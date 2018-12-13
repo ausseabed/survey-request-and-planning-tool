@@ -1,0 +1,18 @@
+version: "3.4"
+services:
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file: .dockerenv
+    environment:
+      - POSTGRES_HOSTNAME=db-postgres
+      - AUTH_SERVER=https://staging.accounts.crcsi.com.au/o/oauth2
+      - PYTHONUNBUFFERED=0
+      - ENVIRONMENT=DEVELOPMENT
+    volumes:
+      - ./server:/code
+    ports:
+      - '3000:3000'
+    command: bash -c "yarn install && npm run dev"

@@ -1,0 +1,1010 @@
+[
+  {
+    "rule_name": "project_name",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".prj_name"
+        }
+      ]
+    },
+    "event": {
+      "type": "project_name",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "prj_name" ],
+        "output_element_key_path": [ "project_name" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "accessibility_inductions_details",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".accessibility_inductions_details"
+        }
+      ]
+    },
+    "event": {
+      "type": "site_access",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "accessibility_inductions_details" ],
+        "output_element_key_path": [ "additional.site_access" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "additional_info_for_coverage_viewpoint",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".additional_info_for_coverage_viewpoint"
+        }
+      ]
+    },
+    "event": {
+      "type": "coverage_viewpoint_details",
+      "action": "set",
+      "params": {
+        "element_source": "survey_output",
+        "element_source_key_path": [ "additional_info_for_coverage_viewpoint" ],
+        "output_element_key_path": [ "additional.vantage_point" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "additional_info_for_landing_takeoff",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".additional_info_for_landing_takeoff"
+        }
+      ]
+    },
+    "event": {
+      "type": "additional_info_for_landing_takeoff",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "additional_info_for_landing_takeoff" ],
+        "output_element_key_path": [ "additional.landing_takeoff" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "casa_caa_requirements",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".casa_caa_requirements"
+        }
+      ]
+    },
+    "event": {
+      "type": "casa_caa_requirements",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "casa_caa_requirements" ],
+        "output_element_key_path": [ "additional.casa_requirements" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "details_of_cataloguing_report",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".details_of_cataloguing_report"
+        }
+      ]
+    },
+    "event": {
+      "type": "details_of_cataloguing_report",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "details_of_cataloguing_report" ],
+        "output_element_key_path": [ "project_report.notes" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "customer_rep_to_be_present",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".customer_rep_to_be_present"
+        }
+      ]
+    },
+    "event": {
+      "type": "customer_rep_to_be_present",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "customer_rep_to_be_present" ],
+        "output_element_key_path": [ "additional.client_needed" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "env_conditions",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".env_conditions"
+        },
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": ".are_there_env_conditions"
+        }
+      ]
+    },
+    "event": {
+      "type": "env_conditions",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "env_conditions" ],
+        "output_element_key_path": [ "collection.environmental_consideration" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "delivery_due_date",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".delivery_due_date"
+        }
+      ]
+    },
+    "event": {
+      "type": "delivery_due_date",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "delivery_due_date" ],
+        "output_element_key_path": [ "delivery.date" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "delivery_method",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".delivery_method"
+        }
+      ]
+    },
+    "event": {
+      "type": "delivery_method",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "delivery_method" ],
+        "output_element_key_path": [ "delivery.method" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "environmental_composition",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".environmental_composition"
+        }
+      ]
+    },
+    "event": {
+      "type": "environmental_composition",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "environmental_composition" ],
+        "output_element_key_path": [ "additional.environment_terrain" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "features_of_interest",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".features_of_interest"
+        }
+      ]
+    },
+    "event": {
+      "type": "features_of_interest",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "features_of_interest" ],
+        "output_element_key_path": [ "additional.features" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "flight_height",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".flight_height"
+        }
+      ]
+    },
+    "event": {
+      "type": "flight_height",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "flight_height" ],
+        "output_element_key_path": [ "additional.flight_height" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "UAV_pattern",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".UAV_pattern"
+        }
+      ]
+    },
+    "event": {
+      "type": "flight_height",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "UAV_pattern" ],
+        "output_element_key_path": [ "additional.flight_pattern" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "project_background",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".project_background"
+        }
+      ]
+    },
+    "event": {
+      "type": "project_background",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "project_background" ],
+        "output_element_key_path": [ "additional.background" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "vegetation_details",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".vegetation_details"
+        },
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": ".if_vegetation_exist"
+        }
+      ]
+    },
+    "event": {
+      "type": "vegetation_details",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "vegetation_details" ],
+        "output_element_key_path": [ "additional.vegetation" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "is_time_sensitive",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": ".is_time_sensitive"
+        }
+      ]
+    },
+    "event": {
+      "type": "is_time_sensitive",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "is_time_sensitive" ],
+        "output_element_key_path": [ "collection.time_sensitive.is_sensitive" ],
+        "fixed_value": [ true ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "preferred_times",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".preferred_times"
+        }
+      ]
+    },
+    "event": {
+      "type": "preferred_times",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "preferred_times" ],
+        "output_element_key_path": [ "collection.time_sensitive.comment" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "is_timeseries",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": ".is_timeseries"
+        }
+      ]
+    },
+    "event": {
+      "type": "is_timeseries",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "is_timeseries" ],
+        "output_element_key_path": [ "collection.time_series_data" ],
+        "fixed_value": [ true ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "standoff_distance",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".standoff_distance"
+        }
+      ]
+    },
+    "event": {
+      "type": "standoff_distance",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "standoff_distance" ],
+        "output_element_key_path": [ "collection.standoff" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "risk_details",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".risk_details"
+        }
+      ]
+    },
+    "event": {
+      "type": "risk_details",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "risk_details" ],
+        "output_element_key_path": [ "additional.flight_risk" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "safety_approval_details",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".safety_approval_details"
+        }
+      ]
+    },
+    "event": {
+      "type": "safety_approval_details",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "safety_approval_details" ],
+        "output_element_key_path": [ "additional.safety_approvals" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "raw_data_delivery_details",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".question3"
+        }
+      ]
+    },
+    "event": {
+      "action": "set",
+      "type": "raw_data_delivery_details",
+      "params": {
+        "element_source": "survey_output",
+        "element_source_key_path": [ "question3" ],
+        "output_element_key_path": [ "additional.raw_data" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "land_ownership",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".land_ownership"
+        }
+      ]
+    },
+    "event": {
+      "type": "land_ownership",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "land_ownership" ],
+        "output_element_key_path": [ "additional.is_land_privately_owned" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "need_accuracy_positioning",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": ".need_accuracy_positioning"
+        },
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": ".to_georeference_data"
+        }
+      ]
+    },
+    "event": {
+      "type": "need_accuracy_positioning",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "need_accuracy_positioning" ],
+        "output_element_key_path": [ "collection.gps_positioning" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "permits",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "notEqual",
+          "value": null,
+          "path": "question8"
+        }
+      ]
+    },
+    "event": {
+      "type": "permits",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "question8" ],
+        "output_element_key_path": [ "additional.permits" ]
+      }
+    }
+  },
+
+  {
+    "rule_name": "deliver_pilot_certificate",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": "deliver_pilot_certificate"
+        }
+      ]
+    },
+    "event": {
+      "type": "deliver_pilot_certificate",
+      "params": {
+        "action": "append",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "delivery.ancillary_data" ],
+        "fixed_value": [ "pilot" ]
+
+      }
+    }
+  },
+
+  {
+    "rule_name": "to_deliver_raw_data",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": "to_deliver_raw_data"
+        }
+      ]
+    },
+    "event": {
+      "type": "to_deliver_raw_data",
+      "params": {
+        "action": "append",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "delivery.ancillary_data" ],
+        "fixed_value": [ "raw" ]
+
+      }
+    }
+  },
+
+  {
+    "rule_name": "to_include_sensor_settings",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": "to_include_sensor_settings"
+        }
+      ]
+    },
+    "event": {
+      "type": "to_include_sensor_settings",
+      "params": {
+        "action": "append",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "delivery.ancillary_data" ],
+        "fixed_value": [ "sensor" ]
+
+      }
+    }
+  },
+
+  {
+    "rule_name": "to_report_catalogue",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": "to_report_catalogue"
+        }
+      ]
+    },
+    "event": {
+      "type": "to_report_catalogue",
+      "params": {
+        "action": "append",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "delivery.ancillary_data" ],
+        "fixed_value": [ "catalogue" ]
+
+      }
+    }
+  },
+
+  {
+    "rule_name": "to_apply_for_safety_approval",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": "to_apply_for_safety_approval"
+        }
+      ]
+    },
+    "event": {
+      "type": "to_apply_for_safety_approval",
+      "params": {
+        "action": "append",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "delivery.ancillary_data" ],
+        "fixed_value": [ "approval" ]
+
+      }
+    }
+  },
+
+
+
+
+  {
+    "rule_name": "imagery_product_selected",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "contains",
+          "value": "imagery",
+          "path": "standard_products"
+        }
+      ]
+    },
+    "event": {
+      "type": "imagery_product_selected",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "imagery.required" ],
+        "fixed_value": [ true ]
+
+      }
+    }
+  },
+  {
+    "rule_name": "point_cloud_product_selected",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "contains",
+          "value": "poincloud",
+          "path": "standard_products"
+        }
+      ]
+    },
+    "event": {
+      "type": "point_cloud_product_selected",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "point_cloud.required" ],
+        "fixed_value": [ true ]
+
+      }
+    }
+  },
+  {
+    "rule_name": "dem_product_selected",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "contains",
+          "value": "DEM",
+          "path": "standard_products"
+        }
+      ]
+    },
+    "event": {
+      "type": "dem_product_selected",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "dem.required" ],
+        "fixed_value": [ true ]
+
+      }
+    }
+  },
+  {
+    "rule_name": "dsm_product_selected",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "contains",
+          "value": "DSM",
+          "path": "standard_products"
+        }
+      ]
+    },
+    "event": {
+      "type": "dsm_product_selected",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "dsm.required" ],
+        "fixed_value": [ true ]
+
+      }
+    }
+  },
+  {
+    "rule_name": "contours_product_selected",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "contains",
+          "value": "contours",
+          "path": "standard_products"
+        }
+      ]
+    },
+    "event": {
+      "type": "contours_product_selected",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "contours.required" ],
+        "fixed_value": [ true ]
+
+      }
+    }
+  },
+  {
+    "rule_name": "video_product_selected",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "contains",
+          "value": "video",
+          "path": "standard_products"
+        }
+      ]
+    },
+    "event": {
+      "type": "video_product_selected",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "video.required" ],
+        "fixed_value": [ true ]
+
+      }
+    }
+  },
+
+  {
+    "rule_name": "metadata_product_selected",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "contains",
+          "value": "metadata",
+          "path": "standard_products"
+        }
+      ]
+    },
+    "event": {
+      "type": "metadata_product_selected",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "metadata.required" ],
+        "fixed_value": [ true ]
+
+      }
+    }
+  },
+
+  {
+    "rule_name": "flight_traj_product_selected",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "contains",
+          "value": "flight_traj",
+          "path": "standard_products"
+        }
+      ]
+    },
+    "event": {
+      "type": "flight_traj_product_selected",
+      "params": {
+        "action": "set",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "trajectory.required" ],
+        "fixed_value": [ true ]
+
+      }
+    }
+  },
+
+  {
+    "rule_name": "to_be_mosaiced",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": "to_be_mosaiced"
+        }
+      ]
+    },
+    "event": {
+      "type": "to_be_mosaiced",
+      "params": {
+        "action": "append",
+        "element_source": "survey_output",
+        "element_source_key_path": null,
+        "output_element_key_path": [ "contours.tile_sizes", "dem.tile_sizes", "dsm.tile_sizes", "imagery.tile_sizes", "point_cloud.tile_sizes", "tile_index.tile_sizes" ],
+        "fixed_value": [ "mosaic", "mosaic", "mosaic", "mosaic", "mosaic", "mosaic" ]
+
+      }
+    },
+    "priority": 2
+  },
+
+  {
+    "rule_name": "to_be_tiled",
+    "conditions": {
+      "all": [
+        {
+          "fact": "survey_answers",
+          "operator": "equal",
+          "value": "yes",
+          "path": "to_be_tiled"
+        }
+      ]
+    },
+    "event": {
+      "type": "to_be_tiled",
+      "params": {
+        "action": "append",
+        "element_source": "survey_output",
+        "element_source_key_path": [ "tile_size", "tile_size", "tile_size", "tile_size", "tile_size", "tile_size" ],
+        "output_element_key_path": [ "contours.tile_sizes", "dem.tile_sizes", "dsm.tile_sizes", "imagery.tile_sizes", "point_cloud.tile_sizes", "tile_index.tile_sizes" ]
+
+
+      }
+    },
+    "priority": 1
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]

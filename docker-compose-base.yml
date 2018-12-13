@@ -1,0 +1,26 @@
+version: "3.4"
+services:
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file: .dockerenv
+    environment:
+      POSTGRES_HOSTNAME: "db-postgres"
+    ports:
+      - '3000:3000'
+    depends_on:
+      - 'db-postgres'
+      - 'db-dynamo'
+
+  db-postgres:
+    image: mdillon/postgis:9.6
+    env_file: .dockerenv
+    ports:
+      - '5432:5432'
+
+  db-dynamo:
+    image: amazon/dynamodb-local
+    ports:
+      - '5433:8000'

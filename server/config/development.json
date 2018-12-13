@@ -1,0 +1,24 @@
+﻿{
+  "db": {
+    "master_userid": "crcsi1",
+    "tables": {
+      "users": "development.qa4lab.users",
+      "projects": "development.qa4lab.projects",
+      "tenders": "development.qa4lab.tenders",
+      "survey": "development.qa4lab.survey",
+      "sessions": "development.qa4lab.sessions",
+      "definitions": "development.qa4lab.definitions"
+    }
+  },
+  "s3bucket": "qa4lab-development",
+  "auth": {
+    "redirecturi": "http://localhost:3001/auth/callback",
+    "crcsi": {
+      "clientId": "076924",
+      "clientSecret": "set_in_env_var",
+      "userInfoEndpoint": "https://staging.accounts.crcsi.com.au/o/oauth2/userinfo",
+      "tokenEndpoint": "https://staging.accounts.crcsi.com.au/o/oauth2/token"
+    }
+  },
+  "broker_url": "set_in_env_var"
+}

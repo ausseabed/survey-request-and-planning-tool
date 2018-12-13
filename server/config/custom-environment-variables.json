@@ -1,0 +1,8 @@
+﻿{
+  "auth": {
+    "crcsi": {
+      "clientSecret": "QA4L_CRCSI_ACCOUNTS_SECRET"
+    }
+  },
+  "broker_url": "RABBIT_BROKER_URL"
+}

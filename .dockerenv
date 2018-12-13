@@ -1,3 +1,5 @@
 POSTGRES_HOSTNAME=db
 POSTGRES_USER=esp
 POSTGRES_PASSWORD=developmentpassword
+
+CELERY_BROKER_URL=amqp://guest:guest@celery:5672//

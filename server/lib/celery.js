@@ -5,7 +5,7 @@ var config = require('config');
 var task = function (options) {
     if (!options) { options = {} };
     options = _.extend({
-        broker_url: config.get('broker_url'),
+        broker_url: process.env.CELERY_BROKER_URL,
         result_backend: 'amqp://'
     }, options);
 

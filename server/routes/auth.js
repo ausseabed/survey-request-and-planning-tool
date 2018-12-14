@@ -29,8 +29,8 @@ router.post('/:provider', function (req, res) {
 
 function crcsiAuth(req, res) {
     Axios.post(config.get('auth.crcsi.tokenEndpoint'), querystring.stringify({
-        client_id: config.get('auth.crcsi.clientId'),
-        client_secret: config.get('auth.crcsi.clientSecret'),
+        client_id: process.env.QA4L_CRCSI_ACCOUNTS_CLIENT_ID,
+        client_secret: process.env.QA4L_CRCSI_ACCOUNTS_SECRET,
         code: req.body.code,
         redirect_uri: req.body.redirectUri,
         state: req.body.state,

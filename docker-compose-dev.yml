@@ -17,7 +17,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    env_file: .dockerenv
+    env_file: ../config/server.conf
     environment:
       - POSTGRES_HOSTNAME=db-postgres
       - AUTH_SERVER=https://staging.accounts.crcsi.com.au/o/oauth2

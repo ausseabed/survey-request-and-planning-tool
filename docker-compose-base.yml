@@ -15,7 +15,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    env_file: .dockerenv
+    env_file: ../config/server.conf
     environment:
       POSTGRES_HOSTNAME: "db-postgres"
     ports:

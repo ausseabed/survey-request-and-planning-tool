@@ -1,0 +1,93 @@
+<template>
+  <q-toolbar color="primary">
+    <q-toolbar-title>
+      QA4UAV
+    </q-toolbar-title>
+    <q-btn v-if="!isAuthenticated" color="primary" @click="auth" label="Log In">
+      <q-tooltip anchor="bottom right" self="top right" :offset="[10, 10]" :delay="400">
+        Login with CRCSI
+      </q-tooltip>
+    </q-btn>
+    <q-item v-if="isAuthenticated">
+      <q-item-side :avatar="profile.avatar">
+        <q-popover ref="popover">
+          <q-list link>
+            <q-item @click="show_profile">
+              <q-item-side icon="face" />
+              <q-item-main label="Profile" />
+            </q-item>
+            <q-item @click="show_settings">
+              <q-item-side icon="settings" />
+              <q-item-main label="Settings" />
+            </q-item>
+            <q-item @click="logout">
+              <q-item-side icon="exit_to_app" />
+              <q-item-main label="Log Out" />
+            </q-item>
+          </q-list>
+        </q-popover>
+      </q-item-side>
+    </q-item>
+  </q-toolbar>
+</template>
+<script>
+  import Vue from 'vue'
+  import Quasar, {
+    QToolbar, QToolbarTitle, QBtn, QTooltip,
+    QItem, QItemMain, QItemSide, QPopover, QList
+  } from 'quasar'
+
+  export default Vue.extend({
+    components: {
+      QToolbar, QToolbarTitle, QBtn, QTooltip,
+      QItem, QItemMain, QItemSide, QPopover, QList
+    },
+    data() {
+      return {
+        isAuthenticated: this.$auth.isAuthenticated()
+      }
+    },
+    methods: {
+      show_settings() {
+        console.log("Show settings here");
+      },
+      show_profile() {
+        console.log("Show profile here");
+      },
+      logout() {
+        this.$auth.logout();
+        this.isAuthenticated = this.$auth.isAuthenticated();
+        //this.$refs.rightSidenav.close();
+      },
+      auth() {
+        if (this.$auth.isAuthenticated()) {
+          this.$auth.logout()
+        }
+
+        this.$auth.authenticate('crcsi')
+          .then(() => {
+            this.isAuthenticated = this.$auth.isAuthenticated();
+          })
+          .catch((e) => {
+            this.isAuthenticated = this.$auth.isAuthenticated();
+          });
+      }
+    },
+    computed: {
+      profile() {
+        if (this.isAuthenticated) {
+          return this.$auth.getPayload();
+        }
+        else {
+          return {};
+        }
+      }
+    }
+  });
+</script>
+<style>
+  .row {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+</style>

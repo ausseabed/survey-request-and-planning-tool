@@ -1,6 +1,16 @@
 version: "3.4"
 services:
 
+  www:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    env_file: .dockerenv
+    ports:
+      - '3001:3001'
+    depends_on:
+      - 'api'
+
   api:
     build:
       context: ./server

@@ -76,7 +76,7 @@ var server = app.listen(app.get('port'), function () {
     if (process.env.NODE_ENV === 'development') {
         // We need credentials & parameters only for development environment.
         // Staging & test will derive their creds from EC2 instance
-        params = {
+        var params = {
             region: process.env.AWS_DEFAULT_REGION,
             accessKeyId: process.env.AWS_ACCESS_KEY,
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY

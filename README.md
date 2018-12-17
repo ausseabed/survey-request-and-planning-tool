@@ -34,6 +34,12 @@ Copy/edit configs. The following environment variables need to be set:
     vi ../config/server.conf
 ```
 
+Initialise DynamoDB
+```
+    mkdir ../dynamodb
+    make create-tables
+```
+
 Build and run  
 ```
     make run

@@ -73,12 +73,19 @@ var db = function (params) {
         }
         AWS.config.update(params);
     }
-    AWS.config.setPromisesDependency(require('bluebird')); 
+    AWS.config.setPromisesDependency(require('bluebird'));
 
-    var client = new AWS.DynamoDB.DocumentClient();
+    if (process.env.AWS_DYNAMODB_ENDPOINT) {
+      var dynamodb = new AWS.DynamoDB(
+        {endpoint: process.env.AWS_DYNAMODB_ENDPOINT});
+    } else {
+      var dynamodb = new AWS.DynamoDB();
+    }
+
+    var client = new AWS.DynamoDB.DocumentClient({service:dynamodb});
     DbBase = require('./base')({ client: client });
     User = require('./user')({ client: client, table: config.get('db.tables.users') });
-    
+
     return (function () {
         return {
             users: _users,

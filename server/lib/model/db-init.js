@@ -5,6 +5,8 @@ var logIdGen = require('../logger').logId;
 
 
 function tableDefinitions() {
+  // JS Object definitions for DynamoDB tables, extracted from cloudformation
+  // definition file.
   const dbPrefix = process.env.NODE_ENV;
   var usersParams = {
     TableName: dbPrefix + ".qa4lab.users",
@@ -53,14 +55,121 @@ function tableDefinitions() {
           ]
         },
         ProvisionedThroughput: {
-          "ReadCapacityUnits": "3",
-          "WriteCapacityUnits": "3"
+          ReadCapacityUnits: "3",
+          WriteCapacityUnits: "3"
         }
       }
     ]
   }
 
-  const tableParams = [usersParams, tendersParams];
+  var projectsParams = {
+    TableName: dbPrefix + ".qa4lab.projects",
+    KeySchema: [
+      { AttributeName: "id", KeyType: "HASH" },
+      { AttributeName: "type", KeyType: "RANGE"}
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "id", AttributeType: "S" },
+      { AttributeName: "type", AttributeType: "S"},
+      { AttributeName: "updated", AttributeType: "S"}
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 3,
+      WriteCapacityUnits: 3
+    },
+    GlobalSecondaryIndexes: [
+      {
+        IndexName: "id-updated-index",
+        KeySchema: [
+          { AttributeName: "id", KeyType: "HASH" },
+          { AttributeName: "updated", KeyType: "RANGE" }
+        ],
+        Projection: {
+          ProjectionType: "INCLUDE",
+          NonKeyAttributes: [
+            "write_users",
+            "sessions",
+            "read_users",
+            "project_name"
+          ]
+        },
+        ProvisionedThroughput: {
+          ReadCapacityUnits: "3",
+          WriteCapacityUnits: "3"
+        }
+      }
+    ]
+  };
+
+  var definitionsParams = {
+    TableName: dbPrefix + ".qa4lab.definitions",
+    KeySchema: [
+      { AttributeName: "id", KeyType: "HASH" },
+      { AttributeName: "type", KeyType: "RANGE"}
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "id", AttributeType: "S" },
+      { AttributeName: "type", AttributeType: "S"},
+      { AttributeName: "updated_on", AttributeType: "S"},
+      { AttributeName: "created_by", AttributeType: "S"}
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 3,
+      WriteCapacityUnits: 3
+    },
+    GlobalSecondaryIndexes: [
+      {
+        IndexName: "created_by-updated_on-index",
+        KeySchema: [
+          { AttributeName: "created_by", KeyType: "HASH" },
+          { AttributeName: "updated_on", KeyType: "RANGE" }
+        ],
+        Projection: {
+          ProjectionType: "INCLUDE",
+          NonKeyAttributes: [
+            "name"
+          ]
+        },
+        ProvisionedThroughput: {
+          ReadCapacityUnits: "3",
+          WriteCapacityUnits: "3"
+        }
+      }
+    ]
+  };
+
+  var surveyParams = {
+    TableName: dbPrefix + ".qa4lab.survey",
+    KeySchema: [
+      { AttributeName: "id", KeyType: "HASH" }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "id", AttributeType: "S" }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 3,
+      WriteCapacityUnits: 3
+    }
+  };
+
+  var sessionsParams = {
+    TableName: dbPrefix + ".qa4lab.sessions",
+    KeySchema: [
+      { AttributeName: "id", KeyType: "HASH" },
+      { AttributeName: "session_id", KeyType: "RANGE"}
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "id", AttributeType: "S" },
+      { AttributeName: "session_id", AttributeType: "N"}
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 3,
+      WriteCapacityUnits: 3
+    }
+  };
+
+  const tableParams = [usersParams, tendersParams, projectsParams,
+    definitionsParams, surveyParams, sessionsParams];
   return tableParams;
 }
 
@@ -115,12 +224,16 @@ function dbInit() {
   var params = {
     region: process.env.AWS_DEFAULT_REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    endpoint: process.env.AWS_ENDPOINT
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   };
   AWS.config.update(params);
 
-  var dynamodb = new AWS.DynamoDB();
+  if (process.env.AWS_DYNAMODB_ENDPOINT) {
+    var dynamodb = new AWS.DynamoDB(
+      {endpoint: process.env.AWS_DYNAMODB_ENDPOINT});
+  } else {
+    var dynamodb = new AWS.DynamoDB();
+  }
 
   if (process.argv.indexOf('--delete') >= 0) {
     logger.info("Deleting tables");

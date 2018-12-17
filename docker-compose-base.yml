@@ -33,4 +33,10 @@ services:
   db-dynamo:
     image: amazon/dynamodb-local
     ports:
-      - '5433:8000'
+      - '5433:5433'
+    environment:
+      - ./Djava.library.path=./DynamoDBLocal_lib
+    volumes:
+      - ../dynamodb:/home/dynamodblocal/data
+    working_dir: /home/dynamodblocal
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "./data", "-port", "5433"]

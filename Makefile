@@ -16,7 +16,7 @@ clean:
 
 # database management targets, operate on DynamoDB
 create-tables:
-	docker-compose $(DEV) run api node lib/model/db-init.js
+	docker-compose $(DEV) run api bash -c "yarn install && npm run create-tables"
 
 delete-tables:
-	docker-compose $(DEV) run api node lib/model/db-init.js --delete
+	docker-compose $(DEV) run api bash -c "yarn install && npm run delete-tables"

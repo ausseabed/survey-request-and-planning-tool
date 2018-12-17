@@ -28,26 +28,36 @@ Clone the repository
 Copy/edit configs. The following environment variables need to be set:
 - `server.conf`
   - `QA4L_CRCSI_ACCOUNTS_SECRET` - obtained from crcsi accounts drupal admin interface (view client details)
+  - `AWS_AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY`, `AWS_SECRET_ACCESS_KEY` for an
+  AWS account that has access to S3. Local deployments of QA4MB make use
+  of remote S3.
 
 ```
     cp -r config.sample ../config
     vi ../config/server.conf
 ```
 
-Initialise DynamoDB
+Create database tables
 ```
     mkdir ../dynamodb
     make create-tables
 ```
 
-Build and run  
+Build and run. This will build and start the various QA4MB containers, docker
+compose is run in attached mode.
 ```
     make run
 ```
 
+
+
 ## Development notes
 
-TODO: Hot reloads, etc
+Both the NodeJS server and VueJS client are run in development mode which
+supports hot reloads. In some cases saved code changes may cause the application
+to crash that will require a restart of the docker container.
+
+
 
 
 ## Development commands

@@ -13,3 +13,10 @@ stop:
 
 clean:
 	rm -rf server/node_modules
+
+# database management targets, operate on DynamoDB
+create-tables:
+	docker-compose $(DEV) run api node lib/model/db-init.js
+
+delete-tables:
+	docker-compose $(DEV) run api node lib/model/db-init.js --delete

@@ -24,8 +24,8 @@ The following configuration parameters are required. These are set as environmen
 * `QA4L_CRCSI_ACCOUNTS_SECRET`  
     * obtained from crcsi accounts drupal admin interface (view client details)
     * This secret must match the `QA4L_CRCSI_ACCOUNTS_CLIENT_ID` id
-* `AWS_AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY`, `AWS_SECRET_ACCESS_KEY` 
-    * For an AWS account that has access to S3. 
+* `AWS_AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY`, `AWS_SECRET_ACCESS_KEY`
+    * For an AWS account that has access to S3.
     * Local deployments of QA4MB make use of remote S3.  
 
 ## Setup
@@ -54,6 +54,16 @@ compose is run in attached mode.
     make run
 ```
 
+## URLs
+
+Web UI application can be found at:  
+    [http://localhost:3001](http://localhost:3001)
+
+NodeJS express can be found at:  
+    [http://localhost:3000](http://localhost:3000)
+
+DynamoDB shell for interrogating /modifying the DynamoDB database:  
+    [http://localhost:5433](http://localhost:5433)
 
 
 ## Development notes

@@ -13,6 +13,7 @@ stop:
 
 clean:
 	rm -rf server/node_modules
+	rm -rf client/node_modules
 
 # database management targets, operate on DynamoDB
 create-tables:

@@ -1,4 +1,4 @@
-FROM node:8.10.0 as builder
+FROM node:8.14.0 as builder
 
 ENV APPDIR=/code
 WORKDIR $APPDIR
@@ -10,6 +10,9 @@ ARG AUTH_HOST
 ARG AUTH_CLIENT_ID
 
 RUN echo $API_HOST
+
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV PATH=$PATH:/home/node/.npm-global/bin
 
 # Set up the files to build with
 #ADD build $APPDIR/build
@@ -26,7 +29,7 @@ ADD yarn.lock $APPDIR/
 EXPOSE 3001
 
 # install vue and quasar command line interface
-RUN npm install -g vue-cli
-RUN npm install quasar-cli -g
+RUN yarn global add vue-cli
+RUN yarn global add quasar-cli
 
-RUN npm install
+RUN yarn install

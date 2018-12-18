@@ -18,6 +18,16 @@ The way this is set up, there are X docker containers:
 - db
     - TODO: Right now 2 (postgres and dynamo), but this needs to be sorted
 
+## Configuration
+The following configuration parameters are required. These are set as environment variables in the client and server config files.
+
+* `QA4L_CRCSI_ACCOUNTS_SECRET`  
+    * obtained from crcsi accounts drupal admin interface (view client details)
+    * This secret must match the `QA4L_CRCSI_ACCOUNTS_CLIENT_ID` id
+* `AWS_AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY`, `AWS_SECRET_ACCESS_KEY` 
+    * For an AWS account that has access to S3. 
+    * Local deployments of QA4MB make use of remote S3.  
+
 ## Setup
 Clone the repository
 ```
@@ -25,12 +35,7 @@ Clone the repository
     cd qa4mbes
 ```
 
-Copy/edit configs. The following environment variables need to be set:
-- `server.conf`
-  - `QA4L_CRCSI_ACCOUNTS_SECRET` - obtained from crcsi accounts drupal admin interface (view client details)
-  - `AWS_AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY`, `AWS_SECRET_ACCESS_KEY` for an
-  AWS account that has access to S3. Local deployments of QA4MB make use
-  of remote S3.
+Copy/edit configs. The following environment variables need to be set:  
 
 ```
     cp -r config.sample ../config

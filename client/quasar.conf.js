@@ -35,7 +35,7 @@ module.exports = function (ctx) {
         },
       scopeHoisting: true,
       vueRouterMode: 'history',
-      devtool: '#eval',
+      devtool: '#eval-source-map',
       // gzip: true,
       // analyze: true,
       // extractCSS: false,

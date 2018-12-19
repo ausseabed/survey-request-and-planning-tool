@@ -24,6 +24,8 @@ ADD package.json $APPDIR/
 ADD yarn.lock $APPDIR/
 
 EXPOSE 3000
+# NodeJS inspect port for remote debugging
+EXPOSE 9229
 
 # Do the package install and build in one step to reduce size of Docker image
 RUN yarn install

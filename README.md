@@ -54,6 +54,14 @@ compose is run in attached mode.
     make run
 ```
 
+## Debugging
+
+In development deployments NodeJS is run with the `--inspect` flag supporting
+remote debugging (remote as the server is run within a docker container).
+Several tools support NodeJS remote debugging; chrome included via [chrome://inspect](chrome://inspect). *note:* ignore the targets listed under Remote Targets and instead choose "Open dedicated DevTools for Node".
+
+
+
 ## URLs
 
 Web UI application can be found at:  

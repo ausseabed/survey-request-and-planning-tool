@@ -27,4 +27,5 @@ services:
       - ./server:/code
     ports:
       - '3000:3000'
+      - '9229:9229' #nodeJS debug port
     command: bash -c "yarn install && npm run dev"

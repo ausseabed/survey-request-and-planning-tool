@@ -27,6 +27,8 @@ EXPOSE 3000
 # NodeJS inspect port for remote debugging
 EXPOSE 9229
 
+RUN yarn global add mocha
+
 # Do the package install and build in one step to reduce size of Docker image
 RUN yarn install
 #RUN yarn build

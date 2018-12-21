@@ -2,7 +2,7 @@ DEV=-f docker-compose-base.yml -f docker-compose-dev.yml
 
 # Running things
 run:
-	docker-compose $(DEV) up
+	docker-compose $(DEV) up www
 
 # Building things
 build-dev:
@@ -21,3 +21,6 @@ create-tables:
 
 delete-tables:
 	docker-compose $(DEV) run api bash -c "yarn install && npm run delete-tables"
+
+test:
+	docker-compose $(DEV) run api-test

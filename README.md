@@ -44,7 +44,6 @@ Copy/edit configs. The following environment variables need to be set:
 
 Create database tables
 ```
-    mkdir ../dynamodb
     make create-tables
 ```
 
@@ -60,6 +59,15 @@ In development deployments NodeJS is run with the `--inspect` flag supporting
 remote debugging (remote as the server is run within a docker container).
 Several tools support NodeJS remote debugging; chrome included via [chrome://inspect](chrome://inspect). *note:* ignore the targets listed under Remote Targets and instead choose "Open dedicated DevTools for Node".
 
+
+## Testing
+Unit tests are available for the NodeJS server, they can be run via the
+following command. Unit tests are run against test databases and do not impact
+the production/development databases.
+
+```
+    make test
+```
 
 
 ## URLs

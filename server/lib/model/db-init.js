@@ -182,15 +182,7 @@ function createTables(dynamodb) {
   });
 
   let promise = Promise.all(tableCreatePromises);
-  promise
-  .then(function(data) {
-    data.forEach(function(data) {
-      logger.info('Created ' + data.TableDescription.TableName);
-    });
-  })
-  .catch(function(error) {
-    logger.error('error', error);
-  });
+  return promise
 }
 
 function deleteTables(dynamodb) {
@@ -209,15 +201,7 @@ function deleteTables(dynamodb) {
   });
 
   let promise = Promise.all(tableDeletePromises);
-  promise
-  .then(function(data) {
-    data.forEach(function(data) {
-      logger.info('Deleted ' + data.TableDescription.TableName);
-    });
-  })
-  .catch(function(error) {
-    logger.error('error', error);
-  });
+  return promise;
 }
 
 function dbInit() {
@@ -237,11 +221,37 @@ function dbInit() {
 
   if (process.argv.indexOf('--delete') >= 0) {
     logger.info("Deleting tables");
-    deleteTables(dynamodb);
-  } else {
+
+    let promise = deleteTables(dynamodb);
+    promise
+    .then(function(data) {
+      data.forEach(function(data) {
+        logger.info('Deleted ' + data.TableDescription.TableName);
+      });
+    })
+    .catch(function(error) {
+      logger.error('error', error);
+    });
+
+  } else if (process.argv.indexOf('--create') >= 0) {
     logger.info("Creating tables");
-    createTables(dynamodb);
+    let promise = createTables(dynamodb);
+    promise
+    .then(function(data) {
+      data.forEach(function(data) {
+        logger.info('Created ' + data.TableDescription.TableName);
+      });
+    })
+    .catch(function(error) {
+      logger.error('error', error);
+    });
   }
 }
 
 dbInit();
+
+module.exports = {
+  tableDefinitions: tableDefinitions,
+  createTables: createTables,
+  deleteTables: deleteTables
+}

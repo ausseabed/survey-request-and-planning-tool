@@ -7,6 +7,45 @@
         <q-breadcrumbs-el label="Project Metadata" icon="fas fa-clipboard-list" />
       </q-breadcrumbs>
     </div>
+
+    <q-page padding class="docs-input row justify-center">
+      <div style="width: 900px; max-width: 90vw;">
+        <q-card inline style="width:100%">
+          <q-card-title> Basic </q-card-title>
+          <q-card-main dense>
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Survey name"
+                     helper="Name of data collection survey">
+              <q-input :value="projectMetadata.surveyName"
+                       @change="update('projectMetadata.surveyName', $event)"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     icon="fas fa-user"
+                     label="Contact person">
+              <q-input :value="projectMetadata.contactPerson"
+                       @change="update('projectMetadata.contactPerson', $event)"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     icon="fas fa-envelope"
+                     label="Contact email"
+                     error-label="Email address is invalid">
+              <q-input :value="projectMetadata.email"
+                       @change="update('projectMetadata.email', $event)"
+                       type="email" />
+            </q-field>
+          </q-card-main>
+        </q-card>
+      </div>
+    </q-page>
+
+
   </div>
 </template>
 <script>

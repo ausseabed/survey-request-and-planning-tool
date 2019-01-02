@@ -93,7 +93,8 @@ var db = function (params) {
             survey: _survey,
             tenders: _tenders,
             sessions: _sessions,
-            definitions: _definitions
+            definitions: _definitions,
+            connection: dynamodb
         };
     }());
 };

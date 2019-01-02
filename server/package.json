@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app",
     "dev": "nodemon --inspect=0.0.0.0:9229 app.js",
-    "create-tables": "node lib/model/db-init.js",
+    "create-tables": "node lib/model/db-init.js --create",
     "delete-tables": "node lib/model/db-init.js --delete",
     "test": "mocha"
   },

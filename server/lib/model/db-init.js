@@ -138,6 +138,20 @@ function tableDefinitions() {
     ]
   };
 
+  var projectMetadataParams = {
+    TableName: dbPrefix + ".qa4lab.projectMetadata",
+    KeySchema: [
+      { AttributeName: "id", KeyType: "HASH" }
+    ],
+    AttributeDefinitions: [
+      { AttributeName: "id", AttributeType: "S" }
+    ],
+    ProvisionedThroughput: {
+      ReadCapacityUnits: 3,
+      WriteCapacityUnits: 3
+    }
+  };
+
   var surveyParams = {
     TableName: dbPrefix + ".qa4lab.survey",
     KeySchema: [
@@ -169,7 +183,7 @@ function tableDefinitions() {
   };
 
   const tableParams = [usersParams, tendersParams, projectsParams,
-    definitionsParams, surveyParams, sessionsParams];
+    definitionsParams, surveyParams, sessionsParams, projectMetadataParams];
   return tableParams;
 }
 

@@ -4,6 +4,7 @@
     "tables": {
       "users": "development.qa4lab.users",
       "projects": "development.qa4lab.projects",
+      "projectMetadata": "development.qa4lab.projectMetadata",
       "tenders": "development.qa4lab.tenders",
       "survey": "development.qa4lab.survey",
       "sessions": "development.qa4lab.sessions",

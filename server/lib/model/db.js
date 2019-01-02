@@ -27,6 +27,19 @@ var _projects = {
     delete: function (key) { return DbBase.delete(config.get('db.tables.projects'), key).then(function (result) { return result; }); }
 }
 
+var _projectMetadata = {
+    create: function (data) { return DbBase.create(config.get('db.tables.projectMetadata'), data).then(function (result) { return result; }); },
+    query: function (params) {
+        return DbBase.query(_.assign(params, { TableName: config.get('db.tables.projectMetadata') }))
+            .then(function (result) { return result; });
+    },
+    scan: function (params) {
+        return DbBase.scan(_.assign(params, { TableName: config.get('db.tables.projectMetadata') }))
+            .then(function (result) { return result; });
+    },
+    delete: function (key) { return DbBase.delete(config.get('db.tables.projectMetadata'), key).then(function (result) { return result; }); }
+}
+
 var _tenders = {
     create: function (data) { return DbBase.create(config.get('db.tables.tenders'), data).then(function (result) { return result; }); },
     query: function (params) {
@@ -90,6 +103,7 @@ var db = function (params) {
         return {
             users: _users,
             projects: _projects,
+            projectMetadata: _projectMetadata,
             survey: _survey,
             tenders: _tenders,
             sessions: _sessions,

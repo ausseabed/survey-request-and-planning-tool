@@ -15,10 +15,7 @@ var path = require('path');
 var hash = require('object-hash');
 var config = require('config');
 var survey_interpretor = require('../lib/surveyinterpretor');
-
-class QA4UError extends Error { }
-class NotFoundError extends Error { }
-class NotAuthorizedError extends Error { }
+var RouteError = require('./route-error');
 
 // Raise 401 if user is not authenticated
 function isAuthenticated(req, res, next) {
@@ -141,7 +138,7 @@ router.post('/api/:type/tender', isAuthenticated, function (req, res) {
                     updated: new Date().toISOString(),
                     updated_by: req.user.id
                 });
-                
+
                 return db.tenders.create(tender_item).then((result) => { return result; })
             })
             .then((result) => {
@@ -228,7 +225,7 @@ router.get('/api/:type/tender/:id', isAuthenticated, function (req, res) {
                                     return res.json(_.assign(result[0], {
                                         can_edit: canWrite,
                                         assets: files,
-                                        aoiUrl: aoi ? s3.getSignedUrl('getObject', 'uav/requirements/' + req.params.id + '/assets/aoi.geojson', { Expires: 60 * 60 * 24 }) : null 
+                                        aoiUrl: aoi ? s3.getSignedUrl('getObject', 'uav/requirements/' + req.params.id + '/assets/aoi.geojson', { Expires: 60 * 60 * 24 }) : null
                                     }))
                                 });
                         }
@@ -266,13 +263,13 @@ router.post('/api/:type/:id/session', isAuthenticated, function (req, res) {
                     }) > -1;
 
                     if (!user_can_edit) {
-                        throw new NotAuthorizedError('Not authorized to edit project.')
+                        throw new RouteError.NotAuthorizedError('Not authorized to edit project.')
                     }
 
                     return projects[0].sessions;
                 }
                 else {
-                    throw new NotFoundError('Project ' + req.params.id + ' does not exists');
+                    throw new RouteError.NotFoundError('Project ' + req.params.id + ' does not exists');
                 }
             })
             .then((sessions) => {
@@ -298,7 +295,7 @@ router.post('/api/:type/:id/session', isAuthenticated, function (req, res) {
                             })
                         }
                         else {
-                            throw new QA4UError('Requirement form missing')
+                            throw new RouteError.QA4UError('Requirement form missing')
                         }
                     })
             })
@@ -334,9 +331,9 @@ router.post('/api/:type/:id/session', isAuthenticated, function (req, res) {
             })
             .catch((e) => {
                 logger.error(e)
-                if (e instanceof QA4UError) { res.status(500).send(e.message) }
-                else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-                else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+                if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+                else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+                else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
                 else { res.status(500).send('Error creating session'); }
             })
     }
@@ -360,13 +357,13 @@ router.get('/api/:type/:project_id/session/:session_id', isAuthenticated, functi
                 }) > -1;
 
                 if (!user_can_view) {
-                    throw new NotAuthorizedError('Not authorized to view project.')
+                    throw new RouteError.NotAuthorizedError('Not authorized to view project.')
                 }
 
                 return user_can_view
             }
             else {
-                throw new NotFoundError('Project ' + req.params.id + ' does not exists');
+                throw new RouteError.NotFoundError('Project ' + req.params.id + ' does not exists');
             }
         })
         .then((user_can_view) => {
@@ -380,15 +377,15 @@ router.get('/api/:type/:project_id/session/:session_id', isAuthenticated, functi
                         return res.json(sessions[0])
                     }
                     else {
-                        throw new NotFoundError('Session ' + req.params.session_id + ' does not exist for Project ' + req.params.project_id);
+                        throw new RouteError.NotFoundError('Session ' + req.params.session_id + ' does not exist for Project ' + req.params.project_id);
                     }
                 })
         })
         .catch((e) => {
             logger.error(e)
-            if (e instanceof QA4UError) { res.status(500).send(e.message) }
-            else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-            else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+            if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+            else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+            else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
             else { res.status(500).send('Error getting project'); }
         })
 })
@@ -407,18 +404,18 @@ router.delete('/api/:type/:project_id/session/:session_id', isAuthenticated, fun
                 }) > -1;
 
                 if (!user_can_write) {
-                    throw new NotAuthorizedError('Not authorized to delete project.')
+                    throw new RouteError.NotAuthorizedError('Not authorized to delete project.')
                 }
 
                 return projects[0];
             }
             else {
-                throw new NotFoundError('Project ' + req.params.id + ' does not exists');
+                throw new RouteError.NotFoundError('Project ' + req.params.id + ' does not exists');
             }
         })
         .then((project) => {
             var idx = _.findIndex(project.sessions, (s) => { return s.session_id === parseInt(req.params.session_id) });
-            
+
             if (idx > -1) {
                 var sessions = project.sessions;
                 sessions.splice(idx, 1);
@@ -446,15 +443,15 @@ router.delete('/api/:type/:project_id/session/:session_id', isAuthenticated, fun
                             })
                     }
                     else {
-                        throw new NotFoundError('Session ' + req.params.session_id + ' does not exist for Project ' + req.params.project_id);
+                        throw new RouteError.NotFoundError('Session ' + req.params.session_id + ' does not exist for Project ' + req.params.project_id);
                     }
                 })
         })
         .catch((e) => {
             logger.error(e)
-            if (e instanceof QA4UError) { res.status(500).send(e.message) }
-            else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-            else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+            if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+            else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+            else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
             else { res.status(500).send('Error getting project'); }
         })
 })
@@ -473,13 +470,13 @@ router.put('/api/:type/:project_id/session/:session_id/dataset', isAuthenticated
                 }) > -1;
 
                 if (!user_can_write) {
-                    throw new NotAuthorizedError('Not authorized to write to project.')
+                    throw new RouteError.NotAuthorizedError('Not authorized to write to project.')
                 }
 
                 return user_can_write
             }
             else {
-                throw new NotFoundError('Project ' + req.params.id + ' does not exists');
+                throw new RouteError.NotFoundError('Project ' + req.params.id + ' does not exists');
             }
         })
         .then((user_can_write) => {
@@ -498,15 +495,15 @@ router.put('/api/:type/:project_id/session/:session_id/dataset', isAuthenticated
                             })
                     }
                     else {
-                        throw new NotFoundError('Session ' + req.params.session_id + ' does not exist for Project ' + req.params.project_id);
+                        throw new RouteError.NotFoundError('Session ' + req.params.session_id + ' does not exist for Project ' + req.params.project_id);
                     }
                 })
         })
         .catch((e) => {
             logger.error(e)
-            if (e instanceof QA4UError) { res.status(500).send(e.message) }
-            else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-            else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+            if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+            else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+            else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
             else { res.status(500).send('Error getting project'); }
         })
 })
@@ -525,13 +522,13 @@ router.post('/api/:type/:project_id/session/:session_id/result', isAuthenticated
                 }) > -1;
 
                 if (!user_can_write) {
-                    throw new NotAuthorizedError('Not authorized to write to project.')
+                    throw new RouteError.NotAuthorizedError('Not authorized to write to project.')
                 }
 
                 return user_can_write
             }
             else {
-                throw new NotFoundError('Project ' + req.params.id + ' does not exists');
+                throw new RouteError.NotFoundError('Project ' + req.params.id + ' does not exists');
             }
         })
         .then((user_can_write) => {
@@ -553,15 +550,15 @@ router.post('/api/:type/:project_id/session/:session_id/result', isAuthenticated
                             })
                     }
                     else {
-                        throw new NotFoundError('Session ' + req.params.session_id + ' does not exist for Project ' + req.params.project_id);
+                        throw new RouteError.NotFoundError('Session ' + req.params.session_id + ' does not exist for Project ' + req.params.project_id);
                     }
                 })
         })
         .catch((e) => {
             logger.error(e)
-            if (e instanceof QA4UError) { res.status(500).send(e.message) }
-            else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-            else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+            if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+            else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+            else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
             else { res.status(500).send('Error getting project'); }
         })
 })
@@ -580,7 +577,7 @@ router.get('/api/:type/project/:id', isAuthenticated, function (req, res) {
                 }) > -1;
 
                 if (!user_can_view) {
-                    throw new NotAuthorizedError('Not authorized to view project.')
+                    throw new RouteError.NotAuthorizedError('Not authorized to view project.')
                 }
 
                 var project = projects[0];
@@ -588,14 +585,14 @@ router.get('/api/:type/project/:id', isAuthenticated, function (req, res) {
                 return res.json(project);
             }
             else {
-                throw new NotFoundError('Project ' + req.params.id + ' does not exists');
+                throw new RouteError.NotFoundError('Project ' + req.params.id + ' does not exists');
             }
         })
         .catch((e) => {
             logger.error(e)
-            if (e instanceof QA4UError) { res.status(500).send(e.message) }
-            else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-            else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+            if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+            else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+            else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
             else { res.status(500).send('Error getting project'); }
         })
 })
@@ -613,13 +610,13 @@ router.delete('/api/:type/project/:id', isAuthenticated, function (req, res) {
                 }) > -1;
 
                 if (!user_can_edit) {
-                    throw new NotAuthorizedError('Not authorized to edit project.')
+                    throw new RouteError.NotAuthorizedError('Not authorized to edit project.')
                 }
 
                 return true
             }
             else {
-                throw new NotFoundError('Project ' + req.params.id + ' does not exists');
+                throw new RouteError.NotFoundError('Project ' + req.params.id + ' does not exists');
             }
         })
         .then((canDelete) => {
@@ -653,9 +650,9 @@ router.delete('/api/:type/project/:id', isAuthenticated, function (req, res) {
         .then(() => { res.json('ok') })
         .catch((e) => {
             logger.error(e)
-            if (e instanceof QA4UError) { res.status(500).send(e.message) }
-            else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-            else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+            if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+            else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+            else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
             else { res.status(500).send('Error deleting project'); }
         })
 });
@@ -730,7 +727,7 @@ router.put('/api/dataset/:type/:id', isAuthenticated, function (req, res) {
     db.definitions.get({ id: req.params.id, type: req.params.type })
         .then((dataset) => {
             if (!dataset) {
-                throw new NotFoundError('Dataset not found');
+                throw new RouteError.NotFoundError('Dataset not found');
             }
             else if (dataset.id === req.params.id && req.user.id === dataset.created_by) {
                 // Create will actually put the object, which is a overwrite not update
@@ -744,14 +741,14 @@ router.put('/api/dataset/:type/:id', isAuthenticated, function (req, res) {
                     })
             }
             else {
-                throw new NotAuthorizedError('Not authorized to update dataset');
+                throw new RouteError.NotAuthorizedError('Not authorized to update dataset');
             }
         })
         .catch((e) => {
             logger.error(e)
-            if (e instanceof QA4UError) { res.status(500).send(e.message) }
-            else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-            else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+            if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+            else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+            else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
             else { res.status(500).send('Error updating dataset'); }
         })
 })
@@ -761,7 +758,7 @@ router.delete('/api/dataset/:type/:id', isAuthenticated, function (req, res) {
     db.definitions.get({ id: req.params.id, type: req.params.type })
         .then((dataset) => {
             if (!dataset) {
-                throw new NotFoundError('Dataset not found');
+                throw new RouteError.NotFoundError('Dataset not found');
             }
             else if (dataset.id === req.params.id && req.user.id === dataset.created_by) {
                 return db.definitions.delete({ id: req.params.id, type: req.params.type })
@@ -771,14 +768,14 @@ router.delete('/api/dataset/:type/:id', isAuthenticated, function (req, res) {
                     })
             }
             else {
-                throw new NotAuthorizedError('Not authorized to delete dataset');
+                throw new RouteError.NotAuthorizedError('Not authorized to delete dataset');
             }
         })
         .catch((e) => {
             logger.error(e)
-            if (e instanceof QA4UError) { res.status(500).send(e.message) }
-            else if (e instanceof NotFoundError) { res.status(404).send(e.message) }
-            else if (e instanceof NotAuthorizedError) { res.status(401).send(e.message) }
+            if (e instanceof RouteError.QA4UError) { res.status(500).send(e.message) }
+            else if (e instanceof RouteError.NotFoundError) { res.status(404).send(e.message) }
+            else if (e instanceof RouteError.NotAuthorizedError) { res.status(401).send(e.message) }
             else { res.status(500).send('Error updating dataset'); }
         })
 })
@@ -851,10 +848,10 @@ router.post('/api/signedurl', function (req, res) {
     }
 })
 
-// Donwload an asset file for a tender fro 
+// Donwload an asset file for a tender fro
 router.get('/api/:type/download/:id', isAuthenticated, function (req, res) {
     if (!req.query.path) res.status(400).send('File path missing.');
-    
+
     db.projects.query({
         KeyConditionExpression: "#id = :id and #type = :type",
         ExpressionAttributeNames: { "#id": "id", "#type": "type" },

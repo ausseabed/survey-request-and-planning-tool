@@ -10,7 +10,7 @@
     <div class="layout-padding row justify-center">
       <div style="width: 900px; max-width: 90vw;">
 
-        <h5 style="text-align: center">Automated quality assurance for UAV</h5>
+        <h5 style="text-align: center"> {{ description }}</h5>
         <h6 style="text-align: center">Collect & use data with confidence</h6>
         <p style="text-align: center">Any other fancy english here</p>
 
@@ -150,6 +150,9 @@
       }),
       reverse_projects() {
         return this.projects.slice().reverse();
+      },
+      description() {
+        return process.env.DESCRIPTION;
       }
     }
   }

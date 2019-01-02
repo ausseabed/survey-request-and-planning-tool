@@ -1,7 +1,7 @@
 <template>
   <q-toolbar color="primary">
     <q-toolbar-title>
-      QA4UAV
+      {{ title }}
     </q-toolbar-title>
     <q-btn v-if="!isAuthenticated" color="primary" @click="auth" label="Log In">
       <q-tooltip anchor="bottom right" self="top right" :offset="[10, 10]" :delay="400">
@@ -81,6 +81,9 @@
         else {
           return {};
         }
+      },
+      title() {
+        return process.env.PRODUCT_NAME;
       }
     }
   });

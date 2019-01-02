@@ -5,6 +5,7 @@ import UavSurvey from 'components/uav/Survey.vue'
 import UavTender from 'components/uav/Tender.vue'
 import UavSession from 'components/uav/Session.vue'
 import UavProjects from 'components/uav/Projects.vue'
+import UavProjectMetadata from 'components/uav/ProjectMetadata.vue'
 
 
 import CustomDataset from 'components/controls/CreateCustomDataset.vue'
@@ -21,6 +22,7 @@ export default [
     { path: '/uav/tender', component: UavTender },
     { path: '/uav/session', component: UavSession },
     { path: '/uav/project', component: UavProjects },
+    { path: '/uav/project-metadata', component: UavProjectMetadata },
 
     {
       path: '/auth/callback',

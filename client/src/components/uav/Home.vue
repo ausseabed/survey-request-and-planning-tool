@@ -20,6 +20,9 @@
             <q-btn class="block col-md-4" @click="gotoSurvey">Help me create a tender</q-btn>
           </div>
           <div v-intro="'Create data collection requirement document from scratch'" v-intro-tooltip-class="'red-bg'">
+            <q-btn class="block col-md-4" @click="gotoProjectMetadata">Create project metadata</q-btn>
+          </div>
+          <div v-intro="'Create data collection requirement document from scratch'" v-intro-tooltip-class="'red-bg'">
             <q-btn class="block col-md-4" @click="gotoTender">Create tender</q-btn>
           </div>
         </div>
@@ -124,6 +127,10 @@
       gotoTender() {
         this.$store.commit('uav_tender/reset');   // Reset tender store
         this.$router.push('/uav/tender');
+      },
+      gotoProjectMetadata() {
+        this.$store.commit('uav_projectmetadata/reset');   // Reset tender store
+        this.$router.push('/uav/project-metadata');
       },
       openTender(id) {
         this.$store.commit('uav_tender/reset');   // Reset tender store

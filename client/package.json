@@ -1,10 +1,10 @@
 {
   "name": "qa4u-ui",
   "version": "1.7.0",
-  "description": "QA for UAV",
-  "productName": "QA4UAV",
+  "description": "Automated quality assurance for MBES",
+  "productName": "QA4MBES",
   "cordovaId": "org.cordova.quasar.app",
-  "author": "Riyas Deen <rdeen@crcsi.com.au>",
+  "author": "Lachlan Hurst <lhurst@frontiersi.com.au>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue src",

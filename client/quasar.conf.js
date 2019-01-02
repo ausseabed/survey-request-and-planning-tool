@@ -28,11 +28,15 @@ module.exports = function (ctx) {
         NODE_ENV: JSON.stringify('development'),
         API_ENDPOINT: JSON.stringify('http://localhost:3000'),
         S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-development'),
+        PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
+        DESCRIPTION: JSON.stringify(require('./package.json').description)
       } : {
-          NODE_ENV: JSON.stringify('production'),
-          API_ENDPOINT: JSON.stringify('https://beta.api.qa4lab.com'),
-          S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-staging'),
-        },
+        NODE_ENV: JSON.stringify('production'),
+        API_ENDPOINT: JSON.stringify('https://beta.api.qa4lab.com'),
+        S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-staging'),
+        PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
+        DESCRIPTION: JSON.stringify(require('./package.json').description)
+      },
       scopeHoisting: true,
       vueRouterMode: 'history',
       devtool: '#eval-source-map',

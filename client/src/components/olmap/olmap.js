@@ -36,9 +36,9 @@ var OlMap = function (target, options) {
 
       var map = new ol.Map({
         interactions: ol.interaction.defaults().extend([dragAndDropInteraction]),
-        controls: [
+        controls: ol.control.defaults().extend([
           new ol.control.FullScreen(),
-        ],
+        ]),
         layers: [
           new ol.layer.Tile({
             source: baseMap
@@ -68,7 +68,7 @@ var OlMap = function (target, options) {
           zoom: 3
         })
       });
-      
+
       dragAndDropInteraction.on('addfeatures', (event) => {
         var ext = event.file.name.split('.').pop();
         var features = null;

@@ -1,12 +1,19 @@
 <template>
   <div class="row justify-center">
-    <div style="width: 900px; max-width: 90vw;">
-      <q-breadcrumbs separator=">" color="light">
-        <q-breadcrumbs-el label="Home" icon="home" to="/" />
-        <q-breadcrumbs-el label="UAV" icon="toys" to="/uav" />
-        <q-breadcrumbs-el label="Project Metadata" icon="fas fa-clipboard-list" />
-      </q-breadcrumbs>
+    <div inline style="width: 900px; max-width: 90vw;">
+      <div class="row justify-between">
+        <q-breadcrumbs separator=">" color="light">
+          <q-breadcrumbs-el label="Home" icon="home" to="/" />
+          <q-breadcrumbs-el label="UAV" icon="toys" to="/uav" />
+          <q-breadcrumbs-el label="Project Metadata" icon="fas fa-clipboard-list" />
+        </q-breadcrumbs>
+        <q-btn icon="fas fa-save" label="Save"
+          @click="submit">
+        </q-btn>
+      </div>
     </div>
+
+
 
     <q-page padding class="docs-input row justify-center">
       <div style="width: 900px; max-width: 90vw;">
@@ -16,31 +23,37 @@
             <q-field :label-width="2"
                      inset="full"
                      label="Survey name"
+                     :error="$v.surveyName.$error"
+                     error-label="Survey name is required"
                      helper="Name of data collection survey">
-              <q-input :value="projectMetadata.surveyName"
-                       @change="update('projectMetadata.surveyName', $event)"
+              <q-input :value="surveyName"
+                       @change="update('surveyName', $event)"
+                       @blur="$v.surveyName.$touch"
                        type="textarea" />
             </q-field>
 
             <q-field :label-width="2"
                      inset="full"
                      icon="fas fa-user"
-                     label="Contact person">
-              <q-input :value="projectMetadata.contactPerson"
-                       @change="update('projectMetadata.contactPerson', $event)"
+                     label="Contact person"
+                     :error="$v.contactPerson.$error"
+                     error-label="Contact person is required">
+              <q-input :value="contactPerson"
+                       @change="update('contactPerson', $event)"
+                       @blur="$v.contactPerson.$touch"
                        type="textarea" />
             </q-field>
 
             <q-field :label-width="2"
                      inset="full"
                      icon="fas fa-envelope"
-                     :error="this.$v.email.$error"
+                     :error="$v.email.$error"
                      error-label="Please provide a valid email address"
                      label="Contact email">
               <q-input
-                       v-model="email"
+                       :value="email"
+                       @change="update('email', $event)"
                        @blur="$v.email.$touch"
-                       @keyup.enter="submit"
                        type="email" />
             </q-field>
           </q-card-main>
@@ -110,7 +123,7 @@ export default Vue.extend({
 
     if (this.aoiUrl) { this.map.addGeojsonUrl(this.aoiUrl) }
 
-    if (!this.projectMetadata.id) {
+    if (!this.id) {
       this.update('id', uuidv4());
     }
   },
@@ -128,22 +141,24 @@ export default Vue.extend({
     },
 
     submit() {
-      //this.$store.dispatch('uav_tender/saveTender')
       this.$v.$touch()
 
       if (this.$v.$error) {
-        this.$q.notify('Please review fields again.')
+        this.$q.notify('Please review fields')
         return
       }
 
-      // due to the validation we keep a local data to store the email address
-      // then set it to the store on submit
-      this.projectMetadata.email = this.email
+      // due to the validation we keep a local data then set it to the
+      // vuex store on submit
+      // TODO - ideally the validation would be performed on the store data
+
+      this.$store.dispatch('uav_projectmetadata/save')
     },
 
     checkGeometry() {
       // Send geojson to server to check for interescting surveys
-      this.$store.dispatch('uav_projectmetadata/checkAoi', { id: this.projectMetadata.id })
+      this.$store.dispatch(
+        'uav_projectmetadata/checkAoi', { id: this.id })
         .catch((e) => {
           this.notify('negative', 'Error uploading Aoi to server.')
         });
@@ -152,19 +167,24 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
-      projectMetadata: 'uav_projectmetadata/projectMetadata',
+      id: 'uav_projectmetadata/id',
+      surveyName: 'uav_projectmetadata/surveyName',
+      contactPerson: 'uav_projectmetadata/contactPerson',
+      email: 'uav_projectmetadata/email',
+      areaOfInterest: 'uav_projectmetadata/areaOfInterest',
     })
   },
 
   validations: {
-    email: { required, email }
+    surveyName: { required },
+    contactPerson: { required },
+    email: { required, email },
   },
 
   data() {
     return {
       map: null,
       canCheckGeometry: false,
-      email: null
     }
   }
 });

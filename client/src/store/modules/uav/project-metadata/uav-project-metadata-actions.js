@@ -8,3 +8,9 @@ export const checkAoi = ({ commit, state }, payload) => {
     console.log(response);
   })
 }
+
+export const save = ({ commit, state }) => {
+  console.log('saving project metadata');
+  console.log(state);
+
+}

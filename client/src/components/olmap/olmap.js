@@ -16,6 +16,10 @@ var OlMap = function (target, options) {
           ol.format.TopoJSON
         ]
       });
+      var drawInteraction = new ol.interaction.Draw({
+        source: source,
+        type: 'Polygon'
+      });
 
       /**
        * @constructor
@@ -49,7 +53,7 @@ var OlMap = function (target, options) {
 
         DrawPolygonControl.prototype.handleDrawPolygon =
           function handleDrawPolygon () {
-            toggleDrawInteraction();
+            startDrawInteraction();
           };
 
         return DrawPolygonControl;
@@ -108,19 +112,23 @@ var OlMap = function (target, options) {
         })
       });
 
-      var draw = undefined; // global so we can remove it later
-      function toggleDrawInteraction() {
-        if (draw) {
-          map.removeInteraction(draw);
-          draw = undefined;
-        } else {
-          draw = new ol.interaction.Draw({
-            source: source,
-            type: 'Polygon'
-          });
-          map.addInteraction(draw);
-        }
+      function startDrawInteraction() {
+        map.addInteraction(drawInteraction);
       }
+
+      drawInteraction.on('drawend', (event) => {
+        map.removeInteraction(drawInteraction);
+        if (typeof this.onAdd === 'function') {
+          // refer https://gis.stackexchange.com/questions/268811/get-feature-from-ol-interaction-draw-on-drawend
+          var feature = event.feature;
+          var features = this.source.getFeatures();
+          features = features.concat(feature);
+          var writer = new ol.format.GeoJSON();
+          var geojsonStr = writer.writeFeatures(features);
+
+          this.onAdd(geojsonStr);
+        }
+      }, source);
 
       dragAndDropInteraction.on('addfeatures', (event) => {
         var ext = event.file.name.split('.').pop();
@@ -145,6 +153,12 @@ var OlMap = function (target, options) {
         else {
           features = event.features;
           this.addFeatures(source, features);
+
+          if (typeof this.onAdd === 'function') {
+            var writer = new ol.format.GeoJSON();
+            var geojsonStr = writer.writeFeatures(features);
+            this.onAdd(geojsonStr);
+          }
         }
       }, source);
 

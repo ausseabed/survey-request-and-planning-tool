@@ -50,6 +50,14 @@
           <q-card-title> Area of Interest </q-card-title>
           <q-card-main>
             <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
+            <q-item-side right>
+              <q-item-tile class="self-end">
+                <q-btn icon="fas fa-check" label="Check AoI"
+                  :disable="!canCheckGeometry"
+                  @click="checkGeometry">
+                </q-btn>
+              </q-item-tile>
+            </q-item-side>
           </q-card-main>
         </q-card>
       </div>
@@ -94,11 +102,14 @@ export default Vue.extend({
     olmap.initMap();
     this.map = olmap;
     this.map.onAdd = (geojson) => {
+      console.log("geojson feature");
+      console.log(geojson);
+      this.canCheckGeometry = true;
       // Geo json added to map, push it to server
-      this.$store.dispatch('uav_tender/putAoi', { id: this.project_details.id, geojson: geojson })
-        .catch((e) => {
-          this.notify('negative', 'Error uploading Aoi to server.')
-        });
+      // this.$store.dispatch('uav_tender/putAoi', { id: this.project_details.id, geojson: geojson })
+      //   .catch((e) => {
+      //     this.notify('negative', 'Error uploading Aoi to server.')
+      //   });
     }
 
     if (this.aoiUrl) { this.map.addGeojsonUrl(this.aoiUrl) }
@@ -129,6 +140,11 @@ export default Vue.extend({
       // then set it to the store on submit
       this.projectMetadata.email = this.email
     },
+
+    checkGeometry() {
+      console.log("do geom check");
+      console.log(this.map.get());
+    }
   },
 
   computed: {
@@ -144,6 +160,7 @@ export default Vue.extend({
   data() {
     return {
       map: null,
+      canCheckGeometry: false,
       email: null
     }
   }

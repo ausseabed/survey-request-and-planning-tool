@@ -10,7 +10,8 @@ module.exports = function (ctx) {
       'authenticate',
       'moment',
       'socket',
-      'intro'
+      'intro',
+      'vuelidate',
     ],
     css: [
       'app.styl'

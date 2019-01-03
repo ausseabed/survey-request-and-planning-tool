@@ -34,10 +34,13 @@
             <q-field :label-width="2"
                      inset="full"
                      icon="fas fa-envelope"
-                     label="Contact email"
-                     error-label="Email address is invalid">
-              <q-input :value="projectMetadata.email"
-                       @change="update('projectMetadata.email', $event)"
+                     :error="this.$v.email.$error"
+                     error-label="Please provide a valid email address"
+                     label="Contact email">
+              <q-input
+                       v-model="email"
+                       @blur="$v.email.$touch"
+                       @keyup.enter="submit"
                        type="email" />
             </q-field>
           </q-card-main>
@@ -55,13 +58,17 @@ import { mapGetters } from 'vuex'
 const _ = require('lodash');
 import { errorHandler } from './../mixins/error-handling'
 const uuidv4 = require('uuid/v4');
+
 const timespan = require('readable-timespan');
 timespan.set({
   lessThanFirst: 'now',
   millisecond: false
 });
+
 import axios from 'axios';
 const path = require('path');
+
+import { required, email } from 'vuelidate/lib/validators';
 
 import OlMap from './../olmap/olmap';
 
@@ -101,6 +108,20 @@ export default Vue.extend({
         value: event
       })
     },
+
+    submit() {
+      //this.$store.dispatch('uav_tender/saveTender')
+      this.$v.$touch()
+
+      if (this.$v.$error) {
+        this.$q.notify('Please review fields again.')
+        return
+      }
+
+      // due to the validation we keep a local data to store the email address
+      // then set it to the store on submit
+      this.projectMetadata.email = this.email
+    },
   },
 
   computed: {
@@ -109,9 +130,14 @@ export default Vue.extend({
     })
   },
 
+  validations: {
+    email: { required, email }
+  },
+
   data() {
     return {
       map: null,
+      email: null
     }
   }
 });

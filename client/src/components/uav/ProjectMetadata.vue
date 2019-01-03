@@ -45,6 +45,13 @@
             </q-field>
           </q-card-main>
         </q-card>
+
+        <q-card inline style="width:100%">
+          <q-card-title> Area of Interest </q-card-title>
+          <q-card-main>
+            <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
+          </q-card-main>
+        </q-card>
       </div>
     </q-page>
 

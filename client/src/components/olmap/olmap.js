@@ -17,6 +17,42 @@ var OlMap = function (target, options) {
         ]
       });
 
+      /**
+       * @constructor
+       * @extends {module:ol/control/Control~Control}
+       * @param {Object=} opt_options Control options.
+       */
+      var DrawPolygonControl = (function (Control) {
+        function DrawPolygonControl(opt_options) {
+          var options = opt_options || {};
+
+          var button = document.createElement('button');
+          button.innerHTML = '<i class="fas fa-draw-polygon"></i>';
+
+          var element = document.createElement('div');
+          element.className = 'draw-polygon ol-unselectable ol-control';
+          element.appendChild(button);
+
+          Control.call(this, {
+            element: element,
+            target: options.target
+          });
+
+          button.addEventListener('click', this.handleDrawPolygon.bind(this), false);
+        }
+
+        if ( Control ) DrawPolygonControl.__proto__ = Control;
+        DrawPolygonControl.prototype = Object.create( Control && Control.prototype );
+        DrawPolygonControl.prototype.constructor = DrawPolygonControl;
+
+        DrawPolygonControl.prototype.handleDrawPolygon = function handleDrawPolygon () {
+          //this.getMap().getView().setRotation(0);
+          console.log("start polygon draw");
+        };
+
+        return DrawPolygonControl;
+      }(ol.control.Control));
+
       var baseMap = null;
       if (options && options.basemap) {
         switch (options.basemap) {
@@ -38,6 +74,7 @@ var OlMap = function (target, options) {
         interactions: ol.interaction.defaults().extend([dragAndDropInteraction]),
         controls: ol.control.defaults().extend([
           new ol.control.FullScreen(),
+          new DrawPolygonControl(),
         ]),
         layers: [
           new ol.layer.Tile({

@@ -38,17 +38,19 @@ var OlMap = function (target, options) {
             target: options.target
           });
 
-          button.addEventListener('click', this.handleDrawPolygon.bind(this), false);
+          button.addEventListener(
+            'click', this.handleDrawPolygon.bind(this), false);
         }
 
         if ( Control ) DrawPolygonControl.__proto__ = Control;
-        DrawPolygonControl.prototype = Object.create( Control && Control.prototype );
+        DrawPolygonControl.prototype =
+          Object.create( Control && Control.prototype );
         DrawPolygonControl.prototype.constructor = DrawPolygonControl;
 
-        DrawPolygonControl.prototype.handleDrawPolygon = function handleDrawPolygon () {
-          //this.getMap().getView().setRotation(0);
-          console.log("start polygon draw");
-        };
+        DrawPolygonControl.prototype.handleDrawPolygon =
+          function handleDrawPolygon () {
+            toggleDrawInteraction();
+          };
 
         return DrawPolygonControl;
       }(ol.control.Control));
@@ -105,6 +107,20 @@ var OlMap = function (target, options) {
           zoom: 3
         })
       });
+
+      var draw = undefined; // global so we can remove it later
+      function toggleDrawInteraction() {
+        if (draw) {
+          map.removeInteraction(draw);
+          draw = undefined;
+        } else {
+          draw = new ol.interaction.Draw({
+            source: source,
+            type: 'Polygon'
+          });
+          map.addInteraction(draw);
+        }
+      }
 
       dragAndDropInteraction.on('addfeatures', (event) => {
         var ext = event.file.name.split('.').pop();

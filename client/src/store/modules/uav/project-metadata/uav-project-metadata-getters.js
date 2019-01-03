@@ -4,5 +4,6 @@ export const projectMetadata = state => {
     surveyName: state.surveyName,
     contactPerson: state.contactPerson,
     email: state.email,
+    areaOfInterest: state.areaOfInterest,
   }
 }

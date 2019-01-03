@@ -1,4 +1,5 @@
 // import * as actions from './uav-project-metadata-actions'
+import * as actions from './uav-project-metadata-actions'
 import * as getters from './uav-project-metadata-getters'
 import * as mutations from './uav-project-metadata-mutations'
 
@@ -26,6 +27,7 @@ export default {
   namespaced: true,
   state: initialState,
   getters,
+  actions,
   mutations: {
     reset(state) {
       const s = initialState()

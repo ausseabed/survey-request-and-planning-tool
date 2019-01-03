@@ -848,6 +848,14 @@ router.post('/api/signedurl', function (req, res) {
     }
 })
 
+router.post('/api/check-aoi', isAuthenticated, function (req, res) {
+  console.log(req.body);
+
+  return res.json({
+    'matching': []
+  });
+})
+
 // Donwload an asset file for a tender fro
 router.get('/api/:type/download/:id', isAuthenticated, function (req, res) {
     if (!req.query.path) res.status(400).send('File path missing.');

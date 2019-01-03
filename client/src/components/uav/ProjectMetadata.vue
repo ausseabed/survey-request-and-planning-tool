@@ -105,11 +105,7 @@ export default Vue.extend({
       console.log("geojson feature");
       console.log(geojson);
       this.canCheckGeometry = true;
-      // Geo json added to map, push it to server
-      // this.$store.dispatch('uav_tender/putAoi', { id: this.project_details.id, geojson: geojson })
-      //   .catch((e) => {
-      //     this.notify('negative', 'Error uploading Aoi to server.')
-      //   });
+      this.setAoi(geojson);
     }
 
     if (this.aoiUrl) { this.map.addGeojsonUrl(this.aoiUrl) }
@@ -127,6 +123,10 @@ export default Vue.extend({
       })
     },
 
+    setAoi(geojson) {
+      this.$store.commit('uav_projectmetadata/setAoi', geojson);
+    },
+
     submit() {
       //this.$store.dispatch('uav_tender/saveTender')
       this.$v.$touch()
@@ -142,8 +142,11 @@ export default Vue.extend({
     },
 
     checkGeometry() {
-      console.log("do geom check");
-      console.log(this.map.get());
+      // Send geojson to server to check for interescting surveys
+      this.$store.dispatch('uav_projectmetadata/checkAoi', { id: this.projectMetadata.id })
+        .catch((e) => {
+          this.notify('negative', 'Error uploading Aoi to server.')
+        });
     }
   },
 

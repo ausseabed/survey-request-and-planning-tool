@@ -7,7 +7,7 @@ function initialState() {
   return {
     id: "",
     surveyName: null,
-    organisaitions: [],
+    organisations: [],
     contactPerson: null,
     email: null,
     areaOfInterest: null,

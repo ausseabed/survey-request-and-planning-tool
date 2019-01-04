@@ -856,6 +856,29 @@ router.post('/api/check-aoi', isAuthenticated, function (req, res) {
   });
 })
 
+router.post('/api/:type/project-metadata', isAuthenticated, function (req, res) {
+  var pm_id = req.body && req.body.id ? req.body.id : uuid5("project-metadata", uuid4());
+  let pm = {
+    id: pm_id,
+    type: req.params.type,
+    created_by: req.user.id,
+    created_on: new Date().toISOString(),
+    updated_on: new Date().toISOString(),
+  }
+  pm = _.merge(pm, _.omit(req.body, ['id', 'type', 'areaOfInterest']))
+  console.log(pm);
+
+  return res.json(pm)
+  // db.projectMetadata.create(pm)
+  // .then((result) => {
+  //   return res.json(result.definition)
+  // })
+  // .catch((e) => {
+  //   logger.error(e);
+  //   return res.status(500).send('Error creating dataset');
+  // })
+})
+
 // Donwload an asset file for a tender fro
 router.get('/api/:type/download/:id', isAuthenticated, function (req, res) {
     if (!req.query.path) res.status(400).send('File path missing.');

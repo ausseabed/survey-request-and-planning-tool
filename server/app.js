@@ -14,6 +14,8 @@ var auth = require('./routes/auth');
 
 var cors = require('cors');
 
+var reflectMetadata = require("reflect-metadata");
+
 var app = express();
 app.use(cors())
 

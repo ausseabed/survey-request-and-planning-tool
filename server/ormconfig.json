@@ -1,0 +1,16 @@
+{
+   "type": "postgres",
+   "host": "db-postgres",
+   "port": 5432,
+   "username": "postgres",
+   "password": "mysecretpassword",
+   "database": "postgres",
+   "synchronize": true,
+   "logging": false,
+   "entities": [
+      "lib/entity/**/*.js"
+   ],
+   "migrations": [
+      "migration/**/*.js"
+   ]
+}

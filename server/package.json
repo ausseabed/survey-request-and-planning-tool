@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app",
-    "dev": "nodemon --inspect=0.0.0.0:9229 app.js",
+    "start": "node start",
+    "dev": "nodemon --inspect=0.0.0.0:9229 start.js",
     "create-tables": "node lib/model/db-init.js --create",
     "delete-tables": "node lib/model/db-init.js --delete",
     "test": "mocha"
@@ -42,6 +42,13 @@
     "winston": "^2.4.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "babel-register": "^6.26.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",

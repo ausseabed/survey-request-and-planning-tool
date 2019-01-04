@@ -28,6 +28,7 @@ EXPOSE 3000
 EXPOSE 9229
 
 RUN yarn global add mocha
+RUN yarn global add babel-cli
 
 # Do the package install and build in one step to reduce size of Docker image
 RUN yarn install

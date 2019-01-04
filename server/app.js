@@ -1,6 +1,6 @@
 ﻿'use strict';
 var debug = require('debug');
-var express = require('express');
+import express from 'express' //var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -14,9 +14,13 @@ var auth = require('./routes/auth');
 
 var cors = require('cors');
 
-var reflectMetadata = require("reflect-metadata");
+import "reflect-metadata";
+import {createConnection} from "typeorm";
+
+import {ProjectMetadata} from './lib/entity/project-metadata';
 
 var app = express();
+
 app.use(cors())
 
 // view engine setup
@@ -68,10 +72,21 @@ app.use(function (err, req, res, next) {
 
 app.set('port', process.env.PORT || 3000);
 
-debug('testing');
-
 var server = app.listen(app.get('port'), function () {
     debug('Express server listening on port ' + server.address().port);
+
+    // TODO - remove this test code
+    createConnection().then(connection => {
+      const projdata = new ProjectMetadata();
+      projdata.surveyName = "My project";
+
+      return connection
+        .getRepository(ProjectMetadata)
+        .save(projdata)
+        .then(pm => {
+            console.log("project metadata has been saved: ", pm);
+        });
+    });
 
     // Configure AWS on startup
     // server ready to accept connections here

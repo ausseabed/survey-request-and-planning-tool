@@ -20,6 +20,7 @@
         <q-card inline style="width:100%">
           <q-card-title> Basic </q-card-title>
           <q-card-main dense>
+            <div>{{id}}</div>
             <q-field :label-width="2"
                      inset="full"
                      label="Survey name"
@@ -122,10 +123,6 @@ export default Vue.extend({
     }
 
     if (this.aoiUrl) { this.map.addGeojsonUrl(this.aoiUrl) }
-
-    if (!this.id) {
-      this.update('id', uuidv4());
-    }
   },
 
   methods: {

@@ -16,9 +16,11 @@
   "dependencies": {
     "aws-sdk": "^2.171.0",
     "axios": "^0.17.1",
+    "babel-polyfill": "^6.26.0",
     "base64url": "^3.0.1",
     "bluebird": "^3.5.1",
     "body-parser": "^1.15.0",
+    "boom": "^7.3.0",
     "config": "1.29.2",
     "cookie-parser": "^1.4.0",
     "cors": "^2.8.4",

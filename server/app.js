@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var AWS = require('aws-sdk');
 
 var routes = require('./routes/index');
+var api = require('./routes/api');
 var users = require('./routes/users');
 var auth = require('./routes/auth');
 
@@ -36,69 +37,86 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.use('/api', api);
 app.use('/users', users);
-app.use('/auth', auth);
+// app.use('/auth', auth);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
+// app.use(function (req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
 
 // error handlers
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
+// if (app.get('env') === 'development') {
+//   app.use(function (err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render('error', {
+//       message: err.message,
+//       error: err
+//     });
+//   });
+// }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
+// app.use(function (err, req, res, next) {
+//   res.status(err.status || 500);
+//   res.render('error', {
+//     message: err.message,
+//     error: {}
+//   });
+// });
 
 app.set('port', process.env.PORT || 3000);
 
-var server = app.listen(app.get('port'), function () {
-    debug('Express server listening on port ' + server.address().port);
-
-    // TODO - remove this test code
-    createConnection().then(connection => {
-      const projdata = new ProjectMetadata();
-      projdata.surveyName = "My project";
-
-      return connection
-        .getRepository(ProjectMetadata)
-        .save(projdata)
-        .then(pm => {
-            console.log("project metadata has been saved: ", pm);
-        });
-    });
-
-    // Configure AWS on startup
-    // server ready to accept connections here
-    if (process.env.NODE_ENV === 'development') {
-        // We need credentials & parameters only for development environment.
-        // Staging & test will derive their creds from EC2 instance
-        var params = {
-            region: process.env.AWS_DEFAULT_REGION,
-            accessKeyId: process.env.AWS_ACCESS_KEY,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-        }
-        AWS.config.update(params);
-    }
-    AWS.config.setPromisesDependency(require('bluebird'));
+createConnection().then(connection => {
+  let connOpts = connection.options;
+  console.log(`Connected to database ${connOpts.host}:${connOpts.port} ` +
+    `(${connOpts.type})`);
+  var server = app.listen(app.get('port'), function () {
+    console.log('Server listening on port ' + server.address().port);
+  });
 });
+
+//
+// var server = app.listen(app.get('port'), function () {
+//     debug('Express server listening on port ' + server.address().port);
+//
+//     // TODO - remove this test code
+//     createConnection().then(async connection => {
+//       const projdata = new ProjectMetadata();
+//       projdata.surveyName = "My project";
+//
+//       let projRepository = connection.getRepository(ProjectMetadata);
+//       await projRepository.save(projdata);
+//       console.log("project metadata has been saved: ", projdata);
+//       let savedPhotos = await projRepository.find();
+//       console.log("saved photos");
+//       console.log(savedPhotos);
+//       //
+//       // return connection.manager
+//       //   .save(projdata)
+//       //   .then(pm => {
+//       //       console.log("project metadata has been saved: ", pm);
+//       //   });
+//     });
+//
+//     // // Configure AWS on startup
+//     // // server ready to accept connections here
+//     // if (process.env.NODE_ENV === 'development') {
+//     //     // We need credentials & parameters only for development environment.
+//     //     // Staging & test will derive their creds from EC2 instance
+//     //     var params = {
+//     //         region: process.env.AWS_DEFAULT_REGION,
+//     //         accessKeyId: process.env.AWS_ACCESS_KEY,
+//     //         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+//     //     }
+//     //     AWS.config.update(params);
+//     // }
+//     // AWS.config.setPromisesDependency(require('bluebird'));
+// });

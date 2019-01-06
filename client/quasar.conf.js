@@ -27,13 +27,11 @@ module.exports = function (ctx) {
     build: {
       env: ctx.dev ? {
         NODE_ENV: JSON.stringify('development'),
-        API_ENDPOINT: JSON.stringify('http://localhost:3000'),
         S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-development'),
         PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
         DESCRIPTION: JSON.stringify(require('./package.json').description)
       } : {
         NODE_ENV: JSON.stringify('production'),
-        API_ENDPOINT: JSON.stringify('https://beta.api.qa4lab.com'),
         S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-staging'),
         PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
         DESCRIPTION: JSON.stringify(require('./package.json').description)
@@ -63,7 +61,14 @@ module.exports = function (ctx) {
     devServer: {
       // https: true,
       port: 3001,
-      open: false // opens browser window automatically
+      open: false, // opens browser window automatically
+      proxy: {
+        // proxy all requests starting with /api to nodejs server
+        '/api': {
+          target: 'http://api:3000',
+          changeOrigin: true,
+        }
+      }
     },
     framework: 'all',
     animations: 'all',

@@ -2,7 +2,6 @@ import VueAuthenticate from 'vue-authenticate';
 
 export default ({ app, router, store, Vue }) => {
   Vue.use(VueAuthenticate, {
-	  baseUrl: process.env.API_ENDPOINT, // Your API domain
 
 	  providers: {
 		crcsi: {
@@ -10,7 +9,7 @@ export default ({ app, router, store, Vue }) => {
 		  redirectUri: window.location.origin + '/auth/callback', // Your client app URL
 
 		  name: 'crcsi',
-		  url: '/auth/crcsi',
+		  url: '/api/auth/crcsi',
 		  authorizationEndpoint: 'https://staging.accounts.crcsi.com.au/o/oauth2/authorize',
 		  requiredUrlParams: ['scope', 'state'],
 		  scope: ['profile', 'email'],

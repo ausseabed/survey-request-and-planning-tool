@@ -13,7 +13,7 @@ export const save = ({ commit, state }) => {
   console.log('saving project metadata');
   console.log(state);
 
-  Vue.axios.post('/api/uav/project-metadata', state)
+  Vue.axios.post('/api/project-metadata', state)
   .then((response) => {
     commit('replace', response.data);
   })

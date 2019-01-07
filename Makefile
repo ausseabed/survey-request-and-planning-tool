@@ -15,12 +15,12 @@ clean:
 	rm -rf server/node_modules
 	rm -rf client/node_modules
 
-# database management targets, operate on DynamoDB
-create-tables:
-	docker-compose $(DEV) run api bash -c "yarn install && npm run create-tables"
-
+# database management targets, operate on Postgres
 delete-tables:
-	docker-compose $(DEV) run api bash -c "yarn install && npm run delete-tables"
+	docker-compose $(DEV) run api bash -c "yarn install && npm run build && typeorm schema:drop --config ormconfig-prod"
+
+migration-run:
+	docker-compose $(DEV) run api bash -c "yarn install && npm run build && typeorm migration:run --config ormconfig-prod"
 
 test:
 	docker-compose $(DEV) run api-test

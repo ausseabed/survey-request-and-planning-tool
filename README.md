@@ -44,7 +44,7 @@ Copy/edit configs. The following environment variables need to be set:
 
 Create database tables
 ```
-    make create-tables
+    make migration-run
 ```
 
 Build and run. This will build and start the various QA4MB containers, docker
@@ -98,3 +98,12 @@ There are a variety of mainenance commands available, all accessed via make:
 `make build-dev` - runs docker compose build for development environment  
 `make stop` - stops all containers  
 `make clean` - removes `node_modules` from server  
+
+
+## Database
+
+The following command will create a database migration script (replace MIGRATION_NAME> param);   
+
+    docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml \
+    run api bash -c \
+    "yarn install && npm run build && typeorm migration:generate -n <MIGRATION_NAME> --config ormconfig-prod"

@@ -1,11 +1,11 @@
 {
   "presets": [
-    "env",
+    "@babel/env",
+    "@babel/typescript",
   ],
   "plugins": [
-    "transform-es2015-destructuring",
-    "transform-object-rest-spread",
-    "transform-decorators-legacy",
-    "transform-class-properties",
+    "@babel/plugin-transform-runtime",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
   ]
 }

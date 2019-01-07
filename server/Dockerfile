@@ -1,4 +1,4 @@
-FROM node:8.10.0 as builder
+FROM node:11.6.0 as builder
 
 ENV APPDIR=/code
 WORKDIR $APPDIR
@@ -27,8 +27,10 @@ EXPOSE 3000
 # NodeJS inspect port for remote debugging
 EXPOSE 9229
 
+RUN yarn global add @babel/core
+RUN yarn global add @babel/cli
+
 RUN yarn global add mocha
-RUN yarn global add babel-cli
 RUN yarn global add typeorm
 
 # Do the package install and build in one step to reduce size of Docker image

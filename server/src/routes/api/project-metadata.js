@@ -35,6 +35,8 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   var project = new ProjectMetadata()
   project.surveyName = req.body.surveyName
+  project.contactPerson = req.body.contactPerson;
+  project.email = req.body.email;
 
   project = await getConnection()
   .getRepository(ProjectMetadata)

@@ -8,10 +8,10 @@
   "synchronize": false,
   "logging": false,
   "entities": [
-    "src/lib/entity/**/*.js"
+    "dist/lib/entity/**/*.js"
   ],
   "migrations": [
-    "src/migration/**/*.js"
+    "dist/migration/**/*.js"
   ],
   "cli": {
     "entitiesDir": "src/lib/entity/**/*.js",

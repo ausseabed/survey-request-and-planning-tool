@@ -9,4 +9,7 @@ export class ProjectMetadata {
     @Column("varchar")
     surveyName = "";
 
+    // @Column("varchar")
+    // contactPerson = "";
+
 }

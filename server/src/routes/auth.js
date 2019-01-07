@@ -85,7 +85,7 @@ function crcsiAuth(req, res) {
                 })
                 .then(function (user) {
                     kms.decrypt({
-                        CiphertextBlob: fs.readFileSync(resolve(__dirname + './../ssh_keys/private.encrypted'))
+                        CiphertextBlob: fs.readFileSync(resolve(__dirname + './../../ssh_keys/private.encrypted'))
                     }, (err, data) => {
                         if (err) return res.status(500).json({ error: "Error decrypting" });
 

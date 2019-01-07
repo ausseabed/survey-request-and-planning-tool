@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node start",
-    "dev": "nodemon --inspect=0.0.0.0:9229 start.js",
-    "create-tables": "node lib/model/db-init.js --create",
-    "delete-tables": "node lib/model/db-init.js --delete",
+    "start": "node src/start",
+    "dev": "nodemon --inspect=0.0.0.0:9229 src/start.js",
+    "create-tables": "node src/lib/model/db-init.js --create",
+    "delete-tables": "node src/lib/model/db-init.js --delete",
     "test": "mocha"
   },
   "description": "QA4UAV API",

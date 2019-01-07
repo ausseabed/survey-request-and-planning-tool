@@ -5,12 +5,15 @@
    "username": "postgres",
    "password": "mysecretpassword",
    "database": "postgres",
-   "synchronize": true,
+   "synchronize": false,
    "logging": false,
    "entities": [
-      "lib/entity/**/*.js"
+      "src/lib/entity/**/*.js"
    ],
    "migrations": [
-      "migration/**/*.js"
-   ]
+      "src/migration/**/*.js"
+   ],
+   "cli": {
+        "migrationsDir": "src/migration"
+    }
 }

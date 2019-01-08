@@ -1,19 +1,27 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable}
+  from "typeorm";
+
+import { Organisation } from './organisation';
 
 @Entity()
 export class ProjectMetadata {
 
-    @PrimaryGeneratedColumn('uuid')
-    id = undefined;
+  @PrimaryGeneratedColumn('uuid')
+  id = undefined;
 
-    @Column("varchar")
-    surveyName = "";
+  @Column("varchar")
+  surveyName = "";
 
-    @Column("varchar")
-    contactPerson = "";
+  @Column("varchar")
+  contactPerson = "";
 
-    @Column("varchar")
-    email = "";
+  @Column("varchar")
+  email = "";
 
+  @ManyToMany(
+    type => Organisation,
+    organisation => organisation.projectMetadatas)
+  @JoinTable()
+  organisations;
 
 }

@@ -9,6 +9,7 @@ import uav_projectmetadata
   from './modules/uav/project-metadata/uav-project-metadata-state'
 import common from './modules/common/common_state'
 import socket from './modules/socket/socket_state'
+import organisation from './modules/organisation/organisation-state'
 
 Vue.use(Vuex)
 
@@ -22,7 +23,8 @@ export default new Vuex.Store({
     uav_project,
     uav_projectmetadata,
     common,
-    socket
+    socket,
+    organisation,
   },
   strict: debug
 })

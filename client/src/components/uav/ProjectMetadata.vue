@@ -20,7 +20,6 @@
         <q-card inline style="width:100%">
           <q-card-title> Basic </q-card-title>
           <q-card-main dense>
-            <div>{{id}}</div>
             <q-field :label-width="2"
                      inset="full"
                      label="Survey name"
@@ -31,6 +30,46 @@
                        @change="update('surveyName', $event)"
                        @blur="$v.surveyName.$touch"
                        type="textarea" />
+            </q-field>
+
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Organisations"
+                     :error="$v.surveyName.$error"
+                     error-label="Survey name is required">
+               <div class="row" >
+                 <q-input class="col-10" v-model="orgSearchTerms" placeholder="Start typing an organisation name">
+                   <q-autocomplete @search="searchOrganisation" @selected="selectedOrganisation" />
+                 </q-input>
+                 <q-btn flat icon="add"
+                   :disable="orgSearchTerms.length == 0"
+                   @click="createNewOrganisation">
+                   <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
+                    Create <strong>new</strong> organisation using entered text.
+                  </q-tooltip>
+                 </q-btn>
+               </div>
+
+               <template v-if="projectOrganisations.length == 0">
+                 <p class="q-body-2 text-center" style="padding:5px">No organisations selected</p>
+               </template>
+               <template v-else>
+                 <q-list-header>Participating organisations</q-list-header>
+                 <q-list dense>
+                   <q-item dense v-for="organisation in projectOrganisations">
+                     <q-item-main :label="organisation.name" />
+                     <q-item-side right>
+                       <q-btn flat icon="close"
+                         @click="removeOrganisation(organisation)">
+                         <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
+                          Remove organisation from this project. Does not delete organisation.
+                        </q-tooltip>
+                       </q-btn>
+                     </q-item-side>
+                   </q-item>
+                 </q-list>
+               </template>
             </q-field>
 
             <q-field :label-width="2"
@@ -83,6 +122,7 @@
 <script>
 import './docs-input.styl'
 import Vue from 'vue'
+import { filter } from 'quasar'
 import { mapGetters } from 'vuex'
 const _ = require('lodash');
 import { errorHandler } from './../mixins/error-handling'
@@ -108,6 +148,7 @@ export default Vue.extend({
       this.$store.dispatch('uav_projectmetadata/getProjectMetadata',
         { id: this.$route.params.id });
     }
+    this.getOrganisations();
   },
 
   mounted() {
@@ -153,6 +194,36 @@ export default Vue.extend({
       this.$store.dispatch('uav_projectmetadata/save')
     },
 
+    createNewOrganisation() {
+      let filteredOrgs = filter(
+        this.orgSearchTerms,
+        {field: 'name', list: this.organisations});
+
+      if (filteredOrgs.length != 0) {
+        // here we check if user is attempting to create a new org with
+        // an existing name. If they are, then just add if to the selected
+        // list and return.
+        this.$store.commit(
+          'uav_projectmetadata/addOrganisation',filteredOrgs[0]);
+        return;
+      }
+
+      // create a new organisation using the name entered into the autocomplete
+      // input element. When the org has been created add it to this project.
+      let org = {
+        name: this.orgSearchTerms,
+      }
+
+      this.$store.dispatch('organisation/saveOrganisation', org)
+      .then(newOrg => {
+        this.$store.commit('uav_projectmetadata/addOrganisation',newOrg);
+        this.$q.notify(`Created new organisation ${newOrg.name}`);
+        this.orgSearchTerms = "";
+      }, error => {
+        console.error("Failed to save organisation");
+      });
+    },
+
     checkGeometry() {
       // Send geojson to server to check for interescting surveys
       this.$store.dispatch(
@@ -160,7 +231,60 @@ export default Vue.extend({
         .catch((e) => {
           this.notify('negative', 'Error uploading Aoi to server.')
         });
-    }
+    },
+
+    getOrganisations() {
+      // gets the list of all orgs, not just those associated to this project
+      this.$store.dispatch('organisation/getOrganisations');
+    },
+
+    saveOrganisation(organisation) {
+      this.$store.dispatch('organisation/saveOrganisation', organisation)
+      .then(response => {
+        console.log(`Org saved ${organisation}`);
+      }, error => {
+        console.error("Failed to save organisation");
+      });
+    },
+
+    searchOrganisation(terms, done) {
+      setTimeout(() => {
+        let filteredOrgs =
+          filter(terms, {field: 'label', list: this.parseOrganisations()});
+        done(filteredOrgs)
+      }, 0)
+    },
+    selectedOrganisation(item, keyboard) {
+      if (keyboard) {
+        //use is just navigating list, not actually selecting
+        return;
+      }
+      // item is just has the org name, so get the org object from list
+      let org = filter(
+        item.label,
+        {field: 'name', list: this.organisations})[0];
+
+      //check for duplicate orgs
+      const filtered = this.projectOrganisations.filter(o => o.id == org.id)
+      if (filtered.length != 0) {
+        this.$q.notify(`${org.name} already selected`)
+        return;
+      }
+
+      this.$store.commit('uav_projectmetadata/addOrganisation',org);
+      this.orgSearchTerms = "";
+    },
+    parseOrganisations() {
+      return this.organisations.map(org => {
+        return {
+          label: org.name,
+          value: org.name
+        }
+      })
+    },
+    removeOrganisation(org) {
+      this.$store.commit('uav_projectmetadata/removeOrganisation',org);
+    },
   },
 
   computed: {
@@ -170,6 +294,8 @@ export default Vue.extend({
       contactPerson: 'uav_projectmetadata/contactPerson',
       email: 'uav_projectmetadata/email',
       areaOfInterest: 'uav_projectmetadata/areaOfInterest',
+      projectOrganisations: 'uav_projectmetadata/organisations',
+      organisations: 'organisation/organisations'
     })
   },
 
@@ -183,6 +309,7 @@ export default Vue.extend({
     return {
       map: null,
       canCheckGeometry: false,
+      orgSearchTerms: '',
     }
   }
 });

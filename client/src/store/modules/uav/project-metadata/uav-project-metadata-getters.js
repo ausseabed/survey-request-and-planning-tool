@@ -17,3 +17,7 @@ export const email = state => {
 export const areaOfInterest = state => {
   return state.areaOfInterest;
 }
+
+export const organisations = state => {
+  return state.organisations;
+}

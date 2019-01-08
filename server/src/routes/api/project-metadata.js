@@ -20,7 +20,7 @@ router.get('/', async function (req, res) {
 router.get('/:id', asyncMiddleware(async function (req, res) {
   let project = await getConnection()
   .getRepository(ProjectMetadata)
-  .findOne(req.params.id);
+  .findOne(req.params.id, { relations: ["organisations"] });
 
   if (!project) {
     let err = boom.notFound(

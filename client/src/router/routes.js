@@ -23,6 +23,7 @@ export default [
     { path: '/uav/session', component: UavSession },
     { path: '/uav/project', component: UavProjects },
     { path: '/uav/project-metadata', component: UavProjectMetadata },
+    { path: '/uav/project-metadata/:id', component: UavProjectMetadata },
 
     {
       path: '/auth/callback',

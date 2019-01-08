@@ -21,3 +21,13 @@ export const save = ({ commit, state }) => {
     console.log(error)
   });
 }
+
+export const getProjectMetadata = ({ commit, state }, payload) => {
+  var url_endpoint = '/api/project-metadata/' + payload.id;
+  if (payload.version) { url_endpoint += "?version=" + payload.version }
+
+  return Vue.axios.get(url_endpoint)
+    .then((response) => {
+      commit('replace', response.data);
+    })
+}

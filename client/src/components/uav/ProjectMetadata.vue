@@ -104,8 +104,9 @@ import OlMap from './../olmap/olmap';
 export default Vue.extend({
   mixins: [errorHandler],
   beforeMount() {
-    if (this.$route.query.id) {
-      this.$store.dispatch('uav_tender/getTender', { id: this.$route.query.id });
+    if (this.$route.params.id) {
+      this.$store.dispatch('uav_projectmetadata/getProjectMetadata',
+        { id: this.$route.params.id });
     }
   },
 

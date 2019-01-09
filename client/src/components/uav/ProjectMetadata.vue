@@ -144,10 +144,6 @@ import OlMap from './../olmap/olmap';
 export default Vue.extend({
   mixins: [errorHandler],
   beforeMount() {
-    if (this.$route.params.id) {
-      this.$store.dispatch('uav_projectmetadata/getProjectMetadata',
-        { id: this.$route.params.id });
-    }
     this.getOrganisations();
   },
 
@@ -158,10 +154,16 @@ export default Vue.extend({
     olmap.initMap();
     this.map = olmap;
     this.map.onAdd = (geojson) => {
-      console.log("geojson feature");
-      console.log(geojson);
       this.canCheckGeometry = true;
       this.setAoi(geojson);
+    }
+
+    if (this.$route.params.id) {
+      this.$store.dispatch(
+        'uav_projectmetadata/getProjectMetadata', { id: this.$route.params.id })
+      .then(projectMetadata => {
+        this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
+      });
     }
 
     if (this.aoiUrl) { this.map.addGeojsonUrl(this.aoiUrl) }

@@ -3,6 +3,7 @@ var _ = require('lodash');
 const boom = require('boom');
 
 import { getConnection } from 'typeorm';
+import { multiPolygon } from "@turf/helpers";
 
 import { asyncMiddleware, isAuthenticated } from '../utils';
 import { ProjectMetadata } from '../../lib/entity/project-metadata';
@@ -30,6 +31,39 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
   return res.json(project);
 }));
 
+function geojsonToMultiPolygon(geojson) {
+  //converts a geosjon object to a multipolygon geojson object
+  if (typeof geojson === 'string' || geojson instanceof String) {
+    //if it wasn't an object, parse it to one.
+    geojson = JSON.parse(geojson);
+  }
+
+  if (geojson.type == 'MultiPolygon') {
+    //already in suitable format
+    return geojson;
+  }
+
+  if (geojson.type == 'FeatureCollection') {
+    let polys = [];
+    geojson.features.forEach(function(feature) {
+      if (feature.type == 'Feature' &&
+          feature.geometry.type == 'Polygon') {
+        polys.push(feature.geometry.coordinates);
+
+      } else if (feature.type == 'Feature' &&
+                 feature.geometry.type == 'MultiPolygon') {
+        polys.push(...feature.geometry.coordinates);
+      }
+    });
+    let mp = multiPolygon(polys);
+    return mp;
+  } else {
+    let err = boom.notImplemented(
+      `Geojson type ${geojson.type} is not supported`);
+    throw err;
+  }
+}
+
 // create new project metadata
 router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
@@ -41,6 +75,9 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.contactPerson = req.body.contactPerson;
   project.email = req.body.email;
   project.organisations = req.body.organisations;
+
+  let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
+  project.areaOfInterest = geojson.geometry;
 
   project = await getConnection()
   .getRepository(ProjectMetadata)

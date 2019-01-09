@@ -126,7 +126,7 @@ var OlMap = function (target, options) {
           var writer = new ol.format.GeoJSON();
           var geojsonStr = writer.writeFeatures(features);
 
-          this.onAdd(geojsonStr);
+          this.onAdd(JSON.parse(geojsonStr));
         }
       }, source);
 
@@ -143,7 +143,7 @@ var OlMap = function (target, options) {
               if (typeof this.onAdd === 'function') {
                 var writer = new ol.format.GeoJSON();
                 var geojsonStr = writer.writeFeatures(features);
-                this.onAdd(geojsonStr);
+                this.onAdd(JSON.parse(geojsonStr));
               }
 
             }.bind(this));
@@ -157,7 +157,7 @@ var OlMap = function (target, options) {
           if (typeof this.onAdd === 'function') {
             var writer = new ol.format.GeoJSON();
             var geojsonStr = writer.writeFeatures(features);
-            this.onAdd(geojsonStr);
+            this.onAdd(JSON.parse(geojsonStr));
           }
         }
       }, source);
@@ -184,6 +184,12 @@ var OlMap = function (target, options) {
           var features = (new ol.format.GeoJSON()).readFeatures(geojson.data);
           this.addFeatures(this.source, features);
         });
+    },
+    addGeojsonFeature: function (geojson) {
+      var olf = (new ol.format.GeoJSON()).readFeatures(geojson);
+
+      this.source.addFeatures(olf);
+      this.map.getView().fit(this.source.getExtent());
     },
     addFeatures: function (source, features) {
       if (features && features.length > 0) {

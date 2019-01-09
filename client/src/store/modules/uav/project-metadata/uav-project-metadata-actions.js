@@ -26,8 +26,15 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
   var url_endpoint = '/api/project-metadata/' + payload.id;
   if (payload.version) { url_endpoint += "?version=" + payload.version }
 
-  return Vue.axios.get(url_endpoint)
+  return new Promise((resolve, reject) => {
+    Vue.axios.get(url_endpoint)
     .then((response) => {
       commit('replace', response.data);
+      resolve(response.data);
     })
+    .catch((error) => {
+      reject(error);
+    });
+  });
+
 }

@@ -24,4 +24,9 @@ export class ProjectMetadata {
   @JoinTable()
   organisations;
 
+  @Column("geometry", {
+    featureType: "Multipolygon",
+    srid: 4326
+  })
+  areaOfInterest;
 }

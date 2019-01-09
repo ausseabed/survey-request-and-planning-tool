@@ -7,6 +7,7 @@ var OlMap = function (target, options) {
   return {
     initMap: function () {
       var source = new ol.source.Vector();
+      var sourceIntersecting = new ol.source.Vector();
       var dragAndDropInteraction = new ol.interaction.DragAndDrop({
         formatConstructors: [
           ol.format.GPX,
@@ -15,6 +16,26 @@ var OlMap = function (target, options) {
           ol.format.KML,
           ol.format.TopoJSON
         ]
+      });
+      var selectInteraction = new ol.interaction.Select({
+        condition:ol.events.condition.never,
+        style: function(feature, resolution) {
+          return new ol.style.Style({
+            fill: new ol.style.Fill({
+              color: 'rgba(0, 0, 0, 0.2)'
+            }),
+            stroke: new ol.style.Stroke({
+              color: 'rgba(0, 0, 0, 0.4)',
+              width: 3
+            }),
+            image: new ol.style.Circle({
+              radius: 7,
+              fill: new ol.style.Fill({
+                color: '#ffcc33'
+              })
+            })
+          })
+        }
       });
       var drawInteraction = new ol.interaction.Draw({
         source: source,
@@ -77,7 +98,8 @@ var OlMap = function (target, options) {
       }
 
       var map = new ol.Map({
-        interactions: ol.interaction.defaults().extend([dragAndDropInteraction]),
+        interactions: ol.interaction.defaults().extend(
+          [dragAndDropInteraction, selectInteraction]),
         controls: ol.control.defaults().extend([
           new ol.control.FullScreen(),
           new DrawPolygonControl(),
@@ -90,10 +112,10 @@ var OlMap = function (target, options) {
             source: source,
             style: new ol.style.Style({
               fill: new ol.style.Fill({
-                color: 'rgba(255, 255, 255, 0.2)'
+                color: 'rgba(255, 0, 0, 0.1)'
               }),
               stroke: new ol.style.Stroke({
-                color: '#rgba(255, 0, 0, 0.2)',
+                color: 'rgba(255, 0, 0, 0.6)',
                 width: 2
               }),
               image: new ol.style.Circle({
@@ -103,7 +125,26 @@ var OlMap = function (target, options) {
                 })
               })
             })
-          })],
+          }),
+          new ol.layer.Vector({
+            source: sourceIntersecting,
+            style: new ol.style.Style({
+              fill: new ol.style.Fill({
+                color: 'rgba(0, 0, 0, 0.1)'
+              }),
+              stroke: new ol.style.Stroke({
+                color: 'rgba(0, 0, 0, 0.3)',
+                width: 2
+              }),
+              image: new ol.style.Circle({
+                radius: 7,
+                fill: new ol.style.Fill({
+                  color: '#ffcc33'
+                })
+              })
+            })
+          })
+        ],
         target: target,      // Get the dom element
         view: new ol.View({
           projection: 'EPSG:4326',
@@ -169,6 +210,8 @@ var OlMap = function (target, options) {
         }
       });
       this.source = source;
+      this.sourceIntersecting = sourceIntersecting;
+      this.selectInteraction = selectInteraction;
     },
     addGeojsonUrl: function (url) {
       // Add geojson from url
@@ -191,12 +234,27 @@ var OlMap = function (target, options) {
       this.source.addFeatures(olf);
       this.map.getView().fit(this.source.getExtent());
     },
+    setGeojsonFeatureIntersecting: function (geojsons) {
+      this.sourceIntersecting.clear();
+      geojsons.forEach(geojson => {
+        const olf = (new ol.format.GeoJSON()).readFeatures(geojson);
+        this.sourceIntersecting.addFeatures(olf);
+      });
+    },
     addFeatures: function (source, features) {
       if (features && features.length > 0) {
         source.clear();
         source.addFeatures(features);
         this.map.getView().fit(source.getExtent());
       }
+    },
+    highlightFeatureIndex: function (index){
+      this.selectInteraction.getFeatures().clear();
+      if (index == -1) {
+        return;
+      }
+      const feat = this.sourceIntersecting.getFeatures()[index];
+      this.selectInteraction.getFeatures().push(feat);
     },
     onAdd: null,
     set: function (value) {
@@ -218,6 +276,9 @@ var OlMap = function (target, options) {
     clear: function () {
       if (this.source) {
         this.source.clear();
+      }
+      if (this.sourceIntersecting) {
+        this.sourceIntersecting.clear();
       }
     },
     destroy: function () {

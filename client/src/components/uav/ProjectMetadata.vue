@@ -114,9 +114,11 @@
               <template v-else>
                 <div class="column col-10">
                   <q-list-header>Intersecting surveys</q-list-header>
-                  <q-list highlight dense>
+                  <q-list highlight dense
+                    @mouseleave.native="mouseleaveMatchingProjMeta">
                     <q-item dense
                       v-for="matchingProjMeta in matchingProjMetas"
+                      @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
                       :to="'/uav/project-metadata/' + matchingProjMeta.id">
                       <q-item-main :label="matchingProjMeta.surveyName" />
                       <!-- <q-item-side right>
@@ -275,6 +277,10 @@ export default Vue.extend({
       .then(matchingProjMetas => {
         console.log(matchingProjMetas);
         this.matchingProjMetas = matchingProjMetas;
+        const areaOfInterests = matchingProjMetas.map(mpm => {
+          return mpm.areaOfInterest;
+        });
+        this.map.setGeojsonFeatureIntersecting(areaOfInterests);
       })
       .catch((e) => {
         this.notify('negative', 'Error uploading Aoi to server.')
@@ -333,6 +339,20 @@ export default Vue.extend({
     removeOrganisation(org) {
       this.$store.commit('uav_projectmetadata/removeOrganisation',org);
     },
+
+    mouseleaveMatchingProjMeta() {
+      //clears selection in map
+      this.map.highlightFeatureIndex(-1);
+    },
+
+    mouseoverMatchingProjMeta(matchingProjMeta) {
+      const index = this.matchingProjMetas.findIndex(mpm => {
+        return mpm.id == matchingProjMeta.id;
+      });
+      if (index != -1) {
+        this.map.highlightFeatureIndex(index);
+      }
+    }
   },
 
   computed: {

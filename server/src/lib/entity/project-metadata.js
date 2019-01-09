@@ -25,7 +25,7 @@ export class ProjectMetadata {
   organisations;
 
   @Column("geometry", {
-    featureType: "Multipolygon",
+    spatialFeatureType: "MultiPolygon",
     srid: 4326
   })
   areaOfInterest;

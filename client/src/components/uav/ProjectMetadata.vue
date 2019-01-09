@@ -103,14 +103,47 @@
           <q-card-title> Area of Interest </q-card-title>
           <q-card-main>
             <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
-            <q-item-side right>
-              <q-item-tile class="self-end">
-                <q-btn icon="fas fa-check" label="Check AoI"
-                  :disable="!canCheckGeometry"
-                  @click="checkGeometry">
-                </q-btn>
-              </q-item-tile>
-            </q-item-side>
+
+            <div class="row">
+              <template v-if="!matchingProjMetas">
+                <p class="col-10 items-center q-body-2 text-center" style="padding:5px">Run check to indentify intersecting surveys</p>
+              </template>
+              <template v-else-if="matchingProjMetas.length == 0">
+                <p class="col-10 items-center q-body-2 text-center" style="padding:5px">No intersecting surveys</p>
+              </template>
+              <template v-else>
+                <div class="column col-10">
+                  <q-list-header>Intersecting surveys</q-list-header>
+                  <q-list highlight dense>
+                    <q-item dense
+                      v-for="matchingProjMeta in matchingProjMetas"
+                      :to="'/uav/project-metadata/' + matchingProjMeta.id">
+                      <q-item-main :label="matchingProjMeta.surveyName" />
+                      <!-- <q-item-side right>
+                        <q-btn flat icon="close"
+                          @click="removeOrganisation(organisation)">
+                          <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
+                           Remove organisation from this project. Does not delete organisation.
+                         </q-tooltip>
+                        </q-btn>
+                      </q-item-side> -->
+                    </q-item>
+                  </q-list>
+
+                </div>
+              </template>
+
+              <q-item-side right class="column col-2">
+                <q-item-tile class="self-end">
+                  <q-btn icon="fas fa-check" label="Check AoI"
+                    :disable="!canCheckGeometry"
+                    @click="checkGeometry">
+                  </q-btn>
+                </q-item-tile>
+              </q-item-side>
+
+            </div>
+
           </q-card-main>
         </q-card>
       </div>
@@ -158,19 +191,27 @@ export default Vue.extend({
       this.setAoi(geojson);
     }
 
-    if (this.$route.params.id) {
-      this.$store.dispatch(
-        'uav_projectmetadata/getProjectMetadata', { id: this.$route.params.id })
-      .then(projectMetadata => {
-        this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
-        this.canCheckGeometry = true;
-      });
-    }
+    this.fetchData();
 
     if (this.aoiUrl) { this.map.addGeojsonUrl(this.aoiUrl) }
   },
 
   methods: {
+    fetchData () {
+      this.matchingProjMetas = undefined;
+      this.map.clear();
+      if (this.$route.params.id) {
+        this.$store.dispatch(
+          'uav_projectmetadata/getProjectMetadata', { id: this.$route.params.id })
+        .then(projectMetadata => {
+          this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
+          this.canCheckGeometry = true;
+        });
+      } else {
+        this.$store.commit('uav_projectmetadata/reset');
+      }
+    },
+
     update(key, event) {
       this.$store.commit('uav_projectmetadata/update', {
         path: key,
@@ -233,6 +274,7 @@ export default Vue.extend({
         'uav_projectmetadata/checkAoi', { id: this.id })
       .then(matchingProjMetas => {
         console.log(matchingProjMetas);
+        this.matchingProjMetas = matchingProjMetas;
       })
       .catch((e) => {
         this.notify('negative', 'Error uploading Aoi to server.')
@@ -311,11 +353,17 @@ export default Vue.extend({
     email: { required, email },
   },
 
+  watch: {
+    // call again the method if the route changes
+    '$route': 'fetchData'
+  },
+
   data() {
     return {
       map: null,
       canCheckGeometry: false,
       orgSearchTerms: '',
+      matchingProjMetas:undefined,
     }
   }
 });

@@ -15,7 +15,14 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   // a list of all projects that have areaOfInterests that intersect this
   // geojson feature.
   const geojson = geojsonToMultiPolygon(req.body);
-  const geomString = JSON.stringify(geojson.geometry);
+
+  // Sometimes the client will provide just the multipolygon defn, such as when
+  // checking intersection of already saved project. This is where we cater
+  // for that.
+  const geomString =
+    geojson.type == "Feature" ?
+      JSON.stringify(geojson.geometry) :
+      JSON.stringify(geojson);
 
   let projects = await getConnection()
   .getRepository(ProjectMetadata)

@@ -163,6 +163,7 @@ export default Vue.extend({
         'uav_projectmetadata/getProjectMetadata', { id: this.$route.params.id })
       .then(projectMetadata => {
         this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
+        this.canCheckGeometry = true;
       });
     }
 

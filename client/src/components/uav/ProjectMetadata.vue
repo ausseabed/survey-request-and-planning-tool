@@ -231,9 +231,12 @@ export default Vue.extend({
       // Send geojson to server to check for interescting surveys
       this.$store.dispatch(
         'uav_projectmetadata/checkAoi', { id: this.id })
-        .catch((e) => {
-          this.notify('negative', 'Error uploading Aoi to server.')
-        });
+      .then(matchingProjMetas => {
+        console.log(matchingProjMetas);
+      })
+      .catch((e) => {
+        this.notify('negative', 'Error uploading Aoi to server.')
+      });
     },
 
     getOrganisations() {

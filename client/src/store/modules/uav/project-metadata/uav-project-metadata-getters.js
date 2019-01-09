@@ -21,3 +21,9 @@ export const areaOfInterest = state => {
 export const organisations = state => {
   return state.organisations;
 }
+
+export const startDate = state => {
+  const date = new Date();
+  date.setTime(state.startDate);
+  return date;
+}

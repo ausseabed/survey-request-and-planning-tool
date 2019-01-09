@@ -42,6 +42,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.contactPerson = req.body.contactPerson;
   project.email = req.body.email;
   project.organisations = req.body.organisations;
+  project.startDate = req.body.startDate;
 
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
   project.areaOfInterest = geojson.geometry;

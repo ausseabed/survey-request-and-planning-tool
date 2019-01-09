@@ -11,7 +11,7 @@ function initialState() {
     contactPerson: null,
     email: null,
     areaOfInterest: null,
-    startDate: null,
+    startDate: Date.now(), // should always be in UTC milliseconds
     purposeSector: null,
     purposeApplicationArea: null,
     description: null,

@@ -148,6 +148,27 @@
 
           </q-card-main>
         </q-card>
+
+        <q-card inline style="width:100%">
+          <q-card-title> Other </q-card-title>
+          <q-card-main dense>
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Start date"
+                     :error="$v.startDate.$error"
+                     error-label="Start date is required">
+              <q-datetime-picker
+                :value="startDate"
+                type="date"
+                format-model="date"
+                @change="setStartDate($event)"
+                @blur="$v.startDate.$touch" />
+            </q-field>
+
+          </q-card-main>
+        </q-card>
+
+
       </div>
     </q-page>
 
@@ -219,6 +240,10 @@ export default Vue.extend({
         path: key,
         value: event
       })
+    },
+
+    setStartDate(startDate) {
+      this.$store.commit('uav_projectmetadata/setStartDate', startDate);
     },
 
     setAoi(geojson) {
@@ -361,6 +386,7 @@ export default Vue.extend({
       surveyName: 'uav_projectmetadata/surveyName',
       contactPerson: 'uav_projectmetadata/contactPerson',
       email: 'uav_projectmetadata/email',
+      startDate: 'uav_projectmetadata/startDate',
       areaOfInterest: 'uav_projectmetadata/areaOfInterest',
       projectOrganisations: 'uav_projectmetadata/organisations',
       organisations: 'organisation/organisations'
@@ -371,6 +397,8 @@ export default Vue.extend({
     surveyName: { required },
     contactPerson: { required },
     email: { required, email },
+
+    startDate: { required },
   },
 
   watch: {

@@ -22,3 +22,7 @@ export const removeOrganisation = (state, organisation) => {
   });
   state.organisations.splice(index, 1);
 }
+
+export const setStartDate = (state, startDate) => {
+  state.startDate = startDate.getTime();
+}

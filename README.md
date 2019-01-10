@@ -131,10 +131,13 @@ The following commands will create a backup file in the `../backup` dir.
         "/backup/qa4mbes-backup-${TODAY}.psql"
 ```
 
-To restore (requires <BACKUP FILE NAME> is in `../backup` );
+To restore (requires `<BACKUP FILE NAME>` is in `../backup` );
+
+*note:* to drop the existing database all current connections must be closed;
+recommend stopping all docker containers (`make stop`).
 
 ```
-    sudo docker-compose run --rm db-postgres-admin bash -c "
+    docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml run --rm db-postgres-admin bash -c "
         dropdb postgres ;
         createdb postgres &&
         pg_restore -d postgres '/backup/<BACKUP FILE NAME>'"

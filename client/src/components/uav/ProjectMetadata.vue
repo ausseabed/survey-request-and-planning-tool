@@ -326,7 +326,7 @@ export default Vue.extend({
         this.patchSelectLists(pmd);
 
         //TODO - stop this from causing data reload
-        this.$router.push({ path: `${pmd.id}` })
+        this.$router.replace({ path: `/uav/project-metadata/${pmd.id}` })
       });
     },
 

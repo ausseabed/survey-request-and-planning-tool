@@ -22,5 +22,8 @@ delete-tables:
 migration-run:
 	docker-compose $(DEV) run api bash -c "yarn install && npm run build && typeorm migration:run --config ormconfig-prod"
 
+migration-revert:
+	docker-compose $(DEV) run api bash -c "yarn install && npm run build && typeorm migration:revert --config ormconfig-prod"
+
 test:
 	docker-compose $(DEV) run api-test

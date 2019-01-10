@@ -31,6 +31,12 @@ export class ProjectMetadata {
   @Column("varchar")
   projectStatus = PROJECT_STATUSES[0];
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  comment = undefined;
+
   @ManyToMany(
     type => Organisation,
     organisation => organisation.projectMetadatas)

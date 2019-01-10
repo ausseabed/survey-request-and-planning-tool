@@ -134,7 +134,7 @@ The following commands will create a backup file in the `../backup` dir.
 To restore (requires <BACKUP FILE NAME> is in `../backup` );
 
 ```
-    sudo docker-compose run --rm dbadmin bash -c "
+    sudo docker-compose run --rm db-postgres-admin bash -c "
         dropdb postgres ;
         createdb postgres &&
         pg_restore -d postgres '/backup/<BACKUP FILE NAME>'"

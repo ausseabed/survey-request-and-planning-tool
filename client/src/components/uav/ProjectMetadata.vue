@@ -324,8 +324,6 @@ export default Vue.extend({
 
       this.$store.dispatch('uav_projectmetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
-
-        //TODO - stop this from causing data reload
         this.$router.replace({ path: `/uav/project-metadata/${pmd.id}` })
       });
     },
@@ -502,7 +500,13 @@ export default Vue.extend({
 
   watch: {
     // call again the method if the route changes
-    '$route': 'fetchData'
+    '$route': function (newRoute, oldRoute) {
+      if (this.id == newRoute.params.id) {
+        // then we've only set the url, no need to fetch new data
+      } else {
+        this.fetchData();
+      }
+    }
   },
 
   data() {

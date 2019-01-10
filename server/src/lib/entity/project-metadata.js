@@ -6,6 +6,13 @@ import { DateTransformer } from './utils';
 import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
 
+// valid values for the `projectStatus` attribute
+export const PROJECT_STATUSES = [
+  "planning",
+  "scheduled",
+  "in progress",
+];
+
 @Entity()
 export class ProjectMetadata {
 
@@ -20,6 +27,9 @@ export class ProjectMetadata {
 
   @Column("varchar")
   email = "";
+
+  @Column("varchar")
+  projectStatus = PROJECT_STATUSES[0];
 
   @ManyToMany(
     type => Organisation,

@@ -6,10 +6,16 @@ import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon }
   from '../utils';
-import { ProjectMetadata } from '../../lib/entity/project-metadata';
+import { ProjectMetadata, PROJECT_STATUSES }
+  from '../../lib/entity/project-metadata';
 
 
 var router = express.Router();
+
+// Gets a list of project metadata
+router.get('/valid-statuses', async function (req, res) {
+  return res.json(PROJECT_STATUSES);
+});
 
 // Gets a list of project metadata
 router.get('/', async function (req, res) {
@@ -50,6 +56,17 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.startDate = req.body.startDate;
   project.instrumentTypes = req.body.instrumentTypes;
   project.dataCaptureTypes = req.body.dataCaptureTypes;
+  if (!_.isNil(req.body.projectStatus)) {
+    const status = req.body.projectStatus
+    if (!PROJECT_STATUSES.includes(status)) {
+      let err = boom.badRequest(`Bad projectStatus "${status}", must be one of\
+        ${PROJECT_STATUSES.join(', ')}`);
+      throw err;
+    }
+    project.projectStatus = status;
+  }
+
+
 
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
   project.areaOfInterest = geojson.geometry;

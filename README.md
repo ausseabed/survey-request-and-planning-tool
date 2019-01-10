@@ -42,7 +42,8 @@ Copy/edit configs. The following environment variables need to be set:
     vi ../config/server.conf
 ```
 
-Create database tables
+Create database tables. The migrations scripts are also responsible for seeding
+default values into the database (eg; instrument types, data capture types, etc)
 ```
     make migration-run
 ```
@@ -92,15 +93,25 @@ to crash that will require a restart of the docker container.
 
 
 ## Development commands
-There are a variety of mainenance commands available, all accessed via make:
+There are a variety of maintenance commands available, all accessed via make:
 
 `make run` - runs the development environment  
 `make build-dev` - runs docker compose build for development environment  
 `make stop` - stops all containers  
-`make clean` - removes `node_modules` from server  
-
+`make clean` - removes `node_modules` from client and server  
+`make migration-run` - runs the database migration scripts
+`make migration-revert` - reverts the last database migration step (not all)
 
 ## Database
+
+General process for modifying the database schema is as follows;    
+1. Modify/add entity ( found in `server/src/lib/entity`)
+1. Run migration generation command (shown below). This will produce a new
+typescript file in `server/src/migration`.
+1. Confirm migration script is ok (often require modification for default
+values, etc)
+1. Run new migration `make migration-run`
+
 
 The following command will create a database migration script (replace MIGRATION_NAME> param);   
 

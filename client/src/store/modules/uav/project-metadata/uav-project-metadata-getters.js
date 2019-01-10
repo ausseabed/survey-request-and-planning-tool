@@ -14,6 +14,10 @@ export const email = state => {
   return state.email;
 }
 
+export const comment = state => {
+  return state.comment;
+}
+
 export const areaOfInterest = state => {
   return state.areaOfInterest;
 }

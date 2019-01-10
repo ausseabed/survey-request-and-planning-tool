@@ -168,7 +168,8 @@
                 @blur="$v.startDate.$touch" />
             </q-field>
 
-            <q-field :label-width="4"
+            <q-field :label-width="2"
+                     inset="full"
                      label="Instrument type">
               <q-select multiple
                         :value="projectInstrumentTypes"
@@ -176,7 +177,8 @@
                         :options="instrumentTypeOptions" />
             </q-field>
 
-            <q-field :label-width="4"
+            <q-field :label-width="2"
+                     inset="full"
                      label="Data capture type">
               <q-select multiple
                         :value="projectDataCaptureTypes"
@@ -184,6 +186,13 @@
                         :options="dataCaptureTypeOptions" />
             </q-field>
 
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Comments">
+              <q-input :value="comment"
+                       @change="update('comment', $event)"
+                       type="textarea" />
+            </q-field>
 
           </q-card-main>
         </q-card>
@@ -463,6 +472,7 @@ export default Vue.extend({
       surveyName: 'uav_projectmetadata/surveyName',
       contactPerson: 'uav_projectmetadata/contactPerson',
       email: 'uav_projectmetadata/email',
+      comment: 'uav_projectmetadata/comment',
       startDate: 'uav_projectmetadata/startDate',
       areaOfInterest: 'uav_projectmetadata/areaOfInterest',
       projectOrganisations: 'uav_projectmetadata/organisations',

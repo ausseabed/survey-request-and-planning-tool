@@ -19,7 +19,7 @@ function initialState() {
     instrumentTypes: [],
     dataCaptureTypes: [],
     status: 'planning',
-    comments: null,
+    comment: null,
   }
 }
 

@@ -1,7 +1,9 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable}
   from "typeorm";
 
+import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
+import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
 
 @Entity()
@@ -38,5 +40,17 @@ export class ProjectMetadata {
       transformer: new DateTransformer()
   })
   startDate;
+
+  @ManyToMany(
+    type => DataCaptureType,
+    dataCaptureType => dataCaptureType.projectMetadatas)
+  @JoinTable()
+  dataCaptureTypes;
+
+  @ManyToMany(
+    type => InstrumentType,
+    instrumentType => instrumentType.projectMetadatas)
+  @JoinTable()
+  instrumentTypes;
 
 }

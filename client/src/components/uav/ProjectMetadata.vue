@@ -324,6 +324,9 @@ export default Vue.extend({
 
       this.$store.dispatch('uav_projectmetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
+
+        //TODO - stop this from causing data reload
+        this.$router.push({ path: `${pmd.id}` })
       });
     },
 

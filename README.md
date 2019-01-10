@@ -99,8 +99,8 @@ There are a variety of maintenance commands available, all accessed via make:
 `make build-dev` - runs docker compose build for development environment  
 `make stop` - stops all containers  
 `make clean` - removes `node_modules` from client and server  
-`make migration-run` - runs the database migration scripts
-`make migration-revert` - reverts the last database migration step (not all)
+`make migration-run` - runs the database migration scripts  
+`make migration-revert` - reverts the last database migration step (not all)  
 
 ## Database
 

@@ -50,7 +50,16 @@ services:
 
   db-postgres: &db-postgres
     image: mdillon/postgis:9.6
-    env_file: .dockerenv
+    env_file: ../config/server.conf
+
+  db-postgres-admin:
+    <<: *db-postgres
+    links:
+      - db-postgres
+    volumes:
+      - ../backup:/backup
+    working_dir: /backup
+    command: ['psql']
 
   db-postgres-test:
     <<: *db-postgres

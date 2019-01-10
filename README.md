@@ -119,3 +119,23 @@ The following command will create a database migration script (replace MIGRATION
     docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml \
     run api bash -c \
     "yarn install && npm run build && typeorm migration:generate -n <MIGRATION_NAME> --config ormconfig-prod"
+
+### Backup and restore
+
+The following commands will create a backup file in the `../backup` dir.
+
+```
+    TODAY=$(date '+%F')
+    docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml \
+        run --rm db-postgres-admin pg_dump --format custom --blobs --file \
+        "/backup/qa4mbes-backup-${TODAY}.psql"
+```
+
+To restore (requires <BACKUP FILE NAME> is in `../backup` );
+
+```
+    sudo docker-compose run --rm dbadmin bash -c "
+        dropdb postgres ;
+        createdb postgres &&
+        pg_restore -d postgres '/backup/<BACKUP FILE NAME>'"
+```

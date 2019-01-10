@@ -57,7 +57,9 @@
                <template v-else>
                  <q-list-header>Participating organisations</q-list-header>
                  <q-list dense>
-                   <q-item dense v-for="organisation in projectOrganisations">
+                   <q-item dense
+                     v-for="organisation in projectOrganisations"
+                     :key="organisation.id">
                      <q-item-main :label="organisation.name" />
                      <q-item-side right>
                        <q-btn flat icon="close"
@@ -118,6 +120,7 @@
                     @mouseleave.native="mouseleaveMatchingProjMeta">
                     <q-item dense
                       v-for="matchingProjMeta in matchingProjMetas"
+                      :key="matchingProjMeta.id"
                       @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
                       :to="'/uav/project-metadata/' + matchingProjMeta.id">
                       <q-item-main :label="matchingProjMeta.surveyName" />

@@ -105,6 +105,7 @@ There are a variety of maintenance commands available, all accessed via make:
 ## Database
 
 General process for modifying the database schema is as follows;    
+
 1. Modify/add entity ( found in `server/src/lib/entity`)
 1. Run migration generation command (shown below). This will produce a new
 typescript file in `server/src/migration`.

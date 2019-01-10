@@ -16,8 +16,8 @@ function initialState() {
     purposeApplicationArea: null,
     description: null,
     vessel: null,
-    instrumentType: [],
-    dataCapture: [],
+    instrumentTypes: [],
+    dataCaptureTypes: [],
     status: 'planning',
     comments: null,
   }

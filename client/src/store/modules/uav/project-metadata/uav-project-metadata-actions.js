@@ -18,12 +18,15 @@ export const save = ({ commit, state }) => {
   console.log('saving project metadata');
   console.log(state);
 
-  Vue.axios.post('/api/project-metadata', state)
-  .then((response) => {
-    commit('replace', response.data);
-  })
-  .catch((error) => {
-    console.log(error)
+  return new Promise((resolve, reject) => {
+    Vue.axios.post('/api/project-metadata', state)
+    .then((response) => {
+      commit('replace', response.data);
+      resolve(response.data);
+    })
+    .catch((error) => {
+      reject(error);
+    });
   });
 }
 

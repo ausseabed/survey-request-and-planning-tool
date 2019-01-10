@@ -168,6 +168,23 @@
                 @blur="$v.startDate.$touch" />
             </q-field>
 
+            <q-field :label-width="4"
+                     label="Instrument type">
+              <q-select multiple
+                        :value="projectInstrumentTypes"
+                        @change="setInstrumentTypes($event)"
+                        :options="instrumentTypeOptions" />
+            </q-field>
+
+            <q-field :label-width="4"
+                     label="Data capture type">
+              <q-select multiple
+                        :value="projectDataCaptureTypes"
+                        @change="setDataCaptureTypes($event)"
+                        :options="dataCaptureTypeOptions" />
+            </q-field>
+
+
           </q-card-main>
         </q-card>
 
@@ -203,7 +220,7 @@ import OlMap from './../olmap/olmap';
 export default Vue.extend({
   mixins: [errorHandler],
   beforeMount() {
-    this.getOrganisations();
+    this.getFormData();
   },
 
   mounted() {
@@ -230,6 +247,7 @@ export default Vue.extend({
         this.$store.dispatch(
           'uav_projectmetadata/getProjectMetadata', { id: this.$route.params.id })
         .then(projectMetadata => {
+          this.patchSelectLists(projectMetadata);
           this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
           this.canCheckGeometry = true;
         });
@@ -253,6 +271,49 @@ export default Vue.extend({
       this.$store.commit('uav_projectmetadata/setAoi', geojson);
     },
 
+    patchSelectLists(projectMetadata) {
+      // The q-select component seems to rely on the fact that its options
+      // values equal that of the model values array. Equal in this case means
+      // object equality. The problem here is we have a list of all options
+      // fetched from the server, and a seperate server request provides the
+      // list of selected options. The selected option objects appear the same
+      // as the all option objects (same values), but they are not the same
+      // objects.
+      // To fix this we replace the current list of selected objects with the
+      // appropriate objects from the all option list.
+      // This could all be avoided if quasar provided some kind of comparison
+      // function hook :-/
+      if (projectMetadata.instrumentTypes) {
+        const instTypes = projectMetadata.instrumentTypes.map(outerIt => {
+          return this.instrumentTypes.find(innerIt => {
+            return outerIt.id == innerIt.id;
+          })
+        });
+        this.setInstrumentTypes(instTypes);
+      }
+
+      if (projectMetadata.dataCaptureTypes) {
+        const dataCapTypes = projectMetadata.dataCaptureTypes.map(outerDct => {
+          return this.dataCaptureTypes.find(innerDct => {
+            return outerDct.id == innerDct.id;
+          })
+        });
+        this.setDataCaptureTypes(dataCapTypes);
+      }
+    },
+
+    setInstrumentTypes(instrumentTypes) {
+      this.$store.commit(
+        'uav_projectmetadata/setInstrumentTypes',
+        instrumentTypes);
+    },
+
+    setDataCaptureTypes(dataCaptureTypes) {
+      this.$store.commit(
+        'uav_projectmetadata/setDataCaptureTypes',
+        dataCaptureTypes);
+    },
+
     submit() {
       this.$v.$touch()
 
@@ -261,11 +322,9 @@ export default Vue.extend({
         return
       }
 
-      // due to the validation we keep a local data then set it to the
-      // vuex store on submit
-      // TODO - ideally the validation would be performed on the store data
-
-      this.$store.dispatch('uav_projectmetadata/save')
+      this.$store.dispatch('uav_projectmetadata/save').then(pmd => {
+        this.patchSelectLists(pmd);
+      });
     },
 
     createNewOrganisation() {
@@ -315,9 +374,23 @@ export default Vue.extend({
       });
     },
 
-    getOrganisations() {
+    getFormData() {
       // gets the list of all orgs, not just those associated to this project
       this.$store.dispatch('organisation/getOrganisations');
+      // get data capture types, but only those not created by users (eg; the
+      // default system defined ones.
+      this.$store.dispatch(
+        'dataCaptureType/getDataCaptureTypes',
+        {params: {
+          userSubmitted: false
+        }}
+      );
+      this.$store.dispatch(
+        'instrumentType/getInstrumentTypes',
+        {params: {
+          userSubmitted: false
+        }}
+      );
     },
 
     saveOrganisation(organisation) {
@@ -392,8 +465,28 @@ export default Vue.extend({
       startDate: 'uav_projectmetadata/startDate',
       areaOfInterest: 'uav_projectmetadata/areaOfInterest',
       projectOrganisations: 'uav_projectmetadata/organisations',
-      organisations: 'organisation/organisations'
-    })
+      projectInstrumentTypes: 'uav_projectmetadata/instrumentTypes',
+      projectDataCaptureTypes: 'uav_projectmetadata/dataCaptureTypes',
+      organisations: 'organisation/organisations',
+      instrumentTypes: 'instrumentType/instrumentTypes',
+      dataCaptureTypes: 'dataCaptureType/dataCaptureTypes',
+    }),
+    instrumentTypeOptions: function () {
+      // select component needs a label and value field
+      const opts = this.instrumentTypes.map(pit => {
+        return {
+          label: pit.name,
+          value: pit
+        }
+      });
+      return opts;
+    },
+    dataCaptureTypeOptions: function () {
+      const opts = this.dataCaptureTypes.map(pit => {
+        return {label: pit.name, value: pit};
+      });
+      return opts;
+    }
   },
 
   validations: {

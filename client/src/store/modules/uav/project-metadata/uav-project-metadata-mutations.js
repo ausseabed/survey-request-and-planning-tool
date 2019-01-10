@@ -12,6 +12,14 @@ export const setAoi = (state, geojson) => {
 
 }
 
+export const setInstrumentTypes = (state, instrumentTypes) => {
+  state.instrumentTypes = instrumentTypes;
+}
+
+export const setDataCaptureTypes = (state, dataCaptureTypes) => {
+  state.dataCaptureTypes = dataCaptureTypes;
+}
+
 export const addOrganisation = (state, organisation) => {
   state.organisations.push(organisation);
 }

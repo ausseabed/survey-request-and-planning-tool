@@ -27,3 +27,11 @@ export const startDate = state => {
   date.setTime(state.startDate);
   return date;
 }
+
+export const instrumentTypes = state => {
+  return state.instrumentTypes;
+}
+
+export const dataCaptureTypes = state => {
+  return state.dataCaptureTypes;
+}

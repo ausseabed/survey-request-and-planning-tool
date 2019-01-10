@@ -9,6 +9,8 @@ import uav_projectmetadata
   from './modules/uav/project-metadata/uav-project-metadata-state'
 import common from './modules/common/common_state'
 import socket from './modules/socket/socket_state'
+import dataCaptureType from './modules/data-capture-type/data-capture-type-state'
+import instrumentType from './modules/instrument-type/instrument-type-state'
 import organisation from './modules/organisation/organisation-state'
 
 Vue.use(Vuex)
@@ -24,6 +26,8 @@ export default new Vuex.Store({
     uav_projectmetadata,
     common,
     socket,
+    dataCaptureType,
+    instrumentType,
     organisation,
   },
   strict: debug

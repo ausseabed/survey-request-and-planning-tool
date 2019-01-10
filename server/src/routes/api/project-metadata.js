@@ -21,7 +21,12 @@ router.get('/', async function (req, res) {
 router.get('/:id', asyncMiddleware(async function (req, res) {
   let project = await getConnection()
   .getRepository(ProjectMetadata)
-  .findOne(req.params.id, { relations: ["organisations"] });
+  .findOne(
+    req.params.id,
+    {
+      relations: ["organisations", "instrumentTypes", "dataCaptureTypes"]
+    }
+  );
 
   if (!project) {
     let err = boom.notFound(
@@ -43,6 +48,8 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.email = req.body.email;
   project.organisations = req.body.organisations;
   project.startDate = req.body.startDate;
+  project.instrumentTypes = req.body.instrumentTypes;
+  project.dataCaptureTypes = req.body.dataCaptureTypes;
 
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
   project.areaOfInterest = geojson.geometry;

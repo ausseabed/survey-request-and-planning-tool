@@ -66,6 +66,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     project.projectStatus = status;
   }
   project.comment = req.body.comment;
+  project.vessel = req.body.vessel;
 
 
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);

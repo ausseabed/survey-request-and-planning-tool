@@ -29,7 +29,7 @@
               <q-input :value="surveyName"
                        @change="update('surveyName', $event)"
                        @blur="$v.surveyName.$touch"
-                       type="textarea" />
+                       type="text" />
             </q-field>
 
 
@@ -155,6 +155,14 @@
         <q-card inline style="width:100%">
           <q-card-title> Other </q-card-title>
           <q-card-main dense>
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Vessel">
+              <q-input :value="vessel"
+                       @change="update('vessel', $event)"
+                       type="text" />
+            </q-field>
+
             <q-field :label-width="2"
                      inset="full"
                      label="Start date"
@@ -473,6 +481,7 @@ export default Vue.extend({
       contactPerson: 'uav_projectmetadata/contactPerson',
       email: 'uav_projectmetadata/email',
       comment: 'uav_projectmetadata/comment',
+      vessel: 'uav_projectmetadata/vessel',
       startDate: 'uav_projectmetadata/startDate',
       areaOfInterest: 'uav_projectmetadata/areaOfInterest',
       projectOrganisations: 'uav_projectmetadata/organisations',

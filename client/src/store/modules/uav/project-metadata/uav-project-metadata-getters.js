@@ -18,6 +18,10 @@ export const comment = state => {
   return state.comment;
 }
 
+export const vessel = state => {
+  return state.vessel;
+}
+
 export const areaOfInterest = state => {
   return state.areaOfInterest;
 }

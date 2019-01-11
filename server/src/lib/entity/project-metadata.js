@@ -35,6 +35,12 @@ export class ProjectMetadata {
       type:"varchar",
       nullable: true,
   })
+  vessel = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
   comment = undefined;
 
   @ManyToMany(

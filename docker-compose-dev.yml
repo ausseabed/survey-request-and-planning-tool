@@ -4,8 +4,9 @@ services:
   www:
     build:
       context: ./client
-      dockerfile: Dockerfile
-    env_file: .dockerenv
+      target: builder
+    environment:
+      - AUTH_HOST=https://staging.accounts.crcsi.com.au
     volumes:
       - ./client:/code
     ports:
@@ -16,13 +17,15 @@ services:
   api:
     build:
       context: ./server
-      dockerfile: Dockerfile
     env_file: ../config/server.conf
     environment:
       - POSTGRES_HOSTNAME=db-postgres
       - AUTH_SERVER=https://staging.accounts.crcsi.com.au/o/oauth2
       - PYTHONUNBUFFERED=0
       - ENVIRONMENT=DEVELOPMENT
+      - AWS_DEFAULT_REGION=ap-southeast-2
+      - AWS_ACCESS_KEY_ID=${ODC_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${ODC_SECRET_KEY}
     volumes:
       - ./server:/code
     ports:

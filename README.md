@@ -38,8 +38,7 @@ Clone the repository
 Copy/edit configs. The following environment variables need to be set:  
 
 ```
-    cp -r config.sample ../config
-    vi ../config/server.conf
+    cp config.sample/server.conf ./server.conf
 ```
 
 Create database tables. The migrations scripts are also responsible for seeding
@@ -101,6 +100,14 @@ There are a variety of maintenance commands available, all accessed via make:
 `make clean` - removes `node_modules` from client and server  
 `make migration-run` - runs the database migration scripts  
 `make migration-revert` - reverts the last database migration step (not all)  
+
+## Testing production
+Production Docker Compose commands are as follows:
+
+`make build-prod` - builds production ready containers
+`make run-prod` - runs an environment that is similar to a production deployment.
+
+Note that to access the system as a prod URL, you go to [qa4mbes.vcap.me](qa4mbes.vcap.me).
 
 ## Database
 

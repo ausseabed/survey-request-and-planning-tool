@@ -4,35 +4,17 @@ ENV APPDIR=/code
 WORKDIR $APPDIR
 
 # We need some build environment variables to switch settings with
-ARG API_HOST
-ARG WEB_HOST
 ARG AUTH_HOST
 ARG AUTH_CLIENT_ID
 
-RUN echo $API_HOST
-
-# Set up the files to build with
-#ADD build $APPDIR/build
-#ADD static $APPDIR/static
-#ADD .eslintrc.js $APPDIR/
-
-# Add in the project files
-#ADD client $APPDIR/client
-
 # And npm bits
-ADD package.json $APPDIR/
-ADD yarn.lock $APPDIR/
+ADD package.json yarn.lock .babelrc ormconfig-prod.js $APPDIR/
 
-EXPOSE 3000
-# NodeJS inspect port for remote debugging
-EXPOSE 9229
+RUN yarn global add mocha typeorm @babel/core @babel/cli
 
-RUN yarn global add @babel/core
-RUN yarn global add @babel/cli
-
-RUN yarn global add mocha
-RUN yarn global add typeorm
+ADD src $APPDIR/src
 
 # Do the package install and build in one step to reduce size of Docker image
-RUN yarn install
-#RUN yarn build
+RUN yarn install && yarn run build
+
+CMD yarn run start

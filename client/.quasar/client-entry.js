@@ -215,12 +215,6 @@ import pVuelidate from 'src/plugins/vuelidate'
 
 
 
-Vue.config.devtools = true
-Vue.config.productionTip = false
-
-
-
-console.info('[Quasar] Running SPA with MAT theme.')
 
 
 

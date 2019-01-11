@@ -1,12 +1,19 @@
 DEV=-f docker-compose-base.yml -f docker-compose-dev.yml
+PROD=-f docker-compose-base.yml -f docker-compose-prod.yml
 
 # Running things
 run:
 	docker-compose $(DEV) up www
 
+run-prod:
+	docker-compose $(PROD) up
+
 # Building things
 build-dev:
 	docker-compose $(DEV) build
+
+build-prod:
+	docker-compose $(PROD) build
 
 stop:
 	docker-compose $(DEV) stop

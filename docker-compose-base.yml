@@ -6,8 +6,6 @@ services:
       context: ./client
       dockerfile: Dockerfile
     env_file: .dockerenv
-    ports:
-      - '3001:3001'
     depends_on:
       - 'api'
 
@@ -15,61 +13,12 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    env_file: ../config/server.conf
+    env_file: ./server.conf
     environment:
       POSTGRES_HOSTNAME: "db-postgres"
-    ports:
-      - '3000:3000'
-    links:
-      - db-postgres:db-postgres
-      - db-dynamo:db-dynamo
     depends_on:
       - 'db-postgres'
-      - 'db-dynamo'
 
-  api-test:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    env_file: ../config/server.conf
-    environment:
-      - POSTGRES_HOSTNAME=db-postgres
-      - AWS_DYNAMODB_ENDPOINT=http://db-dynamo:5433
-      - AUTH_SERVER=https://staging.accounts.crcsi.com.au/o/oauth2
-      - PYTHONUNBUFFERED=0
-      - ENVIRONMENT=DEVELOPMENT
-    links:
-      - db-postgres-test:db-postgres
-      - db-dynamo-test:db-dynamo
-    volumes:
-      - ./server:/code
-    depends_on:
-      - 'db-postgres-test'
-      - 'db-dynamo-test'
-    command: npm test
-
-  db-postgres: &db-postgres
+  db-postgres:
     image: mdillon/postgis:9.6
-    env_file: ../config/server.conf
-
-  db-postgres-admin:
-    <<: *db-postgres
-    links:
-      - db-postgres
-    volumes:
-      - ../backup:/backup
-    working_dir: /backup
-    command: ['psql']
-
-  db-postgres-test:
-    <<: *db-postgres
-
-  db-dynamo: &db-dynamo
-    image: amazon/dynamodb-local
-    environment:
-      - ./Djava.library.path=./DynamoDBLocal_lib
-    working_dir: /home/dynamodblocal
-    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", ".", "-port", "5433"]
-
-  db-dynamo-test:
-    <<: *db-dynamo
+    env_file: ./server.conf

@@ -1,5 +1,8 @@
 import VueAuthenticate from 'vue-authenticate';
 
+const authServer = process.env.AUTH_HOST
+console.log(authServer)
+
 export default ({ app, router, store, Vue }) => {
   Vue.use(VueAuthenticate, {
 
@@ -10,7 +13,7 @@ export default ({ app, router, store, Vue }) => {
 
 		  name: 'crcsi',
 		  url: '/api/auth/crcsi',
-		  authorizationEndpoint: 'https://staging.accounts.crcsi.com.au/o/oauth2/authorize',
+		  authorizationEndpoint: authServer + '/o/oauth2/authorize',
 		  requiredUrlParams: ['scope', 'state'],
 		  scope: ['profile', 'email'],
 		  scopePrefix: 'openid',

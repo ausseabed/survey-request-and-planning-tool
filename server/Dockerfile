@@ -8,7 +8,8 @@ ARG AUTH_HOST
 ARG AUTH_CLIENT_ID
 
 # And npm bits
-ADD package.json yarn.lock .babelrc ormconfig-prod.js $APPDIR/
+ADD package.json yarn.lock .babelrc $APPDIR/
+ADD ormconfig-prod.js $APPDIR/ormconfig.js 
 
 RUN yarn global add mocha typeorm @babel/core @babel/cli
 
@@ -18,4 +19,4 @@ ADD config $APPDIR/config
 # Do the package install and build in one step to reduce size of Docker image
 RUN yarn install && yarn run build
 
-CMD yarn run start
+CMD bash -c "typeorm migration:run && yarn run start"

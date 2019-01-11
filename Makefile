@@ -22,6 +22,9 @@ clean:
 	rm -rf server/node_modules
 	rm -rf client/node_modules
 
+rm-prod:
+	docker-compose $(PROD) rm --force
+
 # database management targets, operate on Postgres
 delete-tables:
 	docker-compose $(DEV) run api bash -c "yarn install && npm run build && typeorm schema:drop --config ormconfig-prod"

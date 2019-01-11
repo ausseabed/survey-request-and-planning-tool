@@ -4,9 +4,10 @@ services:
     build:
       context: ./client
     environment:
-      - VIRTUAL_HOST=qa4mbes.vcap.me
       - AUTH_HOST=https://staging.accounts.crcsi.com.au
       - NODE_ENV=production
+    ports:
+      - '80:80'
 
   api:
     build:
@@ -14,10 +15,3 @@ services:
     env_file: ../config/server.conf
     environment:
       - ENVIRONMENT=production
-
-  proxy:
-    image: jwilder/nginx-proxy:latest
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    ports:
-      - '80:80'

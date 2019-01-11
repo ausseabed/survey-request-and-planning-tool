@@ -1,0 +1,24 @@
+  api-test:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file: ../config/server.conf
+    environment:
+      - POSTGRES_HOSTNAME=db-postgres
+      - AWS_DYNAMODB_ENDPOINT=http://db-dynamo:5433
+      - AUTH_SERVER=https://staging.accounts.crcsi.com.au/o/oauth2
+      - PYTHONUNBUFFERED=0
+      - ENVIRONMENT=DEVELOPMENT
+    links:
+      - db-postgres-test:db-postgres
+      - db-dynamo-test:db-dynamo
+    volumes:
+      - ./server:/code
+    depends_on:
+      - 'db-postgres-test'
+      - 'db-dynamo-test'
+    command: npm test
+
+  db-postgres: &db-postgres
+    image: mdillon/postgis:9.6
+    env_file: ../config/server.conf

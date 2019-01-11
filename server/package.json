@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "babel --extensions=\".js,.ts\" src -d dist",
+    "build": "babel --extensions=\".js,.ts\" src -d dist --copy-files",
     "start": "node dist/app",
     "dev": "nodemon --inspect=0.0.0.0:9229 --exec babel-node src/app.js",
     "test": "mocha"

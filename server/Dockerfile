@@ -13,6 +13,7 @@ ADD package.json yarn.lock .babelrc ormconfig-prod.js $APPDIR/
 RUN yarn global add mocha typeorm @babel/core @babel/cli
 
 ADD src $APPDIR/src
+ADD config $APPDIR/config
 
 # Do the package install and build in one step to reduce size of Docker image
 RUN yarn install && yarn run build

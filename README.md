@@ -123,9 +123,11 @@ values, etc)
 
 The following command will create a database migration script (replace MIGRATION_NAME> param);   
 
+```
     docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml \
-    run api bash -c \
-    "yarn install && npm run build && typeorm migration:generate -n <MIGRATION_NAME> --config ormconfig-prod"
+        run --rm api bash -c "yarn install && yarn run build && \
+        ENVIRONMENT=production typeorm migration:generate -n <MIGRATION_NAME>"
+```
 
 ### Backup and restore
 

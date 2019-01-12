@@ -9,7 +9,7 @@ ARG AUTH_CLIENT_ID
 
 # And npm bits
 ADD package.json yarn.lock .babelrc $APPDIR/
-ADD ormconfig-prod.js $APPDIR/ormconfig.js 
+ADD ormconfig.js $APPDIR/ormconfig.js
 
 RUN yarn global add mocha typeorm @babel/core @babel/cli
 

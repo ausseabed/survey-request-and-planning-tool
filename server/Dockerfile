@@ -15,6 +15,7 @@ RUN yarn global add mocha typeorm @babel/core @babel/cli
 
 ADD src $APPDIR/src
 ADD config $APPDIR/config
+ADD ssh_keys $APPDIR/ssh_keys
 
 # Do the package install and build in one step to reduce size of Docker image
 RUN yarn install && yarn run build

@@ -3,8 +3,9 @@ services:
   www:
     build:
       context: ./client
+      args:
+        - AUTH_HOST=https://staging.accounts.crcsi.com.au
     environment:
-      - AUTH_HOST=https://staging.accounts.crcsi.com.au
       - NODE_ENV=production
     ports:
       - '80:80'

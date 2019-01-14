@@ -1,0 +1,75 @@
+options:
+  docker: true
+image: okdocker/pynode
+pipelines:
+  default:
+    - step:
+        name: Run tests
+        services:
+          - docker
+        script:
+          # Does nothing
+          - ./pipeline/default.sh
+  branches:
+    develop:
+      - step:
+          name: Run tests
+          services:
+            - docker
+          script:
+            # Does nothing
+            - ./pipeline/default.sh
+      - step:
+          name: Build and push
+          services:
+            - docker
+          script:
+            # Configure things
+            - export IMAGE_TAG=$BITBUCKET_BRANCH-$BITBUCKET_COMMIT
+            - export AUTH_HOST=https://staging.accounts.crcsi.com.au
+            - export AUTH_ID=720174
+            # Log in to Docker
+            - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+            # Build and push the WebApp image
+            - ./pipeline/build-web.sh
+            - docker push crcsi/qa4mbes-www:$IMAGE_TAG
+            - docker tag crcsi/qa4mbes-www:$IMAGE_TAG crcsi/qa4mbes-www:$BITBUCKET_BRANCH
+            - docker push crcsi/qa4mbes-www:$BITBUCKET_BRANCH
+            # Build and push the API image
+            - ./pipeline/build-api.sh
+            - docker push crcsi/qa4mbes-api:$IMAGE_TAG
+            - docker tag crcsi/qa4mbes-api:$IMAGE_TAG crcsi/qa4mbes-api:$BITBUCKET_BRANCH
+            - docker push crcsi/qa4mbes-api:$BITBUCKET_BRANCH
+    master:
+      - step:
+          name: Run tests
+          services:
+            - docker
+          script:
+            # Does nothing
+            - ./pipeline/default.sh
+      - step:
+          name: Build and push
+          services:
+            - docker
+          script:
+            # Configure things
+            - export IMAGE_TAG=$BITBUCKET_BRANCH-$BITBUCKET_COMMIT
+            - export AUTH_HOST=https://accounts.crcsi.com.au
+            - export AUTH_ID=720174
+            # Log in to Docker
+            - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+            # Build and push the WebApp image
+            - ./pipeline/build-web.sh
+            - docker push crcsi/qa4mbes-www:$IMAGE_TAG
+            - docker tag crcsi/qa4mbes-www:$IMAGE_TAG crcsi/qa4mbes-www:$BITBUCKET_BRANCH
+            - docker push crcsi/qa4mbes-www:$BITBUCKET_BRANCH
+            # Build and push the API image
+            - ./pipeline/build-api.sh
+            - docker push crcsi/qa4mbes-api:$IMAGE_TAG
+            - docker tag crcsi/qa4mbes-api:$IMAGE_TAG crcsi/qa4mbes-api:$BITBUCKET_BRANCH
+            - docker push crcsi/qa4mbes-api:$BITBUCKET_BRANCH
+definitions:
+  services:
+    docker:
+      memory: 2000

@@ -1,7 +1,7 @@
 import VueAuthenticate from 'vue-authenticate';
 
 const authServer = process.env.AUTH_HOST
-const clientId = process.env.QA4L_CRCSI_ACCOUNTS_CLIENT_ID
+const clientId = process.env.AUTH_CLIENT_ID
 
 export default ({ app, router, store, Vue }) => {
   Vue.use(VueAuthenticate, {

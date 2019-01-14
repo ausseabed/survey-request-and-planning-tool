@@ -11,18 +11,28 @@ import { SurveyApplication } from '../../lib/entity/survey-application';
 var router = express.Router();
 
 router.get('/group-names', async function (req, res) {
+  // get a list of the unique group names for survey applications. This supports
+  // the two stage selection process of survey applications
   let grpNames = await getConnection()
   .getRepository(SurveyApplication)
   .createQueryBuilder("survey_application")
-  .select('DISTINCT ON (survey_application.group) survey_application.group as group').orderBy("survey_application.group", "ASC").getRawMany();
+  .select(
+    'DISTINCT ON (survey_application.group) survey_application.group as group')
+  .orderBy("survey_application.group", "ASC").getRawMany();
 
   return res.json(grpNames);
 });
 
 // Gets a list of survey applications
 router.get('/', async function (req, res) {
+  const whereOpts = _.isNil(req.query['group']) ?
+    {} :
+    {group: req.query['group']}
+
   let surveyApps = await getConnection().getRepository(SurveyApplication)
-  .find();
+  .find({
+    where:whereOpts
+  });
 
   return res.json(surveyApps);
 });

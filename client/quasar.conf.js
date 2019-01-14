@@ -27,12 +27,14 @@ module.exports = function (ctx) {
     build: {
       env: ctx.dev ? {
         AUTH_HOST: JSON.stringify(process.env.AUTH_HOST),
+        QA4L_CRCSI_ACCOUNTS_CLIENT_ID: JSON.stringify(process.env.QA4L_CRCSI_ACCOUNTS_CLIENT_ID),
         NODE_ENV: JSON.stringify('development'),
         S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-development'),
         PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
         DESCRIPTION: JSON.stringify(require('./package.json').description)
       } : {
         AUTH_HOST: JSON.stringify(process.env.AUTH_HOST),
+        QA4L_CRCSI_ACCOUNTS_CLIENT_ID: JSON.stringify(process.env.QA4L_CRCSI_ACCOUNTS_CLIENT_ID),
         NODE_ENV: JSON.stringify('production'),
         S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-staging'),
         PRODUCT_NAME: JSON.stringify(require('./package.json').productName),

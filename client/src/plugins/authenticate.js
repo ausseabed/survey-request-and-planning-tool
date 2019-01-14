@@ -1,14 +1,14 @@
 import VueAuthenticate from 'vue-authenticate';
 
 const authServer = process.env.AUTH_HOST
-console.log(authServer)
+const clientId = process.env.QA4L_CRCSI_ACCOUNTS_CLIENT_ID
 
 export default ({ app, router, store, Vue }) => {
   Vue.use(VueAuthenticate, {
 
 	  providers: {
 		crcsi: {
-		  clientId: '076924',
+		  clientId: clientId,
 		  redirectUri: window.location.origin + '/auth/callback', // Your client app URL
 
 		  name: 'crcsi',

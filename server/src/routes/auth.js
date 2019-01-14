@@ -8,13 +8,9 @@ var jwt = require('jsonwebtoken');
 var fs = require('fs');
 var crypto = require('crypto');
 var _ = require('lodash');
-var db = require('../lib/model/db')();
 var AWS = require("aws-sdk");
 var base64url = require("base64url");
 var resolve = require('path').resolve;
-
-var kms_endpoint = new AWS.Endpoint('https://kms.ap-southeast-2.amazonaws.com');
-var kms = new AWS.KMS({ region: process.env.AWS_DEFAULT_REGION, endpoint: kms_endpoint });
 
 import { getConnection } from 'typeorm';
 import { User } from '../lib/entity/user';
@@ -31,7 +27,12 @@ router.post('/:provider', function (req, res) {
 });
 
 function crcsiAuth(req, res) {
-  Axios.post(config.get('auth.crcsi.tokenEndpoint'), querystring.stringify({
+  const authTokenEndpoint =
+    `${process.env.QA4L_CRCSI_ACCOUNTS_URL}o/oauth2/token`;
+  const authUserInfoEndpoint =
+    `${process.env.QA4L_CRCSI_ACCOUNTS_URL}o/oauth2/userinfo`;
+
+  Axios.post(authTokenEndpoint, querystring.stringify({
     client_id: process.env.QA4L_CRCSI_ACCOUNTS_CLIENT_ID,
     client_secret: process.env.QA4L_CRCSI_ACCOUNTS_SECRET,
     code: req.body.code,
@@ -47,7 +48,7 @@ function crcsiAuth(req, res) {
       logger.error('CRCSI responsed with error', { id: logid });
       res.status(500).json({ error: responseJson.error, id: logid });
     } else {
-      return Axios.get(config.get('auth.crcsi.userInfoEndpoint'), {
+      return Axios.get(authUserInfoEndpoint, {
         headers: { Authorization: 'Bearer ' + responseJson.access_token }
       })
       .then((userInfo) => {
@@ -88,6 +89,7 @@ function crcsiAuth(req, res) {
     return user;
   })
   .then(function (user) {
+    var kms = new AWS.KMS({ region: process.env.AWS_DEFAULT_REGION});
     kms.decrypt({
       CiphertextBlob: fs.readFileSync(resolve(__dirname + './../../ssh_keys/private.encrypted'))
     }, (err, data) => {

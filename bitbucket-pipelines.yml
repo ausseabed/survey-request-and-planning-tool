@@ -26,7 +26,7 @@ pipelines:
           script:
             # Configure things
             - export IMAGE_TAG=$BITBUCKET_BRANCH-$BITBUCKET_COMMIT
-            - export AUTH_HOST=https://staging.accounts.crcsi.com.au
+            - export AUTH_HOST=https://accounts.staging.frontiersi.io
             - export AUTH_ID=720174
             # Log in to Docker
             - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD

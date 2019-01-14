@@ -13,6 +13,6 @@ services:
   api:
     build:
       context: ./server
-    env_file: ../config/server.conf
+    env_file: ./server.conf
     environment:
       - ENVIRONMENT=production

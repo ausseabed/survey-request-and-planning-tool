@@ -2,7 +2,7 @@
     build:
       context: ./server
       dockerfile: Dockerfile
-    env_file: ../config/server.conf
+    env_file: ./server.conf
     environment:
       - POSTGRES_HOSTNAME=db-postgres
       - AWS_DYNAMODB_ENDPOINT=http://db-dynamo:5433
@@ -21,4 +21,4 @@
 
   db-postgres: &db-postgres
     image: mdillon/postgis:9.6
-    env_file: ../config/server.conf
+    env_file: ./server.conf

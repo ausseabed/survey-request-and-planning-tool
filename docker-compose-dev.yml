@@ -17,7 +17,7 @@ services:
   api:
     build:
       context: ./server
-    env_file: ../config/server.conf
+    env_file: ./server.conf
     environment:
       - POSTGRES_HOSTNAME=db-postgres
       - AUTH_SERVER=https://staging.accounts.crcsi.com.au/o/oauth2

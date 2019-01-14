@@ -5,6 +5,7 @@ import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
 import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
+import { SurveyApplication } from './survey-application';
 
 // valid values for the `projectStatus` attribute
 export const PROJECT_STATUSES = [
@@ -74,5 +75,11 @@ export class ProjectMetadata {
     instrumentType => instrumentType.projectMetadatas)
   @JoinTable()
   instrumentTypes;
+
+  @ManyToMany(
+    type => SurveyApplication,
+    surveyApplication => surveyApplication.projectMetadatas)
+  @JoinTable()
+  applications;
 
 }

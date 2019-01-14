@@ -6,6 +6,7 @@ var dataCaptureTypeRoutes = require('./api/data-capture-type');
 var instrumentTypeRoutes = require('./api/instrument-type');
 var projectMetadataRoutes = require('./api/project-metadata');
 var organisationRoutes = require('./api/organisation');
+var surveyApplicationRoutes = require('./api/survey-application');
 
 import { isAuthenticated } from './utils';
 
@@ -17,6 +18,7 @@ router
 .use('/instrument-type', instrumentTypeRoutes)
 .use('/project-metadata', projectMetadataRoutes)
 .use('/organisation', organisationRoutes)
+.use('/survey-application', surveyApplicationRoutes)
 
 
 module.exports = router;

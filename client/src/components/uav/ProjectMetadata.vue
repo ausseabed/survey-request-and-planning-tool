@@ -187,7 +187,7 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Data capture type">
+                     label="Data to capture">
               <q-select multiple
                         :value="projectDataCaptureTypes"
                         @change="setDataCaptureTypes($event)"

@@ -8,6 +8,7 @@ var jwt = require('jsonwebtoken');
 var fs = require('fs');
 var crypto = require('crypto');
 var _ = require('lodash');
+const url = require('url');
 var AWS = require("aws-sdk");
 var base64url = require("base64url");
 var resolve = require('path').resolve;
@@ -28,9 +29,9 @@ router.post('/:provider', function (req, res) {
 
 function crcsiAuth(req, res) {
   const authTokenEndpoint =
-    `${process.env.QA4L_CRCSI_ACCOUNTS_URL}o/oauth2/token`;
+    url.resolve(process.env.AUTH_HOST, 'o/oauth2/token');
   const authUserInfoEndpoint =
-    `${process.env.QA4L_CRCSI_ACCOUNTS_URL}o/oauth2/userinfo`;
+    url.resolve(process.env.AUTH_HOST, 'o/oauth2/userinfo');
 
   Axios.post(authTokenEndpoint, querystring.stringify({
     client_id: process.env.QA4L_CRCSI_ACCOUNTS_CLIENT_ID,

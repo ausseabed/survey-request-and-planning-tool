@@ -20,7 +20,6 @@ services:
     env_file: ./server.conf
     environment:
       - POSTGRES_HOSTNAME=db-postgres
-      - AUTH_SERVER=https://staging.accounts.crcsi.com.au/o/oauth2
       - PYTHONUNBUFFERED=0
       - ENVIRONMENT=development
       - AWS_DEFAULT_REGION=ap-southeast-2

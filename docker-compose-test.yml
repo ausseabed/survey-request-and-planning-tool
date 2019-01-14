@@ -6,7 +6,6 @@
     environment:
       - POSTGRES_HOSTNAME=db-postgres
       - AWS_DYNAMODB_ENDPOINT=http://db-dynamo:5433
-      - AUTH_SERVER=https://staging.accounts.crcsi.com.au/o/oauth2
       - PYTHONUNBUFFERED=0
       - ENVIRONMENT=DEVELOPMENT
     links:

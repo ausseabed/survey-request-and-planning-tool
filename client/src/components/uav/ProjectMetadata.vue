@@ -407,6 +407,13 @@ export default Vue.extend({
       this.$store.dispatch('uav_projectmetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
         this.$router.replace({ path: `/uav/project-metadata/${pmd.id}` })
+        this.$q.notify({
+          message: `Saved project metadata`,
+          type: 'positive',
+          color: 'positive',
+          closeBtn: true,
+          timeout: 700,
+        });
       });
     },
 

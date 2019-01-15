@@ -106,9 +106,9 @@ export default Vue.extend({
       }
       // this.map.addGeojsonFeature(geojson);
       console.log(geojson);
-      this.$store.commit('uav_projectmetadata/setAoi', geojson);
+      this.$store.commit('projectMetadata/setAoi', geojson);
       this.$store.dispatch(
-        'uav_projectmetadata/checkAoi', { id: this.id })
+        'projectMetadata/checkAoi', { id: this.id })
       .then(matchingProjMetas => {
         console.log(matchingProjMetas);
         this.matchingProjMetas = matchingProjMetas;

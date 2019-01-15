@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { EventBus } from './../../../../event-bus';
+import { EventBus } from './../../../event-bus';
 
 export const checkAoi = ({ commit, state }, payload) => {
   return new Promise((resolve, reject) => {

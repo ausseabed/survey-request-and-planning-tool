@@ -296,7 +296,7 @@ export default Vue.extend({
       this.map.clear();
       if (this.$route.params.id) {
         this.$store.dispatch(
-          'uav_projectmetadata/getProjectMetadata', { id: this.$route.params.id })
+          'projectMetadata/getProjectMetadata', { id: this.$route.params.id })
         .then(projectMetadata => {
           this.patchSelectLists(projectMetadata);
           if (projectMetadata.surveyApplication) {
@@ -307,19 +307,19 @@ export default Vue.extend({
           this.canCheckGeometry = true;
         });
       } else {
-        this.$store.commit('uav_projectmetadata/reset');
+        this.$store.commit('projectMetadata/reset');
       }
     },
 
     update(key, event) {
-      this.$store.commit('uav_projectmetadata/update', {
+      this.$store.commit('projectMetadata/update', {
         path: key,
         value: event
       })
     },
 
     setStartDate(startDate) {
-      this.$store.commit('uav_projectmetadata/setStartDate', startDate);
+      this.$store.commit('projectMetadata/setStartDate', startDate);
     },
 
     setSelectedSurveyApplication(surveyApplication) {
@@ -343,12 +343,12 @@ export default Vue.extend({
           surveyApplication);
       });
 
-      this.$store.commit('uav_projectmetadata/setSurveyApplication',
+      this.$store.commit('projectMetadata/setSurveyApplication',
         surveyApplication);
     },
 
     setAoi(geojson) {
-      this.$store.commit('uav_projectmetadata/setAoi', geojson);
+      this.$store.commit('projectMetadata/setAoi', geojson);
       this.$v.areaOfInterest.$touch();
     },
 
@@ -385,13 +385,13 @@ export default Vue.extend({
 
     setInstrumentTypes(instrumentTypes) {
       this.$store.commit(
-        'uav_projectmetadata/setInstrumentTypes',
+        'projectMetadata/setInstrumentTypes',
         instrumentTypes);
     },
 
     setDataCaptureTypes(dataCaptureTypes) {
       this.$store.commit(
-        'uav_projectmetadata/setDataCaptureTypes',
+        'projectMetadata/setDataCaptureTypes',
         dataCaptureTypes);
     },
 
@@ -403,7 +403,7 @@ export default Vue.extend({
         return
       }
 
-      this.$store.dispatch('uav_projectmetadata/save').then(pmd => {
+      this.$store.dispatch('projectMetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
         this.$router.replace({ path: `/project-metadata/${pmd.id}` })
         this.$q.notify({
@@ -426,7 +426,7 @@ export default Vue.extend({
         // an existing name. If they are, then just add if to the selected
         // list and return.
         this.$store.commit(
-          'uav_projectmetadata/addOrganisation',filteredOrgs[0]);
+          'projectMetadata/addOrganisation',filteredOrgs[0]);
         return;
       }
 
@@ -438,7 +438,7 @@ export default Vue.extend({
 
       this.$store.dispatch('organisation/saveOrganisation', org)
       .then(newOrg => {
-        this.$store.commit('uav_projectmetadata/addOrganisation',newOrg);
+        this.$store.commit('projectMetadata/addOrganisation',newOrg);
         this.$q.notify(`Created new organisation ${newOrg.name}`);
         this.orgSearchTerms = "";
       }, error => {
@@ -449,7 +449,7 @@ export default Vue.extend({
     checkGeometry() {
       // Send geojson to server to check for interescting surveys
       this.$store.dispatch(
-        'uav_projectmetadata/checkAoi', { id: this.id })
+        'projectMetadata/checkAoi', { id: this.id })
       .then(matchingProjMetas => {
         console.log(matchingProjMetas);
         this.matchingProjMetas = matchingProjMetas;
@@ -520,7 +520,7 @@ export default Vue.extend({
         return;
       }
 
-      this.$store.commit('uav_projectmetadata/addOrganisation',org);
+      this.$store.commit('projectMetadata/addOrganisation',org);
       this.orgSearchTerms = "";
     },
     parseOrganisations() {
@@ -532,7 +532,7 @@ export default Vue.extend({
       })
     },
     removeOrganisation(org) {
-      this.$store.commit('uav_projectmetadata/removeOrganisation',org);
+      this.$store.commit('projectMetadata/removeOrganisation',org);
     },
 
     mouseleaveMatchingProjMeta() {
@@ -547,18 +547,18 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
-      id: 'uav_projectmetadata/id',
-      surveyName: 'uav_projectmetadata/surveyName',
-      contactPerson: 'uav_projectmetadata/contactPerson',
-      email: 'uav_projectmetadata/email',
-      comment: 'uav_projectmetadata/comment',
-      vessel: 'uav_projectmetadata/vessel',
-      startDate: 'uav_projectmetadata/startDate',
-      areaOfInterest: 'uav_projectmetadata/areaOfInterest',
-      projectOrganisations: 'uav_projectmetadata/organisations',
-      projectInstrumentTypes: 'uav_projectmetadata/instrumentTypes',
-      projectDataCaptureTypes: 'uav_projectmetadata/dataCaptureTypes',
-      projectSurveyApplication: 'uav_projectmetadata/surveyApplication',
+      id: 'projectMetadata/id',
+      surveyName: 'projectMetadata/surveyName',
+      contactPerson: 'projectMetadata/contactPerson',
+      email: 'projectMetadata/email',
+      comment: 'projectMetadata/comment',
+      vessel: 'projectMetadata/vessel',
+      startDate: 'projectMetadata/startDate',
+      areaOfInterest: 'projectMetadata/areaOfInterest',
+      projectOrganisations: 'projectMetadata/organisations',
+      projectInstrumentTypes: 'projectMetadata/instrumentTypes',
+      projectDataCaptureTypes: 'projectMetadata/dataCaptureTypes',
+      projectSurveyApplication: 'projectMetadata/surveyApplication',
       organisations: 'organisation/organisations',
       instrumentTypes: 'instrumentType/instrumentTypes',
       dataCaptureTypes: 'dataCaptureType/dataCaptureTypes',

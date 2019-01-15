@@ -129,7 +129,7 @@
         this.$router.push('/uav/tender');
       },
       gotoProjectMetadata() {
-        this.$store.commit('uav_projectmetadata/reset');   // Reset tender store
+        this.$store.commit('projectMetadata/reset');   // Reset tender store
         this.$router.push('/uav/project-metadata');
       },
       openTender(id) {

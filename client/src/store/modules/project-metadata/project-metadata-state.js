@@ -1,7 +1,7 @@
 // import * as actions from './uav-project-metadata-actions'
-import * as actions from './uav-project-metadata-actions'
-import * as getters from './uav-project-metadata-getters'
-import * as mutations from './uav-project-metadata-mutations'
+import * as actions from './project-metadata-actions'
+import * as getters from './project-metadata-getters'
+import * as mutations from './project-metadata-mutations'
 
 function initialState() {
   return {

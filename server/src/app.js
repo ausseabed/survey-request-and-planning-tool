@@ -47,18 +47,9 @@ createConnection().then(connection => {
     `(${connOpts.type})`);
 
   if (!process.env.AWS_DEFAULT_REGION ||
-      !process.env.AWS_ACCESS_KEY ||
+      !process.env.AWS_ACCESS_KEY_ID ||
       !process.env.AWS_SECRET_ACCESS_KEY) {
     console.log("AWS related environment variables not set");
-  } else {
-    console.log("Setting AWS config based on environment variables");
-    // needed for AWS key management system (in auth)
-    var params = {
-        region: process.env.AWS_DEFAULT_REGION,
-        accessKeyId: process.env.AWS_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-    }
-    AWS.config.update(params);
   }
   AWS.config.setPromisesDependency(require('bluebird'));
 

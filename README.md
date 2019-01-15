@@ -21,10 +21,10 @@ The way this is set up, there are X docker containers:
 ## Configuration
 The following configuration parameters are required. These are set as environment variables in the client and server config files.
 
-* `QA4L_CRCSI_ACCOUNTS_SECRET`  
+* `AUTH_CLIENT_SECRET`  
     * obtained from crcsi accounts drupal admin interface (view client details)
-    * This secret must match the `QA4L_CRCSI_ACCOUNTS_CLIENT_ID` id
-* `AWS_AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY`, `AWS_SECRET_ACCESS_KEY`
+    * This secret must match the `AUTH_CLIENT_ID` id
+* `AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
     * For an AWS account that has access to S3.
     * Local deployments of QA4MB make use of remote S3.  
 

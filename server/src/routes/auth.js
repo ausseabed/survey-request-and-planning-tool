@@ -34,8 +34,8 @@ function crcsiAuth(req, res) {
     url.resolve(process.env.AUTH_HOST, 'o/oauth2/userinfo');
 
   Axios.post(authTokenEndpoint, querystring.stringify({
-    client_id: process.env.QA4L_CRCSI_ACCOUNTS_CLIENT_ID,
-    client_secret: process.env.QA4L_CRCSI_ACCOUNTS_SECRET,
+    client_id: process.env.AUTH_CLIENT_ID,
+    client_secret: process.env.AUTH_CLIENT_SECRET,
     code: req.body.code,
     redirect_uri: req.body.redirectUri,
     state: req.body.state,

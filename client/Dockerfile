@@ -5,7 +5,7 @@ WORKDIR $APPDIR
 
 # We need some build environment variables to switch settings with
 ARG AUTH_HOST
-ARG QA4L_CRCSI_ACCOUNTS_CLIENT_ID
+ARG AUTH_CLIENT_ID
 
 RUN echo $API_HOST
 

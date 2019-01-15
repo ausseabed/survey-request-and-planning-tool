@@ -7,7 +7,7 @@ services:
       target: builder
     environment:
       - AUTH_HOST=https://staging.accounts.crcsi.com.au
-      - QA4L_CRCSI_ACCOUNTS_CLIENT_ID=720174
+      - AUTH_CLIENT_ID=720174
     volumes:
       - ./client:/code
     ports:

@@ -454,7 +454,9 @@ export default Vue.extend({
         console.log(matchingProjMetas);
         this.matchingProjMetas = matchingProjMetas;
         const areaOfInterests = matchingProjMetas.map(mpm => {
-          return mpm.areaOfInterest;
+          let f = mpm.areaOfInterest;
+          f.id = mpm.id;
+          return f;
         });
         this.map.setGeojsonFeatureIntersecting(areaOfInterests);
       })
@@ -535,16 +537,11 @@ export default Vue.extend({
 
     mouseleaveMatchingProjMeta() {
       //clears selection in map
-      this.map.highlightFeatureIndex(-1);
+      this.map.highlightFeatureId(undefined);
     },
 
     mouseoverMatchingProjMeta(matchingProjMeta) {
-      const index = this.matchingProjMetas.findIndex(mpm => {
-        return mpm.id == matchingProjMeta.id;
-      });
-      if (index != -1) {
-        this.map.highlightFeatureIndex(index);
-      }
+      this.map.highlightFeatureId(matchingProjMeta.id);
     }
   },
 

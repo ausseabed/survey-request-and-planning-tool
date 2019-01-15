@@ -209,9 +209,26 @@ var OlMap = function (target, options) {
           options.initialized(event);
         }
       });
+      this.map.getView().on('propertychange', (event) => {
+        let extents = undefined;
+        switch (event.key) {
+          case 'resolution':
+            extents = this.getExtents();
+            break;
+          case 'center':
+            extents = this.getExtents();
+            break;
+        }
+        if (typeof this.onExtentsChange === 'function' && extents) {
+          this.onExtentsChange(extents);
+        }
+      });
       this.source = source;
       this.sourceIntersecting = sourceIntersecting;
       this.selectInteraction = selectInteraction;
+    },
+    getExtents: function() {
+      return this.map.getView().calculateExtent();
     },
     addGeojsonUrl: function (url) {
       // Add geojson from url
@@ -238,6 +255,7 @@ var OlMap = function (target, options) {
       this.sourceIntersecting.clear();
       geojsons.forEach(geojson => {
         const olf = (new ol.format.GeoJSON()).readFeatures(geojson);
+        olf[0].set('id',geojson.id);
         this.sourceIntersecting.addFeatures(olf);
       });
     },
@@ -248,15 +266,18 @@ var OlMap = function (target, options) {
         this.map.getView().fit(source.getExtent());
       }
     },
-    highlightFeatureIndex: function (index){
+    highlightFeatureId: function (id){
       this.selectInteraction.getFeatures().clear();
-      if (index == -1) {
+      if (!id) {
         return;
       }
-      const feat = this.sourceIntersecting.getFeatures()[index];
+      const feat = this.sourceIntersecting.getFeatures().find((f) => {
+        return f.get('id') == id;
+      });
       this.selectInteraction.getFeatures().push(feat);
     },
     onAdd: null,
+    onExtentsChange: null,
     set: function (value) {
       if (value) {
         this.addFeatures(this.source, (new ol.format.GeoJSON()).readFeatures(JSON.parse(value)));

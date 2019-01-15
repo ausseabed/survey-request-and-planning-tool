@@ -162,7 +162,7 @@
                      inset="full"
                      label="Vessel">
               <q-input :value="vessel"
-                       @change="update('vessel', $event)"
+                       @input="update('vessel', $event)"
                        type="text" />
             </q-field>
 
@@ -233,7 +233,7 @@
                      inset="full"
                      label="Comments">
               <q-input :value="comment"
-                       @change="update('comment', $event)"
+                       @input="update('comment', $event)"
                        type="textarea" />
             </q-field>
 

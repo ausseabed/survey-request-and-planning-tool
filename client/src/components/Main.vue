@@ -1,97 +1,151 @@
 <template>
-  <div class="view-parallax">
-    <q-parallax :src="'statics/banner.jpg'" :height="600">
-      <div slot="loading">Loading...</div>
-    </q-parallax>
+  <q-page :style-fn="heightTweak" >
+    <div class="overflow-hidden fit">
+      <div class="row q-pt-md q-pr-md gutter-sm fit ">
+        <div class="col-4">
+          <q-card class="column no-margin full-height justify-between">
+            <div class="col-auto">
+              <q-card-title>
+                Projects
+              </q-card-title>
+              <q-card-separator />
+            </div>
+            <q-card-main class="col">
+              <q-scroll-area class="fit">
+                <q-list no-border highlight
+                  @mouseleave.native="mouseleaveMatchingProjMeta">
+                  <q-item
+                    v-for="matchingProjMeta in matchingProjMetas"
+                    :key="matchingProjMeta.id"
+                    @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
+                    :to="'/project-metadata/' + matchingProjMeta.id"
+                    >
 
-    <div class="layout-padding">
-      <h5 style="text-align: center">Automated quality assurance for point clouds</h5>
-      <h6 style="text-align: center">Collect & use data with confidence</h6>
+                    <q-item-main>
+                      <q-item-tile label>{{matchingProjMeta.surveyName}}</q-item-tile>
+                      <q-item-tile sublabel>{{matchingProjMeta.projectStatus}}</q-item-tile>
+                    </q-item-main>
+
+                  </q-item>
+                </q-list>
+
+              </q-scroll-area>
+              <!-- <div class="q-card-subtitle"><span>Subtitle</span></div> -->
+            </q-card-main>
+            <div class="col-auto">
+              <q-card-separator />
+              <q-card-actions align="end">
+                <q-btn flat icon="add" label="Add project"
+                  @click="clickNewProject">
+                </q-btn>
+              </q-card-actions>
+            </div>
+          </q-card>
+
+        </div>
+        <div class="col-8">
+          <q-card class="no-margin full-height">
+            <!-- <div>Hi2</div> -->
+            <div ref="mapDiv" id="mapDiv" class="fit"></div>
+          </q-card>
+
+        </div>
+      </div>
     </div>
 
-    <div class="layout-padding row">
-      <q-card flat class="col">
-        <q-card-title>
-          <div class="column items-center">
-            <q-icon style="text-align: center" name="fas fa-plane" size="5rem" />
-            <big>LiDAR</big>
-          </div>
-        </q-card-title>
-        <q-card-main>
-          <p>
-            QA4LiDAR simplifies, standardises and automates the quality assurance process for airborne topographic and bathymetric LiDAR data. The tool saves users time with robust data quality that is fit-for-use.
-          </p>
-        </q-card-main>
-        <q-card-actions>
-          <q-btn flat color="primary">Get Started</q-btn>
-        </q-card-actions>
-      </q-card>
+  </q-page>
 
-      <q-card flat class="col">
-        <q-card-title>
-          <div class="column items-center">
-            <q-icon style="text-align: center" name="directions_car" size="5rem" />
-            <big>MOBiLE</big>
-          </div>
-        </q-card-title>
-        <q-card-main>
-          <p>
-            Transport and road agencies around Australia recognise the significant role mobile LiDAR and imagery can play in managing their assets. To maximise the use of mobile LiDAR, substantial amounts of time are spent assessing the quality of the acquired data and extracting key measurements.
-          </p>
-        </q-card-main>
-        <q-card-actions>
-          <q-btn flat color="primary">Get Started</q-btn>
-        </q-card-actions>
-      </q-card>
-
-      <q-card flat class="col">
-        <q-card-title>
-          <div class="column items-center">
-            <q-icon style="text-align: center" name="toys" size="5rem" />
-            <big>UAV</big>
-          </div>
-        </q-card-title>
-        <q-card-main>
-          <p>
-            QA4UAV will be an automated quality assurance software tool for UAV imagery and photogrammetric products, including point clouds and digital surface models (DSMs). It will leverage components of the existing QA4LiDAR and QA4MOBiLE tools, to build another tool in the “QA4” suite.
-          </p>
-        </q-card-main>
-        <q-card-actions>
-          <q-btn flat color="primary" @click="goUav">Get Started</q-btn>
-        </q-card-actions>
-      </q-card>
-      <q-card flat class="col">
-        <q-card-title>
-          <div class="column items-center">
-            <q-icon style="text-align: center" name="directions_boat" size="5rem" />
-            <big>Bathymetry</big>
-          </div>
-        </q-card-title>
-        <q-card-main>
-          <p>
-            TBA
-          </p>
-        </q-card-main>
-        <q-card-actions>
-          <q-btn flat color="primary">Get Started</q-btn>
-        </q-card-actions>
-      </q-card>
-    </div>
-  </div>
 </template>
 
 <script>
-  import { QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions, QBtn } from 'quasar'
-  export default {
-    components: {
-      QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions, QBtn
+import Vue from 'vue'
+import { QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions, QBtn } from 'quasar'
+const _ = require('lodash');
+
+import { errorHandler } from './mixins/error-handling'
+import OlMap from './olmap/olmap';
+
+export default Vue.extend({
+  mixins: [errorHandler],
+  components: {
+    QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions, QBtn
+  },
+
+  mounted() {
+    var olmap = OlMap(this.$refs.mapDiv, {
+      basemap: "osm"
+    })
+    olmap.initMap();
+    this.map = olmap;
+    this.map.onExtentsChange = (extents) => {
+      this.debounceExtents(extents);
+    };
+    this.fetchProjects(this.map.getExtents());
+  },
+
+  methods: {
+    clickNewProject() {
+      this.$router.push('/project-metadata');
     },
-    methods: {
-      goUav() {
-        this.$router.push('/uav');
+    heightTweak (offset) {
+      return {
+        minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
       }
+    },
+    fetchProjects (extents) {
+      const geojson = {
+        type:"MultiPolygon",
+        coordinates:[[[
+          [extents[0],extents[1]],
+          [extents[0],extents[3]],
+          [extents[2],extents[3]],
+          [extents[2],extents[1]],
+          [extents[0],extents[1]],
+        ]]]
+      }
+      // this.map.addGeojsonFeature(geojson);
+      console.log(geojson);
+      this.$store.commit('uav_projectmetadata/setAoi', geojson);
+      this.$store.dispatch(
+        'uav_projectmetadata/checkAoi', { id: this.id })
+      .then(matchingProjMetas => {
+        console.log(matchingProjMetas);
+        this.matchingProjMetas = matchingProjMetas;
+        const areaOfInterests = matchingProjMetas.map(mpm => {
+          let f = mpm.areaOfInterest;
+          f.id = mpm.id;
+          return f;
+        });
+        this.map.setGeojsonFeatureIntersecting(areaOfInterests);
+      })
+      .catch((e) => {
+        this.notify('negative', 'Error fetching projects')
+      });
+    },
+
+    debounceExtents: _.debounce(function(extents) {
+      this.fetchProjects(extents);
+    }, 500),
+
+    mouseoverMatchingProjMeta(matchingProjMeta) {
+      this.map.highlightFeatureId(matchingProjMeta.id);
+    },
+    mouseleaveMatchingProjMeta() {
+      //clears selection in map
+      this.map.highlightFeatureId(undefined);
+    },
+
+  },
+
+  data() {
+    return {
+      map: null,
+      matchingProjMetas:undefined,
     }
   }
+
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

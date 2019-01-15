@@ -90,11 +90,15 @@ function crcsiAuth(req, res) {
     return user;
   })
   .then(function (user) {
-    var kms = new AWS.KMS({ region: process.env.AWS_DEFAULT_REGION});
+    var kms = new AWS.KMS();
     kms.decrypt({
       CiphertextBlob: fs.readFileSync(resolve(__dirname + './../../ssh_keys/private.encrypted'))
     }, (err, data) => {
-      if (err) return res.status(500).json({ error: "Error decrypting" });
+      if (err) {
+        var logid = logIdGen();
+        logger.error(err, { id: logid });
+        return res.status(500).json({ error: "Error decrypting" });
+      }
 
       var cert_priv = base64url.decode(data.Plaintext.toString("base64"));
       var signed_jwt = jwt.sign({

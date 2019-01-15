@@ -46,7 +46,7 @@ createConnection().then(connection => {
   console.log(`Connected to database ${connOpts.host}:${connOpts.port} ` +
     `(${connOpts.type})`);
 
-  if (!process.env.AWS_DEFAULT_REGION ||
+  if (!process.env.AWS_REGION ||
       !process.env.AWS_ACCESS_KEY_ID ||
       !process.env.AWS_SECRET_ACCESS_KEY) {
     console.log("AWS related environment variables not set");

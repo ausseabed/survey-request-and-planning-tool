@@ -148,6 +148,9 @@
               </q-item-side>
 
             </div>
+            <div v-if="$v.areaOfInterest.$error" style="color:red;">
+              Area of Interest has not been provided.
+            </div>
 
           </q-card-main>
         </q-card>
@@ -347,6 +350,7 @@ export default Vue.extend({
 
     setAoi(geojson) {
       this.$store.commit('uav_projectmetadata/setAoi', geojson);
+      this.$v.areaOfInterest.$touch();
     },
 
     patchSelectLists(projectMetadata) {
@@ -594,7 +598,7 @@ export default Vue.extend({
     surveyName: { required },
     contactPerson: { required },
     email: { required, email },
-
+    areaOfInterest: {required },
     startDate: { required },
     selectedSurveyApplication: { required },
     selectedSurveyApplicationGroup: { required },

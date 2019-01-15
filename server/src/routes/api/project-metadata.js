@@ -30,7 +30,12 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
   .findOne(
     req.params.id,
     {
-      relations: ["organisations", "instrumentTypes", "dataCaptureTypes"]
+      relations: [
+        "organisations",
+        "instrumentTypes",
+        "dataCaptureTypes",
+        "surveyApplication",
+      ]
     }
   );
 
@@ -56,6 +61,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.startDate = req.body.startDate;
   project.instrumentTypes = req.body.instrumentTypes;
   project.dataCaptureTypes = req.body.dataCaptureTypes;
+  project.surveyApplication = req.body.surveyApplication;
   if (!_.isNil(req.body.projectStatus)) {
     const status = req.body.projectStatus
     if (!PROJECT_STATUSES.includes(status)) {

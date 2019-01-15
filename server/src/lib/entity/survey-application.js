@@ -17,10 +17,9 @@ export class SurveyApplication {
   @Column("varchar")
   group = undefined;
 
-  @ManyToMany(
+  @OneToMany(
     type => ProjectMetadata,
-    projectMetadata => projectMetadata.applications)
-  @JoinTable()
+    projectMetadata => projectMetadata.surveyApplication)
   projectMetadatas;
 
 }

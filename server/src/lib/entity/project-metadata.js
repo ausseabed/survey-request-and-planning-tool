@@ -1,5 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable}
-  from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
+  JoinTable} from "typeorm";
 
 import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
@@ -76,10 +76,9 @@ export class ProjectMetadata {
   @JoinTable()
   instrumentTypes;
 
-  @ManyToMany(
+  @ManyToOne(
     type => SurveyApplication,
     surveyApplication => surveyApplication.projectMetadatas)
-  @JoinTable()
-  applications;
+  surveyApplication;
 
 }

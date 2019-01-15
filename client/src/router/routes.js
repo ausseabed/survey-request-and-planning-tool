@@ -22,8 +22,8 @@ export default [
     { path: '/uav/tender', component: UavTender },
     { path: '/uav/session', component: UavSession },
     { path: '/uav/project', component: UavProjects },
-    { path: '/uav/project-metadata', component: UavProjectMetadata },
-    { path: '/uav/project-metadata/:id', component: UavProjectMetadata },
+    { path: '/project-metadata', component: UavProjectMetadata },
+    { path: '/project-metadata/:id', component: UavProjectMetadata },
 
     {
       path: '/auth/callback',

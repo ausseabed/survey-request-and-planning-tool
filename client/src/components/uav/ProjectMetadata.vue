@@ -4,7 +4,6 @@
       <div class="row justify-between">
         <q-breadcrumbs separator=">" color="light">
           <q-breadcrumbs-el label="Home" icon="home" to="/" />
-          <q-breadcrumbs-el label="UAV" icon="toys" to="/uav" />
           <q-breadcrumbs-el label="Project Metadata" icon="fas fa-clipboard-list" />
         </q-breadcrumbs>
         <q-btn icon="fas fa-save" label="Save"
@@ -122,7 +121,7 @@
                       v-for="matchingProjMeta in matchingProjMetas"
                       :key="matchingProjMeta.id"
                       @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
-                      :to="'/uav/project-metadata/' + matchingProjMeta.id">
+                      :to="'/project-metadata/' + matchingProjMeta.id">
                       <q-item-main :label="matchingProjMeta.surveyName" />
                       <!-- <q-item-side right>
                         <q-btn flat icon="close"
@@ -406,7 +405,7 @@ export default Vue.extend({
 
       this.$store.dispatch('uav_projectmetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
-        this.$router.replace({ path: `/uav/project-metadata/${pmd.id}` })
+        this.$router.replace({ path: `/project-metadata/${pmd.id}` })
         this.$q.notify({
           message: `Saved project metadata`,
           type: 'positive',

@@ -34,3 +34,7 @@ export const removeOrganisation = (state, organisation) => {
 export const setStartDate = (state, startDate) => {
   state.startDate = startDate.getTime();
 }
+
+export const setSurveyApplication = (state, surveyApplication) => {
+  state.surveyApplication = surveyApplication;
+}

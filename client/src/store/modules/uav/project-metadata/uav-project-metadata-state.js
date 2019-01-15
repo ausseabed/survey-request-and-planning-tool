@@ -12,14 +12,13 @@ function initialState() {
     email: null,
     areaOfInterest: null,
     startDate: Date.now(), // should always be in UTC milliseconds
-    purposeSector: null,
-    purposeApplicationArea: null,
     description: null,
     vessel: null,
     instrumentTypes: [],
     dataCaptureTypes: [],
     status: 'planning',
     comment: null,
+    surveyApplication: null,
   }
 }
 

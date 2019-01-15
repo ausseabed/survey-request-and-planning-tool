@@ -43,3 +43,7 @@ export const instrumentTypes = state => {
 export const dataCaptureTypes = state => {
   return state.dataCaptureTypes;
 }
+
+export const surveyApplication = state => {
+  return state.surveyApplication;
+}

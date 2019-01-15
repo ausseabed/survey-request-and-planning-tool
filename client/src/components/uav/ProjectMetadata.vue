@@ -176,6 +176,26 @@
                 @blur="$v.startDate.$touch" />
             </q-field>
 
+            <q-field :label-width="4"
+                     inset="full"
+                     label="Survey purpose - sector">
+              <q-select filter
+                        autofocus-filter
+                        :value="selectedSurveyApplicationGroup"
+                        @change="setSelectedSurveyApplicationGroup($event)"
+                        :options="surveyApplicationGroupOptions" />
+            </q-field>
+
+            <q-field :label-width="4"
+                     inset="full"
+                     label="Survey purpose - Application area">
+              <q-select filter
+                        autofocus-filter
+                        :value="selectedSurveyApplication"
+                        @change="setSelectedSurveyApplication($event)"
+                        :options="surveyApplicationOptions" />
+            </q-field>
+
             <q-field :label-width="2"
                      inset="full"
                      label="Instrument type">
@@ -265,6 +285,10 @@ export default Vue.extend({
           'uav_projectmetadata/getProjectMetadata', { id: this.$route.params.id })
         .then(projectMetadata => {
           this.patchSelectLists(projectMetadata);
+          if (projectMetadata.surveyApplication) {
+            this.setSelectedSurveyApplication(
+              projectMetadata.surveyApplication);
+          }
           this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
           this.canCheckGeometry = true;
         });
@@ -282,6 +306,31 @@ export default Vue.extend({
 
     setStartDate(startDate) {
       this.$store.commit('uav_projectmetadata/setStartDate', startDate);
+    },
+
+    setSelectedSurveyApplication(surveyApplication) {
+      this.$store.commit('surveyApplication/setSelectedSurveyApplication',
+        surveyApplication);
+    },
+
+    setSelectedSurveyApplicationGroup(group) {
+      // can't dispatch from a mutation, so do it here instead
+      this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
+        group);
+      this.$store.dispatch('surveyApplication/getSurveyApplications');
+    },
+
+    setSelectedSurveyApplication(surveyApplication) {
+      this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
+        surveyApplication.group);
+      this.$store.dispatch('surveyApplication/getSurveyApplications')
+      .then(surveyApps => {
+        this.$store.commit('surveyApplication/setSelectedSurveyApplication',
+          surveyApplication);
+      });
+
+      this.$store.commit('uav_projectmetadata/setSurveyApplication',
+        surveyApplication);
     },
 
     setAoi(geojson) {
@@ -409,6 +458,9 @@ export default Vue.extend({
           userSubmitted: false
         }}
       );
+      this.$store.dispatch(
+        'surveyApplication/getSurveyApplicationGroups'
+      )
     },
 
     saveOrganisation(organisation) {
@@ -487,9 +539,14 @@ export default Vue.extend({
       projectOrganisations: 'uav_projectmetadata/organisations',
       projectInstrumentTypes: 'uav_projectmetadata/instrumentTypes',
       projectDataCaptureTypes: 'uav_projectmetadata/dataCaptureTypes',
+      projectSurveyApplication: 'uav_projectmetadata/surveyApplication',
       organisations: 'organisation/organisations',
       instrumentTypes: 'instrumentType/instrumentTypes',
       dataCaptureTypes: 'dataCaptureType/dataCaptureTypes',
+      surveyApplicationGroups: 'surveyApplication/surveyApplicationGroups',
+      surveyApplications: 'surveyApplication/surveyApplications',
+      selectedSurveyApplication: 'surveyApplication/selectedSurveyApplication',
+      selectedSurveyApplicationGroup: 'surveyApplication/selectedSurveyApplicationGroup',
     }),
     instrumentTypeOptions: function () {
       // select component needs a label and value field
@@ -506,7 +563,19 @@ export default Vue.extend({
         return {label: pit.name, value: pit};
       });
       return opts;
-    }
+    },
+    surveyApplicationGroupOptions: function () {
+      const opts = this.surveyApplicationGroups.map(pit => {
+        return {label: pit, value: pit};
+      });
+      return opts;
+    },
+    surveyApplicationOptions: function () {
+      const opts = this.surveyApplications.map(pit => {
+        return {label: pit.name, value: pit};
+      });
+      return opts;
+    },
   },
 
   validations: {

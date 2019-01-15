@@ -12,6 +12,8 @@ import socket from './modules/socket/socket_state'
 import dataCaptureType from './modules/data-capture-type/data-capture-type-state'
 import instrumentType from './modules/instrument-type/instrument-type-state'
 import organisation from './modules/organisation/organisation-state'
+import surveyApplication
+  from './modules/survey-application/survey-application-state'
 
 Vue.use(Vuex)
 
@@ -29,6 +31,7 @@ export default new Vuex.Store({
     dataCaptureType,
     instrumentType,
     organisation,
+    surveyApplication,
   },
   strict: debug
 })

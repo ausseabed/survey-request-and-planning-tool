@@ -178,40 +178,52 @@
 
             <q-field :label-width="4"
                      inset="full"
-                     label="Survey purpose - sector">
+                     label="Survey purpose - sector"
+                     :error="$v.selectedSurveyApplicationGroup.$error"
+                     error-label="Survey application is required">
               <q-select filter
                         autofocus-filter
                         :value="selectedSurveyApplicationGroup"
                         @change="setSelectedSurveyApplicationGroup($event)"
-                        :options="surveyApplicationGroupOptions" />
+                        :options="surveyApplicationGroupOptions"
+                        @blur="$v.selectedSurveyApplicationGroup.$touch"/>
             </q-field>
 
             <q-field :label-width="4"
                      inset="full"
-                     label="Survey purpose - Application area">
+                     label="Survey purpose - Application area"
+                     :error="$v.selectedSurveyApplication.$error"
+                     error-label="Survey application is required">
               <q-select filter
                         autofocus-filter
                         :value="selectedSurveyApplication"
                         @change="setSelectedSurveyApplication($event)"
-                        :options="surveyApplicationOptions" />
+                        :options="surveyApplicationOptions"
+                        @blur="$v.selectedSurveyApplication.$touch"/>
             </q-field>
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Instrument type">
+                     label="Instrument type"
+                     :error="$v.projectInstrumentTypes.$error"
+                     error-label="Instrument type(s) is required">
               <q-select multiple
                         :value="projectInstrumentTypes"
                         @change="setInstrumentTypes($event)"
-                        :options="instrumentTypeOptions" />
+                        :options="instrumentTypeOptions"
+                        @blur="$v.projectInstrumentTypes.$touch"/>
             </q-field>
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Data to capture">
+                     label="Data to capture"
+                     :error="$v.projectDataCaptureTypes.$error"
+                     error-label="Data type(s) to capture are required">
               <q-select multiple
                         :value="projectDataCaptureTypes"
                         @change="setDataCaptureTypes($event)"
-                        :options="dataCaptureTypeOptions" />
+                        :options="dataCaptureTypeOptions"
+                        @blur="$v.projectDataCaptureTypes.$touch"/>
             </q-field>
 
             <q-field :label-width="2"
@@ -250,7 +262,7 @@ timespan.set({
 import axios from 'axios';
 const path = require('path');
 
-import { required, email } from 'vuelidate/lib/validators';
+import { required, email, minLength } from 'vuelidate/lib/validators';
 
 import OlMap from './../olmap/olmap';
 
@@ -584,6 +596,16 @@ export default Vue.extend({
     email: { required, email },
 
     startDate: { required },
+    selectedSurveyApplication: { required },
+    selectedSurveyApplicationGroup: { required },
+    projectInstrumentTypes: {
+      required,
+      minLength:minLength(1)
+    },
+    projectDataCaptureTypes: {
+      required,
+      minLength:minLength(1)
+    },
   },
 
   watch: {

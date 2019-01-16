@@ -26,7 +26,7 @@
                      error-label="Survey name is required"
                      helper="Name of data collection survey">
               <q-input :value="surveyName"
-                       @change="update('surveyName', $event)"
+                       @change="update('projectMetadata.surveyName', $event)"
                        @blur="$v.surveyName.$touch"
                        type="text" />
             </q-field>
@@ -80,7 +80,7 @@
                      :error="$v.contactPerson.$error"
                      error-label="Contact person is required">
               <q-input :value="contactPerson"
-                       @change="update('contactPerson', $event)"
+                       @change="update('projectMetadata.contactPerson', $event)"
                        @blur="$v.contactPerson.$touch"
                        type="textarea" />
             </q-field>
@@ -93,7 +93,7 @@
                      label="Contact email">
               <q-input
                        :value="email"
-                       @change="update('email', $event)"
+                       @change="update('projectMetadata.email', $event)"
                        @blur="$v.email.$touch"
                        type="email" />
             </q-field>
@@ -161,7 +161,7 @@
                      inset="full"
                      label="Vessel">
               <q-input :value="vessel"
-                       @input="update('vessel', $event)"
+                       @input="update('projectMetadata.vessel', $event)"
                        type="text" />
             </q-field>
 
@@ -232,7 +232,7 @@
                      inset="full"
                      label="Comments">
               <q-input :value="comment"
-                       @input="update('comment', $event)"
+                       @input="update('projectMetadata.comment', $event)"
                        type="textarea" />
             </q-field>
 

@@ -8,33 +8,33 @@ export const replace = (state, updated_state) => {
 
 export const setAoi = (state, geojson) => {
 
-  state.areaOfInterest = geojson;
+  state.projectMetadata.areaOfInterest = geojson;
 
 }
 
 export const setInstrumentTypes = (state, instrumentTypes) => {
-  state.instrumentTypes = instrumentTypes;
+  state.projectMetadata.instrumentTypes = instrumentTypes;
 }
 
 export const setDataCaptureTypes = (state, dataCaptureTypes) => {
-  state.dataCaptureTypes = dataCaptureTypes;
+  state.projectMetadata.dataCaptureTypes = dataCaptureTypes;
 }
 
 export const addOrganisation = (state, organisation) => {
-  state.organisations.push(organisation);
+  state.projectMetadata.organisations.push(organisation);
 }
 
 export const removeOrganisation = (state, organisation) => {
-  let index = state.organisations.findIndex(function (o) {
+  let index = state.projectMetadata.organisations.findIndex(function (o) {
     return o.id == organisation.id;
   });
-  state.organisations.splice(index, 1);
+  state.projectMetadata.organisations.splice(index, 1);
 }
 
 export const setStartDate = (state, startDate) => {
-  state.startDate = startDate.getTime();
+  state.projectMetadata.startDate = startDate.getTime();
 }
 
 export const setSurveyApplication = (state, surveyApplication) => {
-  state.surveyApplication = surveyApplication;
+  state.projectMetadata.surveyApplication = surveyApplication;
 }

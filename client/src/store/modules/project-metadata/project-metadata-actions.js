@@ -4,7 +4,7 @@ import { EventBus } from './../../../event-bus';
 export const checkAoi = ({ commit, state }, payload) => {
   return new Promise((resolve, reject) => {
     Vue.axios
-    .post('/api/check-aoi', state.areaOfInterest)
+    .post('/api/check-aoi', state.projectMetadata.areaOfInterest)
     .then((response) => {
       resolve(response.data);
     })
@@ -19,9 +19,9 @@ export const save = ({ commit, state }) => {
   console.log(state);
 
   return new Promise((resolve, reject) => {
-    Vue.axios.post('/api/project-metadata', state)
+    Vue.axios.post('/api/project-metadata', state.projectMetadata)
     .then((response) => {
-      commit('replace', response.data);
+      commit('update', { path: 'projectMetadata', value: response.data })
       resolve(response.data);
     })
     .catch((error) => {
@@ -37,7 +37,7 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
   return new Promise((resolve, reject) => {
     Vue.axios.get(url_endpoint)
     .then((response) => {
-      commit('replace', response.data);
+      commit('update', { path: 'projectMetadata', value: response.data })
       resolve(response.data);
     })
     .catch((error) => {

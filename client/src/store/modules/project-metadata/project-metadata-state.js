@@ -5,20 +5,22 @@ import * as mutations from './project-metadata-mutations'
 
 function initialState() {
   return {
-    id: "",
-    surveyName: null,
-    organisations: [],
-    contactPerson: null,
-    email: null,
-    areaOfInterest: null,
-    startDate: Date.now(), // should always be in UTC milliseconds
-    description: null,
-    vessel: null,
-    instrumentTypes: [],
-    dataCaptureTypes: [],
-    status: 'planning',
-    comment: null,
-    surveyApplication: null,
+    projectMetadata: {
+      id: "",
+      surveyName: null,
+      organisations: [],
+      contactPerson: null,
+      email: null,
+      areaOfInterest: null,
+      startDate: Date.now(), // should always be in UTC milliseconds
+      description: null,
+      vessel: null,
+      instrumentTypes: [],
+      dataCaptureTypes: [],
+      status: 'planning',
+      comment: null,
+      surveyApplication: null,
+    }
   }
 }
 

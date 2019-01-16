@@ -1,49 +1,49 @@
 export const id = state => {
-  return state.id;
+  return state.projectMetadata.id;
 }
 
 export const surveyName = state => {
-  return state.surveyName;
+  return state.projectMetadata.surveyName;
 }
 
 export const contactPerson = state => {
-  return state.contactPerson;
+  return state.projectMetadata.contactPerson;
 }
 
 export const email = state => {
-  return state.email;
+  return state.projectMetadata.email;
 }
 
 export const comment = state => {
-  return state.comment;
+  return state.projectMetadata.comment;
 }
 
 export const vessel = state => {
-  return state.vessel;
+  return state.projectMetadata.vessel;
 }
 
 export const areaOfInterest = state => {
-  return state.areaOfInterest;
+  return state.projectMetadata.areaOfInterest;
 }
 
 export const organisations = state => {
-  return state.organisations;
+  return state.projectMetadata.organisations;
 }
 
 export const startDate = state => {
   const date = new Date();
-  date.setTime(state.startDate);
+  date.setTime(state.projectMetadata.startDate);
   return date;
 }
 
 export const instrumentTypes = state => {
-  return state.instrumentTypes;
+  return state.projectMetadata.instrumentTypes;
 }
 
 export const dataCaptureTypes = state => {
-  return state.dataCaptureTypes;
+  return state.projectMetadata.dataCaptureTypes;
 }
 
 export const surveyApplication = state => {
-  return state.surveyApplication;
+  return state.projectMetadata.surveyApplication;
 }

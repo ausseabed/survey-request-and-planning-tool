@@ -1,3 +1,4 @@
+import Login from 'components/login.vue'
 import Main from 'components/Main.vue'
 
 import UavHome from 'components/uav/Home.vue'
@@ -13,6 +14,7 @@ import StandardDataset from 'components/controls/CreateStandardDataset.vue'
 
 export default [
     { path: '/', component: Main },
+    { path: '/login', component: Login },
 
     { path: '/customdataset/:id', name: 'CreateCustomDataset', component: CustomDataset },
     { path: '/standarddataset/:id', name: 'StandardDataset', component: StandardDataset },

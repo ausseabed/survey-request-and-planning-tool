@@ -57,7 +57,7 @@
       logout() {
         this.$auth.logout();
         this.isAuthenticated = this.$auth.isAuthenticated();
-        //this.$refs.rightSidenav.close();
+        this.$router.push('/login');
       },
       auth() {
         if (this.$auth.isAuthenticated()) {
@@ -65,12 +65,19 @@
         }
 
         this.$auth.authenticate('crcsi')
-          .then(() => {
-            this.isAuthenticated = this.$auth.isAuthenticated();
-          })
-          .catch((e) => {
-            this.isAuthenticated = this.$auth.isAuthenticated();
-          });
+        .then(() => {
+          this.isAuthenticated = this.$auth.isAuthenticated();
+          if (this.isAuthenticated) {
+            if (this.$route.query.redirect) {
+              this.$router.push(this.$route.query.redirect);
+            } else {
+              this.$router.push('/');
+            }
+          }
+        })
+        .catch((e) => {
+          this.isAuthenticated = this.$auth.isAuthenticated();
+        });
       }
     },
     computed: {

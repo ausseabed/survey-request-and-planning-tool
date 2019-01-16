@@ -38,3 +38,7 @@ export const setStartDate = (state, startDate) => {
 export const setSurveyApplication = (state, surveyApplication) => {
   state.projectMetadata.surveyApplication = surveyApplication;
 }
+
+export const setProjectStatuses = (state, statuses) => {
+  state.projectStatuses = statuses;
+}

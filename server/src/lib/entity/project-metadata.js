@@ -9,9 +9,10 @@ import { SurveyApplication } from './survey-application';
 
 // valid values for the `projectStatus` attribute
 export const PROJECT_STATUSES = [
-  "planning",
-  "scheduled",
-  "in progress",
+  "Planning",
+  "Scheduled",
+  "Complete",
+  "Abandoned",
 ];
 
 @Entity()

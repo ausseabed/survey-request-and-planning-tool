@@ -31,6 +31,18 @@
                        type="text" />
             </q-field>
 
+            <q-field
+              label="Status" :label-width="2" inset="full"
+            >
+              <q-option-group
+                type="radio" inline
+                :value="projectStatus"
+                color="secondary"
+                @change="update('projectMetadata.projectStatus', $event)"
+                :options="projectStatusOptions"
+              />
+            </q-field>
+
 
             <q-field :label-width="2"
                      inset="full"
@@ -468,6 +480,7 @@ export default Vue.extend({
     getFormData() {
       // gets the list of all orgs, not just those associated to this project
       this.$store.dispatch('organisation/getOrganisations');
+      this.$store.dispatch('projectMetadata/getProjectStatuses');
       // get data capture types, but only those not created by users (eg; the
       // default system defined ones.
       this.$store.dispatch(
@@ -549,6 +562,8 @@ export default Vue.extend({
     ...mapGetters({
       id: 'projectMetadata/id',
       surveyName: 'projectMetadata/surveyName',
+      projectStatus: 'projectMetadata/projectStatus',
+      projectStatuses: 'projectMetadata/projectStatuses',
       contactPerson: 'projectMetadata/contactPerson',
       email: 'projectMetadata/email',
       comment: 'projectMetadata/comment',
@@ -567,6 +582,12 @@ export default Vue.extend({
       selectedSurveyApplication: 'surveyApplication/selectedSurveyApplication',
       selectedSurveyApplicationGroup: 'surveyApplication/selectedSurveyApplicationGroup',
     }),
+    projectStatusOptions: function () {
+      const opts = this.projectStatuses.map(pit => {
+        return {label: pit, value: pit};
+      });
+      return opts;
+    },
     instrumentTypeOptions: function () {
       // select component needs a label and value field
       const opts = this.instrumentTypes.map(pit => {

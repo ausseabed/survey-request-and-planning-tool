@@ -47,3 +47,11 @@ export const dataCaptureTypes = state => {
 export const surveyApplication = state => {
   return state.projectMetadata.surveyApplication;
 }
+
+export const projectStatus = state => {
+  return state.projectMetadata.projectStatus;
+}
+
+export const projectStatuses = state => {
+  return state.projectStatuses;
+}

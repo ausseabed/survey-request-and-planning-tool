@@ -46,3 +46,12 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
   });
 
 }
+
+export const getProjectStatuses = ({ commit, state }) => {
+  var url_endpoint = '/api/project-metadata/valid-statuses';
+
+  return Vue.axios.get(url_endpoint)
+  .then((response) => {
+    commit('setProjectStatuses', response.data);
+  })
+}

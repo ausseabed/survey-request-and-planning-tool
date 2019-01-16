@@ -17,10 +17,11 @@ function initialState() {
       vessel: null,
       instrumentTypes: [],
       dataCaptureTypes: [],
-      status: 'planning',
+      projectStatus: 'Planning',
       comment: null,
       surveyApplication: null,
-    }
+    },
+    projectStatuses:[],
   }
 }
 

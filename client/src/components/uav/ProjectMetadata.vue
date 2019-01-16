@@ -328,6 +328,14 @@ export default Vue.extend({
         });
       } else {
         this.$store.commit('projectMetadata/reset');
+        // need to clear the selected options here, otherwise they persist
+        // to a new survey
+        this.$store.commit(
+          'surveyApplication/setSelectedSurveyApplicationGroup',
+          undefined);
+        this.$store.commit(
+          'surveyApplication/setSelectedSurveyApplication',
+          undefined);
       }
     },
 

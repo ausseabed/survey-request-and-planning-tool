@@ -15,6 +15,11 @@ export const addSurveyApplication = (state, surveyApplication) => {
 }
 
 export const setSelectedSurveyApplication = (state, surveyApplication) => {
+  if (!surveyApplication) {
+    //  clears selection
+    state.selectedSurveyApplication = undefined;
+    return;
+  }
   // when setting the selected survey application set it to one that already
   // exists in the list
   let surveyAppToSet = undefined;

@@ -9,6 +9,16 @@ export const errorHandler = {
         message: message,
         position: 'bottom-left'
       })
+    },
+    notifySuccess(message) {
+      this.$q.notify({
+        message: message,
+        type: 'positive',
+        color: 'positive',
+        closeBtn: true,
+        timeout: 700,
+      });
+
     }
   }
 }

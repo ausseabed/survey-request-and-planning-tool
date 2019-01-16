@@ -426,13 +426,7 @@ export default Vue.extend({
       this.$store.dispatch('projectMetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
         this.$router.replace({ path: `/project-metadata/${pmd.id}` })
-        this.$q.notify({
-          message: `Saved project metadata`,
-          type: 'positive',
-          color: 'positive',
-          closeBtn: true,
-          timeout: 700,
-        });
+        this.notifySuccess('Saved project metadata');
       });
     },
 
@@ -459,7 +453,7 @@ export default Vue.extend({
       this.$store.dispatch('organisation/saveOrganisation', org)
       .then(newOrg => {
         this.$store.commit('projectMetadata/addOrganisation',newOrg);
-        this.$q.notify(`Created new organisation ${newOrg.name}`);
+        this.notifySuccess(`Created new organisation ${newOrg.name}`);
         this.orgSearchTerms = "";
       }, error => {
         console.error("Failed to save organisation");

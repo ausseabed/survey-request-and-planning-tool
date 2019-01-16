@@ -18,6 +18,7 @@ function initialState() {
       instrumentTypes: [],
       dataCaptureTypes: [],
       projectStatus: 'Planning',
+      quality: null,
       comment: null,
       surveyApplication: null,
     },

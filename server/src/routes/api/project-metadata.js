@@ -72,6 +72,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     project.projectStatus = status;
   }
   project.comment = req.body.comment;
+  project.quality = req.body.quality;
   project.vessel = req.body.vessel;
 
 

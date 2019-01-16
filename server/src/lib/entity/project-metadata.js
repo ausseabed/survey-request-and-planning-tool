@@ -45,6 +45,12 @@ export class ProjectMetadata {
   })
   comment = undefined;
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  quality = undefined;
+
   @ManyToMany(
     type => Organisation,
     organisation => organisation.projectMetadatas)

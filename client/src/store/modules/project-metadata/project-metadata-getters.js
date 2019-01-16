@@ -14,6 +14,10 @@ export const email = state => {
   return state.projectMetadata.email;
 }
 
+export const quality = state => {
+  return state.projectMetadata.quality;
+}
+
 export const comment = state => {
   return state.projectMetadata.comment;
 }

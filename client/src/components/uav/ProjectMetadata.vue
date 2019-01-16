@@ -242,6 +242,14 @@
 
             <q-field :label-width="2"
                      inset="full"
+                     label="Quality">
+              <q-input :value="quality"
+                       @input="update('projectMetadata.quality', $event)"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
                      label="Comments">
               <q-input :value="comment"
                        @input="update('projectMetadata.comment', $event)"
@@ -567,6 +575,7 @@ export default Vue.extend({
       contactPerson: 'projectMetadata/contactPerson',
       email: 'projectMetadata/email',
       comment: 'projectMetadata/comment',
+      quality: 'projectMetadata/quality',
       vessel: 'projectMetadata/vessel',
       startDate: 'projectMetadata/startDate',
       areaOfInterest: 'projectMetadata/areaOfInterest',

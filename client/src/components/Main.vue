@@ -23,8 +23,14 @@
 
                     <q-item-main>
                       <q-item-tile label>{{matchingProjMeta.surveyName}}</q-item-tile>
-                      <q-item-tile sublabel>{{matchingProjMeta.projectStatus}}</q-item-tile>
+                      <q-item-tile sublabel>{{getProjectStartDateString(matchingProjMeta)}}</q-item-tile>
                     </q-item-main>
+
+                    <q-item-side :icon="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color">
+                      <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
+                        {{matchingProjMeta.projectStatus}}
+                      </q-tooltip>
+                    </q-item-side>
 
                   </q-item>
                 </q-list>
@@ -59,7 +65,8 @@
 
 <script>
 import Vue from 'vue'
-import { QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions, QBtn } from 'quasar'
+import { QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions,
+  QBtn, date } from 'quasar'
 const _ = require('lodash');
 
 import { errorHandler } from './mixins/error-handling'
@@ -135,6 +142,30 @@ export default Vue.extend({
       //clears selection in map
       this.map.highlightFeatureId(undefined);
     },
+
+    getProjectStartDateString(projectMetadata) {
+      const ts = new Date();
+      ts.setTime(projectMetadata.startDate);
+      let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
+      return formattedString;
+    },
+
+    getIconDetails(projectMetadata) {
+      const ps = projectMetadata.projectStatus.toLowerCase();
+      if (ps == "planning") {
+        return {icon: "assignment", color:"tertiary"};
+      } else if (ps == "scheduled") {
+        return {icon: "event", color:"primary"};
+      } else if (ps == "complete") {
+        return {icon: "check_circle_outline", color:"positive"};
+      } else if (ps == "abandoned") {
+        return {icon: "not_interested", color:"faded"};
+      } else {
+        // shouldn't happen, but if it does a new status option has been
+        // added
+        return {icon: "bug_report", color:"negative"}
+      }
+    }
 
   },
 

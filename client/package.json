@@ -1,7 +1,7 @@
 {
   "name": "qa4u-ui",
   "version": "1.7.0",
-  "description": "Automated quality assurance for MBES",
+  "description": "Automated quality assurance for MultiBeam Echo Sounder",
   "productName": "QA4MBES",
   "cordovaId": "org.cordova.quasar.app",
   "author": "Lachlan Hurst <lhurst@frontiersi.com.au>",

@@ -510,15 +510,6 @@ export default Vue.extend({
       )
     },
 
-    saveOrganisation(organisation) {
-      this.$store.dispatch('organisation/saveOrganisation', organisation)
-      .then(response => {
-        console.log(`Org saved ${organisation}`);
-      }, error => {
-        console.error("Failed to save organisation");
-      });
-    },
-
     searchOrganisation(terms, done) {
       setTimeout(() => {
         let filteredOrgs =

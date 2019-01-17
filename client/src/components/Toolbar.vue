@@ -1,7 +1,11 @@
 <template>
   <q-toolbar color="primary">
+    <img class="ml-2" height="43" src="~/assets/qa4-logo.png"/>
     <q-toolbar-title>
       {{ title }}
+      <span slot="subtitle">
+        {{ description }}
+      </span>
     </q-toolbar-title>
     <q-btn v-if="!isAuthenticated" color="primary" @click="auth" label="Log In">
       <q-tooltip anchor="bottom right" self="top right" :offset="[10, 10]" :delay="400">
@@ -91,6 +95,9 @@
       },
       title() {
         return process.env.PRODUCT_NAME;
+      },
+      description() {
+        return process.env.DESCRIPTION;
       }
     }
   });

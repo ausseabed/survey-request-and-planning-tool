@@ -88,4 +88,29 @@ export class ProjectMetadata {
     surveyApplication => surveyApplication.projectMetadatas)
   surveyApplication;
 
+  //survey metadata fields
+  @Column({
+    type:"varchar",
+    nullable: true,
+  })
+  contractNumber = undefined;
+
+  @Column({
+    type:"varchar",
+    nullable: true,
+  })
+  surveyId = undefined;
+
+  @ManyToOne(
+    type => Organisation,
+    organisation => organisation.tenderProjectMetadatas,
+    { nullable: true })
+  tenderer;
+
+  @ManyToMany(
+    type => Organisation,
+    organisation => organisation.surveyorProjectMetadatas)
+  @JoinTable()
+  surveyors;
+
 }

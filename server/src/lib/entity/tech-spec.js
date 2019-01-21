@@ -12,25 +12,11 @@ import { Organisation } from './organisation';
 @Entity()
 export class TechSpec {
 
+  // intention is this will be the same as the project metadata id
+  // if the tech spec is assigned to a project. In another situation this tech
+  // spec may be a default for survey application type.
   @PrimaryColumn('uuid')
-  projectMetadataId;
-
-  @ManyToOne(
-    type => Organisation,
-    organisation => organisation.tenderTechSpecs)
-  tenderer;
-
-  @ManyToMany(
-    type => Organisation,
-    organisation => organisation.surveyorTechSpecs)
-  @JoinTable()
-  surveyors;
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  contractNumber = undefined;
+  id;
 
   // baseline or monitoring
   @Column({type:"varchar"})
@@ -47,7 +33,6 @@ export class TechSpec {
       nullable: true,
   })
   requirements = undefined;
-
 
 
 }

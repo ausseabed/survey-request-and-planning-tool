@@ -36,8 +36,16 @@
                      error-label="Survey name is required"
                      helper="Name of data collection survey">
               <q-input :value="surveyName"
-                       @change="update('projectMetadata.surveyName', $event)"
+                       @input="update('projectMetadata.surveyName', $event)"
                        @blur="$v.surveyName.$touch"
+                       type="text" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Survey ID">
+              <q-input :value="surveyId"
+                       @input="update('projectMetadata.surveyId', $event)"
                        type="text" />
             </q-field>
 
@@ -179,6 +187,35 @@
         <q-card inline style="width:100%">
           <q-card-title> Other </q-card-title>
           <q-card-main dense>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Contract number">
+              <q-input :value="contractNumber"
+                       @input="update('projectMetadata.contractNumber', $event)"
+                       type="text" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Tenderer">
+              <q-select filter
+                        autofocus-filter
+                        :value="tenderer"
+                        @change="setSelectedTenderer($event)"
+                        :options="organisationOptions"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Surveyors">
+              <q-select multiple filter
+                        autofocus-filter
+                        :value="surveyors"
+                        @change="setSelectedSurveyors($event)"
+                        :options="organisationOptions"/>
+            </q-field>
+
             <q-field :label-width="2"
                      inset="full"
                      label="Vessel">
@@ -385,6 +422,16 @@ export default Vue.extend({
         surveyApplication);
     },
 
+    setSelectedTenderer(organisation) {
+      this.$store.commit('projectMetadata/setTenderer',
+        organisation);
+    },
+
+    setSelectedSurveyors(organisations) {
+      this.$store.commit('projectMetadata/setSurveyors',
+        organisations);
+    },
+
     setAoi(geojson) {
       this.$store.commit('projectMetadata/setAoi', geojson);
       this.$v.areaOfInterest.$touch();
@@ -402,6 +449,8 @@ export default Vue.extend({
       // appropriate objects from the all option list.
       // This could all be avoided if quasar provided some kind of comparison
       // function hook :-/
+
+      // TODO - everything here should probably be in the vuex store
       if (projectMetadata.instrumentTypes) {
         const instTypes = projectMetadata.instrumentTypes.map(outerIt => {
           return this.instrumentTypes.find(innerIt => {
@@ -418,6 +467,22 @@ export default Vue.extend({
           })
         });
         this.setDataCaptureTypes(dataCapTypes);
+      }
+
+      if (projectMetadata.tenderer) {
+        const org = this.organisations.find(o => {
+          return o.id == projectMetadata.tenderer.id;
+        });
+        this.setSelectedTenderer(org);
+      }
+
+      if (projectMetadata.surveyors) {
+        const orgs = projectMetadata.surveyors.map(outerOrg => {
+          return this.organisations.find(innerOrg => {
+            return outerOrg.id == innerOrg.id;
+          })
+        });
+        this.setSelectedSurveyors(orgs);
       }
     },
 
@@ -593,6 +658,10 @@ export default Vue.extend({
       surveyApplications: 'surveyApplication/surveyApplications',
       selectedSurveyApplication: 'surveyApplication/selectedSurveyApplication',
       selectedSurveyApplicationGroup: 'surveyApplication/selectedSurveyApplicationGroup',
+      surveyId: 'projectMetadata/surveyId',
+      contractNumber: 'projectMetadata/contractNumber',
+      surveyors: 'projectMetadata/surveyors',
+      tenderer: 'projectMetadata/tenderer',
     }),
     projectStatusOptions: function () {
       const opts = this.projectStatuses.map(pit => {
@@ -624,6 +693,12 @@ export default Vue.extend({
     },
     surveyApplicationOptions: function () {
       const opts = this.surveyApplications.map(pit => {
+        return {label: pit.name, value: pit};
+      });
+      return opts;
+    },
+    organisationOptions: function () {
+      const opts = this.organisations.map(pit => {
         return {label: pit.name, value: pit};
       });
       return opts;

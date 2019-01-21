@@ -21,13 +21,13 @@ export class Organisation {
   projectMetadatas;
 
   @OneToMany(
-    type => TechSpec,
-    techSpecs => techSpecs.tenderer)
-  tenderTechSpecs;
+    type => ProjectMetadata,
+    projectMetadata => projectMetadata.tenderer)
+  tenderProjectMetadatas;
 
   @ManyToMany(
-    type => TechSpec,
-    techSpecs => techSpecs.surveyors)
+    type => ProjectMetadata,
+    projectMetadata => projectMetadata.surveyors)
   @JoinTable()
-  surveyorTechSpecs;
+  surveyorProjectMetadatas;
 }

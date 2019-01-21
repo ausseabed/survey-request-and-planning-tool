@@ -59,3 +59,23 @@ export const projectStatus = state => {
 export const projectStatuses = state => {
   return state.projectStatuses;
 }
+
+export const projectMetadata = state => {
+  return state.projectMetadata;
+}
+
+export const surveyId = state => {
+  return state.projectMetadata.surveyId;
+}
+
+export const contractNumber = state => {
+  return state.projectMetadata.contractNumber;
+}
+
+export const tenderer = state => {
+  return state.projectMetadata.tenderer;
+}
+
+export const surveyors = state => {
+  return state.projectMetadata.surveyors;
+}

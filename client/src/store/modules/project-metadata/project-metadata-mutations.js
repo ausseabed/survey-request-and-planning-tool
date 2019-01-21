@@ -42,3 +42,11 @@ export const setSurveyApplication = (state, surveyApplication) => {
 export const setProjectStatuses = (state, statuses) => {
   state.projectStatuses = statuses;
 }
+
+export const setSurveyors = (state, organisations) => {
+  state.projectMetadata.surveyors = organisations;
+}
+
+export const setTenderer = (state, organisation) => {
+  state.projectMetadata.tenderer = organisation;
+}

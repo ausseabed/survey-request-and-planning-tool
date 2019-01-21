@@ -35,6 +35,8 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
         "instrumentTypes",
         "dataCaptureTypes",
         "surveyApplication",
+        "tenderer",
+        "surveyors",
       ]
     }
   );
@@ -75,6 +77,10 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.quality = req.body.quality;
   project.vessel = req.body.vessel;
 
+  project.contractNumber = req.body.contractNumber;
+  project.surveyId = req.body.surveyId;
+  project.tenderer = req.body.tenderer;
+  project.surveyors = req.body.surveyors;
 
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
   project.areaOfInterest = geojson.geometry;

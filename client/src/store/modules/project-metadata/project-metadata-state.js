@@ -21,6 +21,10 @@ function initialState() {
       quality: null,
       comment: null,
       surveyApplication: null,
+      contractNumber: null,
+      surveyId: null,
+      tenderer: null,
+      surveyors: [],
     },
     projectStatuses:[],
   }

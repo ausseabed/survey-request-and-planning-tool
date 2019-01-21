@@ -44,12 +44,11 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
       `TechSpec ${req.params.id} does not exist`);
     throw err;
   }
-  return res.json(project);
+  return res.json(techSpec);
 }));
 
 // create new survey technical specification
 router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
-  return res.json(project);
   var techSpec = new TechSpec();
 
   if (!_.isNil(req.body.surveyType)) {

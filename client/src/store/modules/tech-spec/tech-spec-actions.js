@@ -31,7 +31,7 @@ export const saveTechSpec = async ({ commit, state }) => {
   try {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
 
-    const resonse = await Vue.axios.post(urlEndpoint, state.techSpec);
+    const response = await Vue.axios.post(urlEndpoint, state.techSpec);
     const techSpec = response.data;
 
     commit(mutTypes.UPDATE, {path: 'techSpec', value: techSpec});
@@ -39,6 +39,22 @@ export const saveTechSpec = async ({ commit, state }) => {
   } catch (error) {
     commit(mutTypes.SET_REQUEST_ERROR, error);
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+    console.log(error);
+  }
+}
+
+
+export const getValidSurveyTypes = async ({ commit, state }, payload) => {
+  const urlEndpoint = '/api/tech-spec/valid-types';
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  try {
+    const response = await Vue.axios.get(urlEndpoint);
+    const stypes = response.data;
+
+    commit(mutTypes.SET_VALID_SURVEY_TYPES, stypes);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
     console.log(error);
   }
 }

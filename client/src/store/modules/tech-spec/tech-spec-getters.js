@@ -9,3 +9,7 @@ export const requestStatus = state => {
 export const requestError = state => {
   return state.requestError;
 }
+
+export const validSurveyTypes = state => {
+  return state.validSurveyTypes;
+}

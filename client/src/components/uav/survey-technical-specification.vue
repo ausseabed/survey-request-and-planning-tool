@@ -17,14 +17,46 @@
       </div>
     </div>
 
-
+    <div v-if="loading">Loading...</div>
 
     <q-page padding class="docs-input row justify-center">
       <div style="width: 900px; max-width: 90vw;">
         <q-card inline style="width:100%">
-          <div v-if="loading">Loading...</div>
-          <q-card-title> Basic </q-card-title>
+          <q-card-title> Survey metadata </q-card-title>
           <q-card-main dense>
+
+            <q-field
+              label="Survey type" :label-width="2" inset="full"
+              :error="$v.techSpec.surveyType.$error"
+              error-label="Survey type is required"
+            >
+              <q-option-group
+                type="radio" inline
+                :value="techSpec.surveyType"
+                @change="UPDATE({path:'techSpec.surveyType', value: $event})"
+                :options="surveyTypeOptions"
+                @blur="$v.techSpec.surveyType.$touch"
+              />
+            </q-field>
+
+            <q-field v-if="techSpec.surveyType == 'Monitoring'"
+                     :label-width="2"
+                     inset="full"
+                     label="Frequency of surveys">
+              <q-input :value="techSpec.surveyFrequency"
+                       @input="UPDATE({path:'techSpec.surveyFrequency', value: $event})"
+                       type="text" />
+            </q-field>
+
+            <q-field v-if="techSpec.surveyType == 'Monitoring'"
+                     :label-width="2"
+                     inset="full"
+                     label="Requirements">
+              <q-input :value="techSpec.requirements"
+                       @input="UPDATE({path:'techSpec.requirements', value: $event})"
+                       type="text" />
+            </q-field>
+
           </q-card-main>
         </q-card>
 
@@ -77,8 +109,23 @@ export default Vue.extend({
 
     fetchData () {
       const id = this.$route.params.id;
-      this.UPDATE({path:'techSpec.projectMetadataId', value:id});
-      this.$store.dispatch('techSpec/getTechSpec', { id: id });
+      this.$store.dispatch(
+        'projectMetadata/getProjectMetadata', { id: id })
+      this.UPDATE({path:'techSpec.id', value:id});
+      this.$store.dispatch('techSpec/getTechSpec', { id: id }).then(no => {
+        if (this.requestStatus == RequestStatus.SUCCESS) {
+          // then all good, tech spec existed and it is loaded
+        } else if (this.requestStatus == RequestStatus.ERROR) {
+          const status = this.requestError.response.status;
+          if (status == 404) {
+            // this is also ok, as it just means the tech spec hasn't been
+            // created for this project id yet
+          } else {
+            this.notifyError(
+              `Failed to retrive technical specification (${status})`);
+          }
+        }
+      });
 
     },
 
@@ -90,85 +137,23 @@ export default Vue.extend({
         return
       }
 
-      this.$store.dispatch('projectMetadata/save').then(pmd => {
-        this.notifySuccess('Saved survey technical specifications');
+      this.$store.dispatch('techSpec/saveTechSpec').then(pmd => {
+        if (this.requestStatus == RequestStatus.SUCCESS) {
+          this.notifySuccess('Saved survey technical specifications');
+        } else if (this.requestStatus == RequestStatus.ERROR) {
+          const status = this.requestError.response.status;
+          this.notifyError(
+            `Failed to save technical specification (${status})`);
+        }
       });
     },
 
-    createNewOrganisation() {
-      let filteredOrgs = filter(
-        this.orgSearchTerms,
-        {field: 'name', list: this.organisations});
-
-      if (filteredOrgs.length != 0) {
-        // here we check if user is attempting to create a new org with
-        // an existing name. If they are, then just add if to the selected
-        // list and return.
-        this.$store.commit(
-          'projectMetadata/addOrganisation',filteredOrgs[0]);
-        return;
-      }
-
-      // create a new organisation using the name entered into the autocomplete
-      // input element. When the org has been created add it to this project.
-      let org = {
-        name: this.orgSearchTerms,
-      }
-
-      this.$store.dispatch('organisation/saveOrganisation', org)
-      .then(newOrg => {
-        this.$store.commit('projectMetadata/addOrganisation',newOrg);
-        this.notifySuccess(`Created new organisation ${newOrg.name}`);
-        this.orgSearchTerms = "";
-      }, error => {
-        console.error("Failed to save organisation");
-      });
-    },
 
     getFormData() {
-      // gets the list of all orgs, not just those associated to this project
-      this.$store.dispatch('organisation/getOrganisations');
+      this.$store.dispatch('techSpec/getValidSurveyTypes');
     },
 
 
-    searchOrganisation(terms, done) {
-      setTimeout(() => {
-        let filteredOrgs =
-          filter(terms, {field: 'label', list: this.parseOrganisations()});
-        done(filteredOrgs)
-      }, 0)
-    },
-    selectedOrganisation(item, keyboard) {
-      if (keyboard) {
-        //use is just navigating list, not actually selecting
-        return;
-      }
-      // item is just has the org name, so get the org object from list
-      let org = filter(
-        item.label,
-        {field: 'name', list: this.organisations})[0];
-
-      //check for duplicate orgs
-      const filtered = this.projectOrganisations.filter(o => o.id == org.id)
-      if (filtered.length != 0) {
-        this.$q.notify(`${org.name} already selected`)
-        return;
-      }
-
-      this.$store.commit('projectMetadata/addOrganisation',org);
-      this.orgSearchTerms = "";
-    },
-    parseOrganisations() {
-      return this.organisations.map(org => {
-        return {
-          label: org.name,
-          value: org.name
-        }
-      })
-    },
-    removeOrganisation(org) {
-      this.$store.commit('projectMetadata/removeOrganisation',org);
-    },
 
   },
 
@@ -177,59 +162,23 @@ export default Vue.extend({
       'techSpec',
       'requestStatus',
       'requestError',
+      'validSurveyTypes',
     ]),
-    // projectStatusOptions: function () {
-    //   const opts = this.projectStatuses.map(pit => {
-    //     return {label: pit, value: pit};
-    //   });
-    //   return opts;
-    // },
-    // instrumentTypeOptions: function () {
-    //   // select component needs a label and value field
-    //   const opts = this.instrumentTypes.map(pit => {
-    //     return {
-    //       label: pit.name,
-    //       value: pit
-    //     }
-    //   });
-    //   return opts;
-    // },
-    // dataCaptureTypeOptions: function () {
-    //   const opts = this.dataCaptureTypes.map(pit => {
-    //     return {label: pit.name, value: pit};
-    //   });
-    //   return opts;
-    // },
-    // surveyApplicationGroupOptions: function () {
-    //   const opts = this.surveyApplicationGroups.map(pit => {
-    //     return {label: pit, value: pit};
-    //   });
-    //   return opts;
-    // },
-    // surveyApplicationOptions: function () {
-    //   const opts = this.surveyApplications.map(pit => {
-    //     return {label: pit.name, value: pit};
-    //   });
-    //   return opts;
-    // },
+    ...mapGetters('projectMetadata',[
+      'projectMetadata',
+    ]),
+    surveyTypeOptions: function () {
+      const opts = this.validSurveyTypes.map(oo => {
+        return {label: oo, value: oo};
+      });
+      return opts;
+    },
   },
 
   validations: {
-    surveyName: { required },
-    contactPerson: { required },
-    email: { required, email },
-    areaOfInterest: {required },
-    startDate: { required },
-    selectedSurveyApplication: { required },
-    selectedSurveyApplicationGroup: { required },
-    projectInstrumentTypes: {
-      required,
-      minLength:minLength(1)
-    },
-    projectDataCaptureTypes: {
-      required,
-      minLength:minLength(1)
-    },
+    techSpec: {
+      surveyType: { required },
+    }
   },
 
   watch: {

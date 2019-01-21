@@ -1,4 +1,4 @@
-import { UPDATE, SET_REQUEST_STATUS, SET_REQUEST_ERROR }
+import { UPDATE, SET_REQUEST_STATUS, SET_REQUEST_ERROR, SET_VALID_SURVEY_TYPES }
   from './tech-spec-mutation-types';
 
 const mutations = {
@@ -12,6 +12,10 @@ const mutations = {
 
   [SET_REQUEST_ERROR] (state, error) {
     state.requestError = error;
+  },
+
+  [SET_VALID_SURVEY_TYPES] (state, validSurveyTypes) {
+    state.validSurveyTypes = validSurveyTypes;
   },
 }
 

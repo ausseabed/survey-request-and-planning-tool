@@ -13,16 +13,14 @@ export const RequestStatus = Object.freeze({
 function initialState() {
   return {
     techSpec: {
-      projectMetadataId: null,
-      contractNumber: null,
+      id: null,
       surveyType: null,
       surveyFrequency: null,
       requirements: null,
-      tenderer: null,
-      surveyors: [],
     },
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
+    validSurveyTypes: [],
   }
 }
 

@@ -2,8 +2,6 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
 import { ProjectMetadata } from './project-metadata';
-import { SurveyTechnicalSpecifications }
-  from './survey-technical-specifications';
 
 @Entity()
 export class SurveyApplication {

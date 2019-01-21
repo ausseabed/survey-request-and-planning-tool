@@ -7,6 +7,8 @@ var instrumentTypeRoutes = require('./api/instrument-type');
 var projectMetadataRoutes = require('./api/project-metadata');
 var organisationRoutes = require('./api/organisation');
 var surveyApplicationRoutes = require('./api/survey-application');
+var techSpecRoutes =
+  require('./api/tech-spec');
 
 import { isAuthenticated } from './utils';
 
@@ -19,6 +21,7 @@ router
 .use('/project-metadata', projectMetadataRoutes)
 .use('/organisation', organisationRoutes)
 .use('/survey-application', surveyApplicationRoutes)
+.use('/tech-spec', techSpecRoutes)
 
 
 module.exports = router;

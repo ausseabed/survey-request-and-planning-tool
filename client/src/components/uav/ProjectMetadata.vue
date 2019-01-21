@@ -6,9 +6,19 @@
           <q-breadcrumbs-el label="Home" icon="home" to="/" />
           <q-breadcrumbs-el label="Project Metadata" icon="fas fa-clipboard-list" />
         </q-breadcrumbs>
-        <q-btn icon="fas fa-save" label="Save"
-          @click="submit">
-        </q-btn>
+        <div class="row">
+          <q-btn icon="fas fa-save" label="Save"
+            @click="submit">
+          </q-btn>
+          <q-btn label="Specifications" icon="arrow_forward"
+            :disable="!id"
+            :to="'/survey-technical-specification/' + id">
+            <q-tooltip v-if="!id" anchor="bottom middle" self="top middle" :offset="[10, 10]">
+              Save project to view specifications.
+            </q-tooltip>
+          </q-btn>
+
+        </div>
       </div>
     </div>
 

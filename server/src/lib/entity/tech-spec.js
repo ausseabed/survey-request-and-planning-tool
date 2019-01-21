@@ -9,28 +9,20 @@ import { ProjectMetadata } from './project-metadata';
 import { Organisation } from './organisation';
 
 
-// valid values for the `projectStatus` attribute
-export const PROJECT_STATUSES = [
-  "planning",
-  "scheduled",
-  "in progress",
-];
-
 @Entity()
-export class SurveyTechnicalSpecifications {
+export class TechSpec {
 
-  @OneToOne(type => ProjectMetadata, { primary: true })
-  @JoinColumn({ name: "projectMetadataId" })
+  @PrimaryColumn('uuid')
   projectMetadataId;
 
   @ManyToOne(
     type => Organisation,
-    organisation => organisation.tenderSurveyTechnicalSpecifications)
+    organisation => organisation.tenderTechSpecs)
   tenderer;
 
   @ManyToMany(
     type => Organisation,
-    organisation => organisation.surveyorSurveyTechnicalSpecifications)
+    organisation => organisation.surveyorTechSpecs)
   @JoinTable()
   surveyors;
 

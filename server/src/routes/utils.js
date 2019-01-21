@@ -72,3 +72,9 @@ export function geojsonToMultiPolygon(geojson) {
     throw err;
   }
 }
+
+function sleep(ms){
+  return new Promise(resolve=>{
+    setTimeout(resolve,ms)
+  })
+}

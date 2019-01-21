@@ -14,6 +14,8 @@ import instrumentType from './modules/instrument-type/instrument-type-state'
 import organisation from './modules/organisation/organisation-state'
 import surveyApplication
   from './modules/survey-application/survey-application-state'
+import techSpec from './modules/tech-spec/tech-spec-state'
+
 
 Vue.use(Vuex)
 
@@ -21,17 +23,13 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
   modules: {
-    uav_tender,
-    uav_common,
-    uav_session,
-    uav_project,
     projectMetadata,
-    common,
     socket,
     dataCaptureType,
     instrumentType,
     organisation,
     surveyApplication,
+    techSpec,
   },
   strict: debug
 })

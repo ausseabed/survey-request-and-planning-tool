@@ -2,8 +2,8 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
 import { ProjectMetadata } from './project-metadata';
-import { SurveyTechnicalSpecifications }
-  from './survey-technical-specifications';
+import { TechSpec }
+  from './tech-spec';
 
 @Entity()
 export class Organisation {
@@ -21,13 +21,13 @@ export class Organisation {
   projectMetadatas;
 
   @OneToMany(
-    type => SurveyTechnicalSpecifications,
+    type => TechSpec,
     techSpecs => techSpecs.tenderer)
-  tenderSurveyTechnicalSpecifications;
+  tenderTechSpecs;
 
   @ManyToMany(
-    type => SurveyTechnicalSpecifications,
+    type => TechSpec,
     techSpecs => techSpecs.surveyors)
   @JoinTable()
-  surveyorSurveyTechnicalSpecifications;
+  surveyorTechSpecs;
 }

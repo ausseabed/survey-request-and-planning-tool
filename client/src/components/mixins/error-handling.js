@@ -10,6 +10,15 @@ export const errorHandler = {
         position: 'bottom-left'
       })
     },
+    notifyError(message) {
+      this.$q.notify({
+        message: message,
+        type: 'negative',
+        color: 'negative',
+        closeBtn: true,
+        timeout: 900,
+      });
+    },
     notifySuccess(message) {
       this.$q.notify({
         message: message,

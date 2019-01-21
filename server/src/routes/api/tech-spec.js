@@ -6,11 +6,17 @@ import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon }
   from '../utils';
-import { TechSpec }
+import { TechSpec, SURVEY_TYPES }
   from '../../lib/entity/tech-spec';
 
 
 var router = express.Router();
+
+// Gets a list of valid survey types
+router.get('/valid-types', async function (req, res) {
+  return res.json(SURVEY_TYPES);
+});
+
 
 // Gets a list of tech specs
 // Not currently required
@@ -45,6 +51,15 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
 router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   return res.json(project);
   var techSpec = new TechSpec();
+
+  if (!_.isNil(req.body.surveyType)) {
+    const stype = req.body.surveyType
+    if (!SURVEY_TYPES.includes(stype)) {
+      let err = boom.badRequest(`Bad surveyType "${stype}", must be one of\
+        ${SURVEY_TYPES.join(', ')}`);
+      throw err;
+    }
+  }
 
   // merge request body attributes into techSpec entity. Attributes
   // "should" match

@@ -9,6 +9,12 @@ import { ProjectMetadata } from './project-metadata';
 import { Organisation } from './organisation';
 
 
+// valid values for the `surveyType` attribute
+export const SURVEY_TYPES = [
+  "Baseline",
+  "Monitoring",
+];
+
 @Entity()
 export class TechSpec {
 

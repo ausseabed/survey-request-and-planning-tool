@@ -162,6 +162,13 @@
                      inset="full"
                      label="Initial survey lines">
               <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
+              <div class="row full-width justify-end">
+                <q-btn icon="fas fa-check" label="Clear"
+                  :disable="!techSpec.surveyLines"
+                  @click="SET_SURVEY_LINES( undefined )">
+                </q-btn>
+              </div>
+
             </q-field>
             <!-- Map goes here -->
             <!-- <div ref="mapDiv" id="mapDiv" style="height:350px;"></div> -->

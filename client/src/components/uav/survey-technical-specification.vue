@@ -22,7 +22,7 @@
     <q-page padding class="docs-input row justify-center">
       <div style="width: 900px; max-width: 90vw;">
         <q-card inline style="width:100%">
-          <q-card-title> Survey metadata </q-card-title>
+          <q-card-title> Survey Requirements </q-card-title>
           <q-card-main dense>
 
             <q-field
@@ -54,6 +54,141 @@
                      label="Requirements">
               <q-input :value="techSpec.requirements"
                        @input="UPDATE({path:'techSpec.requirements', value: $event})"
+                       type="text" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Survey classification">
+              <q-select filter
+                        autofocus-filter
+                        :value="techSpec.surveyClassification"
+                        @change="UPDATE({path:'techSpec.surveyClassification', value: $event})"
+                        :options="surveyClassificationOptions"/>
+            </q-field>
+
+
+
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Features of interest"
+                     :error="$v.techSpec.featuresOfInterest.$error"
+                     error-label="Features of interest is required">
+              <q-input :value="techSpec.featuresOfInterest"
+                       @input="UPDATE({path:'techSpec.featuresOfInterest', value: $event})"
+                       type="text"
+                       @blur="$v.techSpec.featuresOfInterest.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Vessel type">
+              <q-input :value="techSpec.vesselType"
+                       @input="UPDATE({path:'techSpec.vesselType', value: $event})"
+                       type="text" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Depth range"
+                     :error="$v.techSpec.depthRange.$error"
+                     error-label="Depth range is required">
+              <q-input :value="techSpec.depthRange"
+                       @input="UPDATE({path:'techSpec.depthRange', value: $event})"
+                       type="text"
+                       @blur="$v.techSpec.depthRange.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Frequency [range]">
+              <q-input :value="techSpec.frequencyRange"
+                       @input="UPDATE({path:'techSpec.frequencyRange', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Is the data capture time sensitive">
+              <q-checkbox :value="techSpec.timeSensitive"
+                       @input="UPDATE({path:'techSpec.timeSensitive', value: $event})"
+                       />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Requirements (if data capture is time sensitive)">
+              <q-input :value="techSpec.timeSensitiveRequirements"
+                       @input="UPDATE({path:'techSpec.timeSensitiveRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Is ground truthing required">
+              <q-checkbox :value="techSpec.groundTruthing"
+                       @input="UPDATE({path:'techSpec.groundTruthing', value: $event})"
+                       />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Ground truthing method">
+              <q-select filter
+                        autofocus-filter
+                        :value="techSpec.groundTruthingMethod"
+                        @change="UPDATE({path:'techSpec.groundTruthingMethod', value: $event})"
+                        :options="groundTruthingMethodOptions"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Requirements for ground truthing">
+              <q-input :value="techSpec.groundTruthingRequirements"
+                       @input="UPDATE({path:'techSpec.groundTruthingRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Mapping converage requirements">
+              <q-input :value="techSpec.mappingCoverageRequirements"
+                       @input="UPDATE({path:'techSpec.mappingCoverageRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <!-- Map goes here -->
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Environmental conditions"
+                     :error="$v.techSpec.environmentalConditions.$error"
+                     error-label="Environmental conditions is required"
+                     >
+              <q-input :value="techSpec.environmentalConditions"
+                       @input="UPDATE({path:'techSpec.environmentalConditions', value: $event})"
+                       type="textarea"
+                       @blur="$v.techSpec.environmentalConditions.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Positioning requirement"
+                     :error="$v.techSpec.positioningRequirement.$error"
+                     error-label="Positioning requirement is required"
+                     >
+              <q-select :value="techSpec.positioningRequirement"
+                        @change="UPDATE({path:'techSpec.positioningRequirement', value: $event})"
+                        :options="positioningRequirementsOptions"
+                        @blur="$v.techSpec.positioningRequirement.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Positioning requirement - other">
+              <q-input :value="techSpec.positioningRequirementOther"
+                       @input="UPDATE({path:'techSpec.positioningRequirementOther', value: $event})"
                        type="text" />
             </q-field>
 
@@ -151,6 +286,9 @@ export default Vue.extend({
 
     getFormData() {
       this.$store.dispatch('techSpec/getValidSurveyTypes');
+      this.$store.dispatch('techSpec/getValidSurveyClassifications');
+      this.$store.dispatch('techSpec/getValidGroundTruthingMethods');
+      this.$store.dispatch('techSpec/getValidPositioningRequirements');
     },
 
 
@@ -163,6 +301,9 @@ export default Vue.extend({
       'requestStatus',
       'requestError',
       'validSurveyTypes',
+      'validSurveyClassifications',
+      'validGroundTruthingMethods',
+      'validPositioningRequirements',
     ]),
     ...mapGetters('projectMetadata',[
       'projectMetadata',
@@ -173,11 +314,34 @@ export default Vue.extend({
       });
       return opts;
     },
+    surveyClassificationOptions: function () {
+      const opts = this.validSurveyClassifications.map(oo => {
+        return {label: oo, value: oo};
+      });
+      opts.unshift({label: 'None', value: undefined});
+      return opts;
+    },
+    groundTruthingMethodOptions: function () {
+      const opts = this.validGroundTruthingMethods.map(oo => {
+        return {label: oo, value: oo};
+      });
+      return opts;
+    },
+    positioningRequirementsOptions: function () {
+      const opts = this.validPositioningRequirements.map(oo => {
+        return {label: oo, value: oo};
+      });
+      return opts;
+    },
   },
 
   validations: {
     techSpec: {
       surveyType: { required },
+      featuresOfInterest: { required },
+      depthRange: { required },
+      environmentalConditions: { required },
+      positioningRequirement: { required },
     }
   },
 

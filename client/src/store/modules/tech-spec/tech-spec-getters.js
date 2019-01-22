@@ -13,3 +13,15 @@ export const requestError = state => {
 export const validSurveyTypes = state => {
   return state.validSurveyTypes;
 }
+
+export const validSurveyClassifications = state => {
+  return state.validSurveyClassifications;
+}
+
+export const validGroundTruthingMethods = state => {
+  return state.validGroundTruthingMethods;
+}
+
+export const validPositioningRequirements = state => {
+  return state.validPositioningRequirements;
+}

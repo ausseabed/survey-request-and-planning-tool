@@ -23,7 +23,12 @@ router.get('/valid-classifications', async function (req, res) {
   return res.json(SURVEY_CLASSIFICATIONS);
 });
 
-// Gets a list of valid survey classifications
+// Gets a list of valid positioning requirements
+router.get('/valid-ground-truthing-methods', async function (req, res) {
+  return res.json(GROUND_TRUTHING_METHODS);
+});
+
+// Gets a list of valid positioning requirements
 router.get('/valid-positioning-requirements', async function (req, res) {
   return res.json(POSITIONING_REQUIREMENTS);
 });

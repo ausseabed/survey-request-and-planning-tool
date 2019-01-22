@@ -58,3 +58,54 @@ export const getValidSurveyTypes = async ({ commit, state }, payload) => {
     console.log(error);
   }
 }
+
+export const getValidSurveyClassifications =
+  async ({ commit, state }, payload) => {
+
+  const urlEndpoint = '/api/tech-spec/valid-classifications';
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  try {
+    const response = await Vue.axios.get(urlEndpoint);
+    const sclas = response.data;
+
+    commit(mutTypes.SET_VALID_SURVEY_CLASSIFICATIONS, sclas);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
+    console.log(error);
+  }
+}
+
+export const getValidGroundTruthingMethods =
+  async ({ commit, state }, payload) => {
+
+  const urlEndpoint = '/api/tech-spec/valid-ground-truthing-methods';
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  try {
+    const response = await Vue.axios.get(urlEndpoint);
+    const sclas = response.data;
+
+    commit(mutTypes.SET_VALID_GROUND_TRUTHING_METHODS, sclas);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
+    console.log(error);
+  }
+}
+
+export const getValidPositioningRequirements =
+  async ({ commit, state }, payload) => {
+
+  const urlEndpoint = '/api/tech-spec/valid-positioning-requirements';
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  try {
+    const response = await Vue.axios.get(urlEndpoint);
+    const sclas = response.data;
+
+    commit(mutTypes.SET_VALID_POSITIONING_REQUIREMENTS, sclas);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
+    console.log(error);
+  }
+}

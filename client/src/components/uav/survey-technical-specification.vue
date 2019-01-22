@@ -158,7 +158,13 @@
                        type="textarea" />
             </q-field>
 
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Initial survey lines">
+              <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
+            </q-field>
             <!-- Map goes here -->
+            <!-- <div ref="mapDiv" id="mapDiv" style="height:350px;"></div> -->
 
             <q-field :label-width="2"
                      inset="full"
@@ -225,6 +231,7 @@ const path = require('path');
 import { required, email, minLength } from 'vuelidate/lib/validators';
 import { RequestStatus }
   from '../../store/modules/tech-spec/tech-spec-state'
+import surveyLinesMap from './../olmap/survey-lines-map';
 
 export default Vue.extend({
   mixins: [errorHandler],
@@ -233,6 +240,16 @@ export default Vue.extend({
   },
 
   mounted() {
+    var slmap = surveyLinesMap(this.$refs.mapDiv, {
+      basemap: "osm"
+    })
+    slmap.initMap();
+    this.map = slmap;
+    this.map.onAdd = (geojson) => {
+      console.log(geojson);
+      this.SET_SURVEY_LINES( geojson );
+    }
+
     this.fetchData();
 
   },
@@ -240,6 +257,7 @@ export default Vue.extend({
   methods: {
     ...mapMutations('techSpec', [
       types.UPDATE,
+      types.SET_SURVEY_LINES,
     ]),
 
     fetchData () {
@@ -365,6 +383,19 @@ export default Vue.extend({
         this.loading = false;
       }
     },
+    'techSpec.surveyLines': function (newSurveyLines, oldSurveyLines) {
+      this.map.clear();
+      if (newSurveyLines) {
+        this.map.addGeojsonFeature(newSurveyLines);
+        this.map.fit();
+      }
+    },
+    'projectMetadata.areaOfInterest': function (newAoi, oldAoi) {
+      if (newAoi) {
+        this.map.setGeojsonFeatureIntersecting(newAoi);
+        this.map.fit();
+      }
+    }
 
 
   },
@@ -373,6 +404,7 @@ export default Vue.extend({
     return {
       orgSearchTerms: '',
       loading: false,
+      map:undefined,
     }
   }
 });

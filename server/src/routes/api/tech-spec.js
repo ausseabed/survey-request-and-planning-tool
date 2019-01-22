@@ -4,7 +4,8 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon }
+import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
+  geojsonToMultiLineString }
   from '../utils';
 import { TechSpec, SURVEY_TYPES, SURVEY_CLASSIFICATIONS,
   GROUND_TRUTHING_METHODS, POSITIONING_REQUIREMENTS }
@@ -84,10 +85,14 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     }
   }
 
-
   // merge request body attributes into techSpec entity. Attributes
   // "should" match
   _.merge(techSpec, req.body);
+
+  // postgis will only save a multi line string here, and the request may
+  // include a FeatureCollection
+  techSpec.surveyLines =
+    geojsonToMultiLineString(techSpec.surveyLines).geometry;
 
   techSpec = await getConnection()
   .getRepository(TechSpec)

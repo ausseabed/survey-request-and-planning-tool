@@ -1,6 +1,6 @@
 import { UPDATE, SET_REQUEST_STATUS, SET_REQUEST_ERROR, SET_VALID_SURVEY_TYPES,
   SET_VALID_SURVEY_CLASSIFICATIONS, SET_VALID_POSITIONING_REQUIREMENTS,
-  SET_VALID_GROUND_TRUTHING_METHODS }
+  SET_VALID_GROUND_TRUTHING_METHODS, SET_SURVEY_LINES }
   from './tech-spec-mutation-types';
 
 const mutations = {
@@ -30,6 +30,10 @@ const mutations = {
 
   [SET_VALID_POSITIONING_REQUIREMENTS] (state, validPositioningRequirements) {
     state.validPositioningRequirements = validPositioningRequirements;
+  },
+
+  [SET_SURVEY_LINES] (state, surveyLines) {
+    state.techSpec.surveyLines = surveyLines;
   },
 }
 

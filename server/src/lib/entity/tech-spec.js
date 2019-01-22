@@ -15,6 +15,26 @@ export const SURVEY_TYPES = [
   "Monitoring",
 ];
 
+export const SURVEY_CLASSIFICATIONS = [
+  "Special order",
+  "Order 1a",
+  "Order 1b",
+  "Order 2",
+];
+
+export const GROUND_TRUTHING_METHODS = [
+  "Video",
+  "Grab seabed sample",
+  "Other",
+];
+
+export const POSITIONING_REQUIREMENTS = [
+  "PPP",
+  "Differential GPS",
+  "Other",
+  "Not sure",
+];
+
 @Entity()
 export class TechSpec {
 
@@ -40,5 +60,88 @@ export class TechSpec {
   })
   requirements = undefined;
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  surveyClassification = undefined;
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  featuresOfInterest = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  vesselType = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  depthRange = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  frequencyRange = undefined;
+
+  @Column("bool")
+  timeSensitive = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  timeSensitiveRequirements = undefined;
+
+  @Column("bool")
+  groundTruthing = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  groundTruthingMethod = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  groundTruthingRequirements = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  mappingCoverageRequirements = undefined;
+
+  @Column("geometry", {
+    nullable: true,
+    spatialFeatureType: "MultiLineString",
+    srid: 4326
+  })
+  surveyLines = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  environmentalConditions = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  positioningRequirement = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  positioningRequirementOther = undefined;
 }

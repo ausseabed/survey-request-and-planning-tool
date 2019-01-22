@@ -6,7 +6,8 @@ import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon }
   from '../utils';
-import { TechSpec, SURVEY_TYPES }
+import { TechSpec, SURVEY_TYPES, SURVEY_CLASSIFICATIONS,
+  GROUND_TRUTHING_METHODS, POSITIONING_REQUIREMENTS }
   from '../../lib/entity/tech-spec';
 
 
@@ -17,6 +18,15 @@ router.get('/valid-types', async function (req, res) {
   return res.json(SURVEY_TYPES);
 });
 
+// Gets a list of valid survey classifications
+router.get('/valid-classifications', async function (req, res) {
+  return res.json(SURVEY_CLASSIFICATIONS);
+});
+
+// Gets a list of valid survey classifications
+router.get('/valid-positioning-requirements', async function (req, res) {
+  return res.json(POSITIONING_REQUIREMENTS);
+});
 
 // Gets a list of tech specs
 // Not currently required
@@ -59,6 +69,16 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       throw err;
     }
   }
+
+  if (!_.isNil(req.body.surveyClassification)) {
+    const clas = req.body.surveyClassification
+    if (!SURVEY_CLASSIFICATIONS.includes(clas)) {
+      let err = boom.badRequest(`Bad surveyClassification "${clas}", must be` +
+      `one of ${SURVEY_CLASSIFICATIONS.join(', ')}`);
+      throw err;
+    }
+  }
+
 
   // merge request body attributes into techSpec entity. Attributes
   // "should" match

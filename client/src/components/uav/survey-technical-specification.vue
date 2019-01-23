@@ -158,20 +158,33 @@
                        type="textarea" />
             </q-field>
 
+            <!-- MAP -->
             <q-field :label-width="2"
                      inset="full"
                      label="Initial survey lines">
               <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
-              <div class="row full-width justify-end">
-                <q-btn icon="fas fa-check" label="Clear"
-                  :disable="!techSpec.surveyLines"
-                  @click="SET_SURVEY_LINES( undefined )">
-                </q-btn>
-              </div>
+              <div class="row full-width justify-between items-center">
+                <div v-if="drawingSurveyLine"
+                  class="q-body-1 text-faded col">
+                  Click endpoint to complete line
+                </div>
+                <div v-else
+                  class="q-body-1 text-faded col">
+                  Drag and drop shapefile (zip) or geojson onto map, or click the draw line button in map to manually create survey lines.
+                </div>
+                <div class="row col-auto">
+                  <q-btn icon="cloud_upload" label="Upload"
+                    @click="selectSurveyLinesFile">
+                  </q-btn>
+                  <input type="file" id="dataPath" v-on:change="setSurveyLinesFile" ref="fileInput" hidden />
+                  <q-btn icon="clear" label="Clear"
+                    :disable="!techSpec.surveyLines"
+                    @click="SET_SURVEY_LINES( undefined )">
+                  </q-btn>
+                </div>
 
+              </div>
             </q-field>
-            <!-- Map goes here -->
-            <!-- <div ref="mapDiv" id="mapDiv" style="height:350px;"></div> -->
 
             <q-field :label-width="2"
                      inset="full"
@@ -256,6 +269,12 @@ export default Vue.extend({
       console.log(geojson);
       this.SET_SURVEY_LINES( geojson );
     }
+    this.map.drawStart = () => {
+      this.drawingSurveyLine = true;
+    }
+    this.map.drawEnd = () => {
+      this.drawingSurveyLine = false;
+    }
 
     this.fetchData();
 
@@ -316,6 +335,13 @@ export default Vue.extend({
       this.$store.dispatch('techSpec/getValidPositioningRequirements');
     },
 
+    selectSurveyLinesFile () {
+      this.$refs.fileInput.click();
+    },
+    setSurveyLinesFile (event) {
+      console.log(event);
+      this.map.addFile(event.target.files[0]);
+    },
 
 
   },
@@ -412,6 +438,8 @@ export default Vue.extend({
       orgSearchTerms: '',
       loading: false,
       map:undefined,
+      surveyLinesFile: undefined,
+      drawingSurveyLine: false,
     }
   }
 });

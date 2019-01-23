@@ -52,10 +52,9 @@ var surveyLinesMap = function (target, options) {
           Object.create( Control && Control.prototype );
         DrawLineControl.prototype.constructor = DrawLineControl;
 
-        DrawLineControl.prototype.handleDrawPolygon =
-          function handleDrawPolygon () {
-            startDrawInteraction();
-          };
+        DrawLineControl.prototype.handleDrawPolygon = (opts) => {
+          startDrawInteraction();
+        };
 
         return DrawLineControl;
       }(ol.control.Control));
@@ -132,9 +131,12 @@ var surveyLinesMap = function (target, options) {
         })
       });
 
-      function startDrawInteraction() {
+      var startDrawInteraction = () => {
         map.addInteraction(drawInteraction);
-      }
+        if (typeof this.drawStart === 'function') {
+          this.drawStart();
+        }
+      };
 
       drawInteraction.on('drawend', (event) => {
         map.removeInteraction(drawInteraction);
@@ -147,6 +149,9 @@ var surveyLinesMap = function (target, options) {
           var geojsonStr = writer.writeFeatures(features);
 
           this.onAdd(JSON.parse(geojsonStr));
+        }
+        if (typeof this.drawEnd === 'function') {
+          this.drawEnd();
         }
       }, source);
 
@@ -190,6 +195,44 @@ var surveyLinesMap = function (target, options) {
       });
       this.source = source;
       this.sourceIntersecting = sourceIntersecting;
+    },
+    addFile: function (file) {
+      var ext = file.name.split('.').pop();
+      var features = null;
+      if (ext == 'zip') {
+        var reader = new FileReader();
+        reader.onload = (function (e) {
+          shp(e.target.result).then(function (geojson) {
+            features = (new ol.format.GeoJSON()).readFeatures(geojson);
+            this.addFeatures(this.source, features);
+
+            if (typeof this.onAdd === 'function') {
+              var writer = new ol.format.GeoJSON();
+              var geojsonStr = writer.writeFeatures(features);
+              this.onAdd(JSON.parse(geojsonStr));
+            }
+
+          }.bind(this));
+        }).bind(this);
+        reader.readAsArrayBuffer(file);
+      } else {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const jsonObj = JSON.parse(event.target.result);
+          features = jsonObj;
+          var olf = (new ol.format.GeoJSON()).readFeatures(features);
+
+          this.addFeatures(this.source, olf);
+
+          if (typeof this.onAdd === 'function') {
+            // var writer = new ol.format.GeoJSON();
+            // var geojsonStr = writer.writeFeatures(features);
+            this.onAdd(features);
+          }
+        };
+        reader.readAsText(file);
+      }
+
     },
     addGeojsonUrl: function (url) {
       // Add geojson from url
@@ -237,6 +280,8 @@ var surveyLinesMap = function (target, options) {
     },
     onAdd: null,
     onExtentsChange: null,
+    drawStart: null,
+    drawEnd: null,
     set: function (value) {
       if (value) {
         this.addFeatures(this.source, (new ol.format.GeoJSON()).readFeatures(JSON.parse(value)));

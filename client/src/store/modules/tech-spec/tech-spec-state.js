@@ -27,6 +27,7 @@ function initialState() {
       timeSensitiveRequirements: null,
       groundTruthing: false,
       groundTruthingMethod: null,
+      groundTruthingMethodOther: null,
       groundTruthingRequirements: null,
       mappingCoverageRequirements: null,
       surveyLines: null,

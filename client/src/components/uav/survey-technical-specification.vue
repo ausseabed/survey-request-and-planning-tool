@@ -39,23 +39,25 @@
               />
             </q-field>
 
-            <q-field v-if="techSpec.surveyType == 'Monitoring'"
-                     :label-width="2"
-                     inset="full"
-                     label="Frequency of surveys">
-              <q-input :value="techSpec.surveyFrequency"
-                       @input="UPDATE({path:'techSpec.surveyFrequency', value: $event})"
-                       type="text" />
-            </q-field>
+            <div v-if="techSpec.surveyType == 'Monitoring'">
+              <q-field
+                       :label-width="2"
+                       inset="full"
+                       label="Frequency of surveys">
+                <q-input :value="techSpec.surveyFrequency"
+                         @input="UPDATE({path:'techSpec.surveyFrequency', value: $event})"
+                         type="text" />
+              </q-field>
 
-            <q-field v-if="techSpec.surveyType == 'Monitoring'"
-                     :label-width="2"
-                     inset="full"
-                     label="Requirements">
-              <q-input :value="techSpec.requirements"
-                       @input="UPDATE({path:'techSpec.requirements', value: $event})"
-                       type="text" />
-            </q-field>
+              <q-field v-if="techSpec.surveyType == 'Monitoring'"
+                       :label-width="2"
+                       inset="full"
+                       label="Requirements">
+                <q-input :value="techSpec.requirements"
+                         @input="UPDATE({path:'techSpec.requirements', value: $event})"
+                         type="text" />
+              </q-field>
+            </div>
 
             <q-field :label-width="2"
                      inset="full"
@@ -67,8 +69,9 @@
                         :options="surveyClassificationOptions"/>
             </q-field>
 
-
-
+          </q-card-main>
+          <q-card-separator />
+          <q-card-main dense>
 
             <q-field :label-width="2"
                      inset="full"
@@ -108,6 +111,10 @@
                        type="textarea" />
             </q-field>
 
+          </q-card-main>
+          <q-card-separator />
+          <q-card-main dense>
+
             <q-field :label-width="2"
                      inset="full"
                      label="Is the data capture time sensitive">
@@ -133,14 +140,31 @@
                        />
             </q-field>
 
-            <q-field v-if="techSpec.groundTruthing"
-                     :label-width="2"
-                     inset="full"
-                     label="Ground truthing method">
-              <q-select :value="techSpec.groundTruthingMethod"
-                        @change="UPDATE({path:'techSpec.groundTruthingMethod', value: $event})"
-                        :options="groundTruthingMethodOptions"/>
-            </q-field>
+            <div class="overflow-hidden" v-if="techSpec.groundTruthing">
+              <div class="row gutter-x-xs">
+                <div class="col-8">
+                  <q-field :label-width="3"
+                           inset="full"
+                           label="Ground truthing method">
+                    <q-select :value="techSpec.groundTruthingMethod"
+                              @change="UPDATE({path:'techSpec.groundTruthingMethod', value: $event})"
+                              :options="groundTruthingMethodOptions"/>
+                  </q-field>
+                </div>
+
+                <div class="col-4">
+                  <q-field v-if="techSpec.groundTruthingMethod ? techSpec.groundTruthingMethod.toLowerCase() == 'other' : false"
+                           :label-width="1"
+                           class="auto"
+                           helper="Provide other ground truthing method"
+                           >
+                    <q-input :value="techSpec.groundTruthingMethodOther"
+                             @input="UPDATE({path:'techSpec.groundTruthingMethodOther', value: $event})"
+                             type="text" />
+                  </q-field>
+                </div>
+              </div>
+            </div>
 
             <q-field v-if="techSpec.groundTruthing"
                      :label-width="2"
@@ -158,6 +182,10 @@
                        @input="UPDATE({path:'techSpec.mappingCoverageRequirements', value: $event})"
                        type="textarea" />
             </q-field>
+
+          </q-card-main>
+          <q-card-separator />
+          <q-card-main dense>
 
             <!-- MAP -->
             <q-field :label-width="2"
@@ -186,6 +214,10 @@
 
               </div>
             </q-field>
+
+          </q-card-main>
+          <q-card-separator />
+          <q-card-main dense>
 
             <q-field :label-width="2"
                      inset="full"

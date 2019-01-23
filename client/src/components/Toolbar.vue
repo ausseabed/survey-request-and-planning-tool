@@ -36,7 +36,7 @@
 </template>
 <script>
   import Vue from 'vue'
-  import Quasar, {
+  import { Quasar,
     QToolbar, QToolbarTitle, QBtn, QTooltip,
     QItem, QItemMain, QItemSide, QPopover, QList
   } from 'quasar'
@@ -102,9 +102,3 @@
     }
   });
 </script>
-<style>
-  .row {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-</style>

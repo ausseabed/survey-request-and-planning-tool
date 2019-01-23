@@ -74,7 +74,51 @@ module.exports = function (ctx) {
         }
       }
     },
-    framework: 'all',
+    // framework: 'all',
+    framework: {
+      components: [
+        'QLayout',
+        'QLayoutHeader',
+        'QLayoutDrawer',
+        'QPageContainer',
+        'QPage',
+        'QToolbar',
+        'QToolbarTitle',
+        'QBtn',
+        'QIcon',
+        'QList',
+        'QListHeader',
+        'QItem',
+        'QItemMain',
+        'QItemSide',
+        'QField',
+        'QInput',
+        'QSelect',
+        'QCheckbox',
+        'QCard',
+        'QCardTitle',
+        'QCardMain',
+        'QCardSeparator',
+        'QCardActions',
+        'QBreadcrumbs',
+        'QBreadcrumbsEl',
+        'QOptionGroup',
+        'QTooltip',
+        'QScrollArea',
+        'QItemTile',
+        'QDatetimePicker',
+        'QAutocomplete',
+      ],
+      directives: [
+        'Ripple'
+      ],
+      // Quasar plugins
+      plugins: [
+        'Notify'
+      ],
+      cssAddon: true,
+
+    },
     animations: 'all',
     pwa: {
       cacheExt: 'js,html,css,ttf,eot,otf,woff,woff2,json,svg,gif,jpg,jpeg,png,wav,ogg,webm,flac,aac,mp4,mp3',

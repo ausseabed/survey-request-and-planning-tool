@@ -116,7 +116,8 @@
                        />
             </q-field>
 
-            <q-field :label-width="2"
+            <q-field v-if="techSpec.timeSensitive"
+                     :label-width="2"
                      inset="full"
                      label="Requirements (if data capture is time sensitive)">
               <q-input :value="techSpec.timeSensitiveRequirements"
@@ -132,17 +133,17 @@
                        />
             </q-field>
 
-            <q-field :label-width="2"
+            <q-field v-if="techSpec.groundTruthing"
+                     :label-width="2"
                      inset="full"
                      label="Ground truthing method">
-              <q-select filter
-                        autofocus-filter
-                        :value="techSpec.groundTruthingMethod"
+              <q-select :value="techSpec.groundTruthingMethod"
                         @change="UPDATE({path:'techSpec.groundTruthingMethod', value: $event})"
                         :options="groundTruthingMethodOptions"/>
             </q-field>
 
-            <q-field :label-width="2"
+            <q-field v-if="techSpec.groundTruthing"
+                     :label-width="2"
                      inset="full"
                      label="Requirements for ground truthing">
               <q-input :value="techSpec.groundTruthingRequirements"
@@ -198,25 +199,41 @@
                        @blur="$v.techSpec.environmentalConditions.$touch"/>
             </q-field>
 
-            <q-field :label-width="2"
-                     inset="full"
-                     label="Positioning requirement"
-                     :error="$v.techSpec.positioningRequirement.$error"
-                     error-label="Positioning requirement is required"
-                     >
-              <q-select :value="techSpec.positioningRequirement"
-                        @change="UPDATE({path:'techSpec.positioningRequirement', value: $event})"
-                        :options="positioningRequirementsOptions"
-                        @blur="$v.techSpec.positioningRequirement.$touch"/>
-            </q-field>
 
-            <q-field :label-width="2"
-                     inset="full"
-                     label="Positioning requirement - other">
-              <q-input :value="techSpec.positioningRequirementOther"
-                       @input="UPDATE({path:'techSpec.positioningRequirementOther', value: $event})"
-                       type="text" />
-            </q-field>
+            <div class="overflow-hidden">
+              <div class="row gutter-x-xs">
+                <div class="col-8">
+                  <q-field :label-width="3"
+                           inset="full"
+                           label="Positioning requirement"
+                           :error="$v.techSpec.positioningRequirement.$error"
+                           error-label="Positioning requirement is required"
+                           >
+                    <q-select :value="techSpec.positioningRequirement"
+                              @change="UPDATE({path:'techSpec.positioningRequirement', value: $event})"
+                              :options="positioningRequirementsOptions"
+                              @blur="$v.techSpec.positioningRequirement.$touch"/>
+                  </q-field>
+                </div>
+
+                <div class="col-4">
+                  <q-field v-if="techSpec.positioningRequirement ? techSpec.positioningRequirement.toLowerCase() == 'other' : false"
+                           :label-width="1"
+                           class="auto"
+
+                           helper="Please provide other positioning requirement"
+                           >
+                    <q-input :value="techSpec.positioningRequirementOther"
+                             @input="UPDATE({path:'techSpec.positioningRequirementOther', value: $event})"
+                             type="text" />
+                  </q-field>
+                </div>
+
+
+              </div>
+
+            </div>
+
 
           </q-card-main>
         </q-card>

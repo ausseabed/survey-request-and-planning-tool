@@ -112,6 +112,12 @@ export class TechSpec {
       type:"varchar",
       nullable: true,
   })
+  groundTruthingMethodOther = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
   groundTruthingRequirements = undefined;
 
   @Column({

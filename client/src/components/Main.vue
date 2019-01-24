@@ -1,7 +1,7 @@
 <template>
   <q-page :style-fn="heightTweak" >
     <div class="overflow-hidden fit">
-      <div class="row q-pt-md q-pr-md gutter-sm fit ">
+      <div class="row q-pt-md q-pl-md gutter-sm fit ">
         <div class="col-4">
           <q-card class="column no-margin full-height justify-between">
             <div class="col-auto">

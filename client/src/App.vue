@@ -1,11 +1,9 @@
 <template>
-  <q-layout view="hhh lpR fFf" id="q-app">
+  <q-layout view="hHh Lpr lFf" id="q-app">
 	  <q-layout-header>
 		  <toolbar></toolbar>
 	  </q-layout-header>
 
-    <slot name="leftDrawer"></slot>
-    
     <q-page-container>
       <router-view></router-view>
     </q-page-container>

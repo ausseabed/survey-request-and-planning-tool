@@ -83,7 +83,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.surveyors = req.body.surveyors;
 
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
-  project.areaOfInterest = geojson.geometry;
+  project.areaOfInterest = geojson;
 
   project = await getConnection()
   .getRepository(ProjectMetadata)

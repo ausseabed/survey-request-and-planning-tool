@@ -96,9 +96,9 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   // postgis will only save a multi line string here, and the request may
   // include a FeatureCollection
   techSpec.surveyLines =
-    geojsonToMultiLineString(techSpec.surveyLines).geometry;
+    geojsonToMultiLineString(techSpec.surveyLines);
   techSpec.tidalGaugeLocations =
-    geojsonToMultiPoint(techSpec.tidalGaugeLocations).geometry;
+    geojsonToMultiPoint(techSpec.tidalGaugeLocations);
 
 
   techSpec = await getConnection()

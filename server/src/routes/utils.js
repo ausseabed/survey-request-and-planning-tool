@@ -65,7 +65,7 @@ export function geojsonToMultiPolygon(geojson) {
       }
     });
     let mp = multiPolygon(polys);
-    return mp;
+    return mp.geometry;
   } else {
     let err = boom.notImplemented(
       `Geojson type ${geojson.type} is not supported`);
@@ -98,7 +98,7 @@ export function geojsonToMultiLineString(geojson) {
       }
     });
     let mls = multiLineString(lines);
-    return mls;
+    return mls.geometry;
   } else {
     let err = boom.notImplemented(
       `Geojson type ${geojson.type} is not supported`);
@@ -131,7 +131,7 @@ export function geojsonToMultiPoint(geojson) {
       }
     });
     let mls = multiPoint(points);
-    return mls;
+    return mls.geometry;
   } else {
     let err = boom.notImplemented(
       `Geojson type ${geojson.type} is not supported`);

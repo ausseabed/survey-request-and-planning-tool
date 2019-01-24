@@ -1,8 +1,14 @@
 <template>
   <q-toolbar color="primary">
-    <img class="ml-2" height="43" src="~/assets/qa4-logo.png"/>
+    <router-link to="/">
+      <img class="ml-2" height="43" src="~/assets/qa4-logo.png"/>
+    </router-link>
+
     <q-toolbar-title>
-      {{ title }}
+      <router-link to="/" style="color: white; text-decoration:none;">
+        {{ title }}
+      </router-link>
+
       <span slot="subtitle">
         {{ description }}
       </span>

@@ -8,7 +8,7 @@
         </q-breadcrumbs>
         <div class="row">
           <q-btn icon="arrow_back" label="Project Metadata"
-            :to="'/project-metadata/' + techSpec.projectMetadataId">
+            :to="'/project-metadata/' + techSpec.id">
           </q-btn>
           <q-btn icon="fas fa-save" label="Save"
             @click="submit">
@@ -608,7 +608,6 @@ export default Vue.extend({
     slmap.initMap();
     this.mapSurveyLines = slmap;
     this.mapSurveyLines.onAdd = (geojson) => {
-      console.log(geojson);
       this.SET_SURVEY_LINES( geojson );
     }
     this.mapSurveyLines.drawStart = () => {
@@ -624,15 +623,10 @@ export default Vue.extend({
     tgmap.initMap();
     this.mapTidalGauge = tgmap;
     this.mapTidalGauge.onAdd = (geojson) => {
-      console.log(geojson);
       this.SET_TIDAL_GAUGE_LOCATIONS( geojson );
     }
 
-
-
-
     this.fetchData();
-
   },
 
   methods: {

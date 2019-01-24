@@ -220,22 +220,22 @@ export class TechSpec {
       type:"int",
       nullable: false,
   })
-  horizontalRefefenceSystem = undefined;
+  horizontalReferenceSystem = undefined;
 
   @Column({
       type:"int",
       nullable: false,
   })
-  verticalRefefenceSystem = undefined;
+  verticalReferenceSystem = undefined;
 
   @Column({
-      type:"varchar",
+      type:"int",
       nullable: false,
   })
   soundingDatum = undefined;
 
   @Column({
-      type:"varchar",
+      type:"int",
       nullable: false,
   })
   spheroid = undefined;

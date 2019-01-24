@@ -191,7 +191,7 @@
             <q-field :label-width="2"
                      inset="full"
                      label="Initial survey lines">
-              <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
+              <div ref="mapDivSurveyLines" id="mapDivSurveyLines" style="height:350px;"></div>
               <div class="row full-width justify-between items-center">
                 <div v-if="drawingSurveyLine"
                   class="q-body-1 text-faded col">
@@ -270,6 +270,298 @@
           </q-card-main>
         </q-card>
 
+        <q-card inline class="full-width">
+          <q-card-title> Survey technical requirements </q-card-title>
+          <q-card-main dense>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Overlap"
+                     :error="$v.techSpec.overlap.$error"
+                     error-label="Overlap is required"
+                     >
+              <q-input :value="techSpec.overlap"
+                       @input="UPDATE({path:'techSpec.overlap', value: $event})"
+                       type="text"
+                       @blur="$v.techSpec.overlap.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Grid size">
+              <q-input :value="techSpec.gridSize"
+                       @input="UPDATE({path:'techSpec.gridSize', value: $event})"
+                       type="text" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Swath width"
+                     :error="$v.techSpec.swathWidth.$error"
+                     error-label="Swath width is required"
+                     >
+              <q-input :value="techSpec.swathWidth"
+                       @input="UPDATE({path:'techSpec.swathWidth', value: $event})"
+                       type="text"
+                       @blur="$v.techSpec.swathWidth.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Line spacing">
+              <q-input :value="techSpec.lineSpacing"
+                       @input="UPDATE({path:'techSpec.lineSpacing', value: $event})"
+                       type="text" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Max survey speed">
+              <q-input :value="techSpec.maxSurveySpeed"
+                       @input="UPDATE({path:'techSpec.maxSurveySpeed', value: $event})"
+                       type="text" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Sounding density">
+              <q-input :value="techSpec.soundingDensity"
+                       @input="UPDATE({path:'techSpec.soundingDensity', value: $event})"
+                       type="text" />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Resolution"
+                     :error="$v.techSpec.resolution.$error"
+                     error-label="Resolution is required"
+                     >
+              <q-input :value="techSpec.resolution"
+                       @input="UPDATE({path:'techSpec.resolution', value: $event})"
+                       type="text"
+                       @blur="$v.techSpec.resolution.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Horizontal Accuracy (@95% confidence)"
+                     :error="$v.techSpec.horizontalAccuracy.$error"
+                     error-label="Horizontal Accuracy is required"
+                     >
+              <q-input :value="techSpec.horizontalAccuracy"
+                       @input="UPDATE({path:'techSpec.horizontalAccuracy', value: $event})"
+                       type="text"
+                       @blur="$v.techSpec.horizontalAccuracy.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Vertical Accuracy (@95% confidence)"
+                     :error="$v.techSpec.verticalAccuracy.$error"
+                     error-label="Vertical Accuracy is required"
+                     >
+              <q-input :value="techSpec.verticalAccuracy"
+                       @input="UPDATE({path:'techSpec.verticalAccuracy', value: $event})"
+                       type="text"
+                       @blur="$v.techSpec.verticalAccuracy.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Horizontal reference system"
+                     :error="$v.techSpec.horizontalReferenceSystem.$error"
+                     error-label="Horizontal reference system is required"
+                     >
+              <q-select :value="techSpec.horizontalReferenceSystem"
+                        @change="UPDATE({path:'techSpec.horizontalReferenceSystem', value: $event})"
+                        :options="horizontalReferenceSystems"
+                        @blur="$v.techSpec.horizontalReferenceSystem.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Vertical reference system"
+                     :error="$v.techSpec.verticalReferenceSystem.$error"
+                     error-label="Vertical reference system is required"
+                     >
+              <q-select :value="techSpec.verticalReferenceSystem"
+                        @change="UPDATE({path:'techSpec.verticalReferenceSystem', value: $event})"
+                        :options="verticalReferenceSystems"
+                        @blur="$v.techSpec.verticalReferenceSystem.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Sounding datumn"
+                     :error="$v.techSpec.soundingDatum.$error"
+                     error-label="Souding datumn is required"
+                     >
+              <q-select :value="techSpec.soundingDatum"
+                        @change="UPDATE({path:'techSpec.soundingDatum', value: $event})"
+                        :options="soundingDatums"
+                        @blur="$v.techSpec.soundingDatum.$touch"/>
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Spheroid"
+                     :error="$v.techSpec.spheroid.$error"
+                     error-label="Spheroid is required"
+                     >
+              <q-select :value="techSpec.spheroid"
+                        @change="UPDATE({path:'techSpec.spheroid', value: $event})"
+                        :options="spheroids"
+                        @blur="$v.techSpec.spheroid.$touch"/>
+            </q-field>
+          </q-card-main>
+        </q-card>
+
+        <q-card inline class="full-width">
+          <q-card-title> Delivery requirements </q-card-title>
+          <q-card-main dense>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Delivery method"
+                     :error="$v.techSpec.deliveryMethods.$error"
+                     error-label="Delivery method is required"
+                     >
+             <q-option-group
+               type="checkbox"
+               :value="techSpec.deliveryMethods"
+               :options="deliveryMethodOptions"
+               @change="UPDATE({path:'techSpec.deliveryMethods', value: $event})"
+               @blur="$v.techSpec.deliveryMethods.$touch"
+             />
+            </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Delivery requirements"
+                     :error="$v.techSpec.deliveryRequirements.$error"
+                     error-label="Delivery requirements is required"
+                     >
+              <q-input :value="techSpec.deliveryRequirements"
+                       @input="UPDATE({path:'techSpec.deliveryRequirements', value: $event})"
+                       type="textarea"
+                       @blur="$v.techSpec.deliveryRequirements.$touch"/>
+            </q-field>
+
+          </q-card-main>
+        </q-card>
+
+        <q-card inline class="full-width">
+          <q-card-title> Reporting </q-card-title>
+          <q-card-main dense>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Progress report requirements">
+              <q-input :value="techSpec.progressReportRequirements"
+                       @input="UPDATE({path:'techSpec.progressReportRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+          </q-card-main>
+        </q-card>
+
+
+        <q-card inline class="full-width">
+          <q-card-title> Other requirements </q-card-title>
+          <q-card-main dense>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Tidal gauges to be installed">
+              <q-checkbox :value="techSpec.tidalGauges"
+                       @input="UPDATE({path:'techSpec.tidalGauges', value: $event})"
+                       />
+            </q-field>
+
+
+            <!-- MAP -->
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Location of gauges">
+              <div ref="mapDivTidalGauge" id="mapDivTidalGauge" style="height:350px;"></div>
+              <div class="row full-width justify-between items-center">
+                <div
+                  class="q-body-1 text-faded col">
+                  Drag and drop shapefile (zip) or geojson onto map, or click the draw point button in map to manually create tidal gauge locations.
+                </div>
+                <div class="row col-auto">
+                  <q-btn icon="cloud_upload" label="Upload"
+                    @click="selectTidalGaugeFile">
+                  </q-btn>
+                  <input type="file" id="dataPath" v-on:change="setTidalGaugeFile" ref="fileInputTg" hidden />
+                  <q-btn icon="clear" label="Clear"
+                    :disable="!techSpec.tidalGaugeLocations"
+                    @click="SET_TIDAL_GAUGE_LOCATIONS( undefined )">
+                  </q-btn>
+                </div>
+
+              </div>
+            </q-field>
+
+            <q-field :label-width="3"
+                     inset="full"
+                     label="Tidal infrastructure requirements">
+              <q-input :value="techSpec.tidalInfrastructureRequirements"
+                       @input="UPDATE({path:'techSpec.tidalInfrastructureRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="3"
+                     inset="full"
+                     label="Requirements for approvals or permits needed">
+              <q-input :value="techSpec.approvalPermitRequirements"
+                       @input="UPDATE({path:'techSpec.approvalPermitRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="3"
+                     inset="full"
+                     label="Requirements for object detection (if any)">
+              <q-input :value="techSpec.objectDetectionRequirements"
+                       @input="UPDATE({path:'techSpec.objectDetectionRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="3"
+                     inset="full"
+                     label="Requirements for Positioning">
+              <q-input :value="techSpec.positioningRequirements"
+                       @input="UPDATE({path:'techSpec.positioningRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="3"
+                     inset="full"
+                     label="Requirements for data gaps">
+              <q-input :value="techSpec.dataGapRequirements"
+                       @input="UPDATE({path:'techSpec.dataGapRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="3"
+                     inset="full"
+                     label="Information on any existing risks to the data collection">
+              <q-input :value="techSpec.existingRisks"
+                       @input="UPDATE({path:'techSpec.existingRisks', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+            <q-field :label-width="3"
+                     inset="full"
+                     label="Additional requirements">
+              <q-input :value="techSpec.additionalRequirements"
+                       @input="UPDATE({path:'techSpec.additionalRequirements', value: $event})"
+                       type="textarea" />
+            </q-field>
+
+          </q-card-main>
+        </q-card>
+
 
 
       </div>
@@ -301,6 +593,7 @@ import { required, email, minLength } from 'vuelidate/lib/validators';
 import { RequestStatus }
   from '../../store/modules/tech-spec/tech-spec-state'
 import surveyLinesMap from './../olmap/survey-lines-map';
+import tidalGaugeMap from './../olmap/tidal-gauge-map';
 
 export default Vue.extend({
   mixins: [errorHandler],
@@ -309,21 +602,34 @@ export default Vue.extend({
   },
 
   mounted() {
-    var slmap = surveyLinesMap(this.$refs.mapDiv, {
+    var slmap = surveyLinesMap(this.$refs.mapDivSurveyLines, {
       basemap: "osm"
     })
     slmap.initMap();
-    this.map = slmap;
-    this.map.onAdd = (geojson) => {
+    this.mapSurveyLines = slmap;
+    this.mapSurveyLines.onAdd = (geojson) => {
       console.log(geojson);
       this.SET_SURVEY_LINES( geojson );
     }
-    this.map.drawStart = () => {
+    this.mapSurveyLines.drawStart = () => {
       this.drawingSurveyLine = true;
     }
-    this.map.drawEnd = () => {
+    this.mapSurveyLines.drawEnd = () => {
       this.drawingSurveyLine = false;
     }
+
+    var tgmap = tidalGaugeMap(this.$refs.mapDivTidalGauge, {
+      basemap: "osm"
+    })
+    tgmap.initMap();
+    this.mapTidalGauge = tgmap;
+    this.mapTidalGauge.onAdd = (geojson) => {
+      console.log(geojson);
+      this.SET_TIDAL_GAUGE_LOCATIONS( geojson );
+    }
+
+
+
 
     this.fetchData();
 
@@ -333,6 +639,7 @@ export default Vue.extend({
     ...mapMutations('techSpec', [
       types.UPDATE,
       types.SET_SURVEY_LINES,
+      types.SET_TIDAL_GAUGE_LOCATIONS,
     ]),
 
     fetchData () {
@@ -382,6 +689,11 @@ export default Vue.extend({
       this.$store.dispatch('techSpec/getValidSurveyClassifications');
       this.$store.dispatch('techSpec/getValidGroundTruthingMethods');
       this.$store.dispatch('techSpec/getValidPositioningRequirements');
+      this.$store.dispatch('techSpec/getValidDeliveryMethods');
+      this.$store.dispatch('techSpec/getHorizontalReferenceSystems');
+      this.$store.dispatch('techSpec/getVerticalReferenceSystems');
+      this.$store.dispatch('techSpec/getSoundingDatums');
+      this.$store.dispatch('techSpec/getSpheroids');
     },
 
     selectSurveyLinesFile () {
@@ -389,9 +701,15 @@ export default Vue.extend({
     },
     setSurveyLinesFile (event) {
       console.log(event);
-      this.map.addFile(event.target.files[0]);
+      this.mapSurveyLines.addFile(event.target.files[0]);
     },
-
+    selectTidalGaugeFile () {
+      this.$refs.fileInputTg.click();
+    },
+    setTidalGaugeFile (event) {
+      console.log(event);
+      this.mapTidalGauge.addFile(event.target.files[0]);
+    },
 
   },
 
@@ -404,6 +722,11 @@ export default Vue.extend({
       'validSurveyClassifications',
       'validGroundTruthingMethods',
       'validPositioningRequirements',
+      'validDeliveryMethods',
+      'horizontalReferenceSystems',
+      'verticalReferenceSystems',
+      'soundingDatums',
+      'spheroids',
     ]),
     ...mapGetters('projectMetadata',[
       'projectMetadata',
@@ -433,6 +756,12 @@ export default Vue.extend({
       });
       return opts;
     },
+    deliveryMethodOptions: function () {
+      const opts = this.validDeliveryMethods.map(oo => {
+        return {label: oo, value: oo};
+      });
+      return opts;
+    },
   },
 
   validations: {
@@ -442,6 +771,19 @@ export default Vue.extend({
       depthRange: { required },
       environmentalConditions: { required },
       positioningRequirement: { required },
+
+      overlap: { required },
+      swathWidth: { required },
+      resolution: { required },
+      horizontalAccuracy: { required },
+      verticalAccuracy: { required },
+      horizontalReferenceSystem: { required },
+      verticalReferenceSystem: { required },
+      soundingDatum: { required },
+      spheroid: { required },
+      deliveryMethods: { required },
+      deliveryRequirements: { required },
+
     }
   },
 
@@ -466,16 +808,26 @@ export default Vue.extend({
       }
     },
     'techSpec.surveyLines': function (newSurveyLines, oldSurveyLines) {
-      this.map.clear();
+      this.mapSurveyLines.clear();
       if (newSurveyLines) {
-        this.map.addGeojsonFeature(newSurveyLines);
-        this.map.fit();
+        this.mapSurveyLines.addGeojsonFeature(newSurveyLines);
+        this.mapSurveyLines.fit();
+      }
+    },
+    'techSpec.tidalGaugeLocations': function (newTidalGaugeLocations, oldTidalGaugeLocations) {
+      this.mapTidalGauge.clear();
+      if (newTidalGaugeLocations) {
+        this.mapTidalGauge.addGeojsonFeature(newTidalGaugeLocations);
+        this.mapTidalGauge.fit();
       }
     },
     'projectMetadata.areaOfInterest': function (newAoi, oldAoi) {
       if (newAoi) {
-        this.map.setGeojsonFeatureIntersecting(newAoi);
-        this.map.fit();
+        this.mapSurveyLines.setGeojsonFeatureIntersecting(newAoi);
+        this.mapSurveyLines.fit();
+
+        this.mapTidalGauge.setGeojsonFeatureIntersecting(newAoi);
+        this.mapTidalGauge.fit();
       }
     }
 
@@ -486,7 +838,8 @@ export default Vue.extend({
     return {
       orgSearchTerms: '',
       loading: false,
-      map:undefined,
+      mapSurveyLines:undefined,
+      mapTidalGauge:undefined,
       surveyLinesFile: undefined,
       drawingSurveyLine: false,
     }

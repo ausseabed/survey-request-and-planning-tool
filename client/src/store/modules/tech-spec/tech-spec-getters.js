@@ -25,3 +25,23 @@ export const validGroundTruthingMethods = state => {
 export const validPositioningRequirements = state => {
   return state.validPositioningRequirements;
 }
+
+export const validDeliveryMethods = state => {
+  return state.validDeliveryMethods;
+}
+
+export const horizontalReferenceSystems = state => {
+  return state.horizontalReferenceSystems;
+}
+
+export const verticalReferenceSystems = state => {
+  return state.verticalReferenceSystems;
+}
+
+export const soundingDatums = state => {
+  return state.soundingDatums;
+}
+
+export const spheroids = state => {
+  return state.spheroids;
+}

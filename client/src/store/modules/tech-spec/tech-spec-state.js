@@ -34,6 +34,36 @@ function initialState() {
       environmentalConditions: null,
       positioningRequirement: null,
       positioningRequirementOther: null,
+
+      overlap: null,
+      gridSize: null,
+      swathWidth: null,
+      lineSpacing: null,
+      maxSurveySpeed: null,
+      soundingDensity: null,
+      resolution: null,
+      horizontalAccuracy: null,
+      verticalAccuracy: null,
+      horizontalReferenceSystem: null,
+      verticalReferenceSystem: null,
+      soundingDatum: null,
+      spheroid: null,
+
+
+      deliveryMethods: [],
+      deliveryRequirements: null,
+
+      progressReportRequirements: null,
+
+      tidalGauges: false,
+      tidalGaugeLocations: null,
+      tidalInfrastructureRequirements: null,
+      approvalPermitRequirements: null,
+      objectDetectionRequirements: null,
+      positioningRequirements: null,
+      dataGapRequirements: null,
+      existingRisks: null,
+      additionalRequirements: null,
     },
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
@@ -41,6 +71,12 @@ function initialState() {
     validSurveyClassifications: [],
     validGroundTruthingMethods: [],
     validPositioningRequirements: [],
+    validDeliveryMethods: [],
+
+    horizontalReferenceSystems: [],
+    verticalReferenceSystems: [],
+    soundingDatums: [],
+    spheroids: [],
   }
 }
 

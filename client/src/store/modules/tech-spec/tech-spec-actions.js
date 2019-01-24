@@ -109,3 +109,58 @@ export const getValidPositioningRequirements =
     console.log(error);
   }
 }
+
+export const getValidDeliveryMethods =
+  async ({ commit, state }, payload) => {
+
+  const urlEndpoint = '/api/tech-spec/valid-delivery-methods';
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  try {
+    const response = await Vue.axios.get(urlEndpoint);
+    const sclas = response.data;
+
+    commit(mutTypes.SET_VALID_DELIVERY_METHODS, sclas);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
+    console.log(error);
+  }
+}
+
+async function getReferenceSystem(commit, type, setMutatation) {
+  const urlEndpoint = '/api/reference-system';
+  const payload = {params: {type: type}};
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  try {
+    const response = await Vue.axios.get(urlEndpoint, payload);
+    const sclas = response.data;
+
+    commit(setMutatation, sclas);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
+    console.log(error);
+  }
+}
+
+export const getHorizontalReferenceSystems =
+  async ({ commit, state }, payload) => {
+
+  getReferenceSystem(
+    commit, 'horizontal', mutTypes.SET_HORIZONTAL_REFERENCE_SYSTEMS);
+}
+
+export const getVerticalReferenceSystems =
+  async ({ commit, state }, payload) => {
+
+  getReferenceSystem(
+    commit, 'vertical', mutTypes.SET_VERTICAL_REFERENCE_SYSTEMS);
+}
+
+export const getSoundingDatums = async ({ commit, state }, payload) => {
+  getReferenceSystem(commit, 'sounding', mutTypes.SET_SOUNDING_DATUMS);
+}
+
+export const getSpheroids = async ({ commit, state }, payload) => {
+  getReferenceSystem(commit, 'spheroid', mutTypes.SET_SPHEROIDS);
+}

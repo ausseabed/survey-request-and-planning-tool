@@ -5,7 +5,7 @@ const boom = require('boom');
 import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
-  geojsonToMultiLineString }
+  geojsonToMultiLineString, geojsonToMultiPoint }
   from '../utils';
 import { TechSpec, SURVEY_TYPES, SURVEY_CLASSIFICATIONS,
   GROUND_TRUTHING_METHODS, POSITIONING_REQUIREMENTS, DELIVERY_METHODS }
@@ -97,6 +97,9 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   // include a FeatureCollection
   techSpec.surveyLines =
     geojsonToMultiLineString(techSpec.surveyLines).geometry;
+  techSpec.tidalGaugeLocations =
+    geojsonToMultiPoint(techSpec.tidalGaugeLocations).geometry;
+
 
   techSpec = await getConnection()
   .getRepository(TechSpec)

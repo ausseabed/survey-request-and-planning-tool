@@ -244,11 +244,8 @@ export class TechSpec {
   // delivery requirements
   //
 
-  @Column({
-      type:"varchar",
-      nullable: false,
-  })
-  deliveryMethod = undefined;
+  @Column("simple-array")
+  deliveryMethods = [];
 
   @Column({
       type:"varchar",

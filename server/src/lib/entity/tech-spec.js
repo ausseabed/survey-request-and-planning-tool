@@ -35,6 +35,11 @@ export const POSITIONING_REQUIREMENTS = [
   "Not sure",
 ];
 
+export const DELIVERY_METHODS = [
+  "Hard disk",
+  "Cloud storage",
+];
+
 @Entity()
 export class TechSpec {
 
@@ -43,6 +48,8 @@ export class TechSpec {
   // spec may be a default for survey application type.
   @PrimaryColumn('uuid')
   id;
+
+  // Survey Requirements
 
   // baseline or monitoring
   @Column({type:"varchar"})
@@ -150,4 +157,171 @@ export class TechSpec {
       nullable: true,
   })
   positioningRequirementOther = undefined;
+
+  //
+  // Survey technical requirements attributes
+  //
+
+  @Column({
+      type:"varchar",
+      nullable: false,
+  })
+  overlap = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  gridSize = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: false,
+  })
+  swathWidth = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  lineSpacing = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  maxSurveySpeed = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  soundingDensity = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  resolution = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: false,
+  })
+  horizontalAccuracy = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: false,
+  })
+  verticalAccuracy = undefined;
+
+  @Column({
+      type:"int",
+      nullable: false,
+  })
+  horizontalRefefenceSystem = undefined;
+
+  @Column({
+      type:"int",
+      nullable: false,
+  })
+  verticalRefefenceSystem = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: false,
+  })
+  soundingDatum = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: false,
+  })
+  spheroid = undefined;
+
+  //
+  // delivery requirements
+  //
+
+  @Column({
+      type:"varchar",
+      nullable: false,
+  })
+  deliveryMethod = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: false,
+  })
+  deliveryRequirements = undefined;
+
+  //
+  // Reporting requirements
+  //
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  progressReportRequirements = undefined;
+
+  //
+  // other requirements
+  //
+
+  @Column({
+      type:"bool",
+      nullable: true,
+  })
+  tidalGauges = undefined;
+
+  @Column("geometry", {
+    nullable: true,
+    spatialFeatureType: "MultiPoint",
+    srid: 4326
+  })
+  tidalGaugeLocations = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  tidalInfrastructureRequirements = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  approvalPermitRequirements = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  objectDetectionRequirements = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  positioningRequirements = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  dataGapRequirements = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  existingRisks = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  additionalRequirements = undefined;
 }

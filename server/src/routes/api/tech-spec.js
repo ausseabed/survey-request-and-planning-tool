@@ -8,7 +8,7 @@ import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
   geojsonToMultiLineString }
   from '../utils';
 import { TechSpec, SURVEY_TYPES, SURVEY_CLASSIFICATIONS,
-  GROUND_TRUTHING_METHODS, POSITIONING_REQUIREMENTS }
+  GROUND_TRUTHING_METHODS, POSITIONING_REQUIREMENTS, DELIVERY_METHODS }
   from '../../lib/entity/tech-spec';
 
 
@@ -32,6 +32,10 @@ router.get('/valid-ground-truthing-methods', async function (req, res) {
 // Gets a list of valid positioning requirements
 router.get('/valid-positioning-requirements', async function (req, res) {
   return res.json(POSITIONING_REQUIREMENTS);
+});
+
+router.get('/valid-delivery-methods', async function (req, res) {
+  return res.json(DELIVERY_METHODS);
 });
 
 // Gets a list of tech specs

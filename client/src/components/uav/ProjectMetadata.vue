@@ -1,5 +1,7 @@
 <template>
   <div class="row justify-center">
+    <q-scroll-observable @scroll="hasScrolled"></q-scroll-observable>
+
     <div inline style="width: 900px; max-width: 90vw;">
       <div class="row justify-between">
         <q-breadcrumbs separator=">" color="light">
@@ -25,6 +27,36 @@
 
 
     <q-page padding class="docs-input row justify-center">
+      <transition
+        appear
+        enter-active-class="animated slideInRight"
+        leave-active-class="animated slideOutRight"
+      >
+        <q-page-sticky
+          v-if="showFloatingButtons"
+          position="bottom-right"
+          :offset="[18, 18]"
+          style="z-index:100">
+
+          <q-btn
+            round
+            color="primary"
+            @click="submit"
+            icon="fas fa-save"
+          />
+          <q-btn :disable="!id"
+            round
+            color="primary"
+            :to="'/survey-technical-specification/' + id"
+            icon="arrow_forward"
+          >
+            <q-tooltip :offset="[10, 10]">
+              Switch to technical specifications
+            </q-tooltip>
+          </q-btn>
+        </q-page-sticky>
+      </transition>
+
       <div style="width: 900px; max-width: 90vw;">
         <q-card inline style="width:100%">
           <q-card-title> Basic </q-card-title>
@@ -631,7 +663,11 @@ export default Vue.extend({
 
     mouseoverMatchingProjMeta(matchingProjMeta) {
       this.map.highlightFeatureId(matchingProjMeta.id);
-    }
+    },
+
+    hasScrolled (scroll) {
+      this.showFloatingButtons = scroll.position > 30;
+    },
   },
 
   computed: {
@@ -740,6 +776,7 @@ export default Vue.extend({
       canCheckGeometry: false,
       orgSearchTerms: '',
       matchingProjMetas:undefined,
+      showFloatingButtons: false,
     }
   }
 });

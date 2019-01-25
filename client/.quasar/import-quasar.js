@@ -11,7 +11,7 @@
 
 import Vue from 'vue'
 
-import {Quasar,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QItem,QItemMain,QItemSide,QField,QInput,QSelect,QCheckbox,QCard,QCardTitle,QCardMain,QCardSeparator,QCardActions,QBreadcrumbs,QBreadcrumbsEl,QOptionGroup,QTooltip,QScrollArea,QItemTile,QDatetimePicker,QAutocomplete,Ripple,Notify} from 'quasar'
+import {Quasar,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QItem,QItemMain,QItemSide,QField,QInput,QSelect,QCheckbox,QCard,QCardTitle,QCardMain,QCardSeparator,QCardActions,QBreadcrumbs,QBreadcrumbsEl,QOptionGroup,QTooltip,QScrollArea,QItemTile,QDatetimePicker,QAutocomplete,QPageSticky,QFab,QFabAction,QScrollObservable,Ripple,Notify} from 'quasar'
 
 
-Vue.use(Quasar, { config: {},components: {QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QItem,QItemMain,QItemSide,QField,QInput,QSelect,QCheckbox,QCard,QCardTitle,QCardMain,QCardSeparator,QCardActions,QBreadcrumbs,QBreadcrumbsEl,QOptionGroup,QTooltip,QScrollArea,QItemTile,QDatetimePicker,QAutocomplete},directives: {Ripple},plugins: {Notify} })
+Vue.use(Quasar, { config: {},components: {QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QItem,QItemMain,QItemSide,QField,QInput,QSelect,QCheckbox,QCard,QCardTitle,QCardMain,QCardSeparator,QCardActions,QBreadcrumbs,QBreadcrumbsEl,QOptionGroup,QTooltip,QScrollArea,QItemTile,QDatetimePicker,QAutocomplete,QPageSticky,QFab,QFabAction,QScrollObservable},directives: {Ripple},plugins: {Notify} })

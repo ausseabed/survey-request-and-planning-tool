@@ -108,6 +108,10 @@ module.exports = function (ctx) {
         'QItemTile',
         'QDatetimePicker',
         'QAutocomplete',
+        'QPageSticky',
+        'QFab',
+        'QFabAction',
+        'QScrollObservable',
       ],
       directives: [
         'Ripple'

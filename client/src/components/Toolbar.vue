@@ -1,7 +1,7 @@
 <template>
   <q-toolbar color="primary">
     <router-link to="/">
-      <img class="ml-2" height="43" src="~/assets/qa4-logo.png"/>
+      <img class="ml-2" height="43" src="~/assets/aus-seabed-logo.png"/>
     </router-link>
 
     <q-toolbar-title>

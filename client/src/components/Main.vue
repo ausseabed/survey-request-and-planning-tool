@@ -10,28 +10,44 @@
               </q-card-title>
               <q-card-separator />
             </div>
-            <q-card-main class="col">
+            <q-card-main class="col" style="padding:0px">
               <q-scroll-area class="fit">
-                <q-list no-border highlight
+                <q-list no-border
                   @mouseleave.native="mouseleaveMatchingProjMeta">
                   <q-item
                     v-for="matchingProjMeta in matchingProjMetas"
                     :key="matchingProjMeta.id"
                     @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
-                    :to="'/project-metadata/' + matchingProjMeta.id"
                     >
 
                     <q-item-main>
+                      <div v-if="activeProjMetaId == matchingProjMeta.id" class="self-stretch bg-light q-mb-sm" style="width:100%; height:1px"></div>
+                      <div v-if="activeProjMetaId != matchingProjMeta.id" class="self-stretch  q-mb-sm" style="width:100%; height:1px"></div>
                       <q-item-tile label>{{matchingProjMeta.surveyName}}</q-item-tile>
-                      <q-item-tile sublabel>{{getProjectStartDateString(matchingProjMeta)}}</q-item-tile>
+
+                      <div class="row">
+                        <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt"/>
+                        <div class="column q-pl-sm">
+                          <q-item-tile sublabel>{{getProjectStartDateString(matchingProjMeta)}}</q-item-tile>
+                          <q-item-tile sublabel>{{matchingProjMeta.projectStatus}}</q-item-tile>
+                        </div>
+                      </div>
+                      <transition-expand>
+                        <div v-if="activeProjMetaId == matchingProjMeta.id" class="row justify-end">
+                          <q-btn outline size="sm" color="primary" label="Metadata"
+                            :to="'/project-metadata/' + matchingProjMeta.id">
+                            <!-- <q-tooltip> View survey metadata </q-tooltip> -->
+                          </q-btn>
+                          <q-btn outline size="sm" color="primary" label="Specifications"
+                            :to="'/survey-technical-specification/' + matchingProjMeta.id">
+                            <!-- <q-tooltip> View survey technical specifications </q-tooltip> -->
+                          </q-btn>
+                        </div>
+                      </transition-expand>
+
+                      <div v-if="activeProjMetaId == matchingProjMeta.id" class="self-stretch bg-light q-mt-xs" style="width:100%; height:1px"></div>
+                      <div v-if="activeProjMetaId != matchingProjMeta.id" class="self-stretch q-mt-xs" style="width:100%; height:1px"></div>
                     </q-item-main>
-
-                    <q-item-side :icon="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color">
-                      <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
-                        {{matchingProjMeta.projectStatus}}
-                      </q-tooltip>
-                    </q-item-side>
-
                   </q-item>
                 </q-list>
 
@@ -69,13 +85,15 @@ import { QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions,
   QBtn, date } from 'quasar'
 const _ = require('lodash');
 
+import TransitionExpand from './TransitionExpand.vue';
 import { errorHandler } from './mixins/error-handling'
 import OlMap from './olmap/olmap';
 
 export default Vue.extend({
   mixins: [errorHandler],
   components: {
-    QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions, QBtn
+    QParallax, QCard, QCardTitle, QCardMain, QIcon, QCardActions, QBtn,
+    TransitionExpand
   },
 
   mounted() {
@@ -136,10 +154,12 @@ export default Vue.extend({
     }, 500),
 
     mouseoverMatchingProjMeta(matchingProjMeta) {
+      this.activeProjMetaId = matchingProjMeta.id;
       this.map.highlightFeatureId(matchingProjMeta.id);
     },
     mouseleaveMatchingProjMeta() {
       //clears selection in map
+      this.activeProjMetaId = undefined;
       this.map.highlightFeatureId(undefined);
     },
 
@@ -173,6 +193,7 @@ export default Vue.extend({
     return {
       map: null,
       matchingProjMetas:undefined,
+      activeProjMetaId:undefined,
     }
   }
 

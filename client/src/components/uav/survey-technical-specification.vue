@@ -641,12 +641,12 @@ export default Vue.extend({
       const id = this.$route.params.id;
       this.$store.dispatch(
         'projectMetadata/getProjectMetadata', { id: id })
-      this.UPDATE({path:'techSpec.id', value:id});
       this.$store.dispatch('techSpec/getTechSpec', { id: id }).then(no => {
         if (this.requestStatus == RequestStatus.SUCCESS) {
           // then all good, tech spec existed and it is loaded
         } else if (this.requestStatus == RequestStatus.ERROR) {
           this.RESET_TECH_SPEC();
+          this.UPDATE({path:'techSpec.id', value:id});
           const status = this.requestError.response.status;
           if (status == 404) {
             // this is also ok, as it just means the tech spec hasn't been

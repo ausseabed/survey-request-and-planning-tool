@@ -632,6 +632,7 @@ export default Vue.extend({
   methods: {
     ...mapMutations('techSpec', [
       types.UPDATE,
+      types.RESET_TECH_SPEC,
       types.SET_SURVEY_LINES,
       types.SET_TIDAL_GAUGE_LOCATIONS,
     ]),
@@ -645,6 +646,7 @@ export default Vue.extend({
         if (this.requestStatus == RequestStatus.SUCCESS) {
           // then all good, tech spec existed and it is loaded
         } else if (this.requestStatus == RequestStatus.ERROR) {
+          this.RESET_TECH_SPEC();
           const status = this.requestError.response.status;
           if (status == 404) {
             // this is also ok, as it just means the tech spec hasn't been

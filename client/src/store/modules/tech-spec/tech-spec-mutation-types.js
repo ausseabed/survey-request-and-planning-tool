@@ -1,5 +1,6 @@
 export const UPDATE = 'UPDATE';
 export const RESET = 'RESET';
+export const RESET_TECH_SPEC = 'RESET_TECH_SPEC';
 
 export const SET_CONTRACT_NUMBER = 'SET_CONTRACT_NUMBER';
 export const SET_SURVEY_TYPE = 'SET_SURVEY_TYPE';

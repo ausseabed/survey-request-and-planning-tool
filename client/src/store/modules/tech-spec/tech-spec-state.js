@@ -92,6 +92,9 @@ export default {
         state[key] = s[key]
       })
     },
+    [types.RESET_TECH_SPEC](state) {
+      state.techSpec = initialState();
+    },
     ...mutations.mutations
   }
 }

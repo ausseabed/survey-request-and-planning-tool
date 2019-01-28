@@ -30,6 +30,20 @@ export const save = ({ commit, state }) => {
   });
 }
 
+export const deleteProjectMetadata = ({ commit, state }, payload) => {
+  var url_endpoint = '/api/project-metadata/' + payload.id;
+  return new Promise((resolve, reject) => {
+    Vue.axios.delete(url_endpoint)
+    .then((response) => {
+      commit('reset');
+      resolve();
+    })
+    .catch((error) => {
+      reject(error);
+    });
+  });
+}
+
 export const getProjectMetadata = ({ commit, state }, payload) => {
   var url_endpoint = '/api/project-metadata/' + payload.id;
   if (payload.version) { url_endpoint += "?version=" + payload.version }

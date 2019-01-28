@@ -118,7 +118,8 @@ module.exports = function (ctx) {
       ],
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Dialog',
       ],
       cssAddon: true,
 

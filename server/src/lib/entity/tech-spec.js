@@ -321,4 +321,13 @@ export class TechSpec {
       nullable: true,
   })
   additionalRequirements = undefined;
+
+
+
+  @Column({
+      type:"bool",
+      nullable: false,
+      default: false,
+  })
+  deleted = false;
 }

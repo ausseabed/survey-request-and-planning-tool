@@ -12,6 +12,9 @@
           <q-btn icon="fas fa-save" label="Save"
             @click="submit">
           </q-btn>
+          <q-btn icon="fas fa-trash" label="Delete"
+            @click="deleteProject">
+          </q-btn>
           <q-btn label="Specifications" icon="arrow_forward"
             :disable="!id"
             :to="'/survey-technical-specification/' + id">
@@ -543,6 +546,35 @@ export default Vue.extend({
         this.$router.replace({ path: `/project-metadata/${pmd.id}` })
         this.notifySuccess('Saved project metadata');
       });
+    },
+
+    deleteProject() {
+      if (this.id) {
+        // an existing id indicated this project has been saved, so check
+        // with user if they really want to delete project.
+        this.$q.dialog({
+          title: 'Delete project',
+          message: `Project ${this.surveyName} will be deleted`,
+          ok: 'Delete',
+          cancel: 'Cancel'
+        }).then(() => {
+
+          this.$store.dispatch(
+            'projectMetadata/deleteProjectMetadata',
+            { id: this.id }
+          ).then(pmd => {
+            this.notifySuccess('Deleted project');
+            this.$router.replace({ path: `/` });
+          });
+        }).catch(() => {
+          // Picked "Cancel" or dismissed, nothing to do (just catch error)
+        });
+      } else {
+        // no id, so hasn't been saved. I this case reset form and go back
+        // to main page.
+        this.$store.commit('projectMetadata/reset');
+        this.$router.replace({ path: `/` });
+      }
     },
 
     createNewOrganisation() {

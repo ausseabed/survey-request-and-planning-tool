@@ -113,4 +113,12 @@ export class ProjectMetadata {
   @JoinTable()
   surveyors;
 
+
+
+  @Column({
+      type:"bool",
+      nullable: false,
+      default: false,
+  })
+  deleted = false;
 }

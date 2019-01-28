@@ -8,6 +8,7 @@ import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon }
   from '../utils';
 import { ProjectMetadata, PROJECT_STATUSES }
   from '../../lib/entity/project-metadata';
+import { TechSpec } from '../../lib/entity/tech-spec';
 
 
 var router = express.Router();
@@ -41,11 +42,15 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
     }
   );
 
-  if (!project) {
+  if (!project || project.deleted) {
     let err = boom.notFound(
       `ProjectMetadata ${req.params.id} does not exist`);
     throw err;
   }
+
+  // don't return the deleted flag
+  delete project.deleted;
+
   return res.json(project);
 }));
 
@@ -85,11 +90,43 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
   project.areaOfInterest = geojson;
 
+  // don't let the post request mark a project as deleted
+  delete project.deleted;
+
   project = await getConnection()
   .getRepository(ProjectMetadata)
   .save(project)
 
   return res.json(project)
+}));
+
+router.delete(
+  '/:id', isAuthenticated, asyncMiddleware(async function (req, res) {
+
+  const projMetaRepo = getConnection().getRepository(ProjectMetadata);
+  const techSpecRepo = getConnection().getRepository(TechSpec);
+
+  let project = await projMetaRepo.findOne(req.params.id);
+
+  if (!project) {
+    let err = boom.notFound(
+      `ProjectMetadata ${req.params.id} does not exist, cannot delete`);
+    throw err;
+  }
+
+  project.deleted = true;
+  project = await projMetaRepo.save(project);
+
+  let techSpec = await techSpecRepo.findOne(req.params.id);
+  if (techSpec) {
+    // a project metadata entry can exist without a tech-spec, but not the
+    // other way around.
+    techSpec.deleted = true;
+    techSpec = await techSpecRepo.save(techSpec);
+  }
+
+  const responseSuccess = { success : 'Deleted'};
+  return res.json(responseSuccess);
 }));
 
 module.exports = router;

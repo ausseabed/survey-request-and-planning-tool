@@ -59,7 +59,7 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
     }
   );
 
-  if (!techSpec) {
+  if (!techSpec || techSpec.deleted) {
     let err = boom.notFound(
       `TechSpec ${req.params.id} does not exist`);
     throw err;
@@ -100,6 +100,8 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   techSpec.tidalGaugeLocations =
     geojsonToMultiPoint(techSpec.tidalGaugeLocations);
 
+  // don't let the post request mark a tech spec as deleted
+  delete techSpec.deleted;
 
   techSpec = await getConnection()
   .getRepository(TechSpec)

@@ -37,6 +37,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     `project_metadata.deleted = :deleted`,
     {deleted: false}
   )
+  .orderBy("project_metadata.startDate")
   .getMany();
 
   return res.json(projects);

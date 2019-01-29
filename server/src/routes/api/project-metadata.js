@@ -20,7 +20,18 @@ router.get('/valid-statuses', async function (req, res) {
 
 // Gets a list of project metadata
 router.get('/', async function (req, res) {
-  let projects = await getConnection().getRepository(ProjectMetadata).find();
+
+  let projects = await getConnection()
+  .getRepository(ProjectMetadata)
+  .createQueryBuilder("project_metadata")
+  .select(["project_metadata.id", "project_metadata.surveyName",
+    "project_metadata.startDate", "project_metadata.projectStatus"])
+  .where(
+    `project_metadata.deleted = :deleted`,
+    {deleted: false}
+  )
+  .getMany();
+
   return res.json(projects);
 });
 

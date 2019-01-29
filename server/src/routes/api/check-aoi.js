@@ -33,6 +33,9 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       ST_SetSRID(ST_GeomFromGeoJSON(:geomStr),4326)
     )`,
     {geomStr: geomString}
+  ).andWhere(
+    `project_metadata.deleted = :deleted`,
+    {deleted: false}
   )
   .getMany();
 

@@ -40,6 +40,10 @@ export function authenticatedUser(req, res, next) {
     return next();
 }
 
+export function isUuid(testString) {
+  return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(testString);
+}
+
 export function geojsonToMultiPolygon(geojson) {
   //converts a geosjon object to a multipolygon geojson object
   if (typeof geojson === 'string' || geojson instanceof String) {

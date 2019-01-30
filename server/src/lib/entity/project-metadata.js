@@ -1,11 +1,12 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
-  JoinTable} from "typeorm";
+  JoinTable, OneToMany} from "typeorm";
 
 import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
 import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
 import { SurveyApplication } from './survey-application';
+import { SurveyFile } from './survey-file';
 
 // valid values for the `projectStatus` attribute
 export const PROJECT_STATUSES = [
@@ -113,6 +114,10 @@ export class ProjectMetadata {
   @JoinTable()
   surveyors;
 
+  @OneToMany(
+    type => SurveyFile,
+    surveyFile => surveyFile.projectMetadata)
+  files;
 
 
   @Column({

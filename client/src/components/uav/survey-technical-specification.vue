@@ -15,6 +15,9 @@
           <q-btn icon="fas fa-save" label="Save"
             @click="submit">
           </q-btn>
+          <q-btn icon="arrow_forward" label="Files"
+            :to="'/survey-file/' + projectMetadata.id">
+          </q-btn>
         </div>
       </div>
     </div>
@@ -49,6 +52,16 @@
             @click="submit"
             icon="fas fa-save"
           />
+          <q-btn
+            round
+            color="primary"
+            :to="'/survey-file/' + projectMetadata.id"
+            icon="arrow_forward"
+          >
+            <q-tooltip :offset="[10, 10]">
+              View survey files
+            </q-tooltip>
+          </q-btn>
         </q-page-sticky>
 
       </transition>
@@ -624,7 +637,7 @@ const path = require('path');
 
 import { required, email, minLength } from 'vuelidate/lib/validators';
 import { RequestStatus }
-  from '../../store/modules/tech-spec/tech-spec-state'
+  from '../../store/modules/request-status'
 import surveyLinesMap from './../olmap/survey-lines-map';
 import tidalGaugeMap from './../olmap/tidal-gauge-map';
 

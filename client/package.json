@@ -16,6 +16,7 @@
     "custom-protocol-detection": "^1.0.1",
     "intro.js": "^2.9.3",
     "jquery": "^3.3.1",
+    "js-file-download": "^0.4.4",
     "openlayers": "^4.6.5",
     "readable-timespan": "^1.2.0",
     "shpjs": "^3.4.2",

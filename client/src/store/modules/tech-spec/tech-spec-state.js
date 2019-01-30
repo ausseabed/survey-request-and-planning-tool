@@ -3,12 +3,7 @@ import * as getters from './tech-spec-getters'
 import mutations from './tech-spec-mutations'
 import * as types from './tech-spec-mutation-types'
 
-export const RequestStatus = Object.freeze({
-    NOT_REQUESTED:   Symbol("not requested"),
-    REQUESTED:  Symbol("requested"),
-    SUCCESS: Symbol("success"),
-    ERROR: Symbol("error"),
-});
+import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {

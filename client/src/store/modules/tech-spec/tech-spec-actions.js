@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import * as mutTypes from './tech-spec-mutation-types'
-import { RequestStatus } from './tech-spec-state'
+import { RequestStatus } from '../request-status'
 
 export const getTechSpec = async ({ commit, state }, payload) => {
   const urlEndpoint = '/api/tech-spec/' + payload.id;

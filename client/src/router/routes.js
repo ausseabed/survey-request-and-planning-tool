@@ -7,7 +7,9 @@ import UavTender from 'components/uav/Tender.vue'
 import UavSession from 'components/uav/Session.vue'
 import UavProjects from 'components/uav/Projects.vue'
 import ProjectMetadata from 'components/uav/ProjectMetadata.vue'
-import SurveyTechnicalSpecification from 'components/uav/survey-technical-specification.vue'
+import SurveyTechnicalSpecification
+  from 'components/uav/survey-technical-specification.vue'
+import SurveyFile from 'components/uav/survey-file.vue'
 
 
 import CustomDataset from 'components/controls/CreateCustomDataset.vue'
@@ -29,6 +31,7 @@ export default [
     { path: '/project-metadata/:id', component: ProjectMetadata },
     { path: '/survey-technical-specification/:id',
       component: SurveyTechnicalSpecification},
+    { path: '/survey-file/:id', component: SurveyFile},
 
     {
       path: '/auth/callback',

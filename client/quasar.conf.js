@@ -112,6 +112,10 @@ module.exports = function (ctx) {
         'QFab',
         'QFabAction',
         'QScrollObservable',
+        'QUploader',
+        'QTable',
+        'QTr',
+        'QTd',
       ],
       directives: [
         'Ripple'

@@ -93,14 +93,13 @@
           <q-card-title> Upload </q-card-title>
           <q-card-main>
 
-
-
             <q-uploader
+              ref="uploader"
               :multiple="true"
               :auto-expand="true"
               url=""
-              :upload-factory="uploadFiles"/>
-
+              :upload-factory="uploadFiles"
+              @finish="uploadFinished"/>
 
           </q-card-main>
 
@@ -205,16 +204,15 @@ export default Vue.extend({
       };
 
       const uploadUrl = `/api/survey-file/${this.projectMetadata.id}/upload/`;
+      return axios.put(uploadUrl, data, config);
+    },
 
-      axios.put(uploadUrl, data, config)
-      .then(function (res) {
-        console.log("done upload]");
-        console.log(res);
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-      // console.log(file);
+    uploadFinished () {
+      this.$refs.uploader.reset();
+      this.notifySuccess("Uploaded files");
+      // get the file list from the server, each uploaded fiel gets a server
+      // asigned id, so theres no shortcut we can do here
+      this.$store.dispatch('surveyFile/getFiles');
     },
 
     hasScrolled (scroll) {

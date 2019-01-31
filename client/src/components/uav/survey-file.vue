@@ -6,15 +6,12 @@
       <div class="row justify-between">
         <q-breadcrumbs separator=">" color="light">
           <q-breadcrumbs-el label="Home" icon="home" to="/" />
-          <q-breadcrumbs-el label="Survey files" icon="fas fa-clipboard-list" />
+          <q-breadcrumbs-el label="Attachments" icon="attach_file" />
         </q-breadcrumbs>
         <div class="row">
           <q-btn icon="arrow_back" label="Technical specifications"
             :to="'/survey-technical-specification/' + projectMetadata.id">
           </q-btn>
-          <!-- <q-btn icon="fas fa-save" label="Save"
-            @click="submit">
-          </q-btn> -->
         </div>
       </div>
     </div>
@@ -40,15 +37,9 @@
             icon="arrow_back"
           >
             <q-tooltip :offset="[10, 10]">
-              Return to project metadata
+              Return to technical specification
             </q-tooltip>
           </q-btn>
-          <q-btn
-            round
-            color="primary"
-            @click="submit"
-            icon="fas fa-save"
-          />
         </q-page-sticky>
 
       </transition>
@@ -151,10 +142,6 @@ export default Vue.extend({
 
     },
 
-    submit() {
-
-    },
-
     downloadFile(e, props) {
       // The vuex store uses axios to download the file. Axios includes the
       // auth bearer token in this request, requried by the web handler, hence
@@ -239,9 +226,9 @@ export default Vue.extend({
         this.fetchData();
       }
     },
-    'projectMetadata.id': function (newId, oldId) {
-      if (newId) {
-        this.UPDATE({path:'id', value:newId});
+    'projectMetadata': function (newPmd, oldPmd) {
+      if (newPmd) {
+        this.UPDATE({path:'id', value:newPmd.id});
       }
     },
     'id': function (newId, oldId) {

@@ -16,6 +16,7 @@ import surveyApplication
   from './modules/survey-application/survey-application-state'
 import techSpec from './modules/tech-spec/tech-spec-state'
 import surveyFile from './modules/survey-file/survey-file-state'
+import deliverable from './modules/deliverable/deliverable-state'
 
 
 Vue.use(Vuex)
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     surveyApplication,
     techSpec,
     surveyFile,
+    deliverable,
   },
   strict: debug
 })

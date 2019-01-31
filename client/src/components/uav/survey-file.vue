@@ -57,21 +57,21 @@
           <q-tr slot="body" slot-scope="props" :props="props">
             <q-td key="fileName" :props="props">
               <span class="text-italic">{{ props.row.fileName }}</span>
+              <q-progress v-if="props.row.progress != 0" class="q-mt-sm" :percentage="props.row.progress" />
             </q-td>
-            <!-- <q-td key="calories" :props="props">
-              <div class="row items-center justify-between no-wrap">
-                <q-btn size="sm" round dense color="secondary" icon="remove" @click="props.row.calories--" class="q-mr-xs" />
-                <q-btn size="sm" round dense color="tertiary" icon="add" @click="props.row.calories++" class="q-mr-sm" />
-                <div>{{ props.row.calories }}</div>
-              </div>
-            </q-td> -->
-            <q-td key="created" :props="props">
+            <q-td key="created" :props="props" style="width: 110px;">
               {{ getDateString(props.row.created) }}
             </q-td>
             <q-td key="actions" :props="props" style="width: 80px; padding-right: 5px; padding-left: 5px;">
               <div class="row justify-center">
-                <q-btn size="md" flat dense icon="cloud_download" @click="downloadFile($event, props.row)"/>
-                <q-btn size="md" flat dense icon="delete" @click="deleteFile($event, props.row)"/>
+                <q-btn size="md" flat dense
+                  icon="cloud_download"
+                  @click="downloadFile($event, props.row)"
+                  :disable="props.row.downloading"/>
+                <q-btn size="md" flat dense
+                  icon="delete"
+                  @click="deleteFile($event, props.row)"
+                  :disable="props.row.downloading"/>
               </div>
             </q-td>
           </q-tr>

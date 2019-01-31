@@ -116,6 +116,7 @@ module.exports = function (ctx) {
         'QTable',
         'QTr',
         'QTd',
+        'QProgress',
       ],
       directives: [
         'Ripple'

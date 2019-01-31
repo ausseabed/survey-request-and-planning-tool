@@ -13,7 +13,11 @@ export const getFiles = async ({ commit, state }) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
 
     const response = await Vue.axios.get(urlEndpoint);
-    const files = response.data;
+    let files = response.data;
+    files.forEach((f) => {
+      f.progress = 0;
+      f.downloading = false;
+    });
 
     commit(mutTypes.UPDATE, {path: 'files', value: files});
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
@@ -27,11 +31,38 @@ export const getFiles = async ({ commit, state }) => {
 export const downloadFile = async ({commit, state}, payload) => {
   const urlEndpoint =
     `/api/survey-file/${state.id}/download/${payload.id}`;
-  const getParams = { responseType: 'arraybuffer' }
+
+  commit(
+    mutTypes.SET_FILE_DOWNLOADING,
+    {fileId: payload.id, downloading: true}
+  );
+
+  const getParams = {
+    responseType: 'arraybuffer',
+    onDownloadProgress: (progressEvent) => {
+      let percentCompleted = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total);
+      console.log(progressEvent.lengthComputable);
+      console.log(percentCompleted);
+
+      commit(
+        mutTypes.SET_FILE_PROGRESS,
+        {fileId: payload.id, progress: percentCompleted}
+      );
+    }
+  }
 
   Vue.axios.get(urlEndpoint, getParams)
   .then((response) => {
     FileDownload(response.data, payload.name);
+    commit(
+      mutTypes.SET_FILE_PROGRESS,
+      {fileId: payload.id, progress: 0}
+    );
+    commit(
+      mutTypes.SET_FILE_DOWNLOADING,
+      {fileId: payload.id, downloading: false}
+    );
   });
 }
 

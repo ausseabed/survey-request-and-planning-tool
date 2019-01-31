@@ -88,6 +88,7 @@ router.get('/:id/download/:name', isAuthenticated,
     readStream.end(data);
     res.set(
       'Content-disposition', 'attachment; filename=' + surveyFile.fileName);
+    res.set('Content-length', data.length);
     // res.set(
     //   'Content-length', data.length);
     // response.set('Content-Type', 'text/plain');

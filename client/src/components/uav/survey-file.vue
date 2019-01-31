@@ -90,7 +90,9 @@
               :auto-expand="true"
               url=""
               :upload-factory="uploadFiles"
-              @finish="uploadFinished"/>
+              @start="uploadStarted"
+              @finish="uploadFinished"
+              @fail="uploadFailed"/>
 
           </q-card-main>
 
@@ -194,12 +196,27 @@ export default Vue.extend({
       return axios.put(uploadUrl, data, config);
     },
 
+    uploadStarted () {
+      this.fileUploadFailed = false;
+    },
+
     uploadFinished () {
-      this.$refs.uploader.reset();
-      this.notifySuccess("Uploaded files");
+      if (this.fileUploadFailed) {
+        this.notifyError(`Failed to upload`);
+      } else {
+        this.$refs.uploader.reset();
+        this.notifySuccess("Uploaded files");
+      }
+
       // get the file list from the server, each uploaded fiel gets a server
       // asigned id, so theres no shortcut we can do here
       this.$store.dispatch('surveyFile/getFiles');
+    },
+
+    uploadFailed (file, xhr) {
+      this.fileUploadFailed = true;
+      console.log(file);
+      console.log(xhr);
     },
 
     hasScrolled (scroll) {
@@ -244,6 +261,7 @@ export default Vue.extend({
     return {
       loading: false,
       showFloatingButtons: false,
+      fileUploadFailed: false,
       columns: [
         {
           name: 'fileName',

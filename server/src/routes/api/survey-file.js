@@ -133,9 +133,6 @@ async function saveFile(file, projectMetadata) {
   // UTC milliseconds (converted to date by TypeORM transformer)
   surveyFile.created = Date.now();
 
-  console.log(surveyFile);
-
-
   const storage = "db";
   surveyFile.storage = storage;
 

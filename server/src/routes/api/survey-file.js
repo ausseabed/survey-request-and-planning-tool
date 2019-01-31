@@ -165,8 +165,9 @@ router.put('/:id/upload', isAuthenticated,
   .on('field', (name, field) => {
     console.log('Field', name, field)
   })
-  .on('file', (name, file) => {
-    saveFile(file, project);
+  .on('file', async (name, file) => {
+    await saveFile(file, project);
+    res.end();
   })
   .on('aborted', () => {
     console.error('Request aborted by the user')
@@ -176,7 +177,7 @@ router.put('/:id/upload', isAuthenticated,
     throw err
   })
   .on('end', () => {
-    res.end()
+
   })
 }));
 

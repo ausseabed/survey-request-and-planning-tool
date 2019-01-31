@@ -57,7 +57,9 @@
           <q-tr slot="body" slot-scope="props" :props="props">
             <q-td key="fileName" :props="props">
               <span class="text-italic">{{ props.row.fileName }}</span>
-              <q-progress v-if="props.row.progress != 0" class="q-mt-sm" :percentage="props.row.progress" />
+              <q-progress class="q-mt-sm" color="secondary"
+                v-if="props.row.progress != 0"
+                :percentage="props.row.progress" />
             </q-td>
             <q-td key="created" :props="props" style="width: 110px;">
               {{ getDateString(props.row.created) }}

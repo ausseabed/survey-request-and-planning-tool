@@ -1,4 +1,4 @@
-import { UPDATE, SET_LIST, SET_REQUEST_STATUS, SET_REQUEST_ERROR}
+import { UPDATE, SET_DEFINITION_LIST, SET_REQUEST_STATUS, SET_REQUEST_ERROR}
   from './deliverable-mutation-types';
 
 const mutations = {
@@ -6,8 +6,8 @@ const mutations = {
     _.set(state, path, _.cloneDeep(value))
   },
 
-  [SET_LIST] (state, list) {
-    state.list = list;
+  [SET_DEFINITION_LIST] (state, list) {
+    state.definitionList = list;
   },
 
   [SET_REQUEST_STATUS] (state, status) {

@@ -1,5 +1,5 @@
-export const list = state => {
-  return state.list;
+export const definitionList = state => {
+  return state.definitionList;
 }
 
 export const requestStatus = state => {

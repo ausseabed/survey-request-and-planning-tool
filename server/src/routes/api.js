@@ -10,6 +10,7 @@ var surveyApplicationRoutes = require('./api/survey-application');
 var surveyFileRoutes = require('./api/survey-file');
 var techSpecRoutes = require('./api/tech-spec');
 var referenceSystemRoutes = require('./api/reference-system');
+var deliverableRoutes = require('./api/deliverable');
 
 import { isAuthenticated } from './utils';
 
@@ -25,6 +26,7 @@ router
 .use('/survey-file', surveyFileRoutes)
 .use('/tech-spec', techSpecRoutes)
 .use('/reference-system', referenceSystemRoutes)
+.use('/deliverable', deliverableRoutes)
 
 
 module.exports = router;

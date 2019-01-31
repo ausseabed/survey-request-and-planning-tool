@@ -79,7 +79,7 @@ const deliverableList = [
 var router = express.Router();
 
 // Gets a list of all deliverables that are available within the application
-router.get('/list', asyncMiddleware(async function (req, res) {
+router.get('/definition-list', asyncMiddleware(async function (req, res) {
   res.json(deliverableList);
 }));
 

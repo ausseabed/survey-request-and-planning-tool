@@ -7,7 +7,7 @@ import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
-    list: [],
+    definitionList: [],
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
   }

@@ -3,8 +3,8 @@ import Vue from 'vue'
 import * as mutTypes from './deliverable-mutation-types'
 import { RequestStatus } from '../request-status'
 
-export const getList = async ({ commit, state }) => {
-  const urlEndpoint = '/api/deliverable/list';
+export const getDefinitionList = async ({ commit, state }) => {
+  const urlEndpoint = '/api/deliverable/definition-list';
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   try {
@@ -13,7 +13,7 @@ export const getList = async ({ commit, state }) => {
     const response = await Vue.axios.get(urlEndpoint);
     const list = response.data;
 
-    commit(mutTypes.SET_LIST, list);
+    commit(mutTypes.SET_DEFINITION_LIST, list);
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
   } catch (error) {
     commit(mutTypes.SET_REQUEST_ERROR, error);

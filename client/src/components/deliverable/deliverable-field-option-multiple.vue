@@ -1,6 +1,6 @@
 <template>
 
-  <q-option-group
+  <q-select multiple
     :value="getValue()"
     :options="valueOptions"
     @change="setValue($event)"
@@ -26,7 +26,12 @@ export default Vue.extend({
       this.deliverableData[this.field.name] = e;
     },
     getValue() {
-      return this.deliverableData[this.field.name];
+      const val = this.deliverableData[this.field.name];
+      if (val == undefined) {
+        return [];
+      } else {
+        return val;
+      }
     },
   },
   computed: {

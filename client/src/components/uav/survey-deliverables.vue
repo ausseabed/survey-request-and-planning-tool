@@ -41,6 +41,12 @@
               Return to technical specification
             </q-tooltip>
           </q-btn>
+          <q-btn
+            round
+            color="primary"
+            @click="submit"
+            icon="fas fa-save"
+          />
         </q-page-sticky>
 
       </transition>
@@ -56,7 +62,9 @@
 
         </q-card>
 
-        <deliverable-list :definitionList="definitionList">
+        <deliverable-list
+          :definitionList="deliverableDefinitionList"
+          :deliverableList="deliverables">
         </deliverable-list>
 
       </div>
@@ -75,6 +83,8 @@ import { errorHandler } from './../mixins/error-handling'
 import { date } from 'quasar'
 import * as types
   from '../../store/modules/deliverable/deliverable-mutation-types'
+import { RequestStatus }
+  from '../../store/modules/request-status'
 import DeliverableList from '../deliverable/deliverable-list'
 const uuidv4 = require('uuid/v4');
 
@@ -88,7 +98,7 @@ export default Vue.extend({
     'deliverable-list': DeliverableList
   },
   beforeMount() {
-    //this.getFormData();
+    this.getFormData();
   },
 
   mounted() {
@@ -98,16 +108,40 @@ export default Vue.extend({
   methods: {
     ...mapMutations('deliverable', [
       types.UPDATE,
+      types.SET_DELIVERABLE_LIST,
     ]),
+
+    getFormData() {
+      this.$store.dispatch('deliverable/getDefinitionList');
+    },
 
     fetchData () {
       const id = this.$route.params.id;
       this.$store.dispatch(
-        'deliverable/getDefinitionList');
+        'projectMetadata/getProjectMetadata', { id: id });
     },
 
     hasScrolled (scroll) {
       this.showFloatingButtons = scroll.position > 30;
+    },
+
+    submit() {
+      // console.log(this.deliverables);
+      this.SET_DELIVERABLE_LIST(this.deliverables);
+
+      this.$store.dispatch(
+        'deliverable/saveDeliverableList',
+        { id: this.projectMetadata.id }
+      ).then(pmd => {
+        if (this.requestStatus == RequestStatus.SUCCESS) {
+          this.notifySuccess('Saved deliverables');
+        } else if (this.requestStatus == RequestStatus.ERROR) {
+          const status = this.requestError.response.status;
+          this.notifyError(
+            `Failed to save deliverables (${status})`);
+        }
+      });
+
     },
   },
 
@@ -117,6 +151,9 @@ export default Vue.extend({
     ]),
     ...mapGetters('deliverable',[
       'definitionList',
+      'deliverableList',
+      'requestStatus',
+      'requestError',
     ]),
   },
 
@@ -129,12 +166,41 @@ export default Vue.extend({
         this.fetchData();
       }
     },
+    'projectMetadata.id': function (newId, oldId) {
+      if (newId) {
+        this.$store.dispatch(
+          'deliverable/getDeliverableList', { id: newId })
+        this.deliverableDefinitionList = this.definitionList;
+      }
+    },
+    'deliverableList': function (deliverables, old) {
+      if (!deliverables) {
+        return;
+      }
+
+      const newDeliverables = deliverables.map((d) => {
+        const defn = this.definitionList.find((def) => {
+          return def.id == d.definitionId;
+        });
+
+        const rd = {data: {}};
+        defn.fields.forEach((f) => {
+          rd.data[f.name] = undefined;
+        });
+        _.merge(rd, d)
+        return rd;
+      });
+
+      this.deliverables = newDeliverables;
+    },
   },
 
   data() {
     return {
       loading: false,
       showFloatingButtons: false,
+      deliverableDefinitionList: [],
+      deliverables: [],
     }
   }
 });

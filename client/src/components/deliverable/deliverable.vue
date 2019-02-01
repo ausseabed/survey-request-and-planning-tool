@@ -10,7 +10,8 @@
       <deliverable-field
         v-for="field in definition.fields"
         :field="field"
-        :definition="definition">
+        :definition="definition"
+        :deliverable="deliverable">
       </deliverable-field>
     </q-card-main>
     <pre>{{definition}}</pre>
@@ -26,7 +27,7 @@ import DeliverableField from './deliverable-field'
 
 
 export default Vue.extend({
-  props: ['definition'],
+  props: ['definition', 'deliverable'],
   components: {
     'deliverable-field': DeliverableField,
   },

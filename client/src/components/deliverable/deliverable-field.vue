@@ -2,13 +2,11 @@
 
   <q-field :label-width="2"
            inset="full"
-           :label="field.name">
-    <!-- <q-input :value="techSpec.gridSize"
-             @input="UPDATE({path:'techSpec.gridSize', value: $event})"
-             type="text" /> -->
+           :label="field.label ? field.label : field.name">
     <component
       :is="field.type"
-      :field="field">
+      :field="field"
+      :deliverableData="deliverable.data">
     </component>
   </q-field>
 
@@ -16,13 +14,18 @@
 <script>
 
 import Vue from 'vue'
+import DeliverableFieldCheckbox from './deliverable-field-checkbox';
 import DeliverableFieldText from './deliverable-field-text';
+import DeliverableFieldOptionMultiple
+  from './deliverable-field-option-multiple';
 import DeliverableFieldOptionSingle from './deliverable-field-option-single';
 
 export default Vue.extend({
-  props: ['definition', 'field'],
+  props: ['definition', 'field', 'deliverable'],
   components: {
+    'deliverable-field-checkbox': DeliverableFieldCheckbox,
     'deliverable-field-text': DeliverableFieldText,
+    'deliverable-field-option-multiple': DeliverableFieldOptionMultiple,
     'deliverable-field-option-single': DeliverableFieldOptionSingle,
   },
   data() {

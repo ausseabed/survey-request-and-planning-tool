@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div v-for="definition in definitionList">
-      <deliverable :definition="definition">
+    <div v-for="deliverable in deliverableList">
+      <deliverable
+        :definition="definitionForDeliverable(deliverable)"
+        :deliverable="deliverable">
       </deliverable>
 
     </div>
@@ -17,7 +19,10 @@ import Vue from 'vue'
 import Deliverable from './deliverable'
 
 export default Vue.extend({
-  props: ['definitionList'],
+  props: [
+    'definitionList',
+    'deliverableList',
+  ],
   components: {
     'deliverable': Deliverable
   },
@@ -27,7 +32,15 @@ export default Vue.extend({
     }
   },
   methods: {
-
+    definitionForDeliverable(deliverable) {
+      const defn = this.definitionList.find((def) => {
+        return def.id == deliverable.definitionId;
+      });
+      if (!defn) {
+        throw `Could not find definition with id ${deliverable.definitionId}`;
+      }
+      return defn;
+    }
   },
   computed: {
 

@@ -1,9 +1,6 @@
 <template>
 
-  <q-input
-    type="text"
-    v-model="deliverableData[field.name]"
-  />
+  <q-checkbox v-model="deliverableData[field.name]" />
 
 </template>
 <script>
@@ -17,7 +14,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      value: undefined,
     }
   },
   methods: {

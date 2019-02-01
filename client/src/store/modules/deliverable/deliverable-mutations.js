@@ -1,4 +1,5 @@
-import { UPDATE, SET_DEFINITION_LIST, SET_REQUEST_STATUS, SET_REQUEST_ERROR}
+import { UPDATE, SET_DEFINITION_LIST, SET_REQUEST_STATUS, SET_REQUEST_ERROR,
+  SET_DELIVERABLE_LIST}
   from './deliverable-mutation-types';
 
 const mutations = {
@@ -9,6 +10,11 @@ const mutations = {
   [SET_DEFINITION_LIST] (state, list) {
     state.definitionList = list;
   },
+
+  [SET_DELIVERABLE_LIST] (state, list) {
+    state.deliverableList = list;
+  },
+
 
   [SET_REQUEST_STATUS] (state, status) {
     state.requestStatus = status;

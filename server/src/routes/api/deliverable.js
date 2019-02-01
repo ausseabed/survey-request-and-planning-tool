@@ -7,7 +7,7 @@ import { getConnection } from 'typeorm';
 import { asyncMiddleware, isAuthenticated }
   from '../utils';
 
-const deliverableList = [
+const deliverableDefinitionList = [
   {
     id: "a",
     name: "Coverage extent",
@@ -74,13 +74,85 @@ const deliverableList = [
       },
     ]
   },
-]
+  {
+    id: "f",
+    name: "Processed Backscatter",
+    fields: [
+      {
+        name: "format",
+        type: "deliverable-field-option-single",
+        options: ["kml", "xml", "shp"]
+      },
+      {
+        name: "formatMultiple",
+        label: "format like above, but multiple",
+        type: "deliverable-field-option-multiple",
+        options: ["kml", "xml", "shp", "zip", "foo", "bar"]
+      },
+      {
+        name: "acceptedAndRejectedXYZ",
+        label: "Supply accepted and rejected XYZ data separately",
+        type: "deliverable-field-checkbox",
+      },
+      {
+        name: "Requirements",
+        type: "deliverable-field-text"
+      },
+    ]
+  },
+];
+
+
+const deliverableList = [
+  {
+    id:'1',
+    definitionId:'a',
+    data: {},
+  },
+  {
+    id:'2',
+    definitionId:'b',
+    data: {format:"xml"},
+  },
+  {
+    id:'3',
+    definitionId:'c',
+    data: {},
+  },
+  {
+    id:'4',
+    definitionId:'e',
+    data: {},
+  },
+  {
+    id:'5',
+    definitionId:'f',
+    data: {},
+  },
+];
+
 
 var router = express.Router();
 
 // Gets a list of all deliverables that are available within the application
 router.get('/definition-list', asyncMiddleware(async function (req, res) {
+  res.json(deliverableDefinitionList);
+}));
+
+// Gets a  list of all deliverables assigned to this survey
+router.get('/:id/list', asyncMiddleware(async function (req, res) {
   res.json(deliverableList);
 }));
+
+router.post(
+  '/:id/list', isAuthenticated, asyncMiddleware(async function (req, res) {
+
+  console.log("deliverable list post request");
+  console.log(req.body);
+
+  res.end();
+
+}));
+
 
 module.exports = router;

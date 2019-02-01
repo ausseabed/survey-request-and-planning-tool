@@ -10,6 +10,7 @@ import ProjectMetadata from 'components/uav/ProjectMetadata.vue'
 import SurveyTechnicalSpecification
   from 'components/uav/survey-technical-specification.vue'
 import SurveyFile from 'components/uav/survey-file.vue'
+import SurveyDeliverables from 'components/uav/survey-deliverables.vue'
 
 
 import CustomDataset from 'components/controls/CreateCustomDataset.vue'
@@ -32,6 +33,7 @@ export default [
     { path: '/survey-technical-specification/:id',
       component: SurveyTechnicalSpecification},
     { path: '/survey-file/:id', component: SurveyFile},
+    { path: '/survey-deliverables/:id', component: SurveyDeliverables},
 
     {
       path: '/auth/callback',

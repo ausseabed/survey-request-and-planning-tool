@@ -17,7 +17,7 @@ const deliverableList = [
     fields: [
       {
         name: "format",
-        type: "singleoption",
+        type: "deliverable-field-option-single",
         options: ["kml", "xml", "shp"]
       },
     ]
@@ -28,7 +28,7 @@ const deliverableList = [
     fields: [
       {
         name: "format",
-        type: "singleoption",
+        type: "deliverable-field-option-single",
         options: ["kml", "xml", "shp"]
       },
     ]
@@ -39,7 +39,7 @@ const deliverableList = [
     fields: [
       {
         name: "format",
-        type: "singleoption",
+        type: "deliverable-field-option-single",
         options: ["kml", "xml", "shp"]
       },
     ]
@@ -50,12 +50,12 @@ const deliverableList = [
     fields: [
       {
         name: "format",
-        type: "singleoption",
+        type: "deliverable-field-option-single",
         options: ["kml", "xml", "shp"]
       },
       {
         name: "Requirements",
-        type: "textarea"
+        type: "deliverable-field-text"
       },
     ]
   },
@@ -65,12 +65,12 @@ const deliverableList = [
     fields: [
       {
         name: "format",
-        type: "singleoption",
+        type: "deliverable-field-option-single",
         options: ["kml", "xml", "shp"]
       },
       {
         name: "Requirements",
-        type: "textarea"
+        type: "deliverable-field-text"
       },
     ]
   },

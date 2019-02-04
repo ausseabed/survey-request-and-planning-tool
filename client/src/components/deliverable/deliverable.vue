@@ -14,7 +14,6 @@
         :deliverable="deliverable">
       </deliverable-field>
     </q-card-main>
-    <pre>{{definition}}</pre>
   </q-card>
 
 </template>

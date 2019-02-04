@@ -1,12 +1,9 @@
 <template>
-  <div>
-    <div v-for="deliverable in deliverableList">
-      <deliverable
-        :definition="definitionForDeliverable(deliverable)"
-        :deliverable="deliverable">
-      </deliverable>
-
-    </div>
+  <div style="padding-right: 8px; padding-bottom: 30px;">
+    <deliverable v-for="deliverable in deliverableList"
+      :definition="definitionForDeliverable(deliverable)"
+      :deliverable="deliverable">
+    </deliverable>
   </div>
 
 

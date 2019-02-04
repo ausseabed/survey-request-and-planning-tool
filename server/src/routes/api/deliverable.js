@@ -8,32 +8,32 @@ import { asyncMiddleware, isAuthenticated }
   from '../utils';
 
 import { DeliverableDefinition } from '../../lib/entity/deliverable-definition';
-
+import { SurveyDeliverable } from '../../lib/entity/survey-deliverable';
 
 const deliverableList = [
   {
     id:'1',
-    definitionId:'00203202-99ed-46cc-bb3a-464258356485',
+    definitionId:'835ae12a-a20e-43e4-8a35-fe5beb088838',
     data: {},
   },
   {
     id:'2',
-    definitionId:'3a9a83ab-761f-4e11-8f6a-6eb722c3f459',
+    definitionId:'ea8f1e48-2d88-41f8-abc8-acca284830c8',
     data: {format:"xml"},
   },
   {
     id:'3',
-    definitionId:'cef07095-1755-42de-83cf-3a94094812fd',
+    definitionId:'65ca2c7d-04a2-4717-8607-8f23dead1d08',
     data: {},
   },
   {
     id:'4',
-    definitionId:'5909f1db-d889-43dd-95e0-2ac17e0242d7',
+    definitionId:'e42e0366-97ff-4335-8e5f-5be00020b703',
     data: {},
   },
   {
     id:'5',
-    definitionId:'577d2242-be18-440a-8246-106b4a74cc0b',
+    definitionId:'4ad77790-da95-4389-885e-3f2abd15dcfd',
     data: {},
   },
 ];
@@ -58,17 +58,36 @@ router.get('/definition-list', asyncMiddleware(async function (req, res) {
 
 // Gets a  list of all deliverables assigned to this survey
 router.get('/:id/list', asyncMiddleware(async function (req, res) {
-  res.json(deliverableList);
+  const id = req.params.id;
+
+  let surveyDeliverables = await getConnection()
+  .getRepository(SurveyDeliverable)
+  .createQueryBuilder("survey_deliverable")
+  .where(
+    `"projectMetadataId" = :id`,
+    {id: id}
+  )
+  .getMany();
+
+  return res.json(surveyDeliverables);
+
 }));
 
 router.post(
   '/:id/list', isAuthenticated, asyncMiddleware(async function (req, res) {
 
-  console.log("deliverable list post request");
-  console.log(req.body);
+  const deliverables = req.body;
+  let deliverableEntities = deliverables.map((d) => {
+    const surveyDeliverable = new SurveyDeliverable();
+    _.merge(surveyDeliverable, d);
+    return surveyDeliverable;
+  });
 
-  res.end();
+  deliverableEntities = await getConnection()
+  .getRepository(SurveyDeliverable)
+  .save(deliverableEntities);
 
+  res.json(deliverableEntities);
 }));
 
 

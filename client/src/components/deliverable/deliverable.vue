@@ -1,5 +1,5 @@
 <template>
-  <q-card inline style="width:100%">
+  <q-card inline style="width:100%; margin-left: 2px;">
     <q-card-title>
       {{definition.name}}
       <span slot="subtitle" v-if="definition.description">

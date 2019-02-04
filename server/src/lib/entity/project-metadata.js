@@ -6,6 +6,7 @@ import { DateTransformer } from './utils';
 import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
 import { SurveyApplication } from './survey-application';
+import { SurveyDeliverable } from './survey-deliverable';
 import { SurveyFile } from './survey-file';
 
 // valid values for the `projectStatus` attribute
@@ -119,6 +120,10 @@ export class ProjectMetadata {
     surveyFile => surveyFile.projectMetadata)
   files;
 
+  @OneToMany(
+    type => SurveyDeliverable,
+    sd => sd.projectMetadata)
+  deliverables;
 
   @Column({
       type:"bool",

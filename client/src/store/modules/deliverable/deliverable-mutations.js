@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 import { UPDATE, SET_DEFINITION_LIST, SET_REQUEST_STATUS, SET_REQUEST_ERROR,
   SET_DELIVERABLE_LIST}
   from './deliverable-mutation-types';
@@ -12,6 +14,11 @@ const mutations = {
   },
 
   [SET_DELIVERABLE_LIST] (state, list) {
+    list.forEach((d) => {
+      if (_.isNil(d.data)) {
+        d.data = {};
+      }
+    });
     state.deliverableList = list;
   },
 

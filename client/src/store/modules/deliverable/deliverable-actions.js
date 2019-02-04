@@ -41,6 +41,31 @@ export const getDeliverableList = async ({ commit, state }, payload) => {
   }
 }
 
+export const addDeliverablesToSurvey = async ({ commit, state }, payload) => {
+  const urlEndpoint = `/api/deliverable/${payload.id}/list`;
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  try {
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+
+    const response = await Vue.axios.post(urlEndpoint, payload.deliverableList);
+    const deliverables = response.data;
+
+    const newList = [];
+    newList.push(...payload.deliverableList);
+    newList.push(...state.deliverableList);
+
+    commit(mutTypes.SET_DELIVERABLE_LIST, newList);
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+    console.log(error);
+  }
+
+}
+
+
 export const saveDeliverableList = async ({ commit, state }, payload) => {
   const urlEndpoint = `/api/deliverable/${payload.id}/list`;
 

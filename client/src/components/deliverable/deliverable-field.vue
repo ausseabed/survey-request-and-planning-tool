@@ -1,7 +1,6 @@
 <template>
 
-  <q-field :label-width="2"
-           inset="full"
+  <q-field :label-width="4"
            :label="field.label ? field.label : field.name">
     <component
       :is="field.type"

@@ -2,6 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany,
   JoinTable} from "typeorm";
 
 import { ProjectMetadata } from './project-metadata';
+import { SurveyDeliverable } from './survey-deliverable';
 import { TechSpec }
   from './tech-spec';
 
@@ -30,6 +31,11 @@ export class DeliverableDefinition {
     type => DeliverableDefinitionField,
     field => field.deliverableDefinition)
   fields;
+
+  @OneToMany(
+    type => SurveyDeliverable,
+    sd => sd.definition)
+  deliverables;
 }
 
 

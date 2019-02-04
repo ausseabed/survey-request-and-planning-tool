@@ -75,8 +75,8 @@
         "options": ["NetCDF", "ESRI ASCII Raster", "GeoTIFF"]
       },
       {
-        "name": "Sounding data needs",
-        "label": "soundingDataNeeds",
+        "name": "soundingDataNeeds",
+        "label": "Sounding data needs",
         "type": "deliverable-field-textarea"
       }
     ]

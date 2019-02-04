@@ -7,126 +7,33 @@ import { getConnection } from 'typeorm';
 import { asyncMiddleware, isAuthenticated }
   from '../utils';
 
-const deliverableDefinitionList = [
-  {
-    id: "a",
-    name: "Coverage extent",
-    description: "foo bar",
-    public: true,
-    organisation: "org1",
-    fields: [
-      {
-        name: "format",
-        type: "deliverable-field-option-single",
-        options: ["kml", "xml", "shp"]
-      },
-    ]
-  },
-  {
-    id: "b",
-    name: "Navigation data",
-    fields: [
-      {
-        name: "format",
-        type: "deliverable-field-option-single",
-        options: ["kml", "xml", "shp"]
-      },
-    ]
-  },
-  {
-    id: "c",
-    name: "Vessel track",
-    fields: [
-      {
-        name: "format",
-        type: "deliverable-field-option-single",
-        options: ["kml", "xml", "shp"]
-      },
-    ]
-  },
-  {
-    id: "d",
-    name: "Transit data",
-    fields: [
-      {
-        name: "format",
-        type: "deliverable-field-option-single",
-        options: ["kml", "xml", "shp"]
-      },
-      {
-        name: "Requirements",
-        type: "deliverable-field-text"
-      },
-    ]
-  },
-  {
-    id: "e",
-    name: "Bathymetric chart (contours)",
-    fields: [
-      {
-        name: "format",
-        type: "deliverable-field-option-single",
-        options: ["kml", "xml", "shp"]
-      },
-      {
-        name: "Requirements",
-        type: "deliverable-field-text"
-      },
-    ]
-  },
-  {
-    id: "f",
-    name: "Processed Backscatter",
-    fields: [
-      {
-        name: "format",
-        type: "deliverable-field-option-single",
-        options: ["kml", "xml", "shp"]
-      },
-      {
-        name: "formatMultiple",
-        label: "format like above, but multiple",
-        type: "deliverable-field-option-multiple",
-        options: ["kml", "xml", "shp", "zip", "foo", "bar"]
-      },
-      {
-        name: "acceptedAndRejectedXYZ",
-        label: "Supply accepted and rejected XYZ data separately",
-        type: "deliverable-field-checkbox",
-      },
-      {
-        name: "Requirements",
-        type: "deliverable-field-text"
-      },
-    ]
-  },
-];
+import { DeliverableDefinition } from '../../lib/entity/deliverable-definition';
 
 
 const deliverableList = [
   {
     id:'1',
-    definitionId:'a',
+    definitionId:'00203202-99ed-46cc-bb3a-464258356485',
     data: {},
   },
   {
     id:'2',
-    definitionId:'b',
+    definitionId:'3a9a83ab-761f-4e11-8f6a-6eb722c3f459',
     data: {format:"xml"},
   },
   {
     id:'3',
-    definitionId:'c',
+    definitionId:'cef07095-1755-42de-83cf-3a94094812fd',
     data: {},
   },
   {
     id:'4',
-    definitionId:'e',
+    definitionId:'5909f1db-d889-43dd-95e0-2ac17e0242d7',
     data: {},
   },
   {
     id:'5',
-    definitionId:'f',
+    definitionId:'577d2242-be18-440a-8246-106b4a74cc0b',
     data: {},
   },
 ];
@@ -136,7 +43,17 @@ var router = express.Router();
 
 // Gets a list of all deliverables that are available within the application
 router.get('/definition-list', asyncMiddleware(async function (req, res) {
-  res.json(deliverableDefinitionList);
+
+  let orgs = await getConnection()
+  .getRepository(DeliverableDefinition)
+  .find({
+    relations: [
+      "fields",
+    ]
+  });
+
+  return res.json(orgs);
+
 }));
 
 // Gets a  list of all deliverables assigned to this survey

@@ -1,0 +1,688 @@
+[
+  {
+    "name": "Coverage extent",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["Shapefile", "KML"]
+      }
+    ]
+  },
+
+  {
+    "name": "Navigation data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["ASCII"]
+      }
+    ]
+  },
+
+  {
+    "name": "Vessel track",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["Shapefile", "KML", "CSV"]
+      }
+    ]
+  },
+
+  {
+    "name": "Turn data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      }
+    ]
+  },
+
+  {
+    "name": "Transit data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Bathymetric chart (contours)",
+    "group": "Bathymetry data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["NetCDF", "ESRI ASCII Raster", "GeoTIFF"]
+      },
+      {
+        "name": "Sounding data needs",
+        "label": "soundingDataNeeds",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Bathymetry model/DEM (surface)",
+    "group": "Bathymetry data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["CSAR", "XYZ", "ESRI Grid"]
+      }
+    ]
+  },
+
+  {
+    "name": "Processed bathymetry grid",
+    "group": "Bathymetry data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["CSAR", "XYZ", "ESRI ASCII"]
+      }
+    ]
+  },
+
+  {
+    "name": "Slope map",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      }
+    ]
+  },
+
+  {
+    "name": "Processed backscatter",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "acceptedAndRejectedXYZ",
+        "label": "Supply accepted and rejected XYZ data separately",
+        "type": "deliverable-field-checkbox"
+      },
+      {
+        "name": "backscatterImageMosaic",
+        "label": "Supply image of backscatter as mosaic",
+        "type": "deliverable-field-checkbox"
+      },
+      {
+        "name": "backscatterFormat",
+        "label": "Backscatter mosaic format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      }
+    ]
+  },
+
+  {
+    "name": "Backscatter mosaic",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["CSAR", "XYZ", "ESRI ASCII", "GeoTIFF", "ESRI Grid",
+          "ASCII raster format", "ECW", "JPG2000", "NetCFD"]
+      }
+    ]
+  },
+
+  {
+    "name": "Water column Backscatter",
+    "description": "Acoustic return from objects in the water column",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["wcd", "s7k", "Logged to separate file *.wcd (only applicable for Kongsberg multibeam system)"]
+      }
+    ]
+  },
+
+  {
+    "name": "Sound Velocity Profile",
+    "description": "Sound velocity measured using velocimeter as a function of depth",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [
+          "ASCII *.csv",
+          "PNG with their associated time and location files (shapefiles)",
+          "SVP (or TXT file)",
+          "HydroBas format"
+        ]
+      }
+    ]
+  },
+
+  {
+    "name": "Water Column Measurements",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "parametersToCapture",
+        "label": "Parameters to capture",
+        "type": "deliverable-field-option-multiple",
+        "options": ["Conductivity", "Temperature", "Density", "Salinity",
+          "Turbidity", "Fluorimetry", "Dissolved oxygen"]
+      }
+    ]
+  },
+
+  {
+    "name": "True heave",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["Applanix ATH"]
+      }
+    ]
+  },
+
+  {
+    "name": "Cross lines",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Survey speed data",
+    "description": "Speed of vessel over ground during survey",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Metadata",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Raw sonar data",
+    "group": "Raw data",
+    "description": "Raw sonar data in the native format of the multibeam system used. Log complete backscatter i.e. beam intensity and snippets or equivalent.",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["Kongsberg EM series (*.all)", "Reson SeaBat (*.s7k)", "Reson SeaBat - old (*.xtf)"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Raw water column data",
+    "group": "Raw data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Raw backscatter",
+    "group": "Raw data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Seabed classification map",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      }
+    ]
+  },
+
+  {
+    "name": "Sub bottom profile",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Tide data",
+    "description": "Tide data used for tide correction (date, time and depth(m.mm)/pressure (dBar)",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Mobilisation & Calibration Report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Patch Test Report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Survey Plan",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Feature detection report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Installation offsets and Lever Arm check report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Cube modelling report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Processed point cloud report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Tide check report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "SVP check/verification report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Report of Survey (RoS)",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Time synchronisation across different systems report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Navigation quality check/validation report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Azimuth error check report",
+    "group": "Reports",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+
+
+
+
+
+
+  {
+    "name": "Vessel Configuration File",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["Caris *.hvf", "ASCII text"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "SVP Log File",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["ASCII text"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Survey log file(s)",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "TPU/ CUBE related information",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": ["TBD"]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  }
+
+]

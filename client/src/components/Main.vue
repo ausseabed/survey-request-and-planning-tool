@@ -43,6 +43,10 @@
                             :to="'/survey-technical-specification/' + matchingProjMeta.id">
                             <!-- <q-tooltip> View survey technical specifications </q-tooltip> -->
                           </q-btn>
+                          <q-btn outline size="sm" color="primary" label="Deliverables"
+                            :to="'/survey-deliverables/' + matchingProjMeta.id">
+                            <!-- <q-tooltip> View survey technical specifications </q-tooltip> -->
+                          </q-btn>
                           <q-btn outline size="sm" color="primary" icon="attach_file"
                             :to="'/survey-file/' + matchingProjMeta.id">
                           </q-btn>

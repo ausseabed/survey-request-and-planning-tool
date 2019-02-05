@@ -88,7 +88,7 @@ export default {
       })
     },
     [types.RESET_TECH_SPEC](state) {
-      state.techSpec = initialState();
+      state.techSpec = initialState().techSpec;
     },
     ...mutations.mutations
   }

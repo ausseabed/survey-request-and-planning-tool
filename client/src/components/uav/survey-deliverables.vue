@@ -106,7 +106,7 @@
           <q-card-separator />
           <q-scroll-area class="fit" v-if="deliverableList.length != 0">
             <deliverable-list
-              :definitionList="deliverableDefinitionList"
+              :definitionList="definitionList"
               :deliverableList="deliverables"
               :selectedId="selectedId">
             </deliverable-list>
@@ -171,6 +171,8 @@ export default Vue.extend({
       const id = this.$route.params.id;
       this.$store.dispatch(
         'projectMetadata/getProjectMetadata', { id: id });
+      this.$store.dispatch(
+        'deliverable/getDeliverableList', { id: id })
     },
 
     hasScrolled (scroll) {
@@ -276,7 +278,7 @@ export default Vue.extend({
       'requestError',
     ]),
     deliverableDefinitionOptions: function () {
-      const opts = this.deliverableDefinitionList.map(dd => {
+      const opts = this.definitionList.map(dd => {
         return {label: dd.name, value: dd};
       });
       return opts;
@@ -290,13 +292,6 @@ export default Vue.extend({
         // then we've only set the url, no need to fetch new data
       } else {
         this.fetchData();
-      }
-    },
-    'projectMetadata.id': function (newId, oldId) {
-      if (newId) {
-        this.$store.dispatch(
-          'deliverable/getDeliverableList', { id: newId })
-        this.deliverableDefinitionList = this.definitionList;
       }
     },
     'deliverableList': function (deliverables, old) {
@@ -325,7 +320,6 @@ export default Vue.extend({
     return {
       loading: false,
       showFloatingButtons: false,
-      deliverableDefinitionList: [],
       deliverables: [],
       tempDeliverableDefinitions: [],
       activeDeliverableId: undefined,

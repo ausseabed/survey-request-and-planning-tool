@@ -12,6 +12,7 @@ import SurveyTechnicalSpecification
 import SurveyFile from 'components/uav/survey-file.vue'
 import SurveyDeliverables from 'components/uav/survey-deliverables.vue'
 
+import ProjectMain from 'components/project-main.vue'
 
 import CustomDataset from 'components/controls/CreateCustomDataset.vue'
 import StandardDataset from 'components/controls/CreateStandardDataset.vue'
@@ -28,6 +29,29 @@ export default [
     { path: '/uav/tender', component: UavTender },
     { path: '/uav/session', component: UavSession },
     { path: '/uav/project', component: UavProjects },
+    {
+      path: '/survey/:id',
+      component: ProjectMain,
+      children: [
+        {
+          path: 'summary',
+          component: ProjectMetadata,
+        },
+        {
+          path: 'specifications',
+          component: SurveyTechnicalSpecification,
+        },
+        {
+          path: 'deliverables',
+          component: SurveyDeliverables,
+        },
+        {
+          path: 'attachments',
+          component: SurveyFile,
+        },
+      ]
+    },
+
     { path: '/project-metadata', component: ProjectMetadata },
     { path: '/project-metadata/:id', component: ProjectMetadata },
     { path: '/survey-technical-specification/:id',

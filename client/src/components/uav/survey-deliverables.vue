@@ -261,8 +261,8 @@ export default Vue.extend({
 
     heightTweak (offset) {
       return {
-        minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
-        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
+        minHeight: offset ? `calc(100vh - ${offset*2}px)` : '100vh',
+        height: offset ? `calc(100vh - ${offset*2}px)` : '100vh'
       }
     },
   },

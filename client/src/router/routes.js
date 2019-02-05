@@ -30,6 +30,10 @@ export default [
     { path: '/uav/session', component: UavSession },
     { path: '/uav/project', component: UavProjects },
     {
+      path: '/survey/new',
+      component: ProjectMetadata,
+    },
+    {
       path: '/survey/:id',
       component: ProjectMain,
       children: [

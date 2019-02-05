@@ -71,9 +71,9 @@ export default Vue.extend({
     },
     fetchData () {
       this.id = this.$route.params.id;
-      if (id) {
+      if (this.id) {
         this.$store.dispatch(
-          'projectMetadata/getProjectMetadata', { id: id })
+          'projectMetadata/getProjectMetadata', { id: this.id })
         .then(projectMetadata => {
         });
       } else {

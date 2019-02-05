@@ -505,7 +505,7 @@ export default Vue.extend({
 
       this.$store.dispatch('projectMetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
-        this.$router.replace({ path: `/project-metadata/${pmd.id}` })
+        this.$router.replace({ path: `/survey/${pmd.id}/summary` })
         this.notifySuccess('Saved project metadata');
       });
     },

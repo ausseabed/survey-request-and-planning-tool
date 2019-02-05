@@ -66,7 +66,7 @@
               <q-card-separator />
               <q-card-actions align="end">
                 <q-btn flat icon="add" label="Add project"
-                  @click="clickNewProject">
+                  :to="'/survey/new'">
                 </q-btn>
               </q-card-actions>
             </div>
@@ -122,9 +122,6 @@ export default Vue.extend({
   },
 
   methods: {
-    clickNewProject() {
-      this.$router.push('/project-metadata');
-    },
     heightTweak (offset) {
       return {
         minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',

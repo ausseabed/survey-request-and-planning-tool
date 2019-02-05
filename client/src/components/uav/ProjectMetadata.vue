@@ -136,7 +136,7 @@
 
             <div class="row">
               <template v-if="!matchingProjMetas">
-                <p class="col-10 items-center q-body-2 text-center" style="padding:5px">Run check to indentify intersecting surveys</p>
+                <p class="col-10 items-center q-body-2 text-center" style="padding:5px">Run check to identify intersecting surveys</p>
               </template>
               <template v-else-if="matchingProjMetas.length == 0">
                 <p class="col-10 items-center q-body-2 text-center" style="padding:5px">No intersecting surveys</p>

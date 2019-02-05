@@ -90,5 +90,18 @@ router.post(
   res.json(deliverableEntities);
 }));
 
+router.delete(
+  '/:id/', isAuthenticated, asyncMiddleware(async function (req, res) {
+  const id = req.params.id;
+
+  await getConnection()
+  .createQueryBuilder()
+  .delete()
+  .from(SurveyDeliverable)
+  .where("id = :id", { id: id })
+  .execute();
+
+  res.end();
+}));
 
 module.exports = router;

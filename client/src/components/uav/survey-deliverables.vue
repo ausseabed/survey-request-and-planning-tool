@@ -44,7 +44,7 @@
             </q-card-main>
             <q-card-separator />
             <q-card-actions align="end">
-              <q-btn flat icon="add" label="Add deliverables"
+              <q-btn flat icon="add" label="Add"
                 @click="addTempDeliverables">
               </q-btn>
             </q-card-actions>
@@ -60,14 +60,21 @@
             </div>
             <q-card-main class="column col" style="padding:0px">
               <q-scroll-area class="fit">
-                <q-list no-border>
+                <q-list no-border
+                  @mouseleave.native="mouseleaveDeliverableList">
                   <q-item
-                    v-for="definition in deliverableList"
-                    :key="definition.id">
+                    v-for="deliverable in deliverableList"
+                    @mouseover.native="mouseoverDeliverableList(deliverable)"
+                    :key="deliverable.id">
 
                     <q-item-main>
-                      <q-item-tile label>{{nameForDefinition(definition.definitionId)}}</q-item-tile>
+                      <q-item-tile label>{{nameForDefinition(deliverable.definitionId)}}</q-item-tile>
                     </q-item-main>
+                    <q-item-side v-if="activeDeliverableId == deliverable.id">
+                      <q-btn flat style="min-height:36px;height:36px;margin-top:-8px;margin-bottom:-8px;padding-top:0px;padding-bottom:0px;" color="primary" icon="close"
+                        @click="deleteDeliverable(deliverable)">
+                      </q-btn>
+                    </q-item-side>
                   </q-item>
                 </q-list>
               </q-scroll-area>
@@ -78,7 +85,8 @@
             <div class="col-auto">
               <q-card-separator />
               <q-card-actions align="end">
-                <q-btn flat icon="delete" label="Remove all">
+                <q-btn flat icon="delete" label="Remove all"
+                  @click="deleteAllDeliverables">
                 </q-btn>
               </q-card-actions>
             </div>
@@ -99,84 +107,6 @@
     </div>
 
   </q-page>
-
-
-
-
-<!--
-  <div class="row justify-center">
-    <q-scroll-observable @scroll="hasScrolled"></q-scroll-observable>
-    <div inline style="width: 900px; max-width: 90vw;">
-      <div class="row justify-between">
-        <q-breadcrumbs separator=">" color="light">
-          <q-breadcrumbs-el label="Home" icon="home" to="/" />
-          <q-breadcrumbs-el label="Deliverables" icon="attach_file" />
-        </q-breadcrumbs>
-        <div class="row">
-          <q-btn icon="arrow_back" label="Technical specifications"
-            :to="'/survey-technical-specification/' + projectMetadata.id">
-          </q-btn>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="loading">Loading...</div>
-
-
-    <q-page padding class="docs-input row justify-center">
-      <transition
-        appear
-        enter-active-class="animated slideInRight"
-        leave-active-class="animated slideOutRight"
-      >
-        <q-page-sticky
-          v-if="showFloatingButtons"
-          position="bottom-right"
-          :offset="[18, 18]"
-          style="z-index:100">
-
-          <q-btn
-            round
-            color="primary"
-            :to="'/survey-technical-specification/' + projectMetadata.id"
-            icon="arrow_back"
-          >
-            <q-tooltip :offset="[10, 10]">
-              Return to technical specification
-            </q-tooltip>
-          </q-btn>
-          <q-btn
-            round
-            color="primary"
-            @click="submit"
-            icon="fas fa-save"
-          />
-        </q-page-sticky>
-
-      </transition>
-
-      <div style="width: 900px; max-width: 90vw;">
-
-        <q-card inline style="width:100%">
-          <q-card-title> List </q-card-title>
-          <q-card-main>
-
-
-          </q-card-main>
-
-        </q-card>
-
-        <deliverable-list
-          :definitionList="deliverableDefinitionList"
-          :deliverableList="deliverables">
-        </deliverable-list>
-
-      </div>
-    </q-page>
-
-
-  </div> -->
-
 </template>
 <script>
 import './docs-input.styl'
@@ -278,6 +208,25 @@ export default Vue.extend({
       this.tempDeliverableDefinitions = [];
     },
 
+    mouseoverDeliverableList(deliverable) {
+      if (_.isNil(deliverable)) {
+        return;
+      }
+      this.activeDeliverableId = deliverable.id;
+    },
+    mouseleaveDeliverableList() {
+      this.activeDeliverableId = undefined;
+    },
+    deleteDeliverable(deliverable) {
+      this.$store.dispatch(
+        'deliverable/deleteDeliverable',
+        {id: deliverable.id});
+    },
+    deleteAllDeliverables() {
+      this.deliverableList.forEach((d) => {
+        this.deleteDeliverable(d);
+      });
+    },
 
     heightTweak (offset) {
       return {
@@ -350,6 +299,7 @@ export default Vue.extend({
       deliverableDefinitionList: [],
       deliverables: [],
       tempDeliverableDefinitions: [],
+      activeDeliverableId: undefined,
     }
   }
 });

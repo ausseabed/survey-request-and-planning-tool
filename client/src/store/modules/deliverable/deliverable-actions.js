@@ -52,7 +52,7 @@ export const addDeliverablesToSurvey = async ({ commit, state }, payload) => {
     const deliverables = response.data;
 
     const newList = [];
-    newList.push(...payload.deliverableList);
+    newList.push(...deliverables);
     newList.push(...state.deliverableList);
 
     commit(mutTypes.SET_DELIVERABLE_LIST, newList);
@@ -78,6 +78,29 @@ export const saveDeliverableList = async ({ commit, state }, payload) => {
     const dList = response.data;
 
     commit(mutTypes.SET_DELIVERABLE_LIST, dList);
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+    console.log(error);
+  }
+}
+
+export const deleteDeliverable = async ({ commit, state }, payload) => {
+  const urlEndpoint = `/api/deliverable/${payload.id}/`;
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+
+  try {
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+
+    const response = await Vue.axios.delete(urlEndpoint);
+
+    const newList = state.deliverableList.filter((d) => {
+      return d.id != payload.id;
+    });
+
+    commit(mutTypes.SET_DELIVERABLE_LIST, newList);
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
   } catch (error) {
     commit(mutTypes.SET_REQUEST_ERROR, error);

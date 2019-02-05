@@ -1,70 +1,21 @@
 <template>
 
   <div class="row justify-center">
-    <q-scroll-observable @scroll="hasScrolled"></q-scroll-observable>
-    <div inline style="width: 900px; max-width: 90vw;">
-      <div class="row justify-between">
-        <q-breadcrumbs separator=">" color="light">
-          <q-breadcrumbs-el label="Home" icon="home" to="/" />
-          <q-breadcrumbs-el label="Survey Technical Specifications" icon="fas fa-clipboard-list" />
-        </q-breadcrumbs>
-        <div class="row">
-          <q-btn icon="arrow_back" label="Project Metadata"
-            :to="'/project-metadata/' + techSpec.id">
-          </q-btn>
-          <q-btn icon="fas fa-save" label="Save"
-            @click="submit">
-          </q-btn>
-          <q-btn icon="arrow_forward" label="Files"
-            :to="'/survey-file/' + projectMetadata.id">
-          </q-btn>
-        </div>
-      </div>
-    </div>
-
     <div v-if="loading">Loading...</div>
 
     <q-page padding class="docs-input row justify-center">
-      <transition
-        appear
-        enter-active-class="animated slideInRight"
-        leave-active-class="animated slideOutRight"
-      >
-        <q-page-sticky
-          v-if="showFloatingButtons"
-          position="bottom-right"
-          :offset="[18, 18]"
-          style="z-index:100">
+      <q-page-sticky
+        position="bottom-right"
+        :offset="[18, 18]"
+        style="z-index:100">
 
-          <q-btn
-            round
-            color="primary"
-            :to="'/project-metadata/' + techSpec.id"
-            icon="arrow_back"
-          >
-            <q-tooltip :offset="[10, 10]">
-              Return to project metadata
-            </q-tooltip>
-          </q-btn>
-          <q-btn
-            round
-            color="primary"
-            @click="submit"
-            icon="fas fa-save"
-          />
-          <q-btn
-            round
-            color="primary"
-            :to="'/survey-file/' + projectMetadata.id"
-            icon="arrow_forward"
-          >
-            <q-tooltip :offset="[10, 10]">
-              View survey files
-            </q-tooltip>
-          </q-btn>
-        </q-page-sticky>
-
-      </transition>
+        <q-btn
+          round
+          color="primary"
+          @click="submit"
+          icon="fas fa-save"
+        />
+      </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;">
         <q-card inline style="width:100%">

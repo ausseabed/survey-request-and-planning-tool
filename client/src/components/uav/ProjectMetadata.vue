@@ -1,64 +1,29 @@
 <template>
   <div class="row justify-center">
-    <q-scroll-observable @scroll="hasScrolled"></q-scroll-observable>
-
-    <div inline style="width: 900px; max-width: 90vw;">
-      <div class="row justify-between">
-        <q-breadcrumbs separator=">" color="light">
-          <q-breadcrumbs-el label="Home" icon="home" to="/" />
-          <q-breadcrumbs-el label="Project Metadata" icon="fas fa-clipboard-list" />
-        </q-breadcrumbs>
-        <div class="row">
-          <q-btn icon="fas fa-save" label="Save"
-            @click="submit">
-          </q-btn>
-          <q-btn icon="fas fa-trash" label="Delete"
-            @click="deleteProject">
-          </q-btn>
-          <q-btn label="Specifications" icon="arrow_forward"
-            :disable="!id"
-            :to="'/survey-technical-specification/' + id">
-            <q-tooltip v-if="!id" anchor="bottom middle" self="top middle" :offset="[10, 10]">
-              Save project to view specifications.
-            </q-tooltip>
-          </q-btn>
-
-        </div>
-      </div>
-    </div>
-
-
 
     <q-page padding class="docs-input row justify-center">
-      <transition
-        appear
-        enter-active-class="animated slideInRight"
-        leave-active-class="animated slideOutRight"
-      >
-        <q-page-sticky
-          v-if="showFloatingButtons"
-          position="bottom-right"
-          :offset="[18, 18]"
-          style="z-index:100">
+      <q-page-sticky
+        position="bottom-right"
+        :offset="[18, 18]"
+        style="z-index:100">
 
-          <q-btn
-            round
-            color="primary"
-            @click="submit"
-            icon="fas fa-save"
-          />
-          <q-btn :disable="!id"
-            round
-            color="primary"
-            :to="'/survey-technical-specification/' + id"
-            icon="arrow_forward"
-          >
-            <q-tooltip :offset="[10, 10]">
-              Switch to technical specifications
-            </q-tooltip>
-          </q-btn>
-        </q-page-sticky>
-      </transition>
+        <q-btn
+          round
+          color="primary"
+          @click="submit"
+          icon="fas fa-save"
+        />
+        <q-btn :disable="!id"
+          round
+          color="primary"
+          @click="deleteProject"
+          icon="fas fa-trash"
+        >
+          <q-tooltip :offset="[10, 10]">
+            Switch to technical specifications
+          </q-tooltip>
+        </q-btn>
+      </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;">
         <q-card inline style="width:100%">

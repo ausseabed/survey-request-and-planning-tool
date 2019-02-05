@@ -9,16 +9,6 @@
       <q-btn
         round
         color="primary"
-        :to="'/survey-technical-specification/' + projectMetadata.id"
-        icon="arrow_back"
-      >
-        <q-tooltip :offset="[10, 10]">
-          Return to technical specification
-        </q-tooltip>
-      </q-btn>
-      <q-btn
-        round
-        color="primary"
         @click="submit"
         icon="fas fa-save"
       />

@@ -19,9 +19,6 @@
           @click="deleteProject"
           icon="fas fa-trash"
         >
-          <q-tooltip :offset="[10, 10]">
-            Switch to technical specifications
-          </q-tooltip>
         </q-btn>
       </q-page-sticky>
 

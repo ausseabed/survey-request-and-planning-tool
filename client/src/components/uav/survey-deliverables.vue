@@ -59,7 +59,7 @@
               <q-card-separator />
             </div>
             <q-card-main class="column col" style="padding:0px">
-              <q-scroll-area class="fit">
+              <q-scroll-area class="fit" v-if="deliverableList.length != 0">
                 <q-list no-border
                   @mouseleave.native="mouseleaveDeliverableList">
                   <q-item
@@ -78,6 +78,11 @@
                   </q-item>
                 </q-list>
               </q-scroll-area>
+              <div class="fit column justify-center items-center" v-else>
+                <div class="q-pa-md q-caption" style="color: rgba(0,0,0,0.4);">
+                  No deliverables have been assigned to this survey.
+                </div>
+              </div>
 
 
 
@@ -96,12 +101,17 @@
         <div class="col-8">
           <div class="q-headline">Details</div>
           <q-card-separator />
-          <q-scroll-area class="fit">
+          <q-scroll-area class="fit" v-if="deliverableList.length != 0">
             <deliverable-list
               :definitionList="deliverableDefinitionList"
               :deliverableList="deliverables">
             </deliverable-list>
           </q-scroll-area>
+          <div class="fit column justify-center items-center" v-else>
+            <div class="q-pa-md q-caption" style="color: rgba(0,0,0,0.4);">
+              No deliverables have been assigned to this survey.
+            </div>
+          </div>
         </div>
       </div>
     </div>

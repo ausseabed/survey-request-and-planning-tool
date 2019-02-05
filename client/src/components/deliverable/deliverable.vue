@@ -1,7 +1,10 @@
 <template>
-  <q-card inline style="width:100%; margin-left: 2px;">
-    <q-card-title>
-      {{definition.name}}
+  <q-card inline class="row" style="width:100%; margin-left: 2px;">
+    <q-card-title >
+      <div v-bind:style="{fontWeight: fontWeight}">
+        {{definition.name}}
+      </div>
+
       <span slot="subtitle" v-if="definition.description">
         {{definition.description}}
       </span>
@@ -26,7 +29,7 @@ import DeliverableField from './deliverable-field'
 
 
 export default Vue.extend({
-  props: ['definition', 'deliverable'],
+  props: ['definition', 'deliverable', 'selected'],
   components: {
     'deliverable-field': DeliverableField,
   },
@@ -39,7 +42,9 @@ export default Vue.extend({
 
   },
   computed: {
-
+    fontWeight: function() {
+      return this.selected ? 'bold' : 'normal';
+    }
   }
 });
 

@@ -63,9 +63,10 @@
               <q-scroll-area class="fit" v-if="deliverableList.length != 0">
                 <q-list no-border
                   @mouseleave.native="mouseleaveDeliverableList">
-                  <q-item
+                  <q-item highlight
                     v-for="deliverable in deliverableList"
                     @mouseover.native="mouseoverDeliverableList(deliverable)"
+                    @click.native="clickDeliverable(deliverable)"
                     :key="deliverable.id">
 
                     <q-item-main>
@@ -106,7 +107,8 @@
           <q-scroll-area class="fit" v-if="deliverableList.length != 0">
             <deliverable-list
               :definitionList="deliverableDefinitionList"
-              :deliverableList="deliverables">
+              :deliverableList="deliverables"
+              :selectedId="selectedId">
             </deliverable-list>
           </q-scroll-area>
           <div class="fit column justify-center items-center" v-else>
@@ -128,6 +130,9 @@ import { mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { errorHandler } from './../mixins/error-handling'
 import { date } from 'quasar'
+import { scroll } from 'quasar'
+const { getScrollTarget, setScrollPosition } = scroll
+
 import * as types
   from '../../store/modules/deliverable/deliverable-mutation-types'
 import { RequestStatus }
@@ -240,6 +245,18 @@ export default Vue.extend({
       });
     },
 
+    clickDeliverable(deliverable) {
+      this.selectedId = deliverable.id;
+
+      const deliverableElementId = `deliverable-${deliverable.id}`;
+
+      const ele = document.getElementById(deliverableElementId);
+      const target = getScrollTarget(ele);
+      const offset = ele.offsetTop;
+      const duration = 200;
+      setScrollPosition(target, offset, duration);
+    },
+
     heightTweak (offset) {
       return {
         minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
@@ -312,6 +329,7 @@ export default Vue.extend({
       deliverables: [],
       tempDeliverableDefinitions: [],
       activeDeliverableId: undefined,
+      selectedId: undefined,
     }
   }
 });

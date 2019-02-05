@@ -1,8 +1,10 @@
 <template>
   <div style="padding-right: 8px; padding-bottom: 30px;">
     <deliverable v-for="deliverable in deliverableList"
+      :id="'deliverable-' + deliverable.id"
       :definition="definitionForDeliverable(deliverable)"
-      :deliverable="deliverable">
+      :deliverable="deliverable"
+      :selected="selectedId == deliverable.id">
     </deliverable>
   </div>
 
@@ -19,6 +21,7 @@ export default Vue.extend({
   props: [
     'definitionList',
     'deliverableList',
+    'selectedId',
   ],
   components: {
     'deliverable': Deliverable

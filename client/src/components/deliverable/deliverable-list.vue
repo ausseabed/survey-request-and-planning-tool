@@ -1,6 +1,7 @@
 <template>
   <div style="padding-right: 8px; padding-bottom: 30px;">
     <deliverable v-for="deliverable in deliverableList"
+      :key="deliverable.id"
       :id="'deliverable-' + deliverable.id"
       :definition="definitionForDeliverable(deliverable)"
       :deliverable="deliverable"

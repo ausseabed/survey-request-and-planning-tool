@@ -12,6 +12,7 @@
     <q-card-main>
       <deliverable-field
         v-for="field in definition.fields"
+        :key="field.name"
         :field="field"
         :definition="definition"
         :deliverable="deliverable">

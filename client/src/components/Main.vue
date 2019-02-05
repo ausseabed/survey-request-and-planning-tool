@@ -36,19 +36,19 @@
                       <transition-expand>
                         <div v-if="activeProjMetaId == matchingProjMeta.id" class="row justify-end">
                           <q-btn outline size="sm" color="primary" label="Metadata"
-                            :to="'/project-metadata/' + matchingProjMeta.id">
+                            :to="`/survey/${matchingProjMeta.id}/summary`">
                             <!-- <q-tooltip> View survey metadata </q-tooltip> -->
                           </q-btn>
                           <q-btn outline size="sm" color="primary" label="Specifications"
-                            :to="'/survey-technical-specification/' + matchingProjMeta.id">
+                            :to="`/survey/${matchingProjMeta.id}/specifications`">
                             <!-- <q-tooltip> View survey technical specifications </q-tooltip> -->
                           </q-btn>
                           <q-btn outline size="sm" color="primary" label="Deliverables"
-                            :to="'/survey-deliverables/' + matchingProjMeta.id">
+                            :to="`/survey/${matchingProjMeta.id}/deliverables`">
                             <!-- <q-tooltip> View survey technical specifications </q-tooltip> -->
                           </q-btn>
                           <q-btn outline size="sm" color="primary" icon="attach_file"
-                            :to="'/survey-file/' + matchingProjMeta.id">
+                            :to="`/survey/${matchingProjMeta.id}/attachments`">
                           </q-btn>
                         </div>
                       </transition-expand>

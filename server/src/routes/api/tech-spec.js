@@ -95,10 +95,15 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   // postgis will only save a multi line string here, and the request may
   // include a FeatureCollection
-  techSpec.surveyLines =
-    geojsonToMultiLineString(techSpec.surveyLines);
-  techSpec.tidalGaugeLocations =
-    geojsonToMultiPoint(techSpec.tidalGaugeLocations);
+  if (!_.isNil(techSpec.surveyLines)) {
+    techSpec.surveyLines =
+      geojsonToMultiLineString(techSpec.surveyLines);
+  }
+  if (!_.isNil(techSpec.tidalGaugeLocations)) {
+    techSpec.tidalGaugeLocations =
+      geojsonToMultiPoint(techSpec.tidalGaugeLocations);
+  }
+
 
   // don't let the post request mark a tech spec as deleted
   delete techSpec.deleted;

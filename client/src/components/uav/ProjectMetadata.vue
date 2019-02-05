@@ -12,12 +12,14 @@
           color="primary"
           @click="submit"
           icon="fas fa-save"
+          class="q-ml-sm"
         />
         <q-btn :disable="!id"
           round
           color="primary"
           @click="deleteProject"
           icon="fas fa-trash"
+          class="q-ml-sm"
         >
         </q-btn>
       </q-page-sticky>

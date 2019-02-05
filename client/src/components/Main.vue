@@ -34,20 +34,20 @@
                         </div>
                       </div>
                       <transition-expand>
-                        <div v-if="activeProjMetaId == matchingProjMeta.id" class="row justify-end">
-                          <q-btn outline size="sm" color="primary" label="Metadata"
+                        <div v-if="activeProjMetaId == matchingProjMeta.id">
+                          <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
                             :to="`/survey/${matchingProjMeta.id}/summary`">
                             <!-- <q-tooltip> View survey metadata </q-tooltip> -->
                           </q-btn>
-                          <q-btn outline size="sm" color="primary" label="Specifications"
+                          <q-btn outline size="sm" color="primary" label="Specifications" class="q-mt-xs q-ml-xs"
                             :to="`/survey/${matchingProjMeta.id}/specifications`">
                             <!-- <q-tooltip> View survey technical specifications </q-tooltip> -->
                           </q-btn>
-                          <q-btn outline size="sm" color="primary" label="Deliverables"
+                          <q-btn outline size="sm" color="primary" label="Deliverables" class="q-mt-xs q-ml-xs"
                             :to="`/survey/${matchingProjMeta.id}/deliverables`">
                             <!-- <q-tooltip> View survey technical specifications </q-tooltip> -->
                           </q-btn>
-                          <q-btn outline size="sm" color="primary" icon="attach_file"
+                          <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
                             :to="`/survey/${matchingProjMeta.id}/attachments`">
                           </q-btn>
                         </div>

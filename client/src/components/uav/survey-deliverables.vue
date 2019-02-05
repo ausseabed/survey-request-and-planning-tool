@@ -45,6 +45,7 @@
             <q-card-separator />
             <q-card-actions align="end">
               <q-btn flat icon="add" label="Add"
+                :disable="tempDeliverableDefinitions.length == 0"
                 @click="addTempDeliverables">
               </q-btn>
             </q-card-actions>
@@ -91,6 +92,7 @@
               <q-card-separator />
               <q-card-actions align="end">
                 <q-btn flat icon="delete" label="Remove all"
+                  :disable="deliverableList.length == 0"
                   @click="deleteAllDeliverables">
                 </q-btn>
               </q-card-actions>

@@ -365,10 +365,8 @@ export default Vue.extend({
           'projectMetadata/getProjectMetadata', { id: this.$route.params.id })
         .then(projectMetadata => {
           this.patchSelectLists(projectMetadata);
-          if (projectMetadata.surveyApplication) {
-            this.setSelectedSurveyApplication(
-              projectMetadata.surveyApplication);
-          }
+          this.setSelectedSurveyApplication(
+            projectMetadata.surveyApplication);
           this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
           this.canCheckGeometry = true;
         });
@@ -396,11 +394,6 @@ export default Vue.extend({
       this.$store.commit('projectMetadata/setStartDate', startDate);
     },
 
-    setSelectedSurveyApplication(surveyApplication) {
-      this.$store.commit('surveyApplication/setSelectedSurveyApplication',
-        surveyApplication);
-    },
-
     setSelectedSurveyApplicationGroup(group) {
       // can't dispatch from a mutation, so do it here instead
       this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
@@ -409,6 +402,13 @@ export default Vue.extend({
     },
 
     setSelectedSurveyApplication(surveyApplication) {
+      if (_.isNil(surveyApplication)) {
+        this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
+          undefined);
+        this.$store.commit('surveyApplication/setSelectedSurveyApplication',
+          undefined);
+          return;
+      }
       this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
         surveyApplication.group);
       this.$store.dispatch('surveyApplication/getSurveyApplications')

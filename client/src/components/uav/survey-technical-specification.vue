@@ -12,8 +12,19 @@
         <q-btn
           round
           color="primary"
+          @click="applyDefaults"
+          icon="input"
+          class="q-ml-sm"
+        >
+          <q-tooltip> Apply defaults </q-tooltip>
+        </q-btn>
+
+        <q-btn
+          round
+          color="primary"
           @click="submit"
           icon="fas fa-save"
+          class="q-ml-sm"
         />
       </q-page-sticky>
 
@@ -655,6 +666,16 @@ export default Vue.extend({
         }
       });
 
+    },
+
+    applyDefaults() {
+      const defaults = this.projectMetadata.surveyApplication.defaults;
+      if (_.isNil(defaults)) {
+        this.notifyError("No defaults available for survey application.");
+      } else {
+        this.UPDATE({path:'techSpec', value:defaults});
+        this.notifySuccess("Defaults applied");
+      }
     },
 
     submit() {

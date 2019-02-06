@@ -30,7 +30,10 @@ export const GROUND_TRUTHING_METHODS = [
 
 export const POSITIONING_REQUIREMENTS = [
   "PPP",
+  "RTK-GPS",
   "Differential GPS",
+  "Wide Area Differential GPS",
+  "GNSS",
   "Other",
   "Not sure",
 ];

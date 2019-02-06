@@ -371,7 +371,7 @@ export default Vue.extend({
           this.canCheckGeometry = true;
         });
       } else {
-        this.$store.commit('projectMetadata/reset');
+        this.$store.commit('projectMetadata/resetProjectMetadata');
         // need to clear the selected options here, otherwise they persist
         // to a new survey
         this.$store.commit(
@@ -536,7 +536,7 @@ export default Vue.extend({
       } else {
         // no id, so hasn't been saved. I this case reset form and go back
         // to main page.
-        this.$store.commit('projectMetadata/reset');
+        this.$store.commit('projectMetadata/resetProjectMetadata');
         this.$router.replace({ path: `/` });
       }
     },

@@ -42,6 +42,9 @@ export default {
         state[key] = s[key]
       })
     },
+    resetProjectMetadata(state) {
+      state.projectMetadata = initialState().projectMetadata;
+    },
     ...mutations
   }
 }

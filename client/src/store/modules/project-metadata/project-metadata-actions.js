@@ -51,7 +51,7 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
   return new Promise((resolve, reject) => {
     Vue.axios.get(url_endpoint)
     .then((response) => {
-      commit('reset')
+      commit('resetProjectMetadata')
       commit('update', { path: 'projectMetadata', value: response.data })
       resolve(response.data);
     })

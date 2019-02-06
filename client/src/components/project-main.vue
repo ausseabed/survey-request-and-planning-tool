@@ -2,40 +2,50 @@
   <q-page :style-fn="heightTweak" >
     <div class="overflow-hidden fit">
       <div class="column col-4 full-height">
-        <q-tabs color="secondary">
-          <q-route-tab
-            default
-            icon="notes"
-            label="Summary"
-            :to="`/survey/${id}/summary`"
-            exact
-            slot="title"
-          />
-          <q-route-tab
-            default
-            icon="assignment"
-            label="Specifications"
-            :to="`/survey/${id}/specifications`"
-            exact
-            slot="title"
-          />
-          <q-route-tab
-            default
-            icon="ballot"
-            label="Deliverables"
-            :to="`/survey/${id}/deliverables`"
-            exact
-            slot="title"
-          />
-          <q-route-tab
-            default
-            icon="attach_file"
-            label="Attachments"
-            :to="`/survey/${id}/attachments`"
-            exact
-            slot="title"
-          />
-        </q-tabs>
+        <q-toolbar color="secondary" class="q-py-none">
+          <q-toolbar-title>
+              {{projectMetadata.surveyName}}
+              <span slot="subtitle">
+                {{projectMetadata.projectStatus}}
+              </span>
+          </q-toolbar-title>
+
+          <q-tabs color="secondary" align="right">
+            <q-route-tab
+              default
+              icon="notes"
+              label="Summary"
+              :to="`/survey/${id}/summary`"
+              exact
+              slot="title"
+            />
+            <q-route-tab
+              default
+              icon="assignment"
+              label="Specifications"
+              :to="`/survey/${id}/specifications`"
+              exact
+              slot="title"
+            />
+            <q-route-tab
+              default
+              icon="ballot"
+              label="Deliverables"
+              :to="`/survey/${id}/deliverables`"
+              exact
+              slot="title"
+            />
+            <q-route-tab
+              default
+              icon="attach_file"
+              label="Attachments"
+              :to="`/survey/${id}/attachments`"
+              exact
+              slot="title"
+            />
+          </q-tabs>
+
+        </q-toolbar>
 
         <div class="column col" style="overflow-y: auto;">
           <router-view></router-view>
@@ -87,6 +97,9 @@ export default Vue.extend({
   },
 
   computed: {
+    ...mapGetters('projectMetadata',[
+      'projectMetadata',
+    ]),
   },
 
   data() {

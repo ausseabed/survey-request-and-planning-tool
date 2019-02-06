@@ -90,7 +90,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["CSAR", "XYZ", "ESRI Grid"]
+        "options": ["CSAR", "XYZ", "ESRI Grid", "Erdas Imagine", "GeoTIFF", "ASCII"]
       }
     ]
   },
@@ -103,7 +103,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["CSAR", "XYZ", "ESRI ASCII"]
+        "options": ["CSAR", "XYZ", "ESRI ASCII", "ArcGrids", "SD"]
       }
     ]
   },
@@ -127,7 +127,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": ["TBD", "Caris", "gsf"]
       },
       {
         "name": "acceptedAndRejectedXYZ",
@@ -156,7 +156,7 @@
         "label": "Format",
         "type": "deliverable-field-option-single",
         "options": ["CSAR", "XYZ", "ESRI ASCII", "GeoTIFF", "ESRI Grid",
-          "ASCII raster format", "ECW", "JPG2000", "NetCFD"]
+          "ASCII raster format", "ECW", "JPG2000", "NetCFD", "ArcGrids", "SD"]
       }
     ]
   },
@@ -284,7 +284,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["Kongsberg EM series (*.all)", "Reson SeaBat (*.s7k)", "Reson SeaBat - old (*.xtf)"]
+        "options": ["Kongsberg EM series (*.all)", "Reson SeaBat (*.s7k)", "Reson SeaBat - old (*.xtf)", "QPD", "ALL",  "Other proprietary format"]
       },
       {
         "name": "requirements",
@@ -302,7 +302,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": ["TBD", "wcd"]
       },
       {
         "name": "requirements",
@@ -421,7 +421,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": ["TBD", "PDF"]
       },
       {
         "name": "requirements",

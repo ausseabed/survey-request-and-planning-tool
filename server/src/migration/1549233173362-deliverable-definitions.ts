@@ -6,7 +6,7 @@ import { DeliverableDefinition, DeliverableDefinitionField }
   from '../lib/entity/deliverable-definition';
 
 const deliverableDefinitionsJson =
-  require('./1549233173362-deliverable-definitions.json');
+  require('./deliverable-definitions.json');
 
 export class deliverableDefinitions1549233173362 implements MigrationInterface {
 

@@ -27,8 +27,25 @@ router.get('/group-names', async function (req, res) {
   return res.json(grpNames);
 });
 
+router.get('/:id', asyncMiddleware(async function (req, res) {
+  let sa = await getConnection()
+  .getRepository(SurveyApplication)
+  .findOne(req.params.id);
+
+  if (!sa || sa.deleted) {
+    let err = boom.notFound(
+      `SurveyApplication ${req.params.id} does not exist`);
+    throw err;
+  }
+
+  // don't return the deleted flag
+  delete sa.deleted;
+
+  return res.json(sa);
+}));
+
 // Gets a list of survey applications
-router.get('/', async function (req, res) {
+router.get('/', asyncMiddleware(async function (req, res) {
   const whereOpts = _.isNil(req.query['group']) ?
     {deleted: false} :
     {
@@ -45,7 +62,7 @@ router.get('/', async function (req, res) {
   });
 
   return res.json(surveyApps);
-});
+}));
 
 
 module.exports = router;

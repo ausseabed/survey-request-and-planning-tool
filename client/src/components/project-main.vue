@@ -71,14 +71,6 @@ export default Vue.extend({
     },
     fetchData () {
       this.id = this.$route.params.id;
-      if (this.id) {
-        this.$store.dispatch(
-          'projectMetadata/getProjectMetadata', { id: this.id })
-        .then(projectMetadata => {
-        });
-      } else {
-        this.$store.commit('projectMetadata/reset');
-      }
     },
 
   },
@@ -95,9 +87,6 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters({
-      projectMetadata: 'projectMetadata/projectMetadata',
-    }),
   },
 
   data() {

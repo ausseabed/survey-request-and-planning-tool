@@ -15,6 +15,15 @@ export class SurveyApplication {
   @Column("varchar")
   group = undefined;
 
+  @Column("bool")
+  deleted = false;
+
+  @Column({
+    type: "json",
+    nullable: true
+  })
+  defaults = undefined;
+
   @OneToMany(
     type => ProjectMetadata,
     projectMetadata => projectMetadata.surveyApplication)

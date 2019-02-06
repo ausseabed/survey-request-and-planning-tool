@@ -30,11 +30,17 @@ router.get('/group-names', async function (req, res) {
 // Gets a list of survey applications
 router.get('/', async function (req, res) {
   const whereOpts = _.isNil(req.query['group']) ?
-    {} :
-    {group: req.query['group']}
+    {deleted: false} :
+    {
+      group: req.query['group'],
+      deleted: false
+    }
+
+  const selectOpts = ["id", "name", "group"];
 
   let surveyApps = await getConnection().getRepository(SurveyApplication)
   .find({
+    select:selectOpts,
     where:whereOpts
   });
 

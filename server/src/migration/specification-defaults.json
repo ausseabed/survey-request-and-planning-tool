@@ -1,7 +1,7 @@
 [
   {
-    "Group": "Coastal zone management",
-    "Name": "Coastal hazard and risk assessment for estuaries and near shore coastal areas",
+    "group": "Coastal zone management",
+    "name": "Coastal hazard and risk assessment for estuaries and near shore coastal areas",
     "Description (not required on specs form)": "Surveying of estuaries and near-shore coastal for hazard/risk assessment",
     "surveyType": "",
     "surveyFrequency": "",
@@ -49,8 +49,8 @@
     "deliverables": []
   },
   {
-    "Group": "Coastal zone management",
-    "Name": "Mapping bathymetric changes through time for understanding coastal variability in coastal morphology",
+    "group": "Coastal zone management",
+    "name": "Mapping bathymetric changes through time for understanding coastal variability in coastal morphology",
     "Description (not required on specs form)": "Understanding variability of coastal morphology through time",
     "surveyType": "",
     "surveyFrequency": "",
@@ -98,8 +98,8 @@
     "deliverables": []
   },
   {
-    "Group": "Coastal zone management",
-    "Name": "Substrate mapping for marine sediments on the inner-mid shelf",
+    "group": "Coastal zone management",
+    "name": "Substrate mapping for marine sediments on the inner-mid shelf",
     "Description (not required on specs form)": "using bathymetry and backscatter data to map marine sediments on the inner-mid shelf",
     "surveyType": "",
     "surveyFrequency": "",
@@ -147,8 +147,8 @@
     "deliverables": []
   },
   {
-    "Group": "Commercial fishing and aquaculture",
-    "Name": "Mapping scallop habitats",
+    "group": "Commercial fishing and aquaculture",
+    "name": "Mapping scallop habitats",
     "Description (not required on specs form)": "Mapping and modeling of the seabed to identify preferred habitats of the SE QLD Saucer Scallop",
     "surveyType": "",
     "surveyFrequency": "",
@@ -196,8 +196,8 @@
     "deliverables": []
   },
   {
-    "Group": "Construction and navigational charting",
-    "Name": "Dredging safety and volume calculations",
+    "group": "Construction and navigational charting",
+    "name": "Dredging safety and volume calculations",
     "Description (not required on specs form)": "Volume calculations for payment purposes and also identifying hazards.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -264,8 +264,8 @@
     ]
   },
   {
-    "Group": "Data collection and acquisition",
-    "Name": "Collecting and processing Airborn LiDAR Bathymetry (ALB) data",
+    "group": "Data collection and acquisition",
+    "name": "Collecting and processing Airborn LiDAR Bathymetry (ALB) data",
     "Description (not required on specs form)": "Collecting and processing Airborn LiDAR Bathymetry (ALB) data for coastal zone management and charting applications",
     "surveyType": "",
     "surveyFrequency": "",
@@ -332,8 +332,8 @@
     ]
   },
   {
-    "Group": "Construction and navigational charting",
-    "Name": "Dredge support and channel monitoring",
+    "group": "Construction and navigational charting",
+    "name": "Dredge support and channel monitoring",
     "Description (not required on specs form)": "Dredge support and channel monitoring for shoals. providing volumes and checking for clearances from dredging works.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -385,12 +385,12 @@
       {
         "name":"Gridded mean caris surface file (*.csar)",
         "exists": false
-      },
+      }
     ]
   },
   {
-    "Group": "Data collection and acquisition",
-    "Name": "Offshore geological mapping",
+    "group": "Data collection and acquisition",
+    "name": "Offshore geological mapping",
     "Description (not required on specs form)": "Mapping the bedrock geology (and seabed substrate)",
     "surveyType": "",
     "surveyFrequency": "",
@@ -438,8 +438,8 @@
     "deliverables": []
   },
   {
-    "Group": "Data collection and acquisition",
-    "Name": "Hydrographic survey for producing reference surfaces for Airborn LiDAR Bathymetry (ALB) surveys",
+    "group": "Data collection and acquisition",
+    "name": "Hydrographic survey for producing reference surfaces for Airborn LiDAR Bathymetry (ALB) surveys",
     "Description (not required on specs form)": "We (or our client) source MBES data to serve as \"ground truth\" for a subsequent ALB survey.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -487,8 +487,8 @@
     "deliverables": []
   },
   {
-    "Group": "Habitat Mapping",
-    "Name": "Benthic mapping across bathymetry surfaces",
+    "group": "Habitat Mapping",
+    "name": "Benthic mapping across bathymetry surfaces",
     "Description (not required on specs form)": "Benthic analysis data is modelled across bathymetry surfaces",
     "surveyType": "",
     "surveyFrequency": "",
@@ -540,8 +540,8 @@
     ]
   },
   {
-    "Group": "Habitat Mapping",
-    "Name": "Geological and habitat mapping",
+    "group": "Habitat Mapping",
+    "name": "Geological and habitat mapping",
     "Description (not required on specs form)": "Use data for baseline and further monitoring. Integrate with other discipline data (sedimentology, hydrodynamic, geochem, ecology, SBP)",
     "surveyType": "",
     "surveyFrequency": "",
@@ -592,7 +592,7 @@
       },
       {
         "name":"Bathymetry (point cloud)",
-        "exists": false,
+        "exists": false
       },
       {
         "name":"Raw sonar data"
@@ -609,8 +609,8 @@
     ]
   },
   {
-    "Group": "Hydrodynamic modelling",
-    "Name": "Bathymetric model in support of hydrodynamic modelling",
+    "group": "Hydrodynamic modelling",
+    "name": "Bathymetric model in support of hydrodynamic modelling",
     "Description (not required on specs form)": "to create a bathymetric model for input into hydrodynamic modelling software (e.g. Mike or Tuflow)",
     "surveyType": "",
     "surveyFrequency": "",
@@ -665,8 +665,8 @@
     ]
   },
   {
-    "Group": "Hydrographic charting",
-    "Name": "Harbour mapping using bathymetric SAS on AUV",
+    "group": "Hydrographic charting",
+    "name": "Harbour mapping using bathymetric SAS on AUV",
     "Description (not required on specs form)": "Survey of Middle Harbour with bathymetric SAS (Kraken) on a REMUS 600 AUV",
     "surveyType": "",
     "surveyFrequency": "",
@@ -722,8 +722,8 @@
     ]
   },
   {
-    "Group": "Hydrographic charting",
-    "Name": "Depth monitoring",
+    "group": "Hydrographic charting",
+    "name": "Depth monitoring",
     "Description (not required on specs form)": "Identification of shoals or obstructions",
     "surveyType": "",
     "surveyFrequency": "Daily",
@@ -771,8 +771,8 @@
     "deliverables": []
   },
   {
-    "Group": "Hydrographic charting",
-    "Name": "Hydrographic Charting for port safety analysis and risk assessment",
+    "group": "Hydrographic charting",
+    "name": "Hydrographic Charting for port safety analysis and risk assessment",
     "Description (not required on specs form)": "Port Safety work conducted based on a risk assessment profile. Contract work also conducted for dredge works, engineering design, seabed erosion monitoring, habitat mapping, environmental management",
     "surveyType": "",
     "surveyFrequency": "",
@@ -820,8 +820,8 @@
     "deliverables": []
   },
   {
-    "Group": "Hydrographic charting",
-    "Name": "Hydrographic surveying and charting",
+    "group": "Hydrographic charting",
+    "name": "Hydrographic surveying and charting",
     "Description (not required on specs form)": "Hydrographic Survey processing and semi-auto contour creation and sounding selection for nautical charting",
     "surveyType": "",
     "surveyFrequency": "",
@@ -869,8 +869,8 @@
     "deliverables": []
   },
   {
-    "Group": "Hydrographic charting",
-    "Name": "Upgrading existing charts or for making new charts (Nautical Charting)",
+    "group": "Hydrographic charting",
+    "name": "Upgrading existing charts or for making new charts (Nautical Charting)",
     "Description (not required on specs form)": "High resolution MBES is used to map the seabed for the purposes of upgrading existing charts or for making new charts.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -918,8 +918,8 @@
     "deliverables": []
   },
   {
-    "Group": "Hydrographic charting",
-    "Name": "Bathymetry for updating national hydrographic database",
+    "group": "Hydrographic charting",
+    "name": "Bathymetry for updating national hydrographic database",
     "Description (not required on specs form)": "Bathy collected to update the national hydrographic database",
     "surveyType": "",
     "surveyFrequency": "",
@@ -967,8 +967,8 @@
     "deliverables": []
   },
   {
-    "Group": "Hydrographic charting",
-    "Name": "Nautical charting for safety of navigation",
+    "group": "Hydrographic charting",
+    "name": "Nautical charting for safety of navigation",
     "Description (not required on specs form)": "safety of navigation",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1016,8 +1016,8 @@
     "deliverables": []
   },
   {
-    "Group": "Hydrographic charting",
-    "Name": "Hydrographic Survey for port depth declaration",
+    "group": "Hydrographic charting",
+    "name": "Hydrographic Survey for port depth declaration",
     "Description (not required on specs form)": "Hydrographic Survey to Class A MSQ QLD Standards for port depth declaration (in Port of Hay Point)",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1065,8 +1065,8 @@
     "deliverables": []
   },
   {
-    "Group": "Identifying wrecks and dives (Inc. leisure dives)",
-    "Name": "Plane wreck survey",
+    "group": "Identifying wrecks and dives (Inc. leisure dives)",
+    "name": "Plane wreck survey",
     "Description (not required on specs form)": "determine the spread of the wreck site after trawler damage had occured",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1114,8 +1114,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine and coastal conservation",
-    "Name": "Substrate mapping (soft versus reef habitats) for Australian Marine Parks",
+    "group": "Marine and coastal conservation",
+    "name": "Substrate mapping (soft versus reef habitats) for Australian Marine Parks",
     "Description (not required on specs form)": "Bathymetry and habitat mapping required for development and research application assessments, designing biological surveys, baseline monitoring, compliance patrols.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1163,8 +1163,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine construction and infrastructure (Inc. cables etc.)",
-    "Name": "Dredging support",
+    "group": "Marine construction and infrastructure (Inc. cables etc.)",
+    "name": "Dredging support",
     "Description (not required on specs form)": "The use of multibeam for supporting dredging in ports, rivers, lakes, etc.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1219,8 +1219,8 @@
     ]
   },
   {
-    "Group": "Marine construction and infrastructure (Inc. cables etc.)",
-    "Name": "Pipeline Survey",
+    "group": "Marine construction and infrastructure (Inc. cables etc.)",
+    "name": "Pipeline Survey",
     "Description (not required on specs form)": "MBES acquisition along a pipeline together with side scan.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1268,8 +1268,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine habitat mapping",
-    "Name": "Identification and ground truthing of sea floor",
+    "group": "Marine habitat mapping",
+    "name": "Identification and ground truthing of sea floor",
     "Description (not required on specs form)": "dentification and ground truthing of sea floor.  Involves use of backscatter to identify sediment compartments and sedment sampling and video ground  truthing",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1322,8 +1322,8 @@
     ]
   },
   {
-    "Group": "Marine habitat mapping",
-    "Name": "Reef detection",
+    "group": "Marine habitat mapping",
+    "name": "Reef detection",
     "Description (not required on specs form)": "Using bathymetry and backscatter to identify 'reef' for marine conservation management",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1382,8 +1382,8 @@
     ]
   },
   {
-    "Group": "Marine habitat mapping",
-    "Name": "Mapping the spatial distribution of seafloor types, or species preference for the habitat",
+    "group": "Marine habitat mapping",
+    "name": "Mapping the spatial distribution of seafloor types, or species preference for the habitat",
     "Description (not required on specs form)": "Producing a map of the spatial distribution of seafloor types, or species preference for the habitat",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1444,8 +1444,8 @@
     ]
   },
   {
-    "Group": "Marine habitat mapping",
-    "Name": "Habitat mapping",
+    "group": "Marine habitat mapping",
+    "name": "Habitat mapping",
     "Description (not required on specs form)": "MBES survey for Geophysical Data Sources to integrate with observations using machine learning for habitat mapping",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1493,8 +1493,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine habitat mapping",
-    "Name": "Habitat mapping and evaluating and use of relationships between species and their environment",
+    "group": "Marine habitat mapping",
+    "name": "Habitat mapping and evaluating and use of relationships between species and their environment",
     "Description (not required on specs form)": "Evaluate and use relationships between species and their environment using bathymetry/backscatter.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1542,8 +1542,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine habitat mapping",
-    "Name": "Delineate seabed habitat types for hydrodynamic and sediment transport modelling",
+    "group": "Marine habitat mapping",
+    "name": "Delineate seabed habitat types for hydrodynamic and sediment transport modelling",
     "Description (not required on specs form)": "delineate seabed habitat types and bathymetry and backscatter for hydrodynamic and sediment transport modelling",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1591,8 +1591,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine habitat mapping",
-    "Name": "Habitat mapping and seafloor visualisation for marine park monitoring and managment",
+    "group": "Marine habitat mapping",
+    "name": "Habitat mapping and seafloor visualisation for marine park monitoring and managment",
     "Description (not required on specs form)": "Habitat mapping and seafloor visualisation for Marine park monitoring and managment",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1640,8 +1640,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine habitat mapping",
-    "Name": "Shallow water science",
+    "group": "Marine habitat mapping",
+    "name": "Shallow water science",
     "Description (not required on specs form)": "Run a shallow water echosounder for use in scientific projects  around Australia",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1689,8 +1689,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine resarch",
-    "Name": "Evaluation of sediment flux (accumulation vs erosion) and the effect of marine infrastructure",
+    "group": "Marine resarch",
+    "name": "Evaluation of sediment flux (accumulation vs erosion) and the effect of marine infrastructure",
     "Description (not required on specs form)": "High-resolution multibeam sub-bottom profiling and Sediment sampling (BoxCore)",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1745,8 +1745,8 @@
     ]
   },
   {
-    "Group": "Maritime boundary delineation",
-    "Name": "Extended Continental Shelf (ECS) Mapping",
+    "group": "Maritime boundary delineation",
+    "name": "Extended Continental Shelf (ECS) Mapping",
     "Description (not required on specs form)": "To delineate the outer continental shelf of the US/Australia.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1839,8 +1839,8 @@
     ]
   },
   {
-    "Group": "Maritime navigation (Inc. leisure, sailing and boating)",
-    "Name": "Corner inlet entrance survey",
+    "group": "Maritime navigation (Inc. leisure, sailing and boating)",
+    "name": "Corner inlet entrance survey",
     "Description (not required on specs form)": "Survey of approach channel to Corner Inlet which is utilised by offshore oil and gas industry vessels",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1907,8 +1907,8 @@
     ]
   },
   {
-    "Group": "Maritime navigation (Inc. leisure, sailing and boating)",
-    "Name": "Marina survey",
+    "group": "Maritime navigation (Inc. leisure, sailing and boating)",
+    "name": "Marina survey",
     "Description (not required on specs form)": "survey of local marina",
     "surveyType": "",
     "surveyFrequency": "",
@@ -1956,8 +1956,8 @@
     "deliverables": []
   },
   {
-    "Group": "Marine construction and infrastructure (Inc. cables etc.)",
-    "Name": "Dredging Maintenance Surveys for port management",
+    "group": "Marine construction and infrastructure (Inc. cables etc.)",
+    "name": "Dredging Maintenance Surveys for port management",
     "Description (not required on specs form)": "Pre-dredge, dredging, and post-dredge surveys",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2005,8 +2005,8 @@
     "deliverables": []
   },
   {
-    "Group": "Mineral resource (Inc. oil and gas)",
-    "Name": "Mapping of canyons and sub surface features",
+    "group": "Mineral resource (Inc. oil and gas)",
+    "name": "Mapping of canyons and sub surface features",
     "Description (not required on specs form)": "Mapping of canyons and sub surface features to understand tectonics, exposure of seafloor rock samples, or natural sub surface seepage indicators.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2059,8 +2059,8 @@
     ]
   },
   {
-    "Group": "Mineral resource (Inc. oil and gas)",
-    "Name": "Site survey for Oil and Gas",
+    "group": "Mineral resource (Inc. oil and gas)",
+    "name": "Site survey for Oil and Gas",
     "Description (not required on specs form)": "Site survey for a oil and gas field",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2108,8 +2108,8 @@
     "deliverables": []
   },
   {
-    "Group": "Natural disaster and hazard mitigation",
-    "Name": "Coastal hazard modelling",
+    "group": "Natural disaster and hazard mitigation",
+    "name": "Coastal hazard modelling",
     "Description (not required on specs form)": "we are mostly interested in running coastal hazard models eg coastal erosion, inundation etc.  The current NSW project is specifically seeking to provide data on sediment compartments to enable us to refine coastal erosion models.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2170,8 +2170,8 @@
     ]
   },
   {
-    "Group": "Natural disaster and hazard mitigation",
-    "Name": "Mapping of active submarine faults",
+    "group": "Natural disaster and hazard mitigation",
+    "name": "Mapping of active submarine faults",
     "Description (not required on specs form)": "Mapping of a major transform fault boundary where magnitude 7 to 8 earthquakes are common and tsunamis can be expected.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2219,8 +2219,8 @@
     "deliverables": []
   },
   {
-    "Group": "Resource characterisation",
-    "Name": "Survey to determine location of hydrocarbon seeps and collect geochemical samples of the seafloor at seeps",
+    "group": "Resource characterisation",
+    "name": "Survey to determine location of hydrocarbon seeps and collect geochemical samples of the seafloor at seeps",
     "Description (not required on specs form)": "in deep water (>1000m) bathy grid for geological interp,  (15-25m) backscatter grid (5m) for seafloor interp,  all water column interpreted (ping editing and feature detection).   SEep locations are determined and core sites chosen.  Backscatter is used to help guide the core within 10m of target.  Similar method for mineral deposits.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2268,8 +2268,8 @@
     "deliverables": []
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Compartment mapping",
+    "group": "Seafloor type mapping",
+    "name": "Compartment mapping",
     "Description (not required on specs form)": "Mapping bathymetry and backscatter for an entire sedimentary compartment",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2330,8 +2330,8 @@
     ]
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Exploratory seafloor mapping",
+    "group": "Seafloor type mapping",
+    "name": "Exploratory seafloor mapping",
     "Description (not required on specs form)": "map areas of seafloor not mapped with MBES",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2408,8 +2408,8 @@
     ]
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Habitat Mapping across fisheries",
+    "group": "Seafloor type mapping",
+    "name": "Habitat Mapping across fisheries",
     "Description (not required on specs form)": "Mapping distribution of habitat types across Fisheries",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2462,8 +2462,8 @@
     ]
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Habitat mapping targetting reef systems",
+    "group": "Seafloor type mapping",
+    "name": "Habitat mapping targetting reef systems",
     "Description (not required on specs form)": "Habitat mapping targeting reef systems in depth of 10-80 m",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2516,8 +2516,8 @@
     ]
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Identifying foot of slope points (FOS) for Extended Continental Shelf",
+    "group": "Seafloor type mapping",
+    "name": "Identifying foot of slope points (FOS) for Extended Continental Shelf",
     "Description (not required on specs form)": "To identify FOS points for thier ECS.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2565,8 +2565,8 @@
     "deliverables": []
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Mapping seabed habitats for identifying reefs and seagrass",
+    "group": "Seafloor type mapping",
+    "name": "Mapping seabed habitats for identifying reefs and seagrass",
     "Description (not required on specs form)": "efficacy of multibeam backscatter for identifying reefs and seagrass",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2614,8 +2614,8 @@
     "deliverables": []
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "marine geological science research",
+    "group": "Seafloor type mapping",
+    "name": "marine geological science research",
     "Description (not required on specs form)": "The use of (mainly) bathymetry data to identify seafloor features, such as canyons, landslides, drowned reefs etc. Backscatter data are also used, particularly if doing habitat mapping.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2663,8 +2663,8 @@
     "deliverables": []
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Hydrographic survey in support of port Maintenance",
+    "group": "Seafloor type mapping",
+    "name": "Hydrographic survey in support of port Maintenance",
     "Description (not required on specs form)": "Port under-keel clearance survey, dredging operations survey, safe navigation",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2712,8 +2712,8 @@
     "deliverables": []
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Seafloor type mapping",
+    "group": "Seafloor type mapping",
+    "name": "Seafloor type mapping",
     "Description (not required on specs form)": "MBES, backscatter & sub bottom for seafloor type mapping",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2761,8 +2761,8 @@
     "deliverables": []
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Sediment compartment mapping for coastal management",
+    "group": "Seafloor type mapping",
+    "name": "Sediment compartment mapping for coastal management",
     "Description (not required on specs form)": "Multibeam and LiDAR mapping of coastal sediment compartments to determine bathymetry and substrate type to understand coastal processes and sediment dynamics.",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2810,8 +2810,8 @@
     "deliverables": []
   },
   {
-    "Group": "Seafloor type mapping",
-    "Name": "Sediment mapping and grain size interpretation",
+    "group": "Seafloor type mapping",
+    "name": "Sediment mapping and grain size interpretation",
     "Description (not required on specs form)": "Making sediment maps using backscatter data",
     "surveyType": "",
     "surveyFrequency": "",
@@ -2859,8 +2859,8 @@
     "deliverables": []
   },
   {
-    "Group": "Storm surge modelling and impact",
-    "Name": "Modelling changing bathymetry in the surfzone and nearshore",
+    "group": "Storm surge modelling and impact",
+    "name": "Modelling changing bathymetry in the surfzone and nearshore",
     "Description (not required on specs form)": "These data are required to test and improve numerical modelling of storms impacts at the coastline",
     "surveyType": "",
     "surveyFrequency": "",

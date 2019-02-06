@@ -139,13 +139,10 @@ export default Vue.extend({
           [extents[0],extents[1]],
         ]]]
       }
-      // this.map.addGeojsonFeature(geojson);
-      console.log(geojson);
       this.$store.commit('projectMetadata/setAoi', geojson);
       this.$store.dispatch(
         'projectMetadata/checkAoi', { id: this.id })
       .then(matchingProjMetas => {
-        console.log(matchingProjMetas);
         this.matchingProjMetas = matchingProjMetas;
         const areaOfInterests = matchingProjMetas.map(mpm => {
           let f = mpm.areaOfInterest;

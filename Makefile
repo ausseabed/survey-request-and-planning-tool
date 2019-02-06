@@ -27,13 +27,13 @@ rm-prod:
 
 # database management targets, operate on Postgres
 delete-tables:
-	docker-compose $(DEV) run --rm api bash -c "yarn install && yarn run build && ENVIRONMENT=production typeorm schema:drop"
+	docker-compose $(DEV) run --rm api bash -c "yarn install && rm -rf ./dist && yarn run build && ENVIRONMENT=production typeorm schema:drop"
 
 migration-run:
-	docker-compose $(DEV) run --rm api bash -c "yarn install && yarn run build && ENVIRONMENT=production typeorm migration:run"
+	docker-compose $(DEV) run --rm api bash -c "yarn install && rm -rf ./dist && yarn run build && ENVIRONMENT=production typeorm migration:run"
 
 migration-revert:
-	docker-compose $(DEV) run --rm api bash -c "yarn install && yarn run build && ENVIRONMENT=production typeorm migration:revert"
+	docker-compose $(DEV) run --rm api bash -c "yarn install && rm -rf ./dist && yarn run build && ENVIRONMENT=production typeorm migration:revert"
 
 test:
 	docker-compose $(DEV) run api-test

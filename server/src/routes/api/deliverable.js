@@ -20,7 +20,10 @@ router.get('/definition-list', asyncMiddleware(async function (req, res) {
   .find({
     relations: [
       "fields",
-    ]
+    ],
+    order: {
+      name: 'ASC',
+    },
   });
 
   return res.json(orgs);

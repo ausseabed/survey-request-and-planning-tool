@@ -142,9 +142,12 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Is ground truthing required">
+                     label="Is ground truthing required"
+                     :error="$v.techSpec.groundTruthing.$error"
+                     error-label="Ground truthing is required">
               <q-checkbox :value="techSpec.groundTruthing"
                        @input="UPDATE({path:'techSpec.groundTruthing', value: $event})"
+                       @blur="$v.techSpec.groundTruthing.$touch"
                        />
             </q-field>
 
@@ -787,6 +790,7 @@ export default Vue.extend({
       surveyType: { required },
       featuresOfInterest: { required },
       depthRange: { required },
+      groundTruthing: { required },
       environmentalConditions: { required },
       positioningRequirement: { required },
 

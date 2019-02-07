@@ -10,35 +10,6 @@ import { asyncMiddleware, isAuthenticated }
 import { DeliverableDefinition } from '../../lib/entity/deliverable-definition';
 import { SurveyDeliverable } from '../../lib/entity/survey-deliverable';
 
-const deliverableList = [
-  {
-    id:'1',
-    definitionId:'835ae12a-a20e-43e4-8a35-fe5beb088838',
-    data: {},
-  },
-  {
-    id:'2',
-    definitionId:'ea8f1e48-2d88-41f8-abc8-acca284830c8',
-    data: {format:"xml"},
-  },
-  {
-    id:'3',
-    definitionId:'65ca2c7d-04a2-4717-8607-8f23dead1d08',
-    data: {},
-  },
-  {
-    id:'4',
-    definitionId:'e42e0366-97ff-4335-8e5f-5be00020b703',
-    data: {},
-  },
-  {
-    id:'5',
-    definitionId:'4ad77790-da95-4389-885e-3f2abd15dcfd',
-    data: {},
-  },
-];
-
-
 var router = express.Router();
 
 // Gets a list of all deliverables that are available within the application

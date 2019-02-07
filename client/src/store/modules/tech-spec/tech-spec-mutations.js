@@ -66,7 +66,11 @@ const mutations = {
   },
 
   [UPDATE_WITH_DEFAULTS] (state, defaults) {
-    _.merge(state.techSpec, defaults);
+    const item = defaults;
+    Object.keys(item).forEach(function(key) {
+      item[key] = item[key] == null ? undefined : item[key];
+    })
+    _.merge(state.techSpec, item);
   },
 }
 

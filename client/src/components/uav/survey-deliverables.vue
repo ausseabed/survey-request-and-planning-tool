@@ -9,8 +9,19 @@
       <q-btn
         round
         color="primary"
+        @click="applyDefaults"
+        icon="input"
+        class="q-ml-sm"
+      >
+        <q-tooltip> Apply defaults </q-tooltip>
+      </q-btn>
+
+      <q-btn
+        round
+        color="primary"
         @click="submit"
         icon="fas fa-save"
+        class="q-ml-sm"
       />
     </q-page-sticky>
 
@@ -177,6 +188,50 @@ export default Vue.extend({
         return defn.name;
       } else {
         return `Missing definitionId (${definitionId})`
+      }
+    },
+
+    applyDefaults() {
+      const defaults = this.projectMetadata.surveyApplication.defaults;
+      if (_.isNil(defaults)) {
+        this.notifyError("No defaults available for survey application.");
+      } else if (_.isNil(defaults.deliverables)) {
+        this.notifyError(
+          "No deliverable defaults available for survey application.");
+      } else {
+        const surveyDeliverables = []
+        for (const dd of defaults.deliverables) {
+          const defn = this.definitionList.find((def) => {
+            return def.name == dd.name;
+          });
+          if (_.isNil(defn)) {
+            // the defaults include a number of deliverables that are not
+            // present in the deliverable definitions SKIP THESE
+            continue;
+          }
+
+          const sd = {
+            definitionId: defn.id,
+            projectMetadataId: this.projectMetadata.id,
+          }
+          if (!_.isNil(dd.data)) {
+            sd['data'] = dd.data;
+          }
+
+          surveyDeliverables.push(sd);
+        }
+
+        if (surveyDeliverables.length == 0) {
+          this.notifyInfo("No default deliverables");
+        } else {
+          const payload = {
+            id: this.projectMetadata.id,
+            deliverableList: surveyDeliverables,
+          }
+          this.$store.dispatch('deliverable/addDeliverablesToSurvey', payload);
+          this.notifySuccess("Defaults applied");
+        }
+
       }
     },
 

@@ -27,7 +27,15 @@ export const errorHandler = {
         closeBtn: true,
         timeout: 700,
       });
-
+    },
+    notifyInfo(message) {
+      this.$q.notify({
+        message: message,
+        type: 'info',
+        color: 'secondary',
+        closeBtn: true,
+        timeout: 700,
+      });
     }
   }
 }

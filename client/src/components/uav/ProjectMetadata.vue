@@ -184,6 +184,39 @@
         </q-card>
 
         <q-card inline style="width:100%">
+          <q-card-title> Survey Purpose </q-card-title>
+          <q-card-main dense>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Category"
+                     :error="$v.selectedSurveyApplicationGroup.$error"
+                     error-label="Survey application is required">
+              <q-select filter
+                        autofocus-filter
+                        :value="selectedSurveyApplicationGroup"
+                        @change="setSelectedSurveyApplicationGroup($event)"
+                        :options="surveyApplicationGroupOptions"
+                        @blur="$v.selectedSurveyApplicationGroup.$touch"/>
+            </q-field>
+            <!-- v-if="selectedSurveyApplicationGroup" -->
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Purpose"
+                     :error="$v.selectedSurveyApplication.$error"
+                     error-label="Survey application is required">
+              <q-select filter
+                        autofocus-filter
+                        :value="selectedSurveyApplication"
+                        @change="setSelectedSurveyApplication($event)"
+                        :options="surveyApplicationOptions"
+                        @blur="$v.selectedSurveyApplication.$touch"/>
+            </q-field>
+          </q-card-main>
+        </q-card>
+
+
+        <q-card inline style="width:100%">
           <q-card-title> Other </q-card-title>
           <q-card-main dense>
 
@@ -236,31 +269,6 @@
                 @blur="$v.startDate.$touch" />
             </q-field>
 
-            <q-field :label-width="4"
-                     inset="full"
-                     label="Survey purpose - sector"
-                     :error="$v.selectedSurveyApplicationGroup.$error"
-                     error-label="Survey application is required">
-              <q-select filter
-                        autofocus-filter
-                        :value="selectedSurveyApplicationGroup"
-                        @change="setSelectedSurveyApplicationGroup($event)"
-                        :options="surveyApplicationGroupOptions"
-                        @blur="$v.selectedSurveyApplicationGroup.$touch"/>
-            </q-field>
-
-            <q-field :label-width="4"
-                     inset="full"
-                     label="Survey purpose - Application area"
-                     :error="$v.selectedSurveyApplication.$error"
-                     error-label="Survey application is required">
-              <q-select filter
-                        autofocus-filter
-                        :value="selectedSurveyApplication"
-                        @change="setSelectedSurveyApplication($event)"
-                        :options="surveyApplicationOptions"
-                        @blur="$v.selectedSurveyApplication.$touch"/>
-            </q-field>
 
             <q-field :label-width="2"
                      inset="full"

@@ -12,6 +12,16 @@
         <q-btn
           round
           color="primary"
+          @click="clear"
+          icon="clear"
+          class="q-ml-sm"
+        >
+          <q-tooltip> Clear specifications </q-tooltip>
+        </q-btn>
+
+        <q-btn
+          round
+          color="primary"
           @click="applyDefaults"
           icon="input"
           class="q-ml-sm"
@@ -670,6 +680,12 @@ export default Vue.extend({
         }
       });
 
+    },
+
+    clear() {
+      const defaults = this.projectMetadata.surveyApplication.defaults;
+      this.RESET_TECH_SPEC();
+      this.notifySuccess("Specifications cleared");
     },
 
     applyDefaults() {

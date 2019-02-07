@@ -18,6 +18,9 @@ router.get('/group-names', async function (req, res) {
   .createQueryBuilder("survey_application")
   .select(
     'DISTINCT ON (survey_application.group) survey_application.group as group')
+  .where(
+    `"deleted" = false`,
+  )
   .orderBy("survey_application.group", "ASC").getRawMany();
 
   let grpNames = grps.map(grp => {

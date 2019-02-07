@@ -30,21 +30,22 @@
       <div class="row q-pt-md q-pl-md gutter-sm fit ">
         <div class="column col-4 full-height">
 
-          <q-card >
-            <q-card-title>
+          <q-card class="full-width column">
+            <q-card-title class="full-width">
               Add deliverables
               <span slot="subtitle">Select deliverable types from the drop down list below to assign to this survey.</span>
             </q-card-title>
             <q-card-separator />
-            <q-card-main style="padding:8px">
+            <q-card-main style="padding:8px" class="full-width">
               <q-select multiple
                 class="q-pl-md q-pr-md"
                 float-label="Select deliverable types to add"
+                :display-value="`${tempDeliverableDefinitions.length} deliverables selected`"
                 v-model="tempDeliverableDefinitions"
                 :options="deliverableDefinitionOptions"/>
             </q-card-main>
             <q-card-separator />
-            <q-card-actions align="end">
+            <q-card-actions align="end" class="full-width">
               <q-btn flat icon="add" label="Add"
                 :disable="tempDeliverableDefinitions.length == 0"
                 @click="addTempDeliverables">

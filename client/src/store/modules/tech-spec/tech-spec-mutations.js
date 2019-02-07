@@ -1,9 +1,11 @@
+const _ = require('lodash');
+
 import { UPDATE, SET_REQUEST_STATUS, SET_REQUEST_ERROR, SET_VALID_SURVEY_TYPES,
   SET_VALID_SURVEY_CLASSIFICATIONS, SET_VALID_POSITIONING_REQUIREMENTS,
   SET_VALID_GROUND_TRUTHING_METHODS, SET_SURVEY_LINES,
   SET_VALID_DELIVERY_METHODS, SET_HORIZONTAL_REFERENCE_SYSTEMS,
   SET_VERTICAL_REFERENCE_SYSTEMS, SET_SOUNDING_DATUMS, SET_SPHEROIDS,
-  SET_TIDAL_GAUGE_LOCATIONS}
+  SET_TIDAL_GAUGE_LOCATIONS, UPDATE_WITH_DEFAULTS}
   from './tech-spec-mutation-types';
 
 const mutations = {
@@ -61,6 +63,10 @@ const mutations = {
 
   [SET_TIDAL_GAUGE_LOCATIONS] (state, tidalGaugeLocations) {
     state.techSpec.tidalGaugeLocations = tidalGaugeLocations;
+  },
+
+  [UPDATE_WITH_DEFAULTS] (state, defaults) {
+    _.merge(state.techSpec, defaults);
   },
 }
 

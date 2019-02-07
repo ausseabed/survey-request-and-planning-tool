@@ -640,6 +640,7 @@ export default Vue.extend({
   methods: {
     ...mapMutations('techSpec', [
       types.UPDATE,
+      types.UPDATE_WITH_DEFAULTS,
       types.RESET_TECH_SPEC,
       types.SET_SURVEY_LINES,
       types.SET_TIDAL_GAUGE_LOCATIONS,
@@ -673,7 +674,7 @@ export default Vue.extend({
       if (_.isNil(defaults)) {
         this.notifyError("No defaults available for survey application.");
       } else {
-        this.UPDATE({path:'techSpec', value:defaults});
+        this.UPDATE_WITH_DEFAULTS(defaults);
         this.notifySuccess("Defaults applied");
       }
     },

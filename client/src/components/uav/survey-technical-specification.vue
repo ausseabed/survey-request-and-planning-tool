@@ -198,7 +198,7 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Mapping converage requirements">
+                     label="Mapping coverage requirements">
               <q-input :value="techSpec.mappingCoverageRequirements"
                        @input="UPDATE({path:'techSpec.mappingCoverageRequirements', value: $event})"
                        type="textarea" />

@@ -16,19 +16,19 @@ export class addedSurveyApplication1547428748672 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "project_metadata_applications_survey_application" ADD CONSTRAINT "FK_82365d73aa0e0d6c6916923a7af" FOREIGN KEY ("projectMetadataId") REFERENCES "project_metadata"("id") ON DELETE CASCADE`);
         await queryRunner.query(`ALTER TABLE "project_metadata_applications_survey_application" ADD CONSTRAINT "FK_c140bc542f3b1dccdf990190abf" FOREIGN KEY ("surveyApplicationId") REFERENCES "survey_application"("id") ON DELETE CASCADE`);
 
-        // seed database with default survey applications
-        for (const ad of applicationData) {
-          await queryRunner
-           .manager
-           .createQueryBuilder()
-           .insert()
-           .into("survey_application")
-           .values({
-             name:ad.name,
-             group:ad.group,
-           })
-           .execute();
-        }
+        // // seed database with default survey applications
+        // for (const ad of applicationData) {
+        //   await queryRunner
+        //    .manager
+        //    .createQueryBuilder()
+        //    .insert()
+        //    .into("survey_application")
+        //    .values({
+        //      name:ad.name,
+        //      group:ad.group,
+        //    })
+        //    .execute();
+        // }
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

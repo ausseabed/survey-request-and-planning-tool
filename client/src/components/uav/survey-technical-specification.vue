@@ -413,9 +413,9 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Sounding datumn"
+                     label="Sounding datum"
                      :error="$v.techSpec.soundingDatum.$error"
-                     error-label="Souding datumn is required"
+                     error-label="Souding datum is required"
                      >
               <q-select :value="techSpec.soundingDatum"
                         @change="UPDATE({path:'techSpec.soundingDatum', value: $event})"

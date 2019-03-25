@@ -136,13 +136,13 @@
 
             <div class="row">
               <template v-if="!matchingProjMetas">
-                <p class="col-10 items-center q-body-2 text-center" style="padding:5px">Run check to identify intersecting surveys</p>
+                <p class="col-6 items-center q-body-2 text-center" style="padding:5px">Run check to identify intersecting surveys</p>
               </template>
               <template v-else-if="matchingProjMetas.length == 0">
-                <p class="col-10 items-center q-body-2 text-center" style="padding:5px">No intersecting surveys</p>
+                <p class="col-6 items-center q-body-2 text-center" style="padding:5px">No intersecting surveys</p>
               </template>
               <template v-else>
-                <div class="column col-10">
+                <div class="column col-6">
                   <q-list-header>Intersecting surveys</q-list-header>
                   <q-list highlight dense
                     @mouseleave.native="mouseleaveMatchingProjMeta">
@@ -166,14 +166,28 @@
                 </div>
               </template>
 
-              <q-item-side right class="column col-2">
-                <q-item-tile class="self-end">
-                  <q-btn icon="fas fa-check" label="Check AoI"
-                    :disable="!canCheckGeometry"
-                    @click="checkGeometry">
-                  </q-btn>
-                </q-item-tile>
-              </q-item-side>
+              <div class="col-6">
+                <div class="row justify-between gutter-xs no-margin">
+                  <div class="col">
+                    <q-btn class="no-margin full-width" icon="fas fa-check" label="Check AoI"
+                      :disable="!canCheckGeometry"
+                      @click="checkGeometry">
+                    </q-btn>
+                  </div>
+                  <div class="col">
+                    <q-btn class="no-margin full-width" icon="cloud_upload" label="Upload"
+                      @click="selectAoiFile">
+                    </q-btn>
+                    <input type="file" id="dataPath" v-on:change="setAoiFile" ref="fileInput" hidden />
+                  </div>
+                  <div class="col">
+                    <q-btn class="no-margin full-width" icon="clear" label="Clear"
+                      :disable="!areaOfInterest"
+                      @click="setAoi(undefined)">
+                    </q-btn>
+                  </div>
+                </div>
+              </div>
 
             </div>
             <div v-if="$v.areaOfInterest.$error" style="color:red;">
@@ -598,6 +612,13 @@ export default Vue.extend({
       });
     },
 
+    selectAoiFile () {
+      this.$refs.fileInput.click();
+    },
+    setAoiFile (event) {
+      this.map.addFile(event.target.files[0]);
+    },
+
     getFormData() {
       // gets the list of all orgs, not just those associated to this project
       this.$store.dispatch('organisation/getOrganisations');
@@ -771,7 +792,14 @@ export default Vue.extend({
       } else {
         this.fetchData();
       }
-    }
+    },
+    'areaOfInterest': function (newAoi, oldAoi) {
+      this.map.clear();
+      if (newAoi) {
+        this.map.addGeojsonFeature(newAoi);
+        this.map.fit();
+      }
+    },
   },
 
   data() {

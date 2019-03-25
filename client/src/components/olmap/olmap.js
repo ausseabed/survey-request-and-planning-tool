@@ -246,6 +246,44 @@ var OlMap = function (target, options) {
     getExtents: function() {
       return this.map.getView().calculateExtent();
     },
+    addFile: function (file) {
+      var ext = file.name.split('.').pop();
+      var features = null;
+      if (ext == 'zip') {
+        var reader = new FileReader();
+        reader.onload = (function (e) {
+          shp(e.target.result).then(function (geojson) {
+            features = (new ol.format.GeoJSON()).readFeatures(geojson);
+            this.addFeatures(this.source, features);
+
+            if (typeof this.onAdd === 'function') {
+              var writer = new ol.format.GeoJSON();
+              var geojsonStr = writer.writeFeatures(features);
+              this.onAdd(JSON.parse(geojsonStr));
+            }
+
+          }.bind(this));
+        }).bind(this);
+        reader.readAsArrayBuffer(file);
+      } else {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const jsonObj = JSON.parse(event.target.result);
+          features = jsonObj;
+          var olf = (new ol.format.GeoJSON()).readFeatures(features);
+
+          this.addFeatures(this.source, olf);
+
+          if (typeof this.onAdd === 'function') {
+            // var writer = new ol.format.GeoJSON();
+            // var geojsonStr = writer.writeFeatures(features);
+            this.onAdd(features);
+          }
+        };
+        reader.readAsText(file);
+      }
+
+    },
     addGeojsonUrl: function (url) {
       // Add geojson from url
       //this.addFeatures(this.source, (new ol.format.GeoJSON()).readFeatures(url));
@@ -260,6 +298,15 @@ var OlMap = function (target, options) {
           var features = (new ol.format.GeoJSON()).readFeatures(geojson.data);
           this.addFeatures(this.source, features);
         });
+    },
+    fit: function() {
+      // fits view to area of interest geom if available, then survey lines
+      // theory being survey lines will always be within area of interest.
+      if (this.sourceIntersecting.getFeatures().length != 0) {
+        this.map.getView().fit(this.sourceIntersecting.getExtent());
+      } else if (this.sourceIntersecting.getFeatures().length != 0) {
+        this.map.getView().fit(this.source.getExtent());
+      }
     },
     addGeojsonFeature: function (geojson) {
       var olf = (new ol.format.GeoJSON()).readFeatures(geojson);

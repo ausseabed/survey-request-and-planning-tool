@@ -2,10 +2,12 @@ const ol = require('openlayers');
 require('openlayers/dist/ol.css');
 import Vue from 'vue'
 
+import * as MapConstants from './map-constants'
+
 var shp = require('shpjs');
 var OlMap = function (target, options) {
   return {
-    initMap: function () {
+    initMap: async function () {
       var source = new ol.source.Vector();
       var sourceIntersecting = new ol.source.Vector();
       var dragAndDropInteraction = new ol.interaction.DragAndDrop({
@@ -80,22 +82,32 @@ var OlMap = function (target, options) {
         return DrawPolygonControl;
       }(ol.control.Control));
 
-      var baseMap = null;
-      if (options && options.basemap) {
-        switch (options.basemap) {
-          case "osm":
-            baseMap = new ol.source.OSM();
-            break;
+      //
+      // WMTS layer works, but leaves blue lines all over the map. Workaround
+      // is to use Esri Tile server.
+      //
+      // var parser = new ol.format.WMTSCapabilities();
+      // var gcResult = await fetch(MapConstants.WMTS_GET_CAPABILITIES_URL)
+      // .then(function(response) {
+      //   return response.text();
+      // }).then(function(text) {
+      //   var result = parser.read(text);
+      //   return result;
+      // });
+      // var gcOptions = ol.source.WMTS.optionsFromCapabilities(gcResult, {
+      //   layer: 'NationalMap_Colour_Topographic_Base_World_WM',
+      //   matrixSet: 'EPSG:4326'
+      // });
+      // var baseMap = new ol.source.WMTS((gcOptions));
 
-          default:
-            baseMap = new ol.source.OSM();
-            break;
-        }
-      }
+      var baseMap = new ol.source.TileArcGISRest({
+        url: MapConstants.WMTS_MAPSERVER_URL
+      })
 
-      if (!baseMap) {
-        baseMap = new ol.source.OSM();
-      }
+      var center = [
+        (MapConstants.WMTS_DEFAULT_EXTENT[0] + MapConstants.WMTS_DEFAULT_EXTENT[2] / 2),
+        (MapConstants.WMTS_DEFAULT_EXTENT[1] + MapConstants.WMTS_DEFAULT_EXTENT[3] / 2)
+      ];
 
       var map = new ol.Map({
         interactions: ol.interaction.defaults().extend(
@@ -148,10 +160,14 @@ var OlMap = function (target, options) {
         target: target,      // Get the dom element
         view: new ol.View({
           projection: 'EPSG:4326',
-          center: [134.354806, -26.374398],
+          center: center,
           zoom: 3
         })
       });
+
+      // fit to the default extents, then zoom in one level
+      map.getView().fit(MapConstants.WMTS_DEFAULT_EXTENT);
+      map.getView().setZoom(map.getView().getZoom() + 1);
 
       function startDrawInteraction() {
         map.addInteraction(drawInteraction);

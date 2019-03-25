@@ -109,11 +109,11 @@ export default Vue.extend({
     TransitionExpand
   },
 
-  mounted() {
+  async mounted() {
     var olmap = OlMap(this.$refs.mapDiv, {
       basemap: "osm"
     })
-    olmap.initMap();
+    await olmap.initMap();
     this.map = olmap;
     this.map.onExtentsChange = (extents) => {
       this.debounceExtents(extents);

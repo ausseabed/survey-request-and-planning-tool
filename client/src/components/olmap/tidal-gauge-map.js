@@ -2,6 +2,8 @@ const ol = require('openlayers');
 require('openlayers/dist/ol.css');
 import Vue from 'vue'
 
+import * as MapConstants from './map-constants'
+
 var shp = require('shpjs');
 var tidalGaugeMap = function (target, options) {
   return {
@@ -59,22 +61,14 @@ var tidalGaugeMap = function (target, options) {
         return DrawPointControl;
       }(ol.control.Control));
 
-      var baseMap = null;
-      if (options && options.basemap) {
-        switch (options.basemap) {
-          case "osm":
-            baseMap = new ol.source.OSM();
-            break;
+      var baseMap = new ol.source.TileArcGISRest({
+        url: MapConstants.WMTS_MAPSERVER_URL
+      })
 
-          default:
-            baseMap = new ol.source.OSM();
-            break;
-        }
-      }
-
-      if (!baseMap) {
-        baseMap = new ol.source.OSM();
-      }
+      var center = [
+        (MapConstants.WMTS_DEFAULT_EXTENT[0] + MapConstants.WMTS_DEFAULT_EXTENT[2] / 2),
+        (MapConstants.WMTS_DEFAULT_EXTENT[1] + MapConstants.WMTS_DEFAULT_EXTENT[3] / 2)
+      ];
 
       var map = new ol.Map({
         interactions: ol.interaction.defaults().extend(
@@ -126,10 +120,14 @@ var tidalGaugeMap = function (target, options) {
         target: target,      // Get the dom element
         view: new ol.View({
           projection: 'EPSG:4326',
-          center: [134.354806, -26.374398],
+          center: center,
           zoom: 3
         })
       });
+
+      // fit to the default extents, then zoom in one level
+      map.getView().fit(MapConstants.WMTS_DEFAULT_EXTENT);
+      map.getView().setZoom(map.getView().getZoom() + 1);
 
       var startDrawInteraction = () => {
         map.addInteraction(drawInteraction);

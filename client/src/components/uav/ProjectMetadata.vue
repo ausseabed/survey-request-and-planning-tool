@@ -109,7 +109,7 @@
                      :error="$v.contactPerson.$error"
                      error-label="Contact person is required">
               <q-input :value="contactPerson"
-                       @change="update('projectMetadata.contactPerson', $event)"
+                       @input="update('projectMetadata.contactPerson', $event)"
                        @blur="$v.contactPerson.$touch"
                        type="textarea" />
             </q-field>
@@ -122,7 +122,7 @@
                      label="Contact email">
               <q-input
                        :value="email"
-                       @change="update('projectMetadata.email', $event)"
+                       @input="update('projectMetadata.email', $event)"
                        @blur="$v.email.$touch"
                        type="email" />
             </q-field>

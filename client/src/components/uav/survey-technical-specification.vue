@@ -79,7 +79,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Survey classification">
+                     label="Survey classification"
+                     helper="Optional">
               <q-select filter
                         autofocus-filter
                         :value="techSpec.surveyClassification"
@@ -104,7 +105,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Vessel type">
+                     label="Vessel type"
+                     helper="Optional">
               <q-input :value="techSpec.vesselType"
                        @input="UPDATE({path:'techSpec.vesselType', value: $event})"
                        type="text" />
@@ -123,7 +125,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Frequency [range]">
+                     label="Frequency [range]"
+                     helper="Optional">
               <q-input :value="techSpec.frequencyRange"
                        @input="UPDATE({path:'techSpec.frequencyRange', value: $event})"
                        type="textarea" />
@@ -135,7 +138,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Is the data capture time sensitive">
+                     label="Is the data capture time sensitive"
+                     helper="Optional">
               <q-checkbox :value="techSpec.timeSensitive"
                        @input="UPDATE({path:'techSpec.timeSensitive', value: $event})"
                        />
@@ -144,7 +148,8 @@
             <q-field v-if="techSpec.timeSensitive"
                      :label-width="2"
                      inset="full"
-                     label="Requirements (if data capture is time sensitive)">
+                     label="Requirements (if data capture is time sensitive)"
+                     helper="Optional">
               <q-input :value="techSpec.timeSensitiveRequirements"
                        @input="UPDATE({path:'techSpec.timeSensitiveRequirements', value: $event})"
                        type="textarea" />
@@ -154,7 +159,8 @@
                      inset="full"
                      label="Is ground truthing required"
                      :error="$v.techSpec.groundTruthing.$error"
-                     error-label="Ground truthing is required">
+                     error-label="Ground truthing is required"
+                     helper="Optional">
               <q-checkbox :value="techSpec.groundTruthing"
                        @input="UPDATE({path:'techSpec.groundTruthing', value: $event})"
                        @blur="$v.techSpec.groundTruthing.$touch"
@@ -198,7 +204,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Mapping coverage requirements">
+                     label="Mapping coverage requirements"
+                     helper="Optional">
               <q-input :value="techSpec.mappingCoverageRequirements"
                        @input="UPDATE({path:'techSpec.mappingCoverageRequirements', value: $event})"
                        type="textarea" />
@@ -211,7 +218,7 @@
             <!-- MAP -->
             <q-field :label-width="2"
                      inset="full"
-                     label="Initial survey lines">
+                     label="Initial survey lines (optional)">
               <div ref="mapDivSurveyLines" id="mapDivSurveyLines" style="height:350px;"></div>
               <div class="row full-width justify-between items-center">
                 <div v-if="drawingSurveyLine"
@@ -309,7 +316,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Grid size">
+                     label="Grid size"
+                     helper="Optional">
               <q-input :value="techSpec.gridSize"
                        @input="UPDATE({path:'techSpec.gridSize', value: $event})"
                        type="text" />
@@ -329,7 +337,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Line spacing">
+                     label="Line spacing"
+                     helper="Optional">
               <q-input :value="techSpec.lineSpacing"
                        @input="UPDATE({path:'techSpec.lineSpacing', value: $event})"
                        type="text" />
@@ -337,7 +346,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Max survey speed">
+                     label="Max survey speed"
+                     helper="Optional">
               <q-input :value="techSpec.maxSurveySpeed"
                        @input="UPDATE({path:'techSpec.maxSurveySpeed', value: $event})"
                        type="text" />
@@ -345,7 +355,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Sounding density">
+                     label="Sounding density"
+                     helper="Optional">
               <q-input :value="techSpec.soundingDensity"
                        @input="UPDATE({path:'techSpec.soundingDensity', value: $event})"
                        type="text" />
@@ -477,7 +488,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Progress report requirements">
+                     label="Progress report requirements"
+                     helper="Optional">
               <q-input :value="techSpec.progressReportRequirements"
                        @input="UPDATE({path:'techSpec.progressReportRequirements', value: $event})"
                        type="textarea" />
@@ -493,7 +505,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Tidal gauges to be installed">
+                     label="Tidal gauges to be installed"
+                     helper="Optional">
               <q-checkbox :value="techSpec.tidalGauges"
                        @input="UPDATE({path:'techSpec.tidalGauges', value: $event})"
                        />
@@ -503,7 +516,7 @@
             <!-- MAP -->
             <q-field :label-width="2"
                      inset="full"
-                     label="Location of gauges">
+                     label="Location of gauges (optional)">
               <div ref="mapDivTidalGauge" id="mapDivTidalGauge" style="height:350px;"></div>
               <div class="row full-width justify-between items-center">
                 <div
@@ -526,7 +539,8 @@
 
             <q-field :label-width="3"
                      inset="full"
-                     label="Tidal infrastructure requirements">
+                     label="Tidal infrastructure requirements"
+                     helper="Optional">
               <q-input :value="techSpec.tidalInfrastructureRequirements"
                        @input="UPDATE({path:'techSpec.tidalInfrastructureRequirements', value: $event})"
                        type="textarea" />
@@ -534,7 +548,8 @@
 
             <q-field :label-width="3"
                      inset="full"
-                     label="Requirements for approvals or permits needed">
+                     label="Requirements for approvals or permits needed"
+                     helper="Optional">
               <q-input :value="techSpec.approvalPermitRequirements"
                        @input="UPDATE({path:'techSpec.approvalPermitRequirements', value: $event})"
                        type="textarea" />
@@ -542,7 +557,8 @@
 
             <q-field :label-width="3"
                      inset="full"
-                     label="Requirements for object detection (if any)">
+                     label="Requirements for object detection (if any)"
+                     helper="Optional">
               <q-input :value="techSpec.objectDetectionRequirements"
                        @input="UPDATE({path:'techSpec.objectDetectionRequirements', value: $event})"
                        type="textarea" />
@@ -550,7 +566,8 @@
 
             <q-field :label-width="3"
                      inset="full"
-                     label="Requirements for Positioning">
+                     label="Requirements for Positioning"
+                     helper="Optional">
               <q-input :value="techSpec.positioningRequirements"
                        @input="UPDATE({path:'techSpec.positioningRequirements', value: $event})"
                        type="textarea" />
@@ -558,7 +575,8 @@
 
             <q-field :label-width="3"
                      inset="full"
-                     label="Requirements for data gaps">
+                     label="Requirements for data gaps"
+                     helper="Optional">
               <q-input :value="techSpec.dataGapRequirements"
                        @input="UPDATE({path:'techSpec.dataGapRequirements', value: $event})"
                        type="textarea" />
@@ -566,7 +584,8 @@
 
             <q-field :label-width="3"
                      inset="full"
-                     label="Information on any existing risks to the data collection">
+                     label="Information on any existing risks to the data collection"
+                     helper="Optional">
               <q-input :value="techSpec.existingRisks"
                        @input="UPDATE({path:'techSpec.existingRisks', value: $event})"
                        type="textarea" />
@@ -574,7 +593,8 @@
 
             <q-field :label-width="3"
                      inset="full"
-                     label="Additional requirements">
+                     label="Additional requirements"
+                     helper="Optional">
               <q-input :value="techSpec.additionalRequirements"
                        @input="UPDATE({path:'techSpec.additionalRequirements', value: $event})"
                        type="textarea" />

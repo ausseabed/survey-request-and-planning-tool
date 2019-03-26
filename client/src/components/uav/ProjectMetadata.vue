@@ -42,7 +42,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Survey ID">
+                     label="Survey ID"
+                     helper="Optional">
               <q-input :value="surveyId"
                        @input="update('projectMetadata.surveyId', $event)"
                        type="text" />
@@ -236,7 +237,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Contract number">
+                     label="Contract number"
+                     helper="Optional">
               <q-input :value="contractNumber"
                        @input="update('projectMetadata.contractNumber', $event)"
                        type="text" />
@@ -244,7 +246,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Tenderer">
+                     label="Tenderer"
+                     helper="Optional">
               <q-select filter
                         autofocus-filter
                         :value="tenderer"
@@ -254,7 +257,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Surveyors">
+                     label="Surveyors"
+                     helper="Optional">
               <q-select multiple filter
                         autofocus-filter
                         :value="surveyors"
@@ -264,7 +268,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Vessel">
+                     label="Vessel"
+                     helper="Optional">
               <q-input :value="vessel"
                        @input="update('projectMetadata.vessel', $event)"
                        type="text" />
@@ -274,7 +279,8 @@
                      inset="full"
                      label="Start date"
                      :error="$v.startDate.$error"
-                     error-label="Start date is required">
+                     error-label="Start date is required"
+                     helper="Optional">
               <q-datetime-picker
                 :value="startDate"
                 type="date"
@@ -310,7 +316,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Quality">
+                     label="Quality"
+                     helper="Optional">
               <q-input :value="quality"
                        @input="update('projectMetadata.quality', $event)"
                        type="textarea" />
@@ -318,7 +325,8 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Comments">
+                     label="Comments"
+                     helper="Optional">
               <q-input :value="comment"
                        @input="update('projectMetadata.comment', $event)"
                        type="textarea" />

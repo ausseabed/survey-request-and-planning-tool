@@ -18,7 +18,8 @@ router.get('/', isAuthenticated, async function (req, res) {
   let orgs = await getConnection()
   .getRepository(InstrumentType)
   .find({
-    where:whereOpts
+    where:whereOpts,
+    relations: ["dataCaptureTypes"]
   });
   return res.json(orgs);
 });

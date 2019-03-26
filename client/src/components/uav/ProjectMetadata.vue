@@ -148,10 +148,13 @@
                   <q-list highlight dense
                     @mouseleave.native="mouseleaveMatchingProjMeta">
                     <q-item dense
+                      tag="a" class="interescting-project-links"
+                      :href="`/survey/${matchingProjMeta.id}/summary`"
+                      target="_blank"
                       v-for="matchingProjMeta in matchingProjMetas"
                       :key="matchingProjMeta.id"
                       @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
-                      :to="'/project-metadata/' + matchingProjMeta.id">
+                      >
                       <q-item-main :label="matchingProjMeta.surveyName" />
                       <!-- <q-item-side right>
                         <q-btn flat icon="close"
@@ -822,3 +825,13 @@ export default Vue.extend({
 });
 
 </script>
+<style>
+
+.interescting-project-links {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: black;
+}
+
+</style>

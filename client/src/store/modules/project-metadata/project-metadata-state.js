@@ -27,6 +27,7 @@ function initialState() {
       surveyors: [],
     },
     projectStatuses:[],
+    validDataCaptureTypeIds:new Set()
   }
 }
 

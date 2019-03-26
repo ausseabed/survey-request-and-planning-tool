@@ -14,6 +14,28 @@ export const setAoi = (state, geojson) => {
 
 export const setInstrumentTypes = (state, instrumentTypes) => {
   state.projectMetadata.instrumentTypes = instrumentTypes;
+
+  // update list of valid data capture types based on what instruments have
+  // been selected.
+  let idSet = new Set();
+  for (const instType of state.projectMetadata.instrumentTypes) {
+    for (const dtcType of instType.dataCaptureTypes) {
+      idSet.add(dtcType.id);
+    }
+  }
+  state.validDataCaptureTypeIds = idSet;
+
+  if (state.projectMetadata.dataCaptureTypes === undefined) {
+    return;
+  }
+  // setting the list of instrument types can cause the list of dataCaptureTypes
+  // to be updated. A DataCaptureType will be removed if there is no instrument
+  // to support it.
+  state.projectMetadata.dataCaptureTypes
+    = state.projectMetadata.dataCaptureTypes.filter( dct =>
+    {
+      return state.validDataCaptureTypeIds.has(dct.id);
+    });
 }
 
 export const setDataCaptureTypes = (state, dataCaptureTypes) => {

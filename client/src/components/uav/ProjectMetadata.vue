@@ -737,6 +737,7 @@ export default Vue.extend({
       contractNumber: 'projectMetadata/contractNumber',
       surveyors: 'projectMetadata/surveyors',
       tenderer: 'projectMetadata/tenderer',
+      validDataCaptureTypeIds: 'projectMetadata/validDataCaptureTypeIds'
     }),
     projectStatusOptions: function () {
       const opts = this.projectStatuses.map(pit => {
@@ -756,7 +757,11 @@ export default Vue.extend({
     },
     dataCaptureTypeOptions: function () {
       const opts = this.dataCaptureTypes.map(pit => {
-        return {label: pit.name, value: pit};
+        return {
+          label: pit.name,
+          value: pit,
+          disable: !this.validDataCaptureTypeIds.has(pit.id)
+        };
       });
       return opts;
     },

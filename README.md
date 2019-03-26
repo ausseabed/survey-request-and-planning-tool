@@ -125,7 +125,7 @@ The following command will create a database migration script (replace MIGRATION
 
 ```
     docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml \
-        run --rm api bash -c "yarn install && yarn run build && \
+        run --rm api bash -c "yarn install && rm -rf ./dist && yarn run build && \
         ENVIRONMENT=production typeorm migration:generate -n <MIGRATION_NAME>"
 ```
 

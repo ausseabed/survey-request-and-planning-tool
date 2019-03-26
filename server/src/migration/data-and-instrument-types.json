@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Bathymetry",
+    "instruments": [
+      {"name": "Multibeam"},
+      {"name": "Single-beam"},
+      {"name": "Bathy LiDAR"},
+      {"name": "Airborne imagery"},
+      {"name": "Satellite"},
+      {"name": "Side-scan"}
+    ]
+  },
+  {
+    "name": "Water column backscatter (multibeam only)",
+    "instruments": [
+      {"name": "Multibeam"}
+    ]
+  },
+  {
+    "name": "Seabed Backscatter",
+    "instruments": [
+      {"name": "Multibeam"},
+      {"name": "Single-beam"}
+    ]
+  },
+  {
+    "name": "Sound Velocity Profile (SVP)",
+    "instruments": [
+      {"name": "Multibeam"},
+      {"name": "Single-beam"}
+    ]
+  },
+  {
+    "name": "Sub-bottom profile",
+    "instruments": [
+      {"name": "Sub-bottom profiler"}
+    ]
+  },
+  {
+    "name": "Seabed sample",
+    "instruments": [
+      {"name": "Multibeam"},
+      {"name": "Single-beam"}
+    ]
+  },
+  {
+    "name": "Imagery",
+    "instruments": [
+      {"name": "Airborne imagery"},
+      {"name": "Bathy LiDAR"},
+      {"name": "Satellite"}
+    ]
+  }
+]

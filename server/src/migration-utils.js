@@ -1,10 +1,60 @@
 const _ = require('lodash');
 
+import { DataCaptureType } from './lib/entity/data-capture-type';
 import { DeliverableDefinition, DeliverableDefinitionField }
   from './lib/entity/deliverable-definition';
-
+import { InstrumentType } from './lib/entity/instrument-type';
 import { SurveyApplication }
   from './lib/entity/survey-application';
+
+export async function insertDataAndInstrumentTypes(
+  queryRunner, dataAndInstrumentTypes) {
+
+  // use a dict because instruments are duplicated across data capture types
+  let instruments = {};
+
+  // insert new instrument types obtained from each fo the data types
+  for (const dataAndInstrumentType of dataAndInstrumentTypes) {
+    for (const instrument of dataAndInstrumentType.instruments) {
+      if (instrument.name in instruments) {
+        //already added
+      } else {
+        let instrumentEntity = new InstrumentType();
+        instrumentEntity.name = instrument.name;
+        instrumentEntity.userSubmitted = false;
+
+        console.log(`adding instrument ${instrument.name}`);
+
+        instrumentEntity = await queryRunner.manager
+        .getRepository(InstrumentType)
+        .save(instrumentEntity);
+
+        instruments[instrument.name] = instrumentEntity;
+      }
+    }
+  }
+
+  // insert new data capture type and assign list of relevant instrument types
+  for (const dataAndInstrumentType of dataAndInstrumentTypes) {
+    let dataCaptureTypeEntity = new DataCaptureType();
+    dataCaptureTypeEntity.name = dataAndInstrumentType.name;
+    dataCaptureTypeEntity.userSubmitted = false;
+
+    console.log(`adding dct ${dataAndInstrumentType.name}`)
+
+    // get list of entities created above, but only for this DataCaptureType
+    let dctInstrumentEntities = [];
+    for (const instrument of dataAndInstrumentType.instruments) {
+      let instrumentEntity = instruments[instrument.name];
+      dctInstrumentEntities.push(instrumentEntity);
+    }
+
+    dataCaptureTypeEntity.instrumentTypes = dctInstrumentEntities;
+    dataCaptureTypeEntity = await queryRunner.manager
+    .getRepository(DataCaptureType)
+    .save(dataCaptureTypeEntity);
+  }
+}
 
 export async function updateDeliverableDefinitions(
   queryRunner, deliverableDefinitions) {

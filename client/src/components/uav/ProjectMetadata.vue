@@ -244,7 +244,7 @@
 
 
         <q-card inline style="width:100%">
-          <q-card-title> Other </q-card-title>
+          <q-card-title> Supplier </q-card-title>
           <q-card-main dense>
 
             <q-field :label-width="2"
@@ -289,21 +289,6 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Start date"
-                     :error="$v.startDate.$error"
-                     error-label="Start date is required"
-                     helper="Optional">
-              <q-datetime-picker
-                :value="startDate"
-                type="date"
-                format-model="date"
-                @change="setStartDate($event)"
-                @blur="$v.startDate.$touch" />
-            </q-field>
-
-
-            <q-field :label-width="2"
-                     inset="full"
                      label="Instrument type"
                      :error="$v.projectInstrumentTypes.$error"
                      error-label="Instrument type(s) is required">
@@ -328,13 +313,31 @@
 
             <q-field :label-width="2"
                      inset="full"
+                     label="Start date"
+                     :error="$v.startDate.$error"
+                     error-label="Start date is required">
+              <q-datetime-picker
+                :value="startDate"
+                type="date"
+                format-model="date"
+                @change="setStartDate($event)"
+                @blur="$v.startDate.$touch" />
+            </q-field>
+          </q-card-main>
+        </q-card>
+
+        <q-card inline style="width:100%">
+          <q-card-title> Additional Information </q-card-title>
+          <q-card-main dense>
+
+            <q-field :label-width="2"
+                     inset="full"
                      label="Comments"
                      helper="Optional">
               <q-input :value="comment"
                        @input="update('projectMetadata.comment', $event)"
                        type="textarea" />
             </q-field>
-
           </q-card-main>
         </q-card>
 

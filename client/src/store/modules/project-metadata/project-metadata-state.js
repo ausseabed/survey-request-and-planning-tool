@@ -12,7 +12,7 @@ function initialState() {
       contactPerson: null,
       email: null,
       areaOfInterest: null,
-      startDate: Date.now(), // should always be in UTC milliseconds
+      startDate: undefined, // should always be in UTC milliseconds
       description: null,
       vessel: null,
       instrumentTypes: [],

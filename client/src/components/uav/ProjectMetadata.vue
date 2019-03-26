@@ -230,6 +230,15 @@
                         :options="surveyApplicationOptions"
                         @blur="$v.selectedSurveyApplication.$touch"/>
             </q-field>
+
+            <q-field :label-width="2"
+                     inset="full"
+                     label="Statement of Expected Survey Quality"
+                     helper="Optional">
+              <q-input :value="quality"
+                       @input="update('projectMetadata.quality', $event)"
+                       type="textarea" />
+            </q-field>
           </q-card-main>
         </q-card>
 
@@ -315,15 +324,6 @@
                         @change="setDataCaptureTypes($event)"
                         :options="dataCaptureTypeOptions"
                         @blur="$v.projectDataCaptureTypes.$touch"/>
-            </q-field>
-
-            <q-field :label-width="2"
-                     inset="full"
-                     label="Quality"
-                     helper="Optional">
-              <q-input :value="quality"
-                       @input="update('projectMetadata.quality', $event)"
-                       type="textarea" />
             </q-field>
 
             <q-field :label-width="2"

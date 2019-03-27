@@ -229,15 +229,21 @@
                   class="q-body-1 text-faded col">
                   Drag and drop shapefile (zip) or geojson onto map, or click the draw line button in map to manually create survey lines.
                 </div>
-                <div class="row col-auto">
-                  <q-btn icon="cloud_upload" label="Upload"
-                    @click="selectSurveyLinesFile">
-                  </q-btn>
-                  <input type="file" id="dataPath" v-on:change="setSurveyLinesFile" ref="fileInput" hidden />
-                  <q-btn icon="clear" label="Clear"
-                    :disable="!techSpec.surveyLines"
-                    @click="SET_SURVEY_LINES( undefined )">
-                  </q-btn>
+                <div class="map-buttons">
+                  <div class="row justify-between gutter-xs no-margin">
+                    <div class="col">
+                      <q-btn class="no-margin full-width" icon="cloud_upload" label="Upload"
+                        @click="selectSurveyLinesFile">
+                      </q-btn>
+                    </div>
+                    <div class="col">
+                      <input type="file" id="dataPath" v-on:change="setSurveyLinesFile" ref="fileInput" hidden />
+                      <q-btn class="no-margin full-width" icon="clear" label="Clear"
+                        :disable="!techSpec.surveyLines"
+                        @click="SET_SURVEY_LINES( undefined )">
+                      </q-btn>
+                    </div>
+                  </div>
                 </div>
 
               </div>
@@ -523,17 +529,23 @@
                   class="q-body-1 text-faded col">
                   Drag and drop shapefile (zip) or geojson onto map, or click the draw point button in map to manually create tidal gauge locations.
                 </div>
-                <div class="row col-auto">
-                  <q-btn icon="cloud_upload" label="Upload"
-                    @click="selectTidalGaugeFile">
-                  </q-btn>
-                  <input type="file" id="dataPath" v-on:change="setTidalGaugeFile" ref="fileInputTg" hidden />
-                  <q-btn icon="clear" label="Clear"
-                    :disable="!techSpec.tidalGaugeLocations"
-                    @click="SET_TIDAL_GAUGE_LOCATIONS( undefined )">
-                  </q-btn>
-                </div>
 
+                <div class="map-buttons">
+                  <div class="row justify-between gutter-xs no-margin">
+                    <div class="col">
+                      <q-btn class="no-margin full-width" icon="cloud_upload" label="Upload"
+                        @click="selectTidalGaugeFile">
+                      </q-btn>
+                    </div>
+                    <div class="col">
+                      <input type="file" id="dataPath" v-on:change="setTidalGaugeFile" ref="fileInputTg" hidden />
+                      <q-btn class="no-margin full-width" icon="clear" label="Clear"
+                        :disable="!techSpec.tidalGaugeLocations"
+                        @click="SET_TIDAL_GAUGE_LOCATIONS( undefined )">
+                      </q-btn>
+                    </div>
+                  </div>
+                </div>
               </div>
             </q-field>
 
@@ -906,3 +918,8 @@ export default Vue.extend({
 });
 
 </script>
+<style>
+.map-buttons {
+  width: 260px;
+}
+</style>

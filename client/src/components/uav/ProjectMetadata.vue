@@ -873,4 +873,7 @@ export default Vue.extend({
   color: black;
 }
 
+.q-select {
+  overflow: hidden;
+}
 </style>

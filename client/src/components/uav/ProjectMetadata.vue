@@ -768,11 +768,21 @@ export default Vue.extend({
       return opts;
     },
     dataCaptureTypeOptions: function () {
+      let selectedIds = new Set();
+      for (const selectedDct of this.projectDataCaptureTypes) {
+        selectedIds.add(selectedDct.id);
+      }
+      // generate a display name to inform users why they can't select
+      // a specific data collection type.
       const opts = this.dataCaptureTypes.map(pit => {
+        let name =
+          this.validDataCaptureTypeIds.has(pit.id) ?
+            pit.name :
+            `${pit.name} - not valid for selected instrument type`;
         return {
-          label: pit.name,
+          label: name,
           value: pit,
-          disable: !this.validDataCaptureTypeIds.has(pit.id)
+          disable: !(this.validDataCaptureTypeIds.has(pit.id) || selectedIds.has(pit.id))
         };
       });
       return opts;

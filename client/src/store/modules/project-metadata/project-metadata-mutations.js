@@ -25,17 +25,19 @@ export const setInstrumentTypes = (state, instrumentTypes) => {
   }
   state.validDataCaptureTypeIds = idSet;
 
-  if (state.projectMetadata.dataCaptureTypes === undefined) {
-    return;
-  }
-  // setting the list of instrument types can cause the list of dataCaptureTypes
-  // to be updated. A DataCaptureType will be removed if there is no instrument
-  // to support it.
-  state.projectMetadata.dataCaptureTypes
-    = state.projectMetadata.dataCaptureTypes.filter( dct =>
-    {
-      return state.validDataCaptureTypeIds.has(dct.id);
-    });
+  // This was the old approach to automatically update list of selected
+  // data capture types. Now handled by presenting validation error.
+  // if (state.projectMetadata.dataCaptureTypes === undefined) {
+  //   return;
+  // }
+  // // setting the list of instrument types can cause the list of dataCaptureTypes
+  // // to be updated. A DataCaptureType will be removed if there is no instrument
+  // // to support it.
+  // state.projectMetadata.dataCaptureTypes
+  //   = state.projectMetadata.dataCaptureTypes.filter( dct =>
+  //   {
+  //     return state.validDataCaptureTypeIds.has(dct.id);
+  //   });
 }
 
 export const setDataCaptureTypes = (state, dataCaptureTypes) => {

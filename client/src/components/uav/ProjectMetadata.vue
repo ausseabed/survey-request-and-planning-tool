@@ -1,5 +1,6 @@
 <template>
-  <div class="row justify-center">
+  <form-wrapper :validator="$v" :messages="validationMessagesOverride"
+    class="row justify-center">
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
@@ -28,17 +29,16 @@
         <q-card inline style="width:100%">
           <q-card-title> Basic </q-card-title>
           <q-card-main dense>
-            <q-field :label-width="2"
+            <form-field-validated :label-width="2"
                      inset="full"
+                     name="surveyName"
                      label="Survey name"
-                     :error="$v.surveyName.$error"
-                     error-label="Survey name is required"
                      helper="Name of data collection survey">
               <q-input :value="surveyName"
                        @input="update('projectMetadata.surveyName', $event)"
                        @blur="$v.surveyName.$touch"
                        type="text" />
-            </q-field>
+            </form-field-validated>
 
             <q-field :label-width="2"
                      inset="full"
@@ -62,13 +62,13 @@
             </q-field>
 
 
-            <q-field :label-width="2"
+            <form-field-validated :label-width="2"
+                     name="projectOrganisations"
                      inset="full"
-                     label="Organisations"
-                     :error="$v.surveyName.$error"
-                     error-label="Survey name is required">
+                     label="Organisations">
                <div class="row" >
-                 <q-input class="col-10" v-model="orgSearchTerms" placeholder="Start typing an organisation name">
+                 <q-input class="col-10" v-model="orgSearchTerms" placeholder="Start typing an organisation name"
+                   @blur="$v.projectOrganisations.$touch">
                    <q-autocomplete @search="searchOrganisation" @selected="selectedOrganisation" />
                  </q-input>
                  <q-btn flat icon="add"
@@ -101,7 +101,7 @@
                    </q-item>
                  </q-list>
                </template>
-            </q-field>
+            </form-field-validated>
 
             <q-field :label-width="2"
                      inset="full"
@@ -115,18 +115,17 @@
                        type="textarea" />
             </q-field>
 
-            <q-field :label-width="2"
+            <form-field-validated :label-width="2"
                      inset="full"
+                     name="email"
                      icon="fas fa-envelope"
-                     :error="$v.email.$error"
-                     error-label="Please provide a valid email address"
                      label="Contact email">
               <q-input
                        :value="email"
                        @input="update('projectMetadata.email', $event)"
                        @blur="$v.email.$touch"
                        type="email" />
-            </q-field>
+            </form-field-validated>
           </q-card-main>
         </q-card>
 
@@ -287,29 +286,27 @@
                        type="text" />
             </q-field>
 
-            <q-field :label-width="2"
+            <form-field-validated :label-width="2"
+                     name="projectInstrumentTypes"
                      inset="full"
-                     label="Instrument type"
-                     :error="$v.projectInstrumentTypes.$error"
-                     error-label="Instrument type(s) is required">
+                     label="Instrument type">
               <q-select multiple
                         :value="projectInstrumentTypes"
                         @change="setInstrumentTypes($event)"
                         :options="instrumentTypeOptions"
                         @blur="$v.projectInstrumentTypes.$touch"/>
-            </q-field>
+            </form-field-validated>
 
-            <q-field :label-width="2"
+            <form-field-validated :label-width="2"
+                     name="projectDataCaptureTypes"
                      inset="full"
-                     label="Data to capture"
-                     :error="$v.projectDataCaptureTypes.$error"
-                     error-label="Data type(s) to capture are required">
+                     label="Data to capture">
               <q-select multiple
                         :value="projectDataCaptureTypes"
                         @change="setDataCaptureTypes($event)"
                         :options="dataCaptureTypeOptions"
                         @blur="$v.projectDataCaptureTypes.$touch"/>
-            </q-field>
+            </form-field-validated>
 
             <q-field :label-width="2"
                      inset="full"
@@ -346,7 +343,7 @@
     </q-page>
 
 
-  </div>
+  </form-wrapper>
 </template>
 <script>
 import './docs-input.styl'
@@ -369,9 +366,20 @@ const path = require('path');
 import { required, email, minLength } from 'vuelidate/lib/validators';
 
 import OlMap from './../olmap/olmap';
+import FormFieldValidated from '../controls/form-field-validated';
+
+const validDataCaptureType = (value, vm) => {
+  let badDcts = value.filter(dct => {
+    return !vm.validDataCaptureTypeIds.has(dct.id);
+  });
+  return badDcts.length == 0;
+};
 
 export default Vue.extend({
   mixins: [errorHandler],
+  components: {
+    'form-field-validated': FormFieldValidated
+  },
   beforeMount() {
     this.getFormData();
   },
@@ -525,6 +533,7 @@ export default Vue.extend({
       this.$store.commit(
         'projectMetadata/setInstrumentTypes',
         instrumentTypes);
+      this.$v.projectDataCaptureTypes.$touch();
     },
 
     setDataCaptureTypes(dataCaptureTypes) {
@@ -682,6 +691,8 @@ export default Vue.extend({
 
       this.$store.commit('projectMetadata/addOrganisation',org);
       this.orgSearchTerms = "";
+
+      this.$v.projectOrganisations.$touch();
     },
     parseOrganisations() {
       return this.organisations.map(org => {
@@ -693,6 +704,7 @@ export default Vue.extend({
     },
     removeOrganisation(org) {
       this.$store.commit('projectMetadata/removeOrganisation',org);
+      this.$v.projectOrganisations.$touch();
     },
 
     mouseleaveMatchingProjMeta() {
@@ -793,13 +805,18 @@ export default Vue.extend({
     startDate: { required },
     selectedSurveyApplication: { required },
     selectedSurveyApplicationGroup: { required },
+    projectOrganisations: {
+      required,
+      minLength:minLength(1)
+    },
     projectInstrumentTypes: {
       required,
       minLength:minLength(1)
     },
     projectDataCaptureTypes: {
       required,
-      minLength:minLength(1)
+      minLength:minLength(1),
+      validDataCaptureType
     },
   },
 
@@ -828,6 +845,10 @@ export default Vue.extend({
       orgSearchTerms: '',
       matchingProjMetas:undefined,
       showFloatingButtons: false,
+      validationMessagesOverride: {
+        validDataCaptureType:
+          "Selected data capture types are not valid for instrument."
+      }
     }
   }
 });

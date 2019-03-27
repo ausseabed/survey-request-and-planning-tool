@@ -12,6 +12,7 @@ module.exports = function (ctx) {
       'socket',
       'intro',
       'vuelidate',
+      'vuelidate-error-extractor',
     ],
     css: [
       'app.styl'

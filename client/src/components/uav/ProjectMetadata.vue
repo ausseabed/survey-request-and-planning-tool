@@ -173,7 +173,7 @@
                 <div class="row justify-between gutter-xs no-margin">
                   <div class="col">
                     <q-btn class="no-margin full-width" icon="fas fa-check" label="Check AoI"
-                      :disable="!canCheckGeometry"
+                      :disable="!areaOfInterest"
                       @click="checkGeometry">
                     </q-btn>
                   </div>
@@ -391,7 +391,6 @@ export default Vue.extend({
     olmap.initMap();
     this.map = olmap;
     this.map.onAdd = (geojson) => {
-      this.canCheckGeometry = true;
       this.setAoi(geojson);
     }
 
@@ -412,7 +411,6 @@ export default Vue.extend({
           this.setSelectedSurveyApplication(
             projectMetadata.surveyApplication);
           this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
-          this.canCheckGeometry = true;
         });
       } else {
         this.$store.commit('projectMetadata/resetProjectMetadata');
@@ -478,6 +476,8 @@ export default Vue.extend({
     setAoi(geojson) {
       this.$store.commit('projectMetadata/setAoi', geojson);
       this.$v.areaOfInterest.$touch();
+
+      this.matchingProjMeta = [];
     },
 
     patchSelectLists(projectMetadata) {
@@ -845,13 +845,13 @@ export default Vue.extend({
         this.map.addGeojsonFeature(newAoi);
         this.map.fit();
       }
+      this.matchingProjMetas = [];
     },
   },
 
   data() {
     return {
       map: null,
-      canCheckGeometry: false,
       orgSearchTerms: '',
       matchingProjMetas:undefined,
       showFloatingButtons: false,

@@ -101,7 +101,10 @@ var OlMap = function (target, options) {
       // var baseMap = new ol.source.WMTS((gcOptions));
 
       var baseMap = new ol.source.TileArcGISRest({
-        url: MapConstants.WMTS_MAPSERVER_URL
+        url: MapConstants.WMTS_MAPSERVER_URL,
+        attributions: [new ol.Attribution({
+          html: MapConstants.MAP_ATTRIBUTION_HTML
+        })],
       })
 
       var center = [

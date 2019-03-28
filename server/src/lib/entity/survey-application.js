@@ -15,6 +15,12 @@ export class SurveyApplication {
   @Column("varchar")
   group = undefined;
 
+  @Column({
+    type: "bool",
+    default: false
+  })
+  userSubmitted = false;
+
   @Column("bool")
   deleted = false;
 

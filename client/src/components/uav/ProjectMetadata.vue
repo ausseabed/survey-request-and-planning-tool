@@ -478,8 +478,30 @@ export default Vue.extend({
           this.patchSelectLists(projectMetadata);
           this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
             projectMetadata.surveyApplication.group);
-          this.setSelectedSurveyApplication(
-            projectMetadata.surveyApplication);
+
+          if (projectMetadata.surveyApplication.userSubmitted) {
+            let saName = projectMetadata.surveyApplication.name;
+            let saId = projectMetadata.surveyApplication.id;
+            let saGroup = projectMetadata.surveyApplication.group;
+
+            this.setSurveyApplicationNameOther(saName);
+            this.setSurveyApplicationIdOther(saId);
+
+            if (this.surveyApplicationGroups.includes(saGroup)) {
+              this.setSelectedSurveyApplicationGroup(
+                saGroup);
+            } else {
+              this.setSurveyApplicationGroupNameOther(saGroup);
+              this.setSelectedSurveyApplicationGroup(
+                otherSurveyPurpose.group);
+            }
+            this.setSelectedSurveyApplication(
+              otherSurveyPurpose);
+
+          } else {
+            this.setSelectedSurveyApplication(
+              projectMetadata.surveyApplication);
+          }
 
           this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
         });
@@ -596,6 +618,10 @@ export default Vue.extend({
         dataCaptureTypes);
     },
 
+    setSurveyApplicationIdOther(name) {
+      return this.$store.commit(
+        'projectMetadata/setSurveyApplicationIdOther', name);
+    },
     setSurveyApplicationNameOther(name) {
       return this.$store.commit(
         'projectMetadata/setSurveyApplicationNameOther', name);

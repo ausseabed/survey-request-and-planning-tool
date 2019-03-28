@@ -22,8 +22,14 @@ export const getSurveyApplications = ({ commit, state }) => {
 export const getSurveyApplicationGroups = ({ commit, state }) => {
   var url_endpoint = '/api/survey-application/group-names';
 
-  return Vue.axios.get(url_endpoint)
-  .then((response) => {
-    commit('setSurveyApplicationGroups', response.data);
-  })
+  return new Promise((resolve, reject) => {
+    Vue.axios.get(url_endpoint)
+    .then((response) => {
+      commit('setSurveyApplicationGroups', response.data);
+      resolve(response.data);
+    })
+    .catch((error) => {
+      reject(error);
+    });
+  });
 }

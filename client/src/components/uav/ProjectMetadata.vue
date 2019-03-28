@@ -439,7 +439,7 @@ const validSurveyApplicationNameOther = (value, vm) => {
 const otherSurveyPurpose = {
   name: 'Other',
   group: 'Other',
-  userSupplied: true,
+  userSubmitted: true,
   id: undefined
 }
 
@@ -617,7 +617,7 @@ export default Vue.extend({
       // application to account for it possibly being a user submitted
       // survey purpose.
       let sa = _.cloneDeep(this.selectedSurveyApplication);
-      if (sa.userSupplied) {
+      if (sa.userSubmitted) {
         sa.group = this.selectedSurveyApplicationGroup == "Other" ? this.surveyApplicationGroupNameOther : this.selectedSurveyApplicationGroup;
         sa.name = this.selectedSurveyApplication.name == "Other" ? this.surveyApplicationNameOther : this.selectedSurveyApplication.name;
         sa.id = this.surveyApplicationIdOther;

@@ -3,7 +3,18 @@ export const clearSurveyApplicationList = (state, payload) => {
 }
 
 export const setSurveyApplications = (state, surveyApplications) => {
-  state.surveyApplications = _.cloneDeep(surveyApplications);
+  let sApps = _.cloneDeep(surveyApplications);
+  if (state.selectedSurveyApplication) {
+    // then we need to force this selected object to be in the list
+    // otherwise it wont be selected.
+    let index = sApps.findIndex(sa => {
+      return sa.id == state.selectedSurveyApplication.id;
+    });
+    if (index != -1) {
+      sApps[index] = state.selectedSurveyApplication;
+    }
+  }
+  state.surveyApplications = sApps;
 }
 
 export const setSurveyApplicationGroups = (state, surveyApplicationGroups) => {
@@ -27,7 +38,8 @@ export const setSelectedSurveyApplication = (state, surveyApplication) => {
     surveyAppToSet = state.surveyApplications.find(sa => {
       return sa.id == surveyApplication.id;
     });
-  } else {
+  }
+  if (_.isNil(surveyAppToSet)) {
     surveyAppToSet = surveyApplication;
   }
   state.selectedSurveyApplication = surveyAppToSet;

@@ -216,6 +216,25 @@
                         :options="surveyApplicationGroupOptions"
                         @blur="$v.selectedSurveyApplicationGroup.$touch"/>
             </q-field>
+
+            <div class="row" v-if="selectedSurveyApplicationGroup == 'Other'">
+              <div class="col-2">
+              </div>
+              <div class="col-10">
+                <form-field-validated :label-width="1"
+                         name="surveyApplicationGroupNameOther"
+                         inset="full"
+                         label="Name"
+                         class="optional-name-fields">
+                  <q-input
+                    :value="surveyApplicationGroupNameOther"
+                    @input="setSurveyApplicationGroupNameOther($event)"
+                    @blur="$v.surveyApplicationGroupNameOther.$touch"
+                    type="text" />
+                </form-field-validated>
+              </div>
+            </div>
+
             <!-- v-if="selectedSurveyApplicationGroup" -->
             <q-field :label-width="2"
                      inset="full"
@@ -229,6 +248,25 @@
                         :options="surveyApplicationOptions"
                         @blur="$v.selectedSurveyApplication.$touch"/>
             </q-field>
+
+            <div class="row" v-if="selectedSurveyApplication && selectedSurveyApplication.name == 'Other'">
+              <div class="col-2">
+              </div>
+              <div class="col-10">
+                <form-field-validated :label-width="1"
+                         name="surveyApplicationNameOther"
+                         inset="full"
+                         label="Name"
+                         class="optional-name-fields">
+                  <q-input
+                    :value="surveyApplicationNameOther"
+                    @input="setSurveyApplicationNameOther($event)"
+                    @blur="$v.surveyApplicationNameOther.$touch"
+                    type="text" />
+                </form-field-validated>
+              </div>
+            </div>
+
 
             <q-field :label-width="2"
                      inset="full"
@@ -368,12 +406,42 @@ import { required, email, minLength } from 'vuelidate/lib/validators';
 import OlMap from './../olmap/olmap';
 import FormFieldValidated from '../controls/form-field-validated';
 
+// custom validators
 const validDataCaptureType = (value, vm) => {
   let badDcts = value.filter(dct => {
     return !vm.validDataCaptureTypeIds.has(dct.id);
   });
   return badDcts.length == 0;
 };
+const validSurveyApplicationGroupNameOther = (value, vm) => {
+  if (vm.selectedSurveyApplicationGroup == 'Other') {
+    // is other selected, then must provide a name
+    return !(_.isNil(value) || value.length == 0);
+  } else {
+    // then an existing group has been selected, so mark as valid even
+    // if no other field has been presented.
+    return true;
+  }
+}
+const validSurveyApplicationNameOther = (value, vm) => {
+  if (_.isNil(vm.selectedSurveyApplication)) {
+    return true;
+  } else if (vm.selectedSurveyApplication.name == 'Other') {
+    // is other selected, then must provide a name
+    return !(_.isNil(value) || value.length == 0);
+  } else {
+    // then an existing group has been selected, so mark as valid even
+    // if no other field has been presented.
+    return true;
+  }
+}
+
+const otherSurveyPurpose = {
+  name: 'Other',
+  group: 'Other',
+  userSupplied: true,
+  id: undefined
+}
 
 export default Vue.extend({
   mixins: [errorHandler],
@@ -408,8 +476,11 @@ export default Vue.extend({
           'projectMetadata/getProjectMetadata', { id: this.$route.params.id })
         .then(projectMetadata => {
           this.patchSelectLists(projectMetadata);
+          this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
+            projectMetadata.surveyApplication.group);
           this.setSelectedSurveyApplication(
             projectMetadata.surveyApplication);
+
           this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
         });
       } else {
@@ -437,30 +508,13 @@ export default Vue.extend({
     },
 
     setSelectedSurveyApplicationGroup(group) {
-      // can't dispatch from a mutation, so do it here instead
       this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
         group);
-      this.$store.dispatch('surveyApplication/getSurveyApplications');
     },
 
     setSelectedSurveyApplication(surveyApplication) {
-      if (_.isNil(surveyApplication)) {
-        this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
-          undefined);
-        this.$store.commit('surveyApplication/setSelectedSurveyApplication',
-          undefined);
-          return;
-      }
-      this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
-        surveyApplication.group);
-      this.$store.dispatch('surveyApplication/getSurveyApplications')
-      .then(surveyApps => {
-        this.$store.commit('surveyApplication/setSelectedSurveyApplication',
+      this.$store.commit('surveyApplication/setSelectedSurveyApplication',
           surveyApplication);
-      });
-
-      this.$store.commit('projectMetadata/setSurveyApplication',
-        surveyApplication);
     },
 
     setSelectedTenderer(organisation) {
@@ -542,6 +596,15 @@ export default Vue.extend({
         dataCaptureTypes);
     },
 
+    setSurveyApplicationNameOther(name) {
+      return this.$store.commit(
+        'projectMetadata/setSurveyApplicationNameOther', name);
+    },
+    setSurveyApplicationGroupNameOther(name) {
+      return this.$store.commit(
+        'projectMetadata/setSurveyApplicationGroupNameOther', name);
+    },
+
     submit() {
       this.$v.$touch()
 
@@ -549,6 +612,17 @@ export default Vue.extend({
         this.$q.notify('Please review fields')
         return
       }
+
+      // before sending to the server, update the projectMetadata survey
+      // application to account for it possibly being a user submitted
+      // survey purpose.
+      let sa = _.cloneDeep(this.selectedSurveyApplication);
+      if (sa.userSupplied) {
+        sa.group = this.selectedSurveyApplicationGroup == "Other" ? this.surveyApplicationGroupNameOther : this.selectedSurveyApplicationGroup;
+        sa.name = this.selectedSurveyApplication.name == "Other" ? this.surveyApplicationNameOther : this.selectedSurveyApplication.name;
+        sa.id = this.surveyApplicationIdOther;
+      }
+      this.$store.commit('projectMetadata/setSurveyApplication', sa);
 
       this.$store.dispatch('projectMetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
@@ -662,7 +736,11 @@ export default Vue.extend({
       );
       this.$store.dispatch(
         'surveyApplication/getSurveyApplicationGroups'
-      )
+      ).then(surveyAppGroups => {
+        surveyAppGroups.push("Other");
+        this.$store.commit('surveyApplication/setSurveyApplicationGroups',
+          surveyAppGroups);
+      });
     },
 
     searchOrganisation(terms, done) {
@@ -749,7 +827,10 @@ export default Vue.extend({
       contractNumber: 'projectMetadata/contractNumber',
       surveyors: 'projectMetadata/surveyors',
       tenderer: 'projectMetadata/tenderer',
-      validDataCaptureTypeIds: 'projectMetadata/validDataCaptureTypeIds'
+      validDataCaptureTypeIds: 'projectMetadata/validDataCaptureTypeIds',
+      surveyApplicationIdOther: 'projectMetadata/surveyApplicationIdOther',
+      surveyApplicationNameOther: 'projectMetadata/surveyApplicationNameOther',
+      surveyApplicationGroupNameOther: 'projectMetadata/surveyApplicationGroupNameOther',
     }),
     projectStatusOptions: function () {
       const opts = this.projectStatuses.map(pit => {
@@ -814,7 +895,9 @@ export default Vue.extend({
     areaOfInterest: {required },
     startDate: { required },
     selectedSurveyApplication: { required },
+    surveyApplicationNameOther: { validSurveyApplicationNameOther },
     selectedSurveyApplicationGroup: { required },
+    surveyApplicationGroupNameOther: { validSurveyApplicationGroupNameOther },
     projectOrganisations: {
       required,
       minLength:minLength(1)
@@ -847,6 +930,18 @@ export default Vue.extend({
       }
       this.matchingProjMetas = [];
     },
+    'selectedSurveyApplicationGroup': function (newAoi, oldAoi) {
+      this.$store.dispatch('surveyApplication/getSurveyApplications')
+      .then(surveyApps => {
+        surveyApps.push(otherSurveyPurpose);
+        this.$store.commit(
+          'surveyApplication/setSurveyApplications',
+          surveyApps);
+      });
+    },
+    'selectedSurveyApplication': function (newSa, oldSa) {
+      this.$store.commit('projectMetadata/setSurveyApplication', newSa);
+    }
   },
 
   data() {
@@ -857,7 +952,10 @@ export default Vue.extend({
       showFloatingButtons: false,
       validationMessagesOverride: {
         validDataCaptureType:
-          "Selected data capture types are not valid for instrument."
+          "Selected data capture types are not valid for instrument.",
+        validSurveyApplicationNameOther: "Survey purpose name is required.",
+        validSurveyApplicationGroupNameOther:
+          "Survey purpose category name is required."
       }
     }
   }
@@ -871,6 +969,10 @@ export default Vue.extend({
   font-size: 14px;
   font-weight: 500;
   color: black;
+}
+
+.optional-name-fields {
+  margin-top: -24px !important;
 }
 
 .q-select {

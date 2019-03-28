@@ -74,3 +74,15 @@ export const setSurveyors = (state, organisations) => {
 export const setTenderer = (state, organisation) => {
   state.projectMetadata.tenderer = organisation;
 }
+
+export const setSurveyApplicationIdOther = (state, surveyApplicationIdOther) => {
+  return state.surveyApplicationIdOther = surveyApplicationIdOther;
+}
+
+export const setSurveyApplicationNameOther = (state, surveyApplicationNameOther) => {
+  return state.surveyApplicationNameOther = surveyApplicationNameOther;
+}
+
+export const setSurveyApplicationGroupNameOther = (state, surveyApplicationGroupNameOther) => {
+  return state.surveyApplicationGroupNameOther = surveyApplicationGroupNameOther;
+}

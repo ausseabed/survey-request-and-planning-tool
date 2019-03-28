@@ -85,3 +85,15 @@ export const tenderer = state => {
 export const surveyors = state => {
   return state.projectMetadata.surveyors;
 }
+
+export const surveyApplicationIdOther = state => {
+  return state.surveyApplicationIdOther;
+}
+
+export const surveyApplicationNameOther = state => {
+  return state.surveyApplicationNameOther;
+}
+
+export const surveyApplicationGroupNameOther = state => {
+  return state.surveyApplicationGroupNameOther;
+}

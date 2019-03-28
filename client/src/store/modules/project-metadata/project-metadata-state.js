@@ -26,6 +26,9 @@ function initialState() {
       tenderer: null,
       surveyors: [],
     },
+    surveyApplicationGroupNameOther:undefined,
+    surveyApplicationNameOther:undefined,
+    surveyApplicationIdOther:undefined,
     projectStatuses:[],
     validDataCaptureTypeIds:new Set()
   }

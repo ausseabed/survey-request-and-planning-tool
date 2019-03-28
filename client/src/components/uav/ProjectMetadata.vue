@@ -532,6 +532,12 @@ export default Vue.extend({
     setSelectedSurveyApplicationGroup(group) {
       this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
         group);
+
+      // if the other survey purpose category is selected, then the survey
+      // purpose must be the "Other" purpose too.
+      if (this.selectedSurveyApplicationGroup == otherSurveyPurpose.group) {
+        this.setSelectedSurveyApplication(otherSurveyPurpose);
+      }
     },
 
     setSelectedSurveyApplication(surveyApplication) {

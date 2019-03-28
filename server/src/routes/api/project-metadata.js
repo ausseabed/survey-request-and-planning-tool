@@ -8,6 +8,7 @@ import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon }
   from '../utils';
 import { ProjectMetadata, PROJECT_STATUSES }
   from '../../lib/entity/project-metadata';
+import { SurveyApplication } from '../../lib/entity/survey-application';
 import { TechSpec } from '../../lib/entity/tech-spec';
 
 
@@ -79,7 +80,16 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.startDate = req.body.startDate;
   project.instrumentTypes = req.body.instrumentTypes;
   project.dataCaptureTypes = req.body.dataCaptureTypes;
-  project.surveyApplication = req.body.surveyApplication;
+
+  let surveyApp = req.body.surveyApplication;
+  if (!_.isNil(surveyApp) && surveyApp.userSubmitted) {
+    surveyApp = await getConnection()
+    .getRepository(SurveyApplication)
+    .save(surveyApp);
+  }
+  project.surveyApplication = surveyApp;
+
+
   if (!_.isNil(req.body.projectStatus)) {
     const status = req.body.projectStatus
     if (!PROJECT_STATUSES.includes(status)) {

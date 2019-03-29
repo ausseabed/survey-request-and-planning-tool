@@ -53,6 +53,7 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
     .then((response) => {
       commit('resetProjectMetadata')
       commit('update', { path: 'projectMetadata', value: response.data })
+      commit('setDirty', false);
       resolve(response.data);
     })
     .catch((error) => {

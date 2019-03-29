@@ -1,15 +1,17 @@
 export const update = (state, { path, value }) => {
   _.set(state, path, _.cloneDeep(value))
+  state.dirty = true;
 }
 
 export const replace = (state, updated_state) => {
   Object.assign(state, updated_state);
+  state.dirty = true;
 }
 
 export const setAoi = (state, geojson) => {
 
   state.projectMetadata.areaOfInterest = geojson;
-
+  state.dirty = true;
 }
 
 export const setInstrumentTypes = (state, instrumentTypes) => {
@@ -24,7 +26,7 @@ export const setInstrumentTypes = (state, instrumentTypes) => {
     }
   }
   state.validDataCaptureTypeIds = idSet;
-
+  state.dirty = true;
   // This was the old approach to automatically update list of selected
   // data capture types. Now handled by presenting validation error.
   // if (state.projectMetadata.dataCaptureTypes === undefined) {
@@ -42,10 +44,12 @@ export const setInstrumentTypes = (state, instrumentTypes) => {
 
 export const setDataCaptureTypes = (state, dataCaptureTypes) => {
   state.projectMetadata.dataCaptureTypes = dataCaptureTypes;
+  state.dirty = true;
 }
 
 export const addOrganisation = (state, organisation) => {
   state.projectMetadata.organisations.push(organisation);
+  state.dirty = true;
 }
 
 export const removeOrganisation = (state, organisation) => {
@@ -53,14 +57,17 @@ export const removeOrganisation = (state, organisation) => {
     return o.id == organisation.id;
   });
   state.projectMetadata.organisations.splice(index, 1);
+  state.dirty = true;
 }
 
 export const setStartDate = (state, startDate) => {
   state.projectMetadata.startDate = startDate.getTime();
+  state.dirty = true;
 }
 
 export const setSurveyApplication = (state, surveyApplication) => {
   state.projectMetadata.surveyApplication = surveyApplication;
+  state.dirty = true;
 }
 
 export const setProjectStatuses = (state, statuses) => {
@@ -69,10 +76,12 @@ export const setProjectStatuses = (state, statuses) => {
 
 export const setSurveyors = (state, organisations) => {
   state.projectMetadata.surveyors = organisations;
+  state.dirty = true;
 }
 
 export const setTenderer = (state, organisation) => {
   state.projectMetadata.tenderer = organisation;
+  state.dirty = true;
 }
 
 export const setSurveyApplicationIdOther = (state, surveyApplicationIdOther) => {
@@ -85,4 +94,8 @@ export const setSurveyApplicationNameOther = (state, surveyApplicationNameOther)
 
 export const setSurveyApplicationGroupNameOther = (state, surveyApplicationGroupNameOther) => {
   return state.surveyApplicationGroupNameOther = surveyApplicationGroupNameOther;
+}
+
+export const setDirty = (state, dirty) => {
+  return state.dirty = dirty;
 }

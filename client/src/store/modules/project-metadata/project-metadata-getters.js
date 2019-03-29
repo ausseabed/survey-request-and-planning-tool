@@ -97,3 +97,7 @@ export const surveyApplicationNameOther = state => {
 export const surveyApplicationGroupNameOther = state => {
   return state.surveyApplicationGroupNameOther;
 }
+
+export const dirty = state => {
+  return state.dirty;
+}

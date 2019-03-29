@@ -207,6 +207,8 @@ import pVuelidate from 'src/plugins/vuelidate'
 
 import pVuelidateerrorextractor from 'src/plugins/vuelidate-error-extractor'
 
+import pGlobalcomponents from 'src/plugins/global-components'
+
 
 
 
@@ -231,7 +233,7 @@ const { app, store, router } = createApp()
 
 
 
-;[pI18n,pAxios,pAuthenticate,pMoment,pSocket,pIntro,pVuelidate,pVuelidateerrorextractor].forEach(plugin => {
+;[pI18n,pAxios,pAuthenticate,pMoment,pSocket,pIntro,pVuelidate,pVuelidateerrorextractor,pGlobalcomponents].forEach(plugin => {
   plugin({
     app,
     router,

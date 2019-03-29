@@ -30,7 +30,8 @@ function initialState() {
     surveyApplicationNameOther:undefined,
     surveyApplicationIdOther:undefined,
     projectStatuses:[],
-    validDataCaptureTypeIds:new Set()
+    validDataCaptureTypeIds:new Set(),
+    dirty:false,
   }
 }
 

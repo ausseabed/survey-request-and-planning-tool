@@ -380,15 +380,16 @@
       </div>
     </q-page>
 
-
+    <confirm-navigation id="confirmNavigation" ref="confirmNavigation"></confirm-navigation>
   </form-wrapper>
 </template>
 <script>
 import './docs-input.styl'
 import Vue from 'vue'
 import { filter } from 'quasar'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
+import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
 const uuidv4 = require('uuid/v4');
 
@@ -444,10 +445,11 @@ const otherSurveyPurpose = {
 }
 
 export default Vue.extend({
-  mixins: [errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler],
   components: {
     'form-field-validated': FormFieldValidated
   },
+
   beforeMount() {
     this.getFormData();
   },
@@ -468,6 +470,10 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapMutations('projectMetadata', [
+      'setDirty',
+    ]),
+
     fetchData () {
       this.matchingProjMetas = undefined;
       this.map.clear();
@@ -504,6 +510,7 @@ export default Vue.extend({
           }
 
           this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
+          this.setDirty(false);
         });
       } else {
         this.$store.commit('projectMetadata/resetProjectMetadata');
@@ -609,6 +616,8 @@ export default Vue.extend({
         });
         this.setSelectedSurveyors(orgs);
       }
+
+      this.setDirty(false);
     },
 
     setInstrumentTypes(instrumentTypes) {
@@ -660,6 +669,7 @@ export default Vue.extend({
         this.patchSelectLists(pmd);
         this.$router.replace({ path: `/survey/${pmd.id}/summary` })
         this.notifySuccess('Saved project metadata');
+        this.setDirty(false);
       });
     },
 
@@ -863,6 +873,7 @@ export default Vue.extend({
       surveyApplicationIdOther: 'projectMetadata/surveyApplicationIdOther',
       surveyApplicationNameOther: 'projectMetadata/surveyApplicationNameOther',
       surveyApplicationGroupNameOther: 'projectMetadata/surveyApplicationGroupNameOther',
+      dirty: 'projectMetadata/dirty',
     }),
     projectStatusOptions: function () {
       const opts = this.projectStatuses.map(pit => {
@@ -972,7 +983,13 @@ export default Vue.extend({
       });
     },
     'selectedSurveyApplication': function (newSa, oldSa) {
-      this.$store.commit('projectMetadata/setSurveyApplication', newSa);
+      // isNil check is required for when watch called during initiasation
+      // of form. Calling the mutation results in a dirty state which shouln't
+      // be the case on form load.
+      if (!_.isNil(oldSa) && newSa.id != oldSa.id) {
+        this.$store.commit('projectMetadata/setSurveyApplication', newSa);
+      }
+
     }
   },
 

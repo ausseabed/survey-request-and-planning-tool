@@ -13,6 +13,7 @@ module.exports = function (ctx) {
       'intro',
       'vuelidate',
       'vuelidate-error-extractor',
+      'global-components',
     ],
     css: [
       'app.styl'
@@ -122,6 +123,7 @@ module.exports = function (ctx) {
         'QTab',
         'QTabPane',
         'QRouteTab',
+        'QDialog',
       ],
       directives: [
         'Ripple'

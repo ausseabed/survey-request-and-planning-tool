@@ -20,7 +20,6 @@
               slot="title"
             />
             <q-route-tab
-              default
               icon="assignment"
               label="Specifications"
               :to="`/survey/${id}/specifications`"
@@ -28,7 +27,6 @@
               slot="title"
             />
             <q-route-tab
-              default
               icon="ballot"
               label="Deliverables"
               :to="`/survey/${id}/deliverables`"
@@ -36,7 +34,6 @@
               slot="title"
             />
             <q-route-tab
-              default
               icon="attach_file"
               label="Attachments"
               :to="`/survey/${id}/attachments`"

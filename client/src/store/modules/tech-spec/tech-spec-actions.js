@@ -15,6 +15,7 @@ export const getTechSpec = async ({ commit, state }, payload) => {
 
     commit(mutTypes.UPDATE, {path: 'techSpec', value: techSpec});
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+    commit(mutTypes.SET_DIRTY, false);
   } catch (error) {
     commit(mutTypes.SET_REQUEST_ERROR, error);
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
@@ -36,6 +37,7 @@ export const saveTechSpec = async ({ commit, state }) => {
 
     commit(mutTypes.UPDATE, {path: 'techSpec', value: techSpec});
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+    commit(mutTypes.SET_DIRTY, false);
   } catch (error) {
     commit(mutTypes.SET_REQUEST_ERROR, error);
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);

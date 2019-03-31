@@ -620,7 +620,7 @@
       </div>
     </q-page>
 
-
+    <confirm-navigation id="confirmNavigation" ref="confirmNavigation"></confirm-navigation>
   </div>
 </template>
 <script>
@@ -629,6 +629,7 @@ import Vue from 'vue'
 import { filter } from 'quasar'
 import { mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
+import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
 import * as types from '../../store/modules/tech-spec/tech-spec-mutation-types'
 const uuidv4 = require('uuid/v4');
@@ -649,7 +650,7 @@ import surveyLinesMap from './../olmap/survey-lines-map';
 import tidalGaugeMap from './../olmap/tidal-gauge-map';
 
 export default Vue.extend({
-  mixins: [errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler],
   beforeMount() {
     this.getFormData();
   },
@@ -689,6 +690,7 @@ export default Vue.extend({
       types.RESET_TECH_SPEC,
       types.SET_SURVEY_LINES,
       types.SET_TIDAL_GAUGE_LOCATIONS,
+      types.SET_DIRTY,
     ]),
 
     fetchData () {
@@ -710,6 +712,7 @@ export default Vue.extend({
               `Failed to retrive technical specification (${status})`);
           }
         }
+        this.SET_DIRTY(false);
       });
 
     },
@@ -796,6 +799,7 @@ export default Vue.extend({
       'verticalReferenceSystems',
       'soundingDatums',
       'spheroids',
+      'dirty',
     ]),
     ...mapGetters('projectMetadata',[
       'projectMetadata',

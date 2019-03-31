@@ -72,6 +72,7 @@ function initialState() {
     verticalReferenceSystems: [],
     soundingDatums: [],
     spheroids: [],
+    dirty: false,
   }
 }
 

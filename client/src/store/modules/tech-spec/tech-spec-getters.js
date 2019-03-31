@@ -45,3 +45,7 @@ export const soundingDatums = state => {
 export const spheroids = state => {
   return state.spheroids;
 }
+
+export const dirty = state => {
+  return state.dirty;
+}

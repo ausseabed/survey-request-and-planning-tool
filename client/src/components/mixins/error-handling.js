@@ -11,7 +11,7 @@ export const errorHandler = {
       })
     },
     notifyError(message) {
-      this.$q.notify({
+      return this.$q.notify({
         message: message,
         type: 'negative',
         color: 'negative',
@@ -20,7 +20,7 @@ export const errorHandler = {
       });
     },
     notifySuccess(message) {
-      this.$q.notify({
+      return this.$q.notify({
         message: message,
         type: 'positive',
         color: 'positive',
@@ -29,7 +29,7 @@ export const errorHandler = {
       });
     },
     notifyInfo(message) {
-      this.$q.notify({
+      return this.$q.notify({
         message: message,
         type: 'info',
         color: 'secondary',

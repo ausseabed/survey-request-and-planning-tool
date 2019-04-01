@@ -990,7 +990,7 @@ export default Vue.extend({
       // isNil check is required for when watch called during initiasation
       // of form. Calling the mutation results in a dirty state which shouln't
       // be the case on form load.
-      if (!_.isNil(oldSa) && newSa.id != oldSa.id) {
+      if (!_.isNil(newSa) && !_.isNil(oldSa) && newSa.id != oldSa.id) {
         this.$store.commit('projectMetadata/setSurveyApplication', newSa);
       }
 

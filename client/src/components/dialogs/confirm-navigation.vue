@@ -9,7 +9,7 @@
 
     <template slot="buttons" slot-scope="props">
       <q-btn label="Save and continue" @click="clickContinueSave()" />
-      <q-btn color="warning" label="Delete changes" @click="clickContinueNoSave()" />
+      <q-btn color="warning" label="Discard changes" @click="clickContinueNoSave()" />
       <q-btn label="Cancel" @click="clickCancel()" />
     </template>
   </q-dialog>

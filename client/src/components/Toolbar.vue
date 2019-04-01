@@ -20,7 +20,9 @@
     </q-btn>
     <q-item v-if="isAuthenticated">
       <q-item-side>
-        <q-btn flat round dense icon="settings" to="/admin" />
+        <q-btn flat round dense icon="settings" to="/admin">
+          <q-tooltip>Administration</q-tooltip>
+        </q-btn>
       </q-item-side>
       <q-item-side :avatar="profile.avatar">
         <q-popover ref="popover">

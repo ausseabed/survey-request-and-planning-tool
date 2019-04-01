@@ -1,9 +1,10 @@
 <template>
   <!-- <q-layout view="hHh Lpr lFf"> -->
-  <div>
+  <q-page class="q-mt-md col">
     <q-layout-drawer
       side="left"
       v-model="left"
+      behavior="desktop"
       class="admin-side-bar"
     >
       <q-scroll-area class="fit">
@@ -31,7 +32,7 @@
         </p>
       </div> -->
     </div>
-  </div>
+  </q-page>
   <!-- </q-layout> -->
 
 
@@ -75,5 +76,7 @@ export default {
 .admin-content {
   margin-left: 32px;
   margin-right: 16px;
+  height: calc(100vh - 66px - 16px);
+  min-height: calc(100vh - 66px - 16px);
 }
 </style>

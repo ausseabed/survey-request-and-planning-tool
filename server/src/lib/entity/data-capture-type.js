@@ -25,6 +25,5 @@ export class DataCaptureType {
   @ManyToMany(
     type => ProjectMetadata,
     projectMetadata => projectMetadata.dataCaptureTypes)
-  @JoinTable()
   projectMetadatas;
 }

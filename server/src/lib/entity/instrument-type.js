@@ -26,6 +26,5 @@ export class InstrumentType {
   @ManyToMany(
     type => ProjectMetadata,
     projectMetadata => projectMetadata.instrumentTypes)
-  @JoinTable()
   projectMetadatas;
 }

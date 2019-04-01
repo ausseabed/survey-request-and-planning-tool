@@ -17,7 +17,6 @@ export class Organisation {
   @ManyToMany(
     type => ProjectMetadata,
     projectMetadata => projectMetadata.organisations)
-  @JoinTable()
   projectMetadatas;
 
   @OneToMany(
@@ -28,6 +27,5 @@ export class Organisation {
   @ManyToMany(
     type => ProjectMetadata,
     projectMetadata => projectMetadata.surveyors)
-  @JoinTable()
   surveyorProjectMetadatas;
 }

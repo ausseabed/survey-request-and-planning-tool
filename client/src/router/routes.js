@@ -1,19 +1,36 @@
+import Administration from 'components/administration.vue'
 import Login from 'components/login.vue'
 import Main from 'components/Main.vue'
-
+import Organisations from 'components/organisations/organisations.vue'
+import ProjectMain from 'components/project-main.vue'
 import ProjectMetadata from 'components/uav/ProjectMetadata.vue'
 import SurveyTechnicalSpecification
   from 'components/uav/survey-technical-specification.vue'
 import SurveyFile from 'components/uav/survey-file.vue'
 import SurveyDeliverables from 'components/uav/survey-deliverables.vue'
-
-import ProjectMain from 'components/project-main.vue'
-
-import CustomDataset from 'components/controls/CreateCustomDataset.vue'
-import StandardDataset from 'components/controls/CreateStandardDataset.vue'
+import Users from 'components/users/users.vue'
 
 export default [
     { path: '/', component: Main },
+    {
+      path: '/admin',
+      component: Administration,
+      children: [
+        {
+          path: 'users',
+          component: Users,
+        },
+        {
+          path: 'organisations',
+          component: Organisations,
+        },
+        {
+            path: '',
+            component: Users
+        },
+      ]
+    },
+
     { path: '/login', component: Login },
 
     {

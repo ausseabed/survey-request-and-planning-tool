@@ -665,9 +665,13 @@ export default Vue.extend({
       }
       this.$store.commit('projectMetadata/setSurveyApplication', sa);
 
+      const isNew = _.isNil(this.id) || (this.id.length == 0);
+
       this.$store.dispatch('projectMetadata/save').then(pmd => {
         this.patchSelectLists(pmd);
-        this.$router.replace({ path: `/survey/${pmd.id}/summary` })
+        if (isNew) {
+          this.$router.replace({ path: `/survey/${pmd.id}/summary` })
+        }
         this.notifySuccess('Saved project metadata');
         this.setDirty(false);
       });

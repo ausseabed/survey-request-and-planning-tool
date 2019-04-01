@@ -31,10 +31,10 @@
               <q-item-side icon="face" />
               <q-item-main label="Profile" />
             </q-item>
-            <q-item @click.native="show_settings">
+            <!-- <q-item @click.native="show_settings">
               <q-item-side icon="settings" />
               <q-item-main label="Settings" />
-            </q-item>
+            </q-item> -->
             <q-item @click.native="logout">
               <q-item-side icon="exit_to_app" />
               <q-item-main label="Log Out" />

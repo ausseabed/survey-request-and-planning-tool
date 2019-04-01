@@ -1,11 +1,16 @@
-// import * as actions from './uav-project-metadata-actions'
 import * as actions from './organisation-actions'
 import * as getters from './organisation-getters'
-import * as mutations from './organisation-mutations'
+import * as types from './organisation-mutation-types'
+import mutations from './organisation-mutations'
+
+import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
-    organisations:[]
+    dirty: false,
+    organisations:[],
+    requestStatus: RequestStatus.NOT_REQUESTED,
+    requestError: undefined,
   }
 }
 
@@ -15,12 +20,12 @@ export default {
   getters,
   actions,
   mutations: {
-    reset(state) {
+    [types.RESET](state) {
       const s = initialState()
       Object.keys(s).forEach(key => {
         state[key] = s[key]
       })
     },
-    ...mutations
+    ...mutations.mutations
   }
 }

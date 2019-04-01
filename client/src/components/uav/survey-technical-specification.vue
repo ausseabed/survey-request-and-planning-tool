@@ -370,7 +370,7 @@
 
             <q-field :label-width="2"
                      inset="full"
-                     label="Resolution"
+                     label="Resolution (m)"
                      :error="$v.techSpec.resolution.$error"
                      error-label="Resolution is required"
                      >
@@ -389,6 +389,7 @@
               <q-input :value="techSpec.horizontalAccuracy"
                        @input="UPDATE({path:'techSpec.horizontalAccuracy', value: $event})"
                        type="text"
+                       placeholder="in metres"
                        @blur="$v.techSpec.horizontalAccuracy.$touch"/>
             </q-field>
 
@@ -401,6 +402,7 @@
               <q-input :value="techSpec.verticalAccuracy"
                        @input="UPDATE({path:'techSpec.verticalAccuracy', value: $event})"
                        type="text"
+                       placeholder="in metres"
                        @blur="$v.techSpec.verticalAccuracy.$touch"/>
             </q-field>
 

@@ -405,7 +405,6 @@ const path = require('path');
 import { required, email, minLength } from 'vuelidate/lib/validators';
 
 import OlMap from './../olmap/olmap';
-import FormFieldValidated from '../controls/form-field-validated';
 
 // custom validators
 const validDataCaptureType = (value, vm) => {
@@ -446,9 +445,6 @@ const otherSurveyPurpose = {
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler],
-  components: {
-    'form-field-validated': FormFieldValidated
-  },
 
   beforeMount() {
     this.getFormData();

@@ -20,6 +20,9 @@ router.get('/', async function (req, res) {
 router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   var org = new Organisation()
+  if (!_.isNil(req.body.id)) {
+    org.id = req.body.id;
+  }
   org.name = req.body.name;
 
   org = await getConnection()

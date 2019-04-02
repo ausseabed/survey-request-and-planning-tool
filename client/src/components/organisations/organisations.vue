@@ -1,4 +1,5 @@
 <template>
+
   <div class="q-my-md fit">
     <div class="fit">
       <div class="row gutter-sm fit content-stretch">
@@ -38,6 +39,7 @@
             </div>
           </q-card>
         </div>
+
         <div class="col-sm-12 col-lg-12 col-xl-6 self-start">
           <q-card v-if="activeOrganisation" class="fit">
             <q-card-title>
@@ -52,6 +54,17 @@
                 {{activeOrganisation.name}}
               </div>
             </q-card-main>
+            <div class="col-auto">
+              <q-card-separator />
+              <q-card-actions align="end">
+                <q-btn flat icon="save"
+                  label="Save organisation"
+                  @click="submit()"
+                >
+                </q-btn>
+              </q-card-actions>
+            </div>
+
           </q-card>
           <div v-else class="no-active-organisation column justify-center items-center">
             <div>
@@ -104,7 +117,9 @@ export default Vue.extend({
     }),
 
     getFormData() {
-      this.getOrganisations();
+      this.getOrganisations().then(() => {
+        this.updateActiveOrganisation();
+      });
     },
 
     addNewOrganisation() {
@@ -129,6 +144,23 @@ export default Vue.extend({
       return `${base} (something is wrong)`;
     },
 
+    updateActiveOrganisation() {
+      let org = undefined;
+      if (_.isNil(this.id)) {
+        this.setActiveOrganisation(undefined);
+      } else if (this.id == 'new') {
+        org = {
+          id: undefined,
+          name: this.getNewOrganisationName("New organisation"),
+        };
+      } else {
+        org = this.organisations.find(existingOrg => {
+          return existingOrg.id == this.id;
+        });
+      }
+      this.setActiveOrganisation(org);
+    },
+
     submit() {
       // save the organisation
     }
@@ -141,20 +173,8 @@ export default Vue.extend({
       this.id = id;
     },
     'id': function (newId, oldId) {
-      console.log(`org id = ${newId}`)
-      let org = undefined;
-      if (this.id == 'new') {
-        org = {
-          id: undefined,
-          name: this.getNewOrganisationName("New organisation"),
-        };
-      } else {
-        org = this.organisations.find(existingOrg => {
-          return existingOrg.id == this.id;
-        });
-      }
-
-      this.setActiveOrganisation(org);
+      console.log(`org id = ${newId}`);
+      this.updateActiveOrganisation();
     }
   },
 

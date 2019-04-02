@@ -47,13 +47,22 @@
             </q-card-title>
             <q-card-separator />
             <q-card-main>
-              <div>
-                {{activeOrganisation.id}}
-              </div>
-              <div>
-                {{activeOrganisation.name}}
-              </div>
+              <form-wrapper
+                :validator="$v"
+                :messages="validationMessagesOverride"
+              >
+                <form-field-validated :label-width="1"
+                         name="activeOrganisation.name"
+                         attribute="Name"
+                         label="Name">
+                  <q-input :value="activeOrganisation.name"
+                           @input="updateActiveOrganisationValue({path:'name', value:$event})"
+                           @blur="$v.activeOrganisation.name.$touch"
+                           type="text" />
+                </form-field-validated>
+              </form-wrapper>
             </q-card-main>
+            <!-- @input="updateActiveOrganisation({path:'name', value:$event})" -->
             <div class="col-auto">
               <q-card-separator />
               <q-card-actions align="end">
@@ -71,6 +80,7 @@
               No organisation selected.
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -82,6 +92,7 @@
 import Vue from 'vue'
 const _ = require('lodash');
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { required } from 'vuelidate/lib/validators';
 
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
@@ -110,10 +121,12 @@ export default Vue.extend({
   methods: {
     ...mapActions('organisation', [
       'getOrganisations',
+      'saveOrganisation',
     ]),
     ...mapMutations('organisation', {
       'setActiveOrganisation': mTypes.SET_ACTIVE_ORGANISATION,
       'setDirty': mTypes.SET_DIRTY,
+      'updateActiveOrganisationValue': mTypes.UPDATE_ACTIVE_ORGANISATION_VALUE,
     }),
 
     getFormData() {
@@ -163,6 +176,30 @@ export default Vue.extend({
 
     submit() {
       // save the organisation
+      this.$v.$touch()
+
+      if (this.$v.$error) {
+        this.notifyError('Please review fields')
+        return
+      }
+
+      const isNew = _.isNil(this.activeOrganisation.id)
+
+      this.saveOrganisation(this.activeOrganisation).then(org => {
+        // this.getFormData();
+        const successMsg = isNew ? 'Organisation created' : 'Organisation updated';
+        this.notifySuccess(successMsg);
+        if (isNew) {
+          // then updated the route for the org
+          this.$router.replace({ path: `/admin/organisations/${org.id}` });
+        }
+      });
+    }
+  },
+
+  validations: {
+    activeOrganisation: {
+      name: { required },
     }
   },
 
@@ -181,6 +218,9 @@ export default Vue.extend({
   data() {
     return {
       id: undefined,
+      validationMessagesOverride: {
+        'activeOrganisation.name': "Organisation name already exists"
+      }
     }
   }
 })

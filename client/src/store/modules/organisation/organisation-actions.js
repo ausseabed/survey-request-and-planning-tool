@@ -6,7 +6,6 @@ import { RequestStatus } from '../request-status'
 export const saveOrganisation = ({ commit, state }, payload) => {
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
-
   return new Promise((resolve, reject) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
     Vue.axios.post('/api/organisation', payload)

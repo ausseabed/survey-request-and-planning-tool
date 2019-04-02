@@ -99,6 +99,17 @@ import { errorHandler } from './../mixins/error-handling'
 import * as mTypes
   from '../../store/modules/organisation/organisation-mutation-types'
 
+// custom validators
+const duplicateOrganisationName = function (value, vm) {
+  if ( _.isNil(this.organisations)) {
+    return true;
+  }
+  let index = this.organisations.findIndex(org => {
+    return org.name == value && vm.id != org.id;
+  })
+  return index == -1;
+};
+
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler],
   beforeMount() {
@@ -199,7 +210,7 @@ export default Vue.extend({
 
   validations: {
     activeOrganisation: {
-      name: { required },
+      name: { required, duplicateOrganisationName },
     }
   },
 
@@ -219,7 +230,7 @@ export default Vue.extend({
     return {
       id: undefined,
       validationMessagesOverride: {
-        'activeOrganisation.name': "Organisation name already exists"
+        'duplicateOrganisationName': "Organisation name already exists"
       }
     }
   }

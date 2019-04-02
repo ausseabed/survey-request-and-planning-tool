@@ -1,3 +1,7 @@
+export const activeOrganisation = state => {
+  return state.activeOrganisation;
+}
+
 export const dirty = state => {
   return state.dirty;
 }

@@ -1,5 +1,6 @@
 import { ADD_ORGANISATION, CLEAR_ORGANISATION_LIST, SET_DIRTY,
-  SET_ORGANISATIONS, SET_REQUEST_ERROR, SET_REQUEST_STATUS}
+  SET_ORGANISATIONS, SET_REQUEST_ERROR, SET_REQUEST_STATUS,
+  SET_ACTIVE_ORGANISATION }
   from './organisation-mutation-types';
 
 const mutations = {
@@ -9,6 +10,10 @@ const mutations = {
 
   [CLEAR_ORGANISATION_LIST] (state, organisations) {
     state.organisations.splice(0, state.organisations.length);
+  },
+
+  [SET_ACTIVE_ORGANISATION] (state, organisation) {
+    state.activeOrganisation = organisation;
   },
 
   [SET_DIRTY] (state, dirty) {

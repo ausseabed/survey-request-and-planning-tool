@@ -7,6 +7,7 @@ import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
+    activeOrganisation:undefined,
     dirty: false,
     organisations:[],
     requestStatus: RequestStatus.NOT_REQUESTED,

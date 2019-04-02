@@ -36,18 +36,28 @@
 import Vue from 'vue'
 const _ = require('lodash');
 
-export default {
+import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
+import { errorHandler } from './../mixins/error-handling'
+
+export default Vue.extend({
+  mixins: [DirtyRouteGuard, errorHandler],
   components: {
   },
   computed: {
   },
 
+  methods: {
+    submit () {
+      //needed by dirty route guard
+    }
+  },
+
   data() {
     return {
-
+      dirty: false,
     }
   }
-}
+})
 </script>
 
 <style>

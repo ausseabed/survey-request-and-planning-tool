@@ -84,7 +84,7 @@
         </div>
       </div>
     </div>
-
+    <confirm-navigation id="confirmNavigation" ref="confirmNavigation"></confirm-navigation>
   </div>
 </template>
 
@@ -169,20 +169,22 @@ export default Vue.extend({
     },
 
     updateActiveOrganisation() {
-      let org = undefined;
       if (_.isNil(this.id)) {
         this.setActiveOrganisation(undefined);
       } else if (this.id == 'new') {
-        org = {
+        let org = {
           id: undefined,
           name: this.getNewOrganisationName("New organisation"),
         };
+        this.setActiveOrganisation(org);
+        this.setDirty(true);
       } else {
-        org = this.organisations.find(existingOrg => {
+        let org = this.organisations.find(existingOrg => {
           return existingOrg.id == this.id;
         });
+        this.setActiveOrganisation(org);
       }
-      this.setActiveOrganisation(org);
+
     },
 
     submit() {
@@ -200,7 +202,11 @@ export default Vue.extend({
         // this.getFormData();
         const successMsg = isNew ? 'Organisation created' : 'Organisation updated';
         this.notifySuccess(successMsg);
-        if (isNew) {
+
+        // need to check the route, as it may have already been set to something
+        // else via "save and continue".
+        const currentId = this.$route.params.id;
+        if (isNew && currentId == 'new') {
           // then updated the route for the org
           this.$router.replace({ path: `/admin/organisations/${org.id}` });
         }

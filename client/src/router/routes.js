@@ -25,6 +25,10 @@ export default [
           component: Organisations,
         },
         {
+          path: 'organisations/:id',
+          component: Organisations,
+        },
+        {
             path: '',
             component: Users
         },

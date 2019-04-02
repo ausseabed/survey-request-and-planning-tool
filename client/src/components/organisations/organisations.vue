@@ -1,5 +1,4 @@
 <template>
-
   <div class="q-my-md fit">
     <div class="fit">
       <div class="row gutter-sm fit content-stretch">
@@ -18,7 +17,7 @@
                   <q-item
                     v-for="org in organisations"
                     :key="org.id"
-                    :to="`/admin/organisation/${org.id}`"
+                    :to="`/admin/organisations/${org.id}`"
                     >
                       <q-item-main>
                         <q-item-tile label>{{org.name}}</q-item-tile>
@@ -32,7 +31,7 @@
               <q-card-actions align="end">
                 <q-btn flat icon="add"
                   label="Add new organisation"
-                  @click="addNewOrganisation()"
+                  to="/admin/organisations/new"
                 >
                 </q-btn>
               </q-card-actions>
@@ -40,15 +39,25 @@
           </q-card>
         </div>
         <div class="col-sm-12 col-lg-12 col-xl-6 self-start">
-          <q-card class="fit">
+          <q-card v-if="activeOrganisation" class="fit">
             <q-card-title>
-              My Org
+              {{activeOrganisation.name}}
             </q-card-title>
             <q-card-separator />
             <q-card-main>
-              Foo bar
+              <div>
+                {{activeOrganisation.id}}
+              </div>
+              <div>
+                {{activeOrganisation.name}}
+              </div>
             </q-card-main>
           </q-card>
+          <div v-else class="no-active-organisation column justify-center items-center">
+            <div>
+              No organisation selected.
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -63,14 +72,18 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
-import * as mTypes from '../../store/modules/tech-spec/tech-spec-mutation-types'
+import * as mTypes
+  from '../../store/modules/organisation/organisation-mutation-types'
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler],
   beforeMount() {
     this.getFormData();
   },
-
+  mounted() {
+    const id = this.$route.params.id;
+    this.id = id;
+  },
   components: {
   },
   computed: {
@@ -98,19 +111,64 @@ export default Vue.extend({
       console.log("Add new org");
     },
 
+    getNewOrganisationName(base) {
+      let count = 0;
+      let validNumber = 0;
+      // should never be more than 100 orgs that start with "New organisation"
+      while (count < 100) {
+        let checkFor = count == 0 ? base : `${base} (${count})`;
+        let existingIndex = this.organisations.findIndex(existingOrg => {
+          return existingOrg.name == checkFor;
+        });
+        if (existingIndex == -1) {
+          return checkFor;
+        }
+        count++;
+      }
+
+      return `${base} (something is wrong)`;
+    },
+
     submit() {
       // save the organisation
     }
   },
 
+  watch: {
+    // call again the method if the route changes
+    '$route': function (newRoute, oldRoute) {
+      const id =  newRoute.params.id;
+      this.id = id;
+    },
+    'id': function (newId, oldId) {
+      console.log(`org id = ${newId}`)
+      let org = undefined;
+      if (this.id == 'new') {
+        org = {
+          id: undefined,
+          name: this.getNewOrganisationName("New organisation"),
+        };
+      } else {
+        org = this.organisations.find(existingOrg => {
+          return existingOrg.id == this.id;
+        });
+      }
+
+      this.setActiveOrganisation(org);
+    }
+  },
+
   data() {
     return {
-
+      id: undefined,
     }
   }
 })
 </script>
 
 <style>
-
+.no-active-organisation {
+  width: 100%;
+  height: 200px;
+}
 </style>

@@ -59,8 +59,11 @@ router.delete(
   org.deleted = true;
   org = await orgRepo.save(org);
 
-  const responseSuccess = { success : 'Deleted'};
-  return res.json(responseSuccess);
+  // because the saved version of org doesn't include all attribs
+  org = await getConnection()
+  .getRepository(Organisation)
+  .findOne(org.id)
+  return res.json(org)
 }));
 
 module.exports = router;

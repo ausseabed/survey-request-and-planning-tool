@@ -53,7 +53,7 @@
                 class="overflow-hidden"
               >
                 <div class="column gutter-sm">
-                  <form-field-validated :label-width="1"
+                  <form-field-validated :label-width="2"
                            name="activeOrganisation.name"
                            attribute="Name"
                            label="Name">
@@ -63,7 +63,7 @@
                              type="text" />
                   </form-field-validated>
 
-                  <form-field-validated :label-width="1"
+                  <form-field-validated :label-width="2"
                            name="activeOrganisation.abn"
                            attribute="ABN"
                            label="ABN"

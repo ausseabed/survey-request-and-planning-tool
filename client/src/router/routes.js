@@ -30,7 +30,7 @@ export default [
         },
         {
             path: '',
-            component: Users
+            component: Organisations
         },
       ]
     },

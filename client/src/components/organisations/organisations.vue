@@ -50,16 +50,31 @@
               <form-wrapper
                 :validator="$v"
                 :messages="validationMessagesOverride"
+                class="overflow-hidden"
               >
-                <form-field-validated :label-width="1"
-                         name="activeOrganisation.name"
-                         attribute="Name"
-                         label="Name">
-                  <q-input :value="activeOrganisation.name"
-                           @input="updateActiveOrganisationValue({path:'name', value:$event})"
-                           @blur="$v.activeOrganisation.name.$touch"
-                           type="text" />
-                </form-field-validated>
+                <div class="column gutter-sm">
+                  <form-field-validated :label-width="1"
+                           name="activeOrganisation.name"
+                           attribute="Name"
+                           label="Name">
+                    <q-input :value="activeOrganisation.name"
+                             @input="updateActiveOrganisationValue({path:'name', value:$event})"
+                             @blur="$v.activeOrganisation.name.$touch"
+                             type="text" />
+                  </form-field-validated>
+
+                  <form-field-validated :label-width="1"
+                           name="activeOrganisation.abn"
+                           attribute="ABN"
+                           label="ABN"
+                           helper="Optional">
+                    <q-input :value="activeOrganisation.abn"
+                             @input="updateActiveOrganisationValue({path:'abn', value:$event})"
+                             @blur="$v.activeOrganisation.abn.$touch"
+                             type="text" />
+                  </form-field-validated>
+                </div>
+
               </form-wrapper>
             </q-card-main>
             <!-- @input="updateActiveOrganisation({path:'name', value:$event})" -->
@@ -69,6 +84,11 @@
                 <q-btn flat icon="save"
                   label="Save organisation"
                   @click="submit()"
+                >
+                </q-btn>
+                <q-btn flat icon="delete"
+                  label="Delete organisation"
+                  @click="deleteOrgClick()"
                 >
                 </q-btn>
               </q-card-actions>
@@ -133,6 +153,7 @@ export default Vue.extend({
     ...mapActions('organisation', [
       'getOrganisations',
       'saveOrganisation',
+      'deleteOrganisation',
     ]),
     ...mapMutations('organisation', {
       'setActiveOrganisation': mTypes.SET_ACTIVE_ORGANISATION,
@@ -187,6 +208,33 @@ export default Vue.extend({
 
     },
 
+    deleteOrgClick() {
+      if (!_.isNil(this.activeOrganisation.id)) {
+        // an existing id indicated this org has been saved
+        this.$q.dialog({
+          title: 'Delete organisation',
+          message:
+            `Organisation ${this.activeOrganisation.name} will be deleted`,
+          ok: 'Delete',
+          cancel: 'Cancel'
+        }).then(() => {
+
+          this.deleteOrganisation({ id: this.id })
+          .then(pmd => {
+            //delete org handler sets active org to undefined, so no need here
+            this.notifySuccess('Organisation deleted');
+            this.$router.replace({ path: `/admin/organisations/` });
+          });
+        }).catch(() => {
+          // Picked "Cancel" or dismissed, nothing to do (just catch error)
+        });
+      } else {
+        // no id, so hasn't been saved. Simply replace active org with nothing
+        this.setActiveOrganisation(undefined);
+        this.$router.replace({ path: `/admin/organisations/` });
+      }
+    },
+
     submit() {
       // save the organisation
       this.$v.$touch()
@@ -217,6 +265,7 @@ export default Vue.extend({
   validations: {
     activeOrganisation: {
       name: { required, duplicateOrganisationName },
+      abn: { },
     }
   },
 

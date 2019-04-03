@@ -30,16 +30,16 @@ router.get('/', asyncMiddleware(async function (req, res) {
 router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   var org = new Organisation()
-  if (!_.isNil(req.body.id)) {
-    org.id = req.body.id;
-  }
-  org.name = req.body.name;
-  org.abn = req.body.abn;
+  _.merge(org, req.body);
 
   org = await getConnection()
   .getRepository(Organisation)
   .save(org)
 
+  // because the saved version of org doesn't include all attribs
+  org = await getConnection()
+  .getRepository(Organisation)
+  .findOne(org.id)
   return res.json(org)
 }));
 

@@ -21,7 +21,11 @@
                     :to="`/admin/organisations/${org.id}`"
                     >
                       <q-item-main>
-                        <q-item-tile label>{{org.name}}</q-item-tile>
+                        <q-item-tile label
+                          v-bind:class="{ organisationnamedeleted: org.deleted }"
+                        >
+                          {{org.name}}
+                        </q-item-tile>
                       </q-item-main>
                   </q-item>
                 </q-list>
@@ -29,12 +33,21 @@
             </q-card-main>
             <div class="col-auto">
               <q-card-separator />
-              <q-card-actions align="end">
+              <q-card-actions align="between">
+                <q-checkbox
+                  class="q-pl-sm"
+                  :value="deletedOrganisations"
+                  @change="setDeletedOrganisationsChange($event)"
+                  toggle-indeterminate
+                >
+                  <div class="q-pl-sm"><small>Show deleted</small></div>
+                </q-checkbox>
                 <q-btn flat icon="add"
-                  label="Add new organisation"
+                  label="Add new"
                   to="/admin/organisations/new"
                 >
                 </q-btn>
+
               </q-card-actions>
             </div>
           </q-card>
@@ -42,8 +55,9 @@
 
         <div class="col-sm-12 col-lg-12 col-xl-6 self-start">
           <q-card v-if="activeOrganisation" class="fit">
-            <q-card-title>
-              {{activeOrganisation.name}}
+            <q-card-title class="row">
+              <strong v-if="activeOrganisation.deleted">Deleted organisation - </strong>
+              <span v-bind:class="{ organisationnamedeleted: activeOrganisation.deleted }"> {{activeOrganisation.name}} </span>
             </q-card-title>
             <q-card-separator />
             <q-card-main>
@@ -82,12 +96,17 @@
               <q-card-separator />
               <q-card-actions align="end">
                 <q-btn flat icon="save"
-                  label="Save organisation"
+                  label="Save"
                   @click="submit()"
                 >
                 </q-btn>
-                <q-btn flat icon="delete"
-                  label="Delete organisation"
+                <q-btn v-if="activeOrganisation.deleted" flat icon="restore_from_trash"
+                  label="Restore"
+                  @click="restoreOrgClick()"
+                >
+                </q-btn>
+                <q-btn v-else flat icon="delete"
+                  label="Delete"
                   @click="deleteOrgClick()"
                 >
                 </q-btn>
@@ -121,7 +140,7 @@ import * as mTypes
 
 // custom validators
 const duplicateOrganisationName = function (value, vm) {
-  if ( _.isNil(this.organisations)) {
+  if ( _.isNil(this.organisations) || _.isNil(value)) {
     return true;
   }
   let index = this.organisations.findIndex(org => {
@@ -158,6 +177,7 @@ export default Vue.extend({
   computed: {
     ...mapGetters('organisation', [
       'activeOrganisation',
+      'deletedOrganisations',
       'dirty',
       'organisations',
     ]),
@@ -168,21 +188,25 @@ export default Vue.extend({
       'getOrganisations',
       'saveOrganisation',
       'deleteOrganisation',
+      'restoreOrganisation',
     ]),
     ...mapMutations('organisation', {
       'setActiveOrganisation': mTypes.SET_ACTIVE_ORGANISATION,
+      'setDeletedOrganisations': mTypes.SET_DELETED_ORGANISATIONS,
       'setDirty': mTypes.SET_DIRTY,
       'updateActiveOrganisationValue': mTypes.UPDATE_ACTIVE_ORGANISATION_VALUE,
     }),
+
+    setDeletedOrganisationsChange(deletedOrganisations) {
+      // deletedOrganisations can be true, false, or null
+      this.setDeletedOrganisations(deletedOrganisations);
+      this.getFormData();
+    },
 
     getFormData() {
       this.getOrganisations().then(() => {
         this.updateActiveOrganisation();
       });
-    },
-
-    addNewOrganisation() {
-      console.log("Add new org");
     },
 
     getNewOrganisationName(base) {
@@ -210,6 +234,7 @@ export default Vue.extend({
         let org = {
           id: undefined,
           name: this.getNewOrganisationName("New organisation"),
+          deleted: false,
         };
         this.setActiveOrganisation(org);
         this.setDirty(true);
@@ -220,6 +245,20 @@ export default Vue.extend({
         this.setActiveOrganisation(org);
       }
 
+    },
+
+    restoreOrgClick() {
+      this.restoreOrganisation(this.activeOrganisation.id)
+      .then(org => {
+        this.updateActiveOrganisationValue('deleted', false);
+        this.setDirty(false);
+        this.notifySuccess('Organisation restored');
+        if (!_.isNil(this.deletedOrganisations)) {
+          // don't need to get form data if we are looking at complete
+          // list or orgs including deleted, and non-deleted
+          this.getFormData();
+        }
+      });
     },
 
     deleteOrgClick() {
@@ -237,7 +276,11 @@ export default Vue.extend({
           .then(pmd => {
             //delete org handler sets active org to undefined, so no need here
             this.notifySuccess('Organisation deleted');
-            this.$router.replace({ path: `/admin/organisations/` });
+            if (!_.isNil(this.deletedOrganisations)) {
+              // don't need to get form data if we are looking at complete
+              // list or orgs including deleted, and non-deleted
+              this.getFormData();
+            }
           });
         }).catch(() => {
           // Picked "Cancel" or dismissed, nothing to do (just catch error)
@@ -311,5 +354,13 @@ export default Vue.extend({
 .no-active-organisation {
   width: 100%;
   height: 200px;
+}
+
+.organisation-name-plain {
+
+}
+.organisationnamedeleted {
+  text-decoration: line-through;
+  color: grey;
 }
 </style>

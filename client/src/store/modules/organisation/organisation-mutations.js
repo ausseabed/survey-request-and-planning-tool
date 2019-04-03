@@ -2,7 +2,8 @@ import Vue from 'vue';
 
 import { ADD_ORGANISATION, CLEAR_ORGANISATION_LIST, SET_DIRTY,
   SET_ORGANISATIONS, SET_REQUEST_ERROR, SET_REQUEST_STATUS,
-  SET_ACTIVE_ORGANISATION, UPDATE_ACTIVE_ORGANISATION_VALUE }
+  SET_ACTIVE_ORGANISATION, UPDATE_ACTIVE_ORGANISATION_VALUE,
+  SET_DELETED_ORGANISATIONS }
   from './organisation-mutation-types';
 
 const mutations = {
@@ -16,6 +17,12 @@ const mutations = {
       Vue.set(state.organisations, existingIndex, organisation);
     }
 
+    // update the active org too is this is the org we are adding
+    if (!_.isNil(state.activeOrganisation) &&
+      organisation.id == state.activeOrganisation.id)
+    {
+      state.activeOrganisation = organisation;
+    }
   },
 
   [CLEAR_ORGANISATION_LIST] (state, organisations) {
@@ -25,6 +32,10 @@ const mutations = {
   [SET_ACTIVE_ORGANISATION] (state, organisation) {
     state.activeOrganisation = _.cloneDeep(organisation);
     state.dirty = false;
+  },
+
+  [SET_DELETED_ORGANISATIONS] (state, deletedOrganisations) {
+    state.deletedOrganisations = deletedOrganisations;
   },
 
   [SET_DIRTY] (state, dirty) {

@@ -2,6 +2,10 @@ export const activeOrganisation = state => {
   return state.activeOrganisation;
 }
 
+export const deletedOrganisations = state => {
+  return state.deletedOrganisations;
+}
+
 export const dirty = state => {
   return state.dirty;
 }

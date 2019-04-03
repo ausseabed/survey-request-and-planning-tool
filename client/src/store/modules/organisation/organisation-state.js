@@ -12,6 +12,7 @@ function initialState() {
     organisations:[],
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
+    deletedOrganisations: null, // should deleted orgs be requested
   }
 }
 

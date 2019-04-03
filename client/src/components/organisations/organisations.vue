@@ -56,7 +56,7 @@
         <div class="col-sm-12 col-lg-12 col-xl-6 self-start">
           <q-card v-if="activeOrganisation" class="fit">
             <q-card-title class="row">
-              <strong v-if="activeOrganisation.deleted">Deleted organisation - </strong>
+              <strong v-if="activeOrganisation.deleted">Deleted - </strong>
               <span v-bind:class="{ organisationnamedeleted: activeOrganisation.deleted }"> {{activeOrganisation.name}} </span>
             </q-card-title>
             <q-card-separator />
@@ -166,6 +166,7 @@ const duplicateOrganisationAbn = function (value, vm) {
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler],
   beforeMount() {
+    this.setDeletedOrganisations(null);
     this.getFormData();
   },
   mounted() {

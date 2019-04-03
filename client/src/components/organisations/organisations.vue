@@ -125,7 +125,7 @@ const duplicateOrganisationName = function (value, vm) {
     return true;
   }
   let index = this.organisations.findIndex(org => {
-    return org.name == value && vm.id != org.id;
+    return (org.name.toLowerCase() == value.toLowerCase()) && (vm.id != org.id);
   })
   return index == -1;
 };

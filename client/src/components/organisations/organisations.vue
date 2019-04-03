@@ -130,6 +130,20 @@ const duplicateOrganisationName = function (value, vm) {
   return index == -1;
 };
 
+const duplicateOrganisationAbn = function (value, vm) {
+  if ( _.isNil(this.organisations)) {
+    return true;
+  }
+  let index = this.organisations.findIndex(org => {
+    if (_.isNil(org.abn) || _.isNil(value) ||
+      org.abn.length == 0 || value.length == 0) {
+      return false;
+    }
+    return (org.abn.toLowerCase() == value.toLowerCase()) && (vm.id != org.id);
+  })
+  return index == -1;
+};
+
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler],
   beforeMount() {
@@ -265,7 +279,7 @@ export default Vue.extend({
   validations: {
     activeOrganisation: {
       name: { required, duplicateOrganisationName },
-      abn: { },
+      abn: { duplicateOrganisationAbn },
     }
   },
 
@@ -285,7 +299,8 @@ export default Vue.extend({
     return {
       id: undefined,
       validationMessagesOverride: {
-        'duplicateOrganisationName': "Organisation name already exists"
+        'duplicateOrganisationName': "Organisation name already exists",
+        'duplicateOrganisationAbn': "ABN assigned to other organisation"
       }
     }
   }

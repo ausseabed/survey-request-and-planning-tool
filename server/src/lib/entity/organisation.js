@@ -14,6 +14,19 @@ export class Organisation {
   @Column("varchar")
   name = undefined;
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  abn = undefined;
+
+  @Column({
+      type:"bool",
+      nullable: false,
+      default: false,
+  })
+  deleted = false;
+
   @ManyToMany(
     type => ProjectMetadata,
     projectMetadata => projectMetadata.organisations)

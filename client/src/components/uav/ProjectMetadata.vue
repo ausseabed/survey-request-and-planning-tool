@@ -67,15 +67,17 @@
                      inset="full"
                      label="Organisations">
                <div class="row" >
-                 <q-input class="col-10" v-model="orgSearchTerms" placeholder="Start typing an organisation name"
-                   @blur="$v.projectOrganisations.$touch">
-                   <q-autocomplete @search="searchOrganisation" @selected="selectedOrganisation" />
-                 </q-input>
-                 <q-btn flat icon="add"
-                   :disable="orgSearchTerms.length == 0"
-                   @click="createNewOrganisation">
+                 <q-select class="col-10"
+                           multiple filter
+                           autofocus-filter
+                           :value="projectOrganisations"
+                           :display-value="projectOrganisationsSelectText"
+                           @change="setProjectOrganisations($event)"
+                           :options="organisationOptions"/>
+                 <q-btn flat icon="settings"
+                   to="/admin/organisations">
                    <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
-                    Create <strong>new</strong> organisation using entered text.
+                    Manage organisations
                   </q-tooltip>
                  </q-btn>
                </div>
@@ -155,14 +157,6 @@
                       @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
                       >
                       <q-item-main :label="matchingProjMeta.surveyName" />
-                      <!-- <q-item-side right>
-                        <q-btn flat icon="close"
-                          @click="removeOrganisation(organisation)">
-                          <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
-                           Remove organisation from this project. Does not delete organisation.
-                         </q-tooltip>
-                        </q-btn>
-                      </q-item-side> -->
                     </q-item>
                   </q-list>
 
@@ -391,7 +385,8 @@ import { mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
-const uuidv4 = require('uuid/v4');
+import * as orgMutTypes
+  from '../../store/modules/organisation/organisation-mutation-types'
 
 const timespan = require('readable-timespan');
 timespan.set({
@@ -466,9 +461,14 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapMutations('projectMetadata', [
-      'setDirty',
-    ]),
+
+    ...mapMutations('projectMetadata', {
+      'setDirty': 'setDirty',
+      'setProjectOrganisations': 'setOrganisations'
+    }),
+    ...mapMutations('organisation', {
+      'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
+    }),
 
     fetchData () {
       this.matchingProjMetas = undefined;
@@ -598,19 +598,38 @@ export default Vue.extend({
       }
 
       if (projectMetadata.tenderer) {
-        const org = this.organisations.find(o => {
+        let org = this.organisations.find(o => {
           return o.id == projectMetadata.tenderer.id;
         });
+        if (org.deleted) {
+          org = undefined;
+        }
         this.setSelectedTenderer(org);
       }
 
       if (projectMetadata.surveyors) {
-        const orgs = projectMetadata.surveyors.map(outerOrg => {
+        let orgs = projectMetadata.surveyors.map(outerOrg => {
           return this.organisations.find(innerOrg => {
             return outerOrg.id == innerOrg.id;
           })
         });
+        orgs = orgs.filter(org => {
+          return !org.deleted;
+        })
         this.setSelectedSurveyors(orgs);
+      }
+
+      if (projectMetadata.organisations) {
+        let orgs = projectMetadata.organisations.map(outerOrg => {
+          const inOrgListOrg = this.organisations.find(innerOrg => {
+            return outerOrg.id == innerOrg.id;
+          });
+          return inOrgListOrg;
+        });
+        orgs = orgs.filter(org => {
+          return !org.deleted;
+        })
+        this.setProjectOrganisations(orgs);
       }
 
       this.setDirty(false);
@@ -737,7 +756,6 @@ export default Vue.extend({
       this.$store.dispatch(
         'projectMetadata/checkAoi', { id: this.id })
       .then(matchingProjMetas => {
-        console.log(matchingProjMetas);
         this.matchingProjMetas = matchingProjMetas;
         const areaOfInterests = matchingProjMetas.map(mpm => {
           let f = mpm.areaOfInterest;
@@ -759,6 +777,8 @@ export default Vue.extend({
     },
 
     getFormData() {
+      // only get non-deleted organisations
+      this.setDeletedOrganisations(null);
       // gets the list of all orgs, not just those associated to this project
       this.$store.dispatch('organisation/getOrganisations');
       this.$store.dispatch('projectMetadata/getProjectStatuses');
@@ -924,11 +944,21 @@ export default Vue.extend({
       return opts;
     },
     organisationOptions: function () {
-      const opts = this.organisations.map(pit => {
+      const orgs = this.organisations.filter(org => {
+        return !org.deleted;
+      });
+      const opts = orgs.map(pit => {
         return {label: pit.name, value: pit};
       });
       return opts;
     },
+    projectOrganisationsSelectText: function () {
+      if (this.projectOrganisations.length == 0) {
+        return 'No organisations selected';
+      } else {
+        return `${this.projectOrganisations.length} organisation${this.projectOrganisations.length > 1 ? 's' : ''} selected`;
+      }
+    }
   },
 
   validations: {

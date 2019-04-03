@@ -52,6 +52,11 @@ export const addOrganisation = (state, organisation) => {
   state.dirty = true;
 }
 
+export const setOrganisations = (state, organisations) => {
+  state.projectMetadata.organisations = organisations;
+  state.dirty = true;
+}
+
 export const removeOrganisation = (state, organisation) => {
   let index = state.projectMetadata.organisations.findIndex(function (o) {
     return o.id == organisation.id;

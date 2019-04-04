@@ -15,8 +15,8 @@ export class cleanupJoinTables1554091241831 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "tech_spec_surveyors_organisation"`);
         await queryRunner.query(`DROP TABLE "organisation_surveyor_tech_specs_tech_spec"`);
 
-        await queryRunner.query(`DROP TABLE "survey_technical_specifications"`);
         await queryRunner.query(`DROP TABLE "survey_technical_specifications_surveyors_organisation"`);
+        await queryRunner.query(`DROP TABLE "survey_technical_specifications" CASCADE`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

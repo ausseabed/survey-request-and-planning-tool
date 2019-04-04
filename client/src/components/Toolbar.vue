@@ -21,7 +21,7 @@
     <q-item v-if="isAuthenticated">
       <q-item-side>
         <q-btn flat round dense icon="settings" to="/admin">
-          <q-tooltip>Administration</q-tooltip>
+          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Administration</q-tooltip>
         </q-btn>
       </q-item-side>
       <q-item-side :avatar="profile.avatar">

@@ -2,8 +2,8 @@
 
   <q-page :style-fn="heightTweak" >
     <q-page-sticky
-      position="bottom-right"
-      :offset="[18, 18]"
+      position="top-right"
+      :offset="[18, 18+66]"
       style="z-index:100">
 
       <q-btn
@@ -13,7 +13,7 @@
         icon="input"
         class="q-ml-sm"
       >
-        <q-tooltip> Apply defaults </q-tooltip>
+        <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]"> Apply defaults </q-tooltip>
       </q-btn>
 
       <q-btn
@@ -22,7 +22,9 @@
         @click="submit"
         icon="fas fa-save"
         class="q-ml-sm"
-      />
+      >
+        <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]"> Save deliverables </q-tooltip>
+      </q-btn>
     </q-page-sticky>
 
 

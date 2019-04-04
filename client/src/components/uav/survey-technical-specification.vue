@@ -5,8 +5,8 @@
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
-        position="bottom-right"
-        :offset="[18, 18]"
+        position="top-right"
+        :offset="[18, 18+66]"
         style="z-index:100">
 
         <q-btn
@@ -16,7 +16,7 @@
           icon="clear"
           class="q-ml-sm"
         >
-          <q-tooltip> Clear specifications </q-tooltip>
+          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]"> Clear specifications </q-tooltip>
         </q-btn>
 
         <q-btn
@@ -26,7 +26,7 @@
           icon="input"
           class="q-ml-sm"
         >
-          <q-tooltip> Apply defaults </q-tooltip>
+          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]"> Apply defaults </q-tooltip>
         </q-btn>
 
         <q-btn
@@ -35,7 +35,9 @@
           @click="submit"
           icon="fas fa-save"
           class="q-ml-sm"
-        />
+        >
+          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save specifications</q-tooltip>
+        </q-btn>
       </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;">

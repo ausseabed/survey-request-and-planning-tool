@@ -4,8 +4,8 @@
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
-        position="bottom-right"
-        :offset="[18, 18]"
+        position="top-right"
+        :offset="[18, 18+66]"
         style="z-index:100">
 
         <q-btn
@@ -14,7 +14,9 @@
           @click="submit"
           icon="fas fa-save"
           class="q-ml-sm"
-        />
+        >
+          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save summary</q-tooltip>
+        </q-btn>
         <q-btn :disable="!id"
           round
           color="primary"
@@ -22,6 +24,7 @@
           icon="fas fa-trash"
           class="q-ml-sm"
         >
+          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete project</q-tooltip>
         </q-btn>
       </q-page-sticky>
 

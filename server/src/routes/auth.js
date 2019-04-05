@@ -3,7 +3,6 @@ var logger = require('../lib/logger').logger;
 var logIdGen = require('../lib/logger').logId;
 var Request = require('request');
 var Axios = require('axios');
-var config = require('config');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 var crypto = require('crypto');

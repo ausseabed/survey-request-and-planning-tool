@@ -64,13 +64,6 @@ export default [
       ]
     },
 
-    { path: '/project-metadata', component: ProjectMetadata },
-    { path: '/project-metadata/:id', component: ProjectMetadata },
-    { path: '/survey-technical-specification/:id',
-      component: SurveyTechnicalSpecification},
-    { path: '/survey-file/:id', component: SurveyFile},
-    { path: '/survey-deliverables/:id', component: SurveyDeliverables},
-
     {
       path: '/auth/callback',
       component: {

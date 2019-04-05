@@ -5,7 +5,7 @@
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
         position="top-right"
-        :offset="[18, 18+66]"
+        :offset="id ? [18, 18+66] : [18, 18]"
         style="z-index:100">
 
         <q-btn

@@ -9,8 +9,6 @@ module.exports = function (ctx) {
       'axios',
       'authenticate',
       'moment',
-      'socket',
-      'intro',
       'vuelidate',
       'vuelidate-error-extractor',
       'global-components',
@@ -59,7 +57,6 @@ module.exports = function (ctx) {
         cfg.plugins.push(
           new webpack.ProvidePlugin({
             // other modules
-            introJs: ['intro.js', 'introJs']
           })
         )
       }

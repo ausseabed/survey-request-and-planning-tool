@@ -277,7 +277,8 @@
                            :error="$v.techSpec.positioningRequirement.$error"
                            error-label="Positioning requirement is required"
                            >
-                    <q-select :value="techSpec.positioningRequirement"
+                    <q-select multiple
+                              :value="this.techSpec.positioningRequirement"
                               @change="UPDATE({path:'techSpec.positioningRequirement', value: $event})"
                               :options="positioningRequirementsOptions"
                               @blur="$v.techSpec.positioningRequirement.$touch"/>
@@ -285,7 +286,7 @@
                 </div>
 
                 <div class="col-4">
-                  <q-field v-if="techSpec.positioningRequirement ? techSpec.positioningRequirement.toLowerCase() == 'other' : false"
+                  <q-field v-if="techSpec.positioningRequirement ? techSpec.positioningRequirement.includes('Other') : false"
                            :label-width="1"
                            class="auto"
 

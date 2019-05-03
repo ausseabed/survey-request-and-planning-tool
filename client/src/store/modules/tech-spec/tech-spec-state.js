@@ -27,7 +27,7 @@ function initialState() {
       mappingCoverageRequirements: null,
       surveyLines: null,
       environmentalConditions: null,
-      positioningRequirement: null,
+      positioningRequirement: [],
       positioningRequirementOther: null,
 
       overlap: null,

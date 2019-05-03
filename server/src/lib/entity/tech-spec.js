@@ -150,10 +150,10 @@ export class TechSpec {
   environmentalConditions = undefined;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type:"simple-array",
+    default: ""
   })
-  positioningRequirement = undefined;
+  positioningRequirement = [];
 
   @Column({
       type:"varchar",

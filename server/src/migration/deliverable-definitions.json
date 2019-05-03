@@ -6,7 +6,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["Shapefile", "KML"]
+        "options": [ "Shapefile", "KML" ]
       }
     ]
   },
@@ -18,7 +18,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["ASCII"]
+        "options": [ "ASCII" ]
       }
     ]
   },
@@ -30,7 +30,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["Shapefile", "KML", "CSV"]
+        "options": [ "Shapefile", "KML", "CSV" ]
       }
     ]
   },
@@ -42,7 +42,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       }
     ]
   },
@@ -54,7 +54,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -72,7 +72,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["NetCDF", "ESRI ASCII Raster", "GeoTIFF"]
+        "options": [ "NetCDF", "ESRI ASCII Raster", "GeoTIFF", "Shapefile", "DWG" ]
       },
       {
         "name": "soundingDataNeeds",
@@ -87,10 +87,15 @@
     "group": "Bathymetry data",
     "fields": [
       {
+        "name": "bathymetryResolution",
+        "label": "Resolution",
+        "type": "deliverable-field-text"
+      },
+      {
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["CSAR", "XYZ", "ESRI Grid", "Erdas Imagine", "GeoTIFF", "ASCII"]
+        "options": [ "CSAR", "XYZ", "ESRI Grid", "Erdas Imagine", "GeoTIFF", "ASCII", "NetCDF", "Point cloud (.las)", ".pts" ]
       }
     ]
   },
@@ -100,10 +105,15 @@
     "group": "Bathymetry data",
     "fields": [
       {
+        "name": "processedBathyResolution",
+        "label": "Resolution",
+        "type": "deliverable-field-text"
+      },
+      {
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["CSAR", "XYZ", "ESRI ASCII", "ArcGrids", "SD"]
+        "options": [ "CSAR", "XYZ", "ESRI ASCII", "ESRI Grid", "SD", "NetCDF", "ASCII", "GeoTIFF" ]
       }
     ]
   },
@@ -115,10 +125,71 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       }
     ]
   },
+
+  {
+    "name": "Substrate map",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "Shapefile" ]
+      }
+    ]
+  },
+
+  {
+    "name": "Fledermaus 3d",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ ".scene" ]
+      }
+    ]
+  },
+
+
+  {
+    "name": "Fault map",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "ASCII", "GeoTIFF", "Shapefile" ]
+      }
+    ]
+  },
+
+  {
+    "name": "Map of reef extent and coverage",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "Shapefile" ]
+      }
+    ]
+  },
+  {
+    "name": "Map of distribution of sediments",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "GeoTIFF", "ShapeFile" ]
+      }
+    ]
+  },
+
 
   {
     "name": "Processed backscatter",
@@ -127,7 +198,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD", "Caris", "gsf"]
+        "options": [ "TBD", "Caris", "gsf", "ASCII", "XYZ" ]
       },
       {
         "name": "acceptedAndRejectedXYZ",
@@ -141,9 +212,14 @@
       },
       {
         "name": "backscatterFormat",
-        "label": "Backscatter mosaic format",
+        "label": "Backscatter format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
+      },
+      {
+        "name": "backscatterResolution",
+        "label": "Backscatter resolution",
+        "type": "deliverable-field-text"
       }
     ]
   },
@@ -152,11 +228,27 @@
     "name": "Backscatter mosaic",
     "fields": [
       {
+        "name": "backscatterResolution",
+        "label": "Backscatter mosaic resolution",
+        "type": "deliverable-field-text"
+      },
+      {
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["CSAR", "XYZ", "ESRI ASCII", "GeoTIFF", "ESRI Grid",
-          "ASCII raster format", "ECW", "JPG2000", "NetCFD", "ArcGrids", "SD"]
+        "options": [
+          "CSAR",
+          "XYZ",
+          "ESRI ASCII",
+          "GeoTIFF",
+          "ESRI Grid",
+          "ASCII",
+          "ECW",
+          "JPG2000",
+          "NetCFD",
+          "ArcGrids",
+          "SD"
+        ]
       }
     ]
   },
@@ -169,10 +261,25 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["wcd", "s7k", "Logged to separate file *.wcd (only applicable for Kongsberg multibeam system)"]
+        "options": [ "WCD (Logged to separate file)", "s7k" ]
       }
     ]
   },
+
+  {
+    "name": "CARIS surface file",
+    "description": "CARIS Surface File",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "csar" ]
+      }
+    ]
+  },
+
+
 
   {
     "name": "Sound Velocity Profile",
@@ -185,7 +292,7 @@
         "options": [
           "ASCII *.csv",
           "PNG with their associated time and location files (shapefiles)",
-          "SVP (or TXT file)",
+          "TXT file *.txt)",
           "HydroBas format"
         ]
       }
@@ -199,18 +306,36 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "parametersToCapture",
         "label": "Parameters to capture",
         "type": "deliverable-field-option-multiple",
-        "options": ["Conductivity", "Temperature", "Density", "Salinity",
-          "Turbidity", "Fluorimetry", "Dissolved oxygen"]
+        "options": [
+          "Conductivity",
+          "Temperature",
+          "Density",
+          "Salinity",
+          "Turbidity",
+          "Fluorimetry",
+          "Dissolved oxygen"
+        ]
       }
     ]
   },
 
+  {
+    "name": "SBP Data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ ".sgy" ]
+      }
+    ]
+  },
   {
     "name": "True heave",
     "fields": [
@@ -218,7 +343,30 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["Applanix ATH"]
+        "options": [ "Applanix ATH" ]
+      }
+    ]
+  },
+
+  {
+    "name": "Geophyiscal Data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "SEG-Y" ]
+      }
+    ]
+  },
+  {
+    "name": "Chirp subbottom Data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "SEG-Y" ]
       }
     ]
   },
@@ -230,7 +378,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -248,7 +396,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -265,7 +413,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "PDF", "HTML" ]
       },
       {
         "name": "requirements",
@@ -284,7 +432,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["Kongsberg EM series (*.all)", "Reson SeaBat (*.s7k)", "Reson SeaBat - old (*.xtf)", "QPD", "ALL",  "Other proprietary format"]
+        "options": [ "Kongsberg EM series (*.all)", "Reson SeaBat (*.s7k)", "Reson SeaBat (*.xtf)", "QPD" ]
       },
       {
         "name": "requirements",
@@ -302,7 +450,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD", "wcd"]
+        "options": [ "TBD", "wcd" ]
       },
       {
         "name": "requirements",
@@ -320,7 +468,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -337,7 +485,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "GeoTIFF", "ESRI Grid", "JPG", "KML", "TIFF" ]
       }
     ]
   },
@@ -349,7 +497,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -367,7 +515,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -385,7 +533,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -403,7 +551,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -421,7 +569,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD", "PDF"]
+        "options": [ "TBD", "PDF" ]
       },
       {
         "name": "requirements",
@@ -439,7 +587,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -457,7 +605,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -475,7 +623,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -493,7 +641,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -511,7 +659,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -529,7 +677,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -547,7 +695,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "PDF", ".docx" ]
       },
       {
         "name": "requirements",
@@ -565,7 +713,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -575,6 +723,8 @@
     ]
   },
 
+
+
   {
     "name": "Navigation quality check/validation report",
     "group": "Reports",
@@ -583,7 +733,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -601,7 +751,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -615,8 +765,38 @@
 
 
 
-
-
+  {
+    "name": "Roughness and Hardness",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "evi" ]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+  {
+    "name": "Angular Response curves",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "ASCII", " Text (.txt)" ]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
   {
     "name": "Vessel Configuration File",
     "fields": [
@@ -624,7 +804,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["Caris *.hvf", "ASCII text"]
+        "options": [ "Caris *.hvf", "ASCII, text" ]
       },
       {
         "name": "requirements",
@@ -641,7 +821,24 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["ASCII text"]
+        "options": [ "ASCII text" ]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+  {
+    "name": "Sound Velocity Profile (SVP) data",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "edf", "ASCII", ".txt" ]
       },
       {
         "name": "requirements",
@@ -658,7 +855,7 @@
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",
@@ -669,13 +866,32 @@
   },
 
   {
+    "name": "Video",
+    "fields": [
+      {
+        "name": "format",
+        "label": "Format",
+        "type": "deliverable-field-option-single",
+        "options": [ "AVI", "MPG" ]
+      },
+      {
+        "name": "requirements",
+        "label": "Requirements",
+        "type": "deliverable-field-textarea"
+      }
+    ]
+  },
+
+
+
+  {
     "name": "TPU/ CUBE related information",
     "fields": [
       {
         "name": "format",
         "label": "Format",
         "type": "deliverable-field-option-single",
-        "options": ["TBD"]
+        "options": [ "TBD" ]
       },
       {
         "name": "requirements",

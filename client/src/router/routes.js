@@ -1,6 +1,6 @@
 import Administration from 'components/administration.vue'
 import Login from 'components/login.vue'
-import Main from 'components/Main.vue'
+import Main from 'components/main.vue'
 import Organisations from 'components/organisations/organisations.vue'
 import Users from 'components/users/users.vue'
 

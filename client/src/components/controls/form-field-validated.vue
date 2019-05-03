@@ -1,12 +1,13 @@
 <template>
-  <q-field
+  <q-input
     v-bind="$attrs"
+    v-on="$listeners"
     :label="label"
+    bottom-slots
     :error="hasErrors"
-    :error-label="firstErrorMessage"
+    :error-message="firstErrorMessage"
   >
-    <slot/>
-  </q-field>
+  </q-input>
 </template>
 <script>
 import { singleErrorExtractorMixin } from "vuelidate-error-extractor";

@@ -1,66 +1,100 @@
 // Configuration for your app
-var webpack = require("webpack");
 
 module.exports = function (ctx) {
   return {
-    // app plugins (/src/plugins)
-    plugins: [
-      'i18n',
+    // app boot file (/src/boot)
+    // --> boot files are part of "main.js"
+    boot: [
       'axios',
       'authenticate',
-      'moment',
       'vuelidate',
       'vuelidate-error-extractor',
       'global-components',
+      'moment',
     ],
+
     css: [
       'app.styl'
     ],
+
     extras: [
-      ctx.theme.mat ? 'roboto-font' : null,
-      'material-icons',
-      'mdi',
-      'ionicons',
-      'fontawesome'
+      'roboto-font',
+      'material-icons' // optional, you are not bound to it
+      // 'ionicons-v4',
+      // 'mdi-v3',
+      // 'fontawesome-v5',
+      // 'eva-icons'
     ],
-    supportIE: true,
+
+    framework: {
+      // all: true, // --- includes everything; for dev only!
+
+      components: [
+        'QLayout',
+        'QHeader',
+        'QDrawer',
+        'QPageContainer',
+        'QPage',
+        'QToolbar',
+        'QToolbarTitle',
+        'QBtn',
+        'QIcon',
+        'QList',
+        'QItem',
+        'QItemSection',
+        'QItemLabel',
+        'QAvatar',
+        'QMenu',
+        'QCardSection',
+        'QSeparator',
+        'QScrollArea',
+        'QCard',
+        'QCardActions',
+        'QCheckbox',
+        'QDialog',
+        'QInput',
+      ],
+
+      directives: [
+        'Ripple'
+      ],
+
+      // Quasar plugins
+      plugins: [
+        'Dialog',
+        'Notify',
+      ]
+
+      // iconSet: 'ionicons-v4'
+      // lang: 'de' // Quasar language
+    },
+
+    supportIE: false,
+
     build: {
       env: ctx.dev ? {
         AUTH_HOST: JSON.stringify(process.env.AUTH_HOST),
         AUTH_CLIENT_ID: JSON.stringify(process.env.AUTH_CLIENT_ID),
         NODE_ENV: JSON.stringify('development'),
-        S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-development'),
         PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
         DESCRIPTION: JSON.stringify(require('./package.json').description)
       } : {
         AUTH_HOST: JSON.stringify(process.env.AUTH_HOST),
         AUTH_CLIENT_ID: JSON.stringify(process.env.AUTH_CLIENT_ID),
         NODE_ENV: JSON.stringify('production'),
-        S3_BUCKET: JSON.stringify('https://s3-ap-southeast-2.amazonaws.com/qa4lab-staging'),
         PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
         DESCRIPTION: JSON.stringify(require('./package.json').description)
       },
       scopeHoisting: true,
-      vueRouterMode: 'history',
-      devtool: '#eval-source-map',
+      // vueRouterMode: 'history',
+      // vueCompiler: true,
       // gzip: true,
       // analyze: true,
       // extractCSS: false,
-      // useNotifier: false,
-      extendWebpack(cfg) {
-        // cfg.module.rules.push({
-        // enforce: 'pre',
-        // test: /\.(js|vue)$/,
-        // loader: 'eslint-loader',
-        // exclude: /(node_modules|quasar)/
-        // })
-        cfg.plugins.push(
-          new webpack.ProvidePlugin({
-            // other modules
-          })
-        )
+      extendWebpack (cfg) {
       }
     },
+
     devServer: {
       // https: true,
       port: 3001,
@@ -73,69 +107,17 @@ module.exports = function (ctx) {
         }
       }
     },
-    // framework: 'all',
-    framework: {
-      components: [
-        'QLayout',
-        'QLayoutHeader',
-        'QLayoutDrawer',
-        'QPageContainer',
-        'QPage',
-        'QToolbar',
-        'QToolbarTitle',
-        'QBtn',
-        'QIcon',
-        'QList',
-        'QListHeader',
-        'QItem',
-        'QItemMain',
-        'QItemSide',
-        'QField',
-        'QInput',
-        'QSelect',
-        'QCheckbox',
-        'QCard',
-        'QCardTitle',
-        'QCardMain',
-        'QCardSeparator',
-        'QCardActions',
-        'QBreadcrumbs',
-        'QBreadcrumbsEl',
-        'QOptionGroup',
-        'QTooltip',
-        'QScrollArea',
-        'QItemTile',
-        'QDatetimePicker',
-        'QAutocomplete',
-        'QPageSticky',
-        'QFab',
-        'QFabAction',
-        'QScrollObservable',
-        'QUploader',
-        'QTable',
-        'QTr',
-        'QTd',
-        'QProgress',
-        'QTabs',
-        'QTab',
-        'QTabPane',
-        'QRouteTab',
-        'QDialog',
-      ],
-      directives: [
-        'Ripple'
-      ],
-      // Quasar plugins
-      plugins: [
-        'Notify',
-        'Dialog',
-      ],
-      cssAddon: true,
 
+    // animations: 'all', // --- includes all animations
+    animations: [],
+
+    ssr: {
+      pwa: false
     },
-    animations: 'all',
+
     pwa: {
-      cacheExt: 'js,html,css,ttf,eot,otf,woff,woff2,json,svg,gif,jpg,jpeg,png,wav,ogg,webm,flac,aac,mp4,mp3',
+      // workboxPluginMode: 'InjectManifest',
+      // workboxOptions: {}, // only for NON InjectManifest
       manifest: {
         // name: 'Quasar App',
         // short_name: 'Quasar-PWA',
@@ -173,14 +155,23 @@ module.exports = function (ctx) {
         ]
       }
     },
+
     cordova: {
       // id: 'org.cordova.quasar.app'
+      // noIosLegacyBuildFlag: true // uncomment only if you know what you are doing
     },
+
     electron: {
-      extendWebpack(cfg) {
-        // do something with cfg
+      // bundler: 'builder', // or 'packager'
+
+      extendWebpack (cfg) {
+        // do something with Electron main process Webpack cfg
+        // chainWebpack also available besides this extendWebpack
       },
+
       packager: {
+        // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
+
         // OS X / Mac App Store
         // appBundleId: '',
         // appCategoryType: '',
@@ -189,10 +180,13 @@ module.exports = function (ctx) {
 
         // Window only
         // win32metadata: { ... }
-      }
-    },
+      },
 
-    // leave this here for Quasar CLI
-    starterKit: '1.0.0'
+      builder: {
+        // https://www.electron.build/configuration/configuration
+
+        // appId: 'quasar-app'
+      }
+    }
   }
 }

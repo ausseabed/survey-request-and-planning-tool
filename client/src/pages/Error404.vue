@@ -2,7 +2,7 @@
   <div class="fixed-center text-center">
     <p>
       <img
-        src="~assets/sad.svg"
+        src="~assets/frontiersi-logo.png"
         style="width:30vw;max-width:150px;"
       >
     </p>
@@ -14,3 +14,9 @@
     >Go back</q-btn>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'Error404'
+}
+</script>

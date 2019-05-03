@@ -19,29 +19,31 @@
       </q-tooltip>
     </q-btn>
     <q-item v-if="isAuthenticated">
-      <q-item-side>
+      <q-item-section>
         <q-btn flat round dense icon="settings" to="/admin">
           <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Administration</q-tooltip>
         </q-btn>
-      </q-item-side>
-      <q-item-side :avatar="profile.avatar">
-        <q-popover ref="popover">
-          <q-list link>
-            <q-item @click.native="show_profile">
-              <q-item-side icon="face" />
-              <q-item-main label="Profile" />
-            </q-item>
-            <!-- <q-item @click.native="show_settings">
-              <q-item-side icon="settings" />
-              <q-item-main label="Settings" />
-            </q-item> -->
-            <q-item @click.native="logout">
-              <q-item-side icon="exit_to_app" />
-              <q-item-main label="Log Out" />
-            </q-item>
-          </q-list>
-        </q-popover>
-      </q-item-side>
+      </q-item-section>
+
+      <q-item-section avatar>
+        <q-avatar rounded text-color="white">
+          <img :src="profile.avatar"/>
+          <q-menu ref="popover">
+            <q-list link>
+              <q-item @click.native="show_profile">
+                <q-item-side icon="face" />
+                <q-item-main label="Profile" />
+              </q-item>
+              <q-item @click.native="logout">
+                <q-item-side icon="exit_to_app" />
+                <q-item-main label="Log Out" />
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-avatar>
+      </q-item-section>
+
+
     </q-item>
   </q-toolbar>
 </template>
@@ -49,13 +51,13 @@
   import Vue from 'vue'
   import { Quasar,
     QToolbar, QToolbarTitle, QBtn, QTooltip,
-    QItem, QItemMain, QItemSide, QPopover, QList
+    QItem, QList
   } from 'quasar'
 
   export default Vue.extend({
     components: {
       QToolbar, QToolbarTitle, QBtn, QTooltip,
-      QItem, QItemMain, QItemSide, QPopover, QList
+      QItem, QList
     },
     data() {
       return {

@@ -2,27 +2,27 @@
 
     <div class="q-my-md fit">
       <div class="fit">
-        <div class="row gutter-sm fit content-stretch">
+        <div class="row q-gutter-sm fit content-stretch">
           <div class="col-sm-12 ol-lg-12 col-xl-6 self-stretch ">
             <q-card class="fit">
-              <q-card-title>
+              <q-card-section>
                 Users
-              </q-card-title>
-              <q-card-separator />
-              <q-card-main>
+              </q-card-section>
+              <q-separator />
+              <q-card-section>
                 Not implemented.
-              </q-card-main>
+              </q-card-section>
             </q-card>
           </div>
           <div class="col-sm-12 col-lg-12 col-xl-6 self-start">
             <q-card class="fit">
-              <q-card-title>
+              <q-card-section>
                 User
-              </q-card-title>
-              <q-card-separator />
-              <q-card-main>
+              </q-card-section>
+              <q-separator />
+              <q-card-section>
                 Not implemented.
-              </q-card-main>
+              </q-card-section>
             </q-card>
           </div>
         </div>

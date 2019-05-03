@@ -1,17 +1,23 @@
 <template>
   <q-dialog
     v-model="active"
-    prevent-close
+    persistent
   >
-    <span slot="title">Confirm navigation</span>
-    <span slot="message">Modifications have been made to the current form that have <strong>not been saved.</strong></span>
+    <q-card style="min-width: 400px">
+      <q-card-section>
+        <div class="text-h6">Confirm navigation</div>
+        <div>
+          Modifications have been made to the current form that have <strong>not been saved.</strong>
+        </div>
+      </q-card-section>
 
+      <q-card-actions align="right" class="text-primary">
+        <q-btn label="Save and continue" @click="clickContinueSave()" />
+        <q-btn color="warning" label="Discard changes" @click="clickContinueNoSave()" />
+        <q-btn label="Cancel" @click="clickCancel()" />
+      </q-card-actions>
 
-    <template slot="buttons" slot-scope="props">
-      <q-btn label="Save and continue" @click="clickContinueSave()" />
-      <q-btn color="warning" label="Discard changes" @click="clickContinueNoSave()" />
-      <q-btn label="Cancel" @click="clickCancel()" />
-    </template>
+    </q-card>
   </q-dialog>
 </template>
 

@@ -12,7 +12,7 @@ services:
       - ./client:/code
     ports:
       - '3001:3001'
-    command: bash -c "yarn install && quasar dev -p 3001"
+    command: bash -c "npm install && quasar dev -p 3001"
 
 
   api:

@@ -11,3 +11,5 @@ db.sqlite3
 __pycache__/
 yarn-error.log
 server.conf
+client_old/
+client/.quasar/

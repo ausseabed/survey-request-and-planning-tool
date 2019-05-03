@@ -2,15 +2,9 @@ import Administration from 'components/administration.vue'
 import Login from 'components/login.vue'
 import Main from 'components/Main.vue'
 import Organisations from 'components/organisations/organisations.vue'
-import ProjectMain from 'components/project-main.vue'
-import ProjectMetadata from 'components/uav/ProjectMetadata.vue'
-import SurveyTechnicalSpecification
-  from 'components/uav/survey-technical-specification.vue'
-import SurveyFile from 'components/uav/survey-file.vue'
-import SurveyDeliverables from 'components/uav/survey-deliverables.vue'
 import Users from 'components/users/users.vue'
 
-export default [
+const routes = [
     { path: '/', component: Main },
     {
       path: '/admin',
@@ -38,36 +32,19 @@ export default [
     { path: '/login', component: Login },
 
     {
-      path: '/survey/new',
-      component: ProjectMetadata,
-    },
-    {
-      path: '/survey/:id',
-      component: ProjectMain,
-      children: [
-        {
-          path: 'summary',
-          component: ProjectMetadata,
-        },
-        {
-          path: 'specifications',
-          component: SurveyTechnicalSpecification,
-        },
-        {
-          path: 'deliverables',
-          component: SurveyDeliverables,
-        },
-        {
-          path: 'attachments',
-          component: SurveyFile,
-        },
-      ]
-    },
-
-    {
       path: '/auth/callback',
       component: {
         template: '<div class="auth-component"></div>'
       }
     }
 ]
+
+// Always leave this as last one
+if (process.env.MODE !== 'ssr') {
+  routes.push({
+    path: '*',
+    component: () => import('pages/Error404.vue')
+  })
+}
+
+export default routes

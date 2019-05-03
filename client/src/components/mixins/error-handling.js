@@ -15,7 +15,7 @@ export const errorHandler = {
         message: message,
         type: 'negative',
         color: 'negative',
-        closeBtn: true,
+        actions: [{ icon: 'close', color: 'white' }],
         timeout: 900,
       });
     },
@@ -24,7 +24,7 @@ export const errorHandler = {
         message: message,
         type: 'positive',
         color: 'positive',
-        closeBtn: true,
+        actions: [{ icon: 'close', color: 'white' }],
         timeout: 700,
       });
     },
@@ -33,7 +33,7 @@ export const errorHandler = {
         message: message,
         type: 'info',
         color: 'secondary',
-        closeBtn: true,
+        actions: [{ icon: 'close', color: 'white' }],
         timeout: 700,
       });
     }

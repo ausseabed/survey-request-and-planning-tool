@@ -2,14 +2,14 @@
 
   <div class="q-my-md fit">
     <div class="fit">
-      <div class="row gutter-sm fit content-stretch">
+      <div class="row q-gutter-sm fit content-stretch">
         <div class="col-sm-12 ol-lg-12 col-xl-6 self-stretch ">
           <q-card class="fit column">
-            <q-card-title>
-              Organisations
-            </q-card-title>
-            <q-card-separator />
-            <q-card-main class="full-height col" style="padding:0px">
+            <q-card-section>
+              <div class="text-h6">Organisations</div>
+            </q-card-section>
+            <q-separator />
+            <q-card-section class="full-height col" style="padding:0px">
               <div v-if="organisations.length == 0">
                 No organisations.
               </div>
@@ -20,19 +20,15 @@
                     :key="org.id"
                     :to="`/admin/organisations/${org.id}`"
                     >
-                      <q-item-main>
-                        <q-item-tile label
-                          v-bind:class="{ organisationnamedeleted: org.deleted }"
-                        >
-                          {{org.name}}
-                        </q-item-tile>
-                      </q-item-main>
+                      <q-item-label v-bind:class="{ organisationnamedeleted: org.deleted }">
+                        {{org.name}}
+                      </q-item-label>
                   </q-item>
                 </q-list>
               </q-scroll-area>
-            </q-card-main>
+            </q-card-section>
             <div class="col-auto">
-              <q-card-separator />
+              <q-separator />
               <q-card-actions align="between">
                 <q-checkbox
                   class="q-pl-sm"
@@ -55,46 +51,49 @@
 
         <div class="col-sm-12 col-lg-12 col-xl-6 self-start">
           <q-card v-if="activeOrganisation" class="fit">
-            <q-card-title class="row">
-              <strong v-if="activeOrganisation.deleted">Deleted - </strong>
-              <span v-bind:class="{ organisationnamedeleted: activeOrganisation.deleted }"> {{activeOrganisation.name}} </span>
-            </q-card-title>
-            <q-card-separator />
-            <q-card-main>
+            <q-card-section class="row">
+              <div class="text-h6">
+                <strong v-if="activeOrganisation.deleted">Deleted - </strong>
+                <span v-bind:class="{ organisationnamedeleted: activeOrganisation.deleted }"> {{activeOrganisation.name}} </span>
+              </div>
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
               <form-wrapper
                 :validator="$v"
                 :messages="validationMessagesOverride"
                 class="overflow-hidden"
               >
-                <div class="column gutter-sm">
+                <div class="column q-gutter-sm">
                   <form-field-validated :label-width="2"
                            name="activeOrganisation.name"
                            attribute="Name"
-                           label="Name">
-                    <q-input :value="activeOrganisation.name"
-                             @input="updateActiveOrganisationValue({path:'name', value:$event})"
-                             @blur="$v.activeOrganisation.name.$touch"
-                             type="text" />
+                           label="Name"
+                           :value="activeOrganisation.name"
+                            @input="updateActiveOrganisationValue({path:'name', value:$event})"
+                            @blur="$v.activeOrganisation.name.$touch"
+                            type="text"
+                           >
                   </form-field-validated>
 
                   <form-field-validated :label-width="2"
                            name="activeOrganisation.abn"
                            attribute="ABN"
                            label="ABN"
-                           helper="Optional">
-                    <q-input :value="activeOrganisation.abn"
-                             @input="updateActiveOrganisationValue({path:'abn', value:$event})"
-                             @blur="$v.activeOrganisation.abn.$touch"
-                             type="text" />
+                           helper="Optional"
+                           :value="activeOrganisation.abn"
+                                    @input="updateActiveOrganisationValue({path:'abn', value:$event})"
+                                    @blur="$v.activeOrganisation.abn.$touch"
+                                    type="text" >
                   </form-field-validated>
                 </div>
 
               </form-wrapper>
-            </q-card-main>
+            </q-card-section>
             <!-- @input="updateActiveOrganisation({path:'name', value:$event})" -->
             <div class="col-auto">
-              <q-card-separator />
-              <q-card-actions align="end">
+              <q-separator />
+              <q-card-actions align="right">
                 <q-btn flat icon="save"
                   label="Save"
                   @click="submit()"
@@ -265,14 +264,14 @@ export default Vue.extend({
     deleteOrgClick() {
       if (!_.isNil(this.activeOrganisation.id)) {
         // an existing id indicated this org has been saved
+
         this.$q.dialog({
           title: 'Delete organisation',
           message:
             `Organisation ${this.activeOrganisation.name} will be deleted`,
           ok: 'Delete',
           cancel: 'Cancel'
-        }).then(() => {
-
+        }).onOk(() => {
           this.deleteOrganisation({ id: this.id })
           .then(pmd => {
             //delete org handler sets active org to undefined, so no need here
@@ -283,9 +282,12 @@ export default Vue.extend({
               this.getFormData();
             }
           });
-        }).catch(() => {
-          // Picked "Cancel" or dismissed, nothing to do (just catch error)
-        });
+        }).onCancel(() => {
+          //do nothing
+        }).onDismiss(() => {
+          //do nothing
+        })
+
       } else {
         // no id, so hasn't been saved. Simply replace active org with nothing
         this.setActiveOrganisation(undefined);

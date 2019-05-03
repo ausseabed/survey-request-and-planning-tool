@@ -1,8 +1,8 @@
 <template>
   <q-layout view="hHh Lpr lFf" id="q-app">
-	  <q-layout-header>
-		  <toolbar></toolbar>
-	  </q-layout-header>
+    <q-header>
+      <toolbar></toolbar>
+    </q-header>
 
     <q-page-container>
       <router-view></router-view>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import Toolbar from 'components/Toolbar'
+  import Toolbar from 'components/toolbar'
   import { EventBus } from './event-bus.js';
 
   export default {

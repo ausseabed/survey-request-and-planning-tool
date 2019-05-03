@@ -1,7 +1,7 @@
 <template>
   <!-- <q-layout view="hHh Lpr lFf"> -->
   <q-page class="q-mt-md col">
-    <q-layout-drawer
+    <q-drawer
       side="left"
       v-model="left"
       behavior="desktop"
@@ -10,18 +10,22 @@
       <q-scroll-area class="fit">
         <!-- <q-list-header>Administration</q-list-header> -->
         <div class="admin-heading">Administration</div>
-        <q-card-separator class="q-mb-md" />
+        <q-separator class="q-mb-md" />
         <q-item to="/admin/users">
-          <q-item-side icon="supervisor_account" />
-          <q-item-main label="Users" sublabel="Manage user accounts" />
+          <q-item-section icon="supervisor_account">
+            <q-item-label>Users</q-item-label>
+            <q-item-label caption>Manage user accounts</q-item-label>
+          </q-item-section>
         </q-item>
         <q-item to="/admin/organisations">
-          <q-item-side icon="account_balance" />
-          <q-item-main label="Organisations" sublabel="Manage organisations" />
+          <q-item-section icon="account_balance">
+            <q-item-label>Organisations</q-item-label>
+            <q-item-label caption>Manage organisations</q-item-label>
+          </q-item-section>
         </q-item>
 
       </q-scroll-area>
-    </q-layout-drawer>
+    </q-drawer>
 
     <div class="admin-content">
       <router-view />

@@ -70,10 +70,18 @@ const mutations = {
 
   [UPDATE_WITH_DEFAULTS] (state, defaults) {
     const item = defaults;
+    // replace all `null` values with `undefined`
     Object.keys(item).forEach(function(key) {
       item[key] = item[key] == null ? undefined : item[key];
     })
     _.merge(state.techSpec, item);
+    // set tech spec attributes to new objects for Vue change detection to
+    // pick up on. Mostly works without this, but array types aren't being
+    // picked up.
+    Object.keys(state.techSpec).forEach(function(key) {
+      state.techSpec[key] = _.cloneDeep(state.techSpec[key]);
+    })
+
     state.dirty = true;
   },
 

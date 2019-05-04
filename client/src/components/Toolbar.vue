@@ -28,15 +28,20 @@
       <q-item-section avatar>
         <q-avatar rounded text-color="white">
           <img :src="profile.avatar"/>
-          <q-menu ref="popover">
-            <q-list link>
-              <q-item @click.native="show_profile">
-                <q-item-side icon="face" />
-                <q-item-main label="Profile" />
+          <q-menu content-class="bg-primary text-white" :offset="[0, 10]" auto-close>
+            <q-list link style="min-width: 140px">
+              <q-item @click="show_profile" clickable class="row">
+                <q-item-section>
+                  <q-avatar icon="face" />
+                </q-item-section>
+                <q-item-section>Profile</q-item-section>
               </q-item>
-              <q-item @click.native="logout">
-                <q-item-side icon="exit_to_app" />
-                <q-item-main label="Log Out" />
+              <q-separator />
+              <q-item @click="logout" clickable>
+                <q-item-section>
+                  <q-avatar icon="exit_to_app" />
+                </q-item-section>
+                <q-item-section>Log Out</q-item-section>
               </q-item>
             </q-list>
           </q-menu>

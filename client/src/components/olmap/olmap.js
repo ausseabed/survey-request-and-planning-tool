@@ -54,7 +54,7 @@ var OlMap = function (target, options) {
           var options = opt_options || {};
 
           var button = document.createElement('button');
-          button.innerHTML = '<i class="fas fa-draw-polygon"></i>';
+          button.innerHTML = '<i class="material-icons">timeline</i>';
 
           var element = document.createElement('div');
           element.className = 'draw-polygon ol-unselectable ol-control';

@@ -63,7 +63,8 @@
           <div class="col-auto">
             <q-separator />
             <q-card-actions align="right">
-              <q-btn flat icon="add" label="Add project">
+              <q-btn flat icon="add" label="Add project"
+                :to="'/survey/new'">
               </q-btn>
             </q-card-actions>
           </div>

@@ -2,6 +2,8 @@ import Administration from 'components/administration.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
 import Organisations from 'components/organisations/organisations.vue'
+import ProjectMain from 'components/project-main.vue'
+import ProjectMetadata from 'components/project-metadata.vue'
 import Users from 'components/users/users.vue'
 
 const routes = [
@@ -30,6 +32,22 @@ const routes = [
     },
 
     { path: '/login', component: Login },
+
+    {
+      path: '/survey/new',
+      component: ProjectMetadata,
+    },
+    {
+      path: '/survey/:id',
+      component: ProjectMain,
+      children: [
+        {
+          path: 'summary',
+          component: ProjectMetadata,
+        },
+      ]
+    },
+
 
     {
       path: '/auth/callback',

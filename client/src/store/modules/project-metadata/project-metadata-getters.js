@@ -35,9 +35,7 @@ export const organisations = state => {
 }
 
 export const startDate = state => {
-  const date = new Date();
-  date.setTime(state.projectMetadata.startDate);
-  return date;
+  return state.projectMetadata.startDate;
 }
 
 export const instrumentTypes = state => {

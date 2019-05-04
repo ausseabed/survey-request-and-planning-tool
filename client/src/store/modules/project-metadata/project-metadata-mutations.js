@@ -66,7 +66,7 @@ export const removeOrganisation = (state, organisation) => {
 }
 
 export const setStartDate = (state, startDate) => {
-  state.projectMetadata.startDate = startDate.getTime();
+  state.projectMetadata.startDate = startDate;
   state.dirty = true;
 }
 

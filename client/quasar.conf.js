@@ -53,6 +53,14 @@ module.exports = function (ctx) {
         'QCheckbox',
         'QDialog',
         'QInput',
+        'QTabs',
+        'QPageSticky',
+        'QTooltip',
+        'QSelect',
+        'QRouteTab',
+        'QField',
+        'QOptionGroup',
+        'QDate',
       ],
 
       directives: [
@@ -86,7 +94,7 @@ module.exports = function (ctx) {
         DESCRIPTION: JSON.stringify(require('./package.json').description)
       },
       scopeHoisting: true,
-      // vueRouterMode: 'history',
+      vueRouterMode: 'history',
       // vueCompiler: true,
       // gzip: true,
       // analyze: true,

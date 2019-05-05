@@ -5,6 +5,7 @@ import Organisations from 'components/organisations/organisations.vue'
 import ProjectMain from 'components/project-main.vue'
 import ProjectMetadata from 'components/project-metadata.vue'
 import SurveyDeliverables from 'components/survey-deliverables.vue'
+import SurveyFile from 'components/survey-file.vue'
 import SurveyTechnicalSpecification from 'components/survey-technical-specification.vue'
 import Users from 'components/users/users.vue'
 
@@ -54,6 +55,10 @@ const routes = [
         {
           path: 'deliverables',
           component: SurveyDeliverables,
+        },
+        {
+          path: 'attachments',
+          component: SurveyFile,
         },
       ]
     },

@@ -61,6 +61,12 @@ module.exports = function (ctx) {
         'QField',
         'QOptionGroup',
         'QDate',
+        'QTable',
+        'QTh',
+        'QTr',
+        'QTd',
+        'QUploader',
+        'QLinearProgress',
       ],
 
       directives: [

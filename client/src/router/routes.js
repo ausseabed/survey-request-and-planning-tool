@@ -4,6 +4,7 @@ import Main from 'components/main.vue'
 import Organisations from 'components/organisations/organisations.vue'
 import ProjectMain from 'components/project-main.vue'
 import ProjectMetadata from 'components/project-metadata.vue'
+import SurveyTechnicalSpecification from 'components/survey-technical-specification.vue'
 import Users from 'components/users/users.vue'
 
 const routes = [
@@ -44,6 +45,10 @@ const routes = [
         {
           path: 'summary',
           component: ProjectMetadata,
+        },
+        {
+          path: 'specifications',
+          component: SurveyTechnicalSpecification,
         },
       ]
     },

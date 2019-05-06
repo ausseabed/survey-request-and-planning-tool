@@ -181,15 +181,14 @@ export default Vue.extend({
 
       const isNew = (
         _.isNil(this.hippRequest.id) ||
-        this.hippRequest.id.length == 0);
+        this.hippRequest.id.length == 0)
 
-      this.$store.dispatch('projectMetadata/save').then(pmd => {
+      this.saveHippRequest().then((hr) => {
         if (isNew) {
-          this.$router.replace({ path: `/survey/${pmd.id}/summary` })
+          this.$router.replace({ path: `/hipp-request/${hr.id}/summary` })
         }
-        this.notifySuccess('Saved project metadata');
-        this.setDirty(false);
-      });
+        this.notifySuccess('Saved project metadata')
+      })
     },
 
     deleteHippRequest() {

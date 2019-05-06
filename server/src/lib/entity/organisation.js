@@ -1,6 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
+import { HippRequest } from './hipp-request';
 import { ProjectMetadata } from './project-metadata';
 import { TechSpec }
   from './tech-spec';
@@ -41,4 +42,9 @@ export class Organisation {
     type => ProjectMetadata,
     projectMetadata => projectMetadata.surveyors)
   surveyorProjectMetadatas;
+
+  @OneToMany(
+    type => HippRequest,
+    hippRequest => hippRequest.requestingAgency)
+  requestingAgencyHipp;
 }

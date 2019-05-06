@@ -11,6 +11,7 @@ var surveyFileRoutes = require('./api/survey-file');
 var techSpecRoutes = require('./api/tech-spec');
 var referenceSystemRoutes = require('./api/reference-system');
 var deliverableRoutes = require('./api/deliverable');
+var hippRequestRoutes = require('./api/hipp-request');
 
 import { isAuthenticated } from './utils';
 
@@ -27,6 +28,7 @@ router
 .use('/tech-spec', techSpecRoutes)
 .use('/reference-system', referenceSystemRoutes)
 .use('/deliverable', deliverableRoutes)
+.use('/hipp-request', hippRequestRoutes)
 
 
 module.exports = router;

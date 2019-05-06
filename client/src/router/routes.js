@@ -1,4 +1,6 @@
 import Administration from 'components/administration.vue'
+import HippMain from 'components/hipp/hipp-main.vue'
+import HippSummary from 'components/hipp/hipp-summary.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
 import Organisations from 'components/organisations/organisations.vue'
@@ -63,6 +65,20 @@ const routes = [
       ]
     },
 
+    {
+      path: '/hipp-request/new',
+      component: HippSummary,
+    },
+    {
+      path: '/hipp-request/:id',
+      component: HippMain,
+      children: [
+        {
+          path: 'summary',
+          component: HippSummary,
+        },
+      ]
+    },
 
     {
       path: '/auth/callback',

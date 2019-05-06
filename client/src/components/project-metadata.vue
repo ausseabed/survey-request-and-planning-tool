@@ -34,7 +34,7 @@
             <div class="text-h6"> Basic </div>
           </q-card-section>
           <q-card-section>
-            <form-field-validated
+            <form-field-validated-input
               name="surveyName"
               label="Survey name"
               hint="Name of data collection survey"
@@ -43,7 +43,7 @@
               @blur="$v.surveyName.$touch"
               type="text"
               >
-            </form-field-validated>
+            </form-field-validated-input>
 
             <q-input
               label="Survey ID"
@@ -122,7 +122,7 @@
               >
             </q-input>
 
-            <form-field-validated
+            <form-field-validated-input
               :label-width="2"
               inset="full"
               name="email"
@@ -133,7 +133,7 @@
               @blur="$v.email.$touch"
               type="email"
               >
-            </form-field-validated>
+            </form-field-validated-input>
           </q-card-section>
         </q-card>
 
@@ -227,7 +227,7 @@
               <div class="col-1">
               </div>
               <div class="col-11">
-                <form-field-validated
+                <form-field-validated-input
                   name="surveyApplicationGroupNameOther"
                   label="Name"
                   class="optional-name-fields"
@@ -236,7 +236,7 @@
                   @blur="$v.surveyApplicationGroupNameOther.$touch"
                   type="text"
                   >
-                </form-field-validated>
+                </form-field-validated-input>
               </div>
             </div>
 
@@ -259,7 +259,7 @@
               <div class="col-1">
               </div>
               <div class="col-11">
-                <form-field-validated
+                <form-field-validated-input
                   name="surveyApplicationNameOther"
                   label="Name"
                   class="optional-name-fields"
@@ -268,7 +268,7 @@
                   @blur="$v.surveyApplicationNameOther.$touch"
                   type="text"
                   >
-                </form-field-validated>
+                </form-field-validated-input>
               </div>
             </div>
 

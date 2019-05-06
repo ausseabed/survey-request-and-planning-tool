@@ -109,14 +109,5 @@ export default Vue.extend({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus">
 
-.q-tabs {
-  border-radius: 0px;
-}
-
-.tabs-toolbar-sub-title {
-  margin-top: -6px;
-  font-size: 10px;
-  text-transform: uppercase;
-}
 
 </style>

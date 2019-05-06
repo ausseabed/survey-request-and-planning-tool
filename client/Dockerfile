@@ -27,5 +27,5 @@ FROM nginx:1.13.9 as nginx
 ADD build/nginx-www.conf /etc/nginx/nginx.conf
 ADD build/nginx-www-default.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=builder /code/dist/spa-mat /tmp/dist/spa-mat
-RUN rm -rf /usr/share/nginx/html && mv /tmp/dist/spa-mat /usr/share/nginx/html
+COPY --from=builder /code/dist/spa /tmp/dist/spa
+RUN rm -rf /usr/share/nginx/html && mv /tmp/dist/spa /usr/share/nginx/html

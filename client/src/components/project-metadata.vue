@@ -59,7 +59,7 @@
                   type="radio" inline
                   :value="projectStatus"
                   color="secondary"
-                  @change="update('projectMetadata.projectStatus', $event)"
+                  @input="update('projectMetadata.projectStatus', $event)"
                   :options="projectStatusOptions"
                 />
               </template>

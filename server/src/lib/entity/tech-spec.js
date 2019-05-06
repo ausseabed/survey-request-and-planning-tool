@@ -113,10 +113,10 @@ export class TechSpec {
   groundTruthing = undefined;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type:"simple-array",
+    default: ""
   })
-  groundTruthingMethod = undefined;
+  groundTruthingMethod = [];
 
   @Column({
       type:"varchar",

@@ -186,6 +186,7 @@
                 <div class="col-8">
                   <q-select
                     label="Ground truthing method"
+                    multiple
                     :value="techSpec.groundTruthingMethod"
                     @input="UPDATE({path:'techSpec.groundTruthingMethod', value: $event})"
                     :options="validGroundTruthingMethods"
@@ -195,7 +196,7 @@
 
                 <div class="col">
                   <q-input
-                    v-if="techSpec.groundTruthingMethod ? techSpec.groundTruthingMethod.toLowerCase() == 'other' : false"
+                    v-if="techSpec.groundTruthingMethod ? techSpec.groundTruthingMethod.includes('Other') : false"
                     :label-width="1"
                     hint="Provide other ground truthing method"
                     :value="techSpec.groundTruthingMethodOther"

@@ -21,7 +21,7 @@ function initialState() {
       timeSensitive: false,
       timeSensitiveRequirements: null,
       groundTruthing: false,
-      groundTruthingMethod: null,
+      groundTruthingMethod: [],
       groundTruthingMethodOther: null,
       groundTruthingRequirements: null,
       mappingCoverageRequirements: null,

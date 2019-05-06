@@ -65,7 +65,7 @@
                 class="overflow-hidden"
               >
                 <div class="column q-gutter-sm">
-                  <form-field-validated :label-width="2"
+                  <form-field-validated-input :label-width="2"
                            name="activeOrganisation.name"
                            attribute="Name"
                            label="Name"
@@ -74,9 +74,9 @@
                             @blur="$v.activeOrganisation.name.$touch"
                             type="text"
                            >
-                  </form-field-validated>
+                  </form-field-validated-input>
 
-                  <form-field-validated :label-width="2"
+                  <form-field-validated-input :label-width="2"
                            name="activeOrganisation.abn"
                            attribute="ABN"
                            label="ABN"
@@ -85,7 +85,7 @@
                                     @input="updateActiveOrganisationValue({path:'abn', value:$event})"
                                     @blur="$v.activeOrganisation.abn.$touch"
                                     type="text" >
-                  </form-field-validated>
+                  </form-field-validated-input>
                 </div>
 
               </form-wrapper>

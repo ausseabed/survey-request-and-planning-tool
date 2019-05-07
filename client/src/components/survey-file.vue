@@ -30,7 +30,7 @@
               <div class="row justify-center">
                 <q-btn size="md" flat dense
                   icon="cloud_download"
-                  @click="downloadFile($event, props.row)"
+                  @click="downloadFile({id: props.row.id, name: props.row.fileName})"
                   :disable="props.row.downloading"/>
                 <q-btn size="md" flat dense
                   icon="delete"
@@ -50,29 +50,22 @@
           ref="uploader"
           multiple
           :auto-expand="true"
-          :url="`/api/attachment/${this.attachesTo}/${this.attachesToId}/upload/`"
           :factory="uploadFiles"
           @start="uploadStarted"
           @finish="uploadFinished"
           @failed="uploadFailed"/>
-
-
-
       </div>
     </q-page>
-
-
   </div>
 </template>
 <script>
 import Vue from 'vue'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { errorHandler } from './mixins/error-handling'
 import { date } from 'quasar'
 import * as types
   from '../store/modules/survey-file/survey-file-mutation-types'
-const uuidv4 = require('uuid/v4');
 
 const FileDownload = require('js-file-download');
 
@@ -83,37 +76,22 @@ const path = require('path');
 export default Vue.extend({
   props: ['attachesTo'],
   mixins: [errorHandler],
-  beforeMount() {
-    //this.getFormData();
-  },
 
   mounted() {
     this.SET_ATTACHES_TO(this.attachesTo)
     this.SET_ATTACHES_TO_ID(this.$route.params.id)
-
-    this.fetchData();
   },
 
   methods: {
+    ...mapActions('surveyFile', [
+      'getFiles',
+      'downloadFile',
+    ]),
     ...mapMutations('surveyFile', [
       types.UPDATE,
       types.SET_ATTACHES_TO,
       types.SET_ATTACHES_TO_ID,
     ]),
-
-    fetchData () {
-
-    },
-
-    downloadFile(e, props) {
-      // The vuex store uses axios to download the file. Axios includes the
-      // auth bearer token in this request, requried by the web handler, hence
-      // a simple html anchor tag with a href wont work.
-      this.$store.dispatch(
-        'surveyFile/downloadFile',
-        {id: props.id, name: props.fileName}
-      );
-    },
 
     deleteFile(e, props) {
       this.$q.dialog({
@@ -175,9 +153,6 @@ export default Vue.extend({
       console.log(xhr);
     },
 
-    hasScrolled (scroll) {
-      this.showFloatingButtons = scroll.position > 30;
-    },
   },
 
   computed: {
@@ -193,7 +168,7 @@ export default Vue.extend({
   watch: {
     'attachesToId': function (newId, oldId) {
       if (newId) {
-        this.$store.dispatch('surveyFile/getFiles');
+        this.getFiles()
       } else {
         this.UPDATE({path:'files', value:[]});
       }
@@ -203,7 +178,6 @@ export default Vue.extend({
   data() {
     return {
       loading: false,
-      showFloatingButtons: false,
       fileUploadFailed: false,
       columns: [
         {

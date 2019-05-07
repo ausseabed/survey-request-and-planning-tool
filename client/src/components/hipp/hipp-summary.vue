@@ -187,7 +187,7 @@ export default Vue.extend({
         if (isNew) {
           this.$router.replace({ path: `/hipp-request/${hr.id}/summary` })
         }
-        this.notifySuccess('Saved project metadata')
+        this.notifySuccess('Saved HIPP Request')
       })
     },
 

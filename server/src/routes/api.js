@@ -7,7 +7,7 @@ var instrumentTypeRoutes = require('./api/instrument-type');
 var projectMetadataRoutes = require('./api/project-metadata');
 var organisationRoutes = require('./api/organisation');
 var surveyApplicationRoutes = require('./api/survey-application');
-var surveyFileRoutes = require('./api/survey-file');
+var attachmentRoutes = require('./api/attachment');
 var techSpecRoutes = require('./api/tech-spec');
 var referenceSystemRoutes = require('./api/reference-system');
 var deliverableRoutes = require('./api/deliverable');
@@ -24,7 +24,7 @@ router
 .use('/project-metadata', projectMetadataRoutes)
 .use('/organisation', organisationRoutes)
 .use('/survey-application', surveyApplicationRoutes)
-.use('/survey-file', surveyFileRoutes)
+.use('/attachment', attachmentRoutes)
 .use('/tech-spec', techSpecRoutes)
 .use('/reference-system', referenceSystemRoutes)
 .use('/deliverable', deliverableRoutes)

@@ -6,7 +6,7 @@ import { RequestStatus } from '../request-status'
 
 
 export const getFiles = async ({ commit, state }) => {
-  const urlEndpoint = `/api/survey-file/${state.id}`;
+  const urlEndpoint = `/api/attachment/${state.attachesTo}/${state.attachesToId}`;
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   try {
@@ -30,7 +30,7 @@ export const getFiles = async ({ commit, state }) => {
 
 export const downloadFile = async ({commit, state}, payload) => {
   const urlEndpoint =
-    `/api/survey-file/${state.id}/download/${payload.id}`;
+    `/api/attachment/${state.attachesTo}/${state.attachesToId}/download/${payload.id}`;
 
   commit(
     mutTypes.SET_FILE_DOWNLOADING,
@@ -68,7 +68,7 @@ export const downloadFile = async ({commit, state}, payload) => {
 
 export const deleteFile = async ({ commit, state }, payload) => {
   const urlEndpoint =
-    `/api/survey-file/${state.id}/delete/${payload.id}`;
+    `/api/attachment/${state.attachesTo}/${state.attachesToId}/delete/${payload.id}`;
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   try {

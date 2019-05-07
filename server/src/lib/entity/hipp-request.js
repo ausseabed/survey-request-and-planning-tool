@@ -3,6 +3,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
 
 import { DateTransformer } from './utils';
 
+import { HippRequestAttachment } from './hipp-request-attachment';
 import { Organisation } from './organisation';
 
 
@@ -71,4 +72,9 @@ export class HippRequest {
       default: false,
   })
   deleted = false;
+
+  @OneToMany(
+    type => HippRequestAttachment,
+    attachment => attachment.entity)
+  attachments;
 }

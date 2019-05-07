@@ -7,7 +7,7 @@ import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
 import { SurveyApplication } from './survey-application';
 import { SurveyDeliverable } from './survey-deliverable';
-import { SurveyFile } from './survey-file';
+import { SurveyAttachment } from './survey-attachment';
 
 // valid values for the `projectStatus` attribute
 export const PROJECT_STATUSES = [
@@ -116,9 +116,9 @@ export class ProjectMetadata {
   surveyors;
 
   @OneToMany(
-    type => SurveyFile,
-    surveyFile => surveyFile.projectMetadata)
-  files;
+    type => SurveyAttachment,
+    attachment => attachment.entity)
+  attachments;
 
   @OneToMany(
     type => SurveyDeliverable,

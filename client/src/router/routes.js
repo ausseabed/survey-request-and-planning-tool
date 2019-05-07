@@ -61,6 +61,7 @@ const routes = [
         {
           path: 'attachments',
           component: SurveyFile,
+          props: {attachesTo:"survey"}
         },
       ]
     },
@@ -76,6 +77,11 @@ const routes = [
         {
           path: 'summary',
           component: HippSummary,
+        },
+        {
+          path: 'attachments',
+          component: SurveyFile,
+          props: {attachesTo:"hipp-request"}
         },
       ]
     },

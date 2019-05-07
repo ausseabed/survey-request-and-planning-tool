@@ -50,7 +50,7 @@
           ref="uploader"
           multiple
           :auto-expand="true"
-          url=""
+          :url="`/api/attachment/${this.attachesTo}/${this.attachesToId}/upload/`"
           :factory="uploadFiles"
           @start="uploadStarted"
           @finish="uploadFinished"
@@ -81,24 +81,27 @@ const path = require('path');
 
 
 export default Vue.extend({
+  props: ['attachesTo'],
   mixins: [errorHandler],
   beforeMount() {
     //this.getFormData();
   },
 
   mounted() {
+    this.SET_ATTACHES_TO(this.attachesTo)
+    this.SET_ATTACHES_TO_ID(this.$route.params.id)
+
     this.fetchData();
   },
 
   methods: {
     ...mapMutations('surveyFile', [
       types.UPDATE,
+      types.SET_ATTACHES_TO,
+      types.SET_ATTACHES_TO_ID,
     ]),
 
     fetchData () {
-      const id = this.$route.params.id;
-      this.$store.dispatch(
-        'projectMetadata/getProjectMetadata', { id: id });
 
     },
 
@@ -145,7 +148,7 @@ export default Vue.extend({
       //     updateProgress(progressEvent.loaded / progressEvent.total);
       //   }
       // };
-      const uploadUrl = `/api/survey-file/${this.projectMetadata.id}/upload/`;
+      const uploadUrl = `/api/attachment/${this.attachesTo}/${this.attachesToId}/upload/`;
       return axios.put(uploadUrl, data);
     },
 
@@ -183,25 +186,12 @@ export default Vue.extend({
     ]),
     ...mapGetters('surveyFile',[
       'files',
-      'id',
+      'attachesToId',
     ]),
   },
 
   watch: {
-    // call again the method if the route changes
-    '$route': function (newRoute, oldRoute) {
-      if (this.id == newRoute.params.id) {
-        // then we've only set the url, no need to fetch new data
-      } else {
-        this.fetchData();
-      }
-    },
-    'projectMetadata': function (newPmd, oldPmd) {
-      if (newPmd) {
-        this.UPDATE({path:'id', value:newPmd.id});
-      }
-    },
-    'id': function (newId, oldId) {
+    'attachesToId': function (newId, oldId) {
       if (newId) {
         this.$store.dispatch('surveyFile/getFiles');
       } else {

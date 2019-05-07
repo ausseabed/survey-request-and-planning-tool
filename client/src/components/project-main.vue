@@ -56,7 +56,7 @@
 <script>
 import Vue from 'vue'
 const _ = require('lodash');
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import { errorHandler } from './mixins/error-handling'
 
@@ -68,6 +68,10 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapActions('projectMetadata', [
+      'getProjectMetadata',
+    ]),
+
     heightTweak (offset) {
       return {
         minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
@@ -76,6 +80,7 @@ export default Vue.extend({
     },
     fetchData () {
       this.id = this.$route.params.id;
+      this.getProjectMetadata({ id: this.id })
     },
 
   },

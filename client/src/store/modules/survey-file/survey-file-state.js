@@ -7,7 +7,8 @@ import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
-    id: null,
+    attachesToId: undefined,
+    attachesTo: undefined,
     files: [],
 
     requestStatus: RequestStatus.NOT_REQUESTED,

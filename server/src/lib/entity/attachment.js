@@ -2,19 +2,12 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
   } from "typeorm";
 
 import { DateTransformer } from './utils';
-import { ProjectMetadata } from './project-metadata';
 
 @Entity()
-export class SurveyFile {
+export class Attachment {
 
   @PrimaryGeneratedColumn('uuid')
   id;
-
-  @ManyToOne(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.files,
-    { nullable: true })
-  projectMetadata;
 
   @Column("varchar")
   fileName;

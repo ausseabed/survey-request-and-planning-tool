@@ -1,24 +1,22 @@
 const _ = require('lodash');
 
-import { UPDATE, SET_REQUEST_STATUS, SET_REQUEST_ERROR,
-  UPDATE_WITH_DEFAULTS, SET_DIRTY}
-  from './hipp-request-mutation-types';
+import * as types from './hipp-request-mutation-types'
 
 const mutations = {
-  [UPDATE] (state, { path, value }) {
+  [types.UPDATE] (state, { path, value }) {
     state.dirty = true;
     _.set(state, path, _.cloneDeep(value))
   },
 
-  [SET_REQUEST_STATUS] (state, status) {
+  [types.SET_REQUEST_STATUS] (state, status) {
     state.requestStatus = status;
   },
 
-  [SET_REQUEST_ERROR] (state, error) {
+  [types.SET_REQUEST_ERROR] (state, error) {
     state.requestError = error;
   },
 
-  [UPDATE_WITH_DEFAULTS] (state, defaults) {
+  [types.UPDATE_WITH_DEFAULTS] (state, defaults) {
     const item = defaults;
     // replace all `null` values with `undefined`
     Object.keys(item).forEach(function(key) {
@@ -35,7 +33,7 @@ const mutations = {
     state.dirty = true;
   },
 
-  [SET_DIRTY] (state, dirty) {
+  [types.SET_DIRTY] (state, dirty) {
     return state.dirty = dirty;
   }
 }

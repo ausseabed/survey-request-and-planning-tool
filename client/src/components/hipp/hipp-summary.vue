@@ -92,6 +92,17 @@
                 @blur="$v.hippRequest.requestDate.$touch" />
             </form-field-validated>
 
+            <form-field-validated-input
+              name="hippRequest.areaName"
+              attribute="Area Name"
+              label="Name of the Area to be surveyed"
+              :value="hippRequest.areaName"
+              @input="update({path:'hippRequest.areaName', value:$event})"
+              @blur="$v.hippRequest.areaName.$touch"
+              type="text"
+              >
+            </form-field-validated-input>
+
           </q-card-section>
         </q-card>
 
@@ -329,7 +340,7 @@ export default Vue.extend({
       requestorName: { required },
       pointOfContactDetails: { required, email },
       requestDate: { required },
-      areaName: {},
+      areaName: {required},
       area: {},
       businessJustification: {},
       costBenefit: {},

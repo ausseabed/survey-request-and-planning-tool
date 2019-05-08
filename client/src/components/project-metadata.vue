@@ -754,7 +754,7 @@ export default Vue.extend({
       this.$v.$touch()
 
       if (this.$v.$error) {
-        this.$q.notify('Please review fields')
+        this.notifyError('Please review fields')
         return
       }
 

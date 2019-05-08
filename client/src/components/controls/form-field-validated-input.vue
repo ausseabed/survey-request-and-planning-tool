@@ -7,6 +7,9 @@
     :error="hasErrors"
     :error-message="firstErrorMessage"
   >
+    <template v-slot:append>
+      <slot/>
+    </template>
   </q-input>
 </template>
 <script>

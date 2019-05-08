@@ -86,12 +86,55 @@
               label="Request Date"
               attribute="Request Date"
               >
-              <q-date landscape
+              <q-date :landscape="$q.platform.is.desktop"
                 :value="formattedRequestDate"
                 @input="setFormattedRequestDate($event)"
                 @blur="$v.hippRequest.requestDate.$touch" />
             </form-field-validated>
 
+          </q-card-section>
+        </q-card>
+
+        <q-card class="full-width">
+          <q-card-section>
+            <div class="text-h6"> Moratorium </div>
+          </q-card-section>
+          <q-card-section class="row q-col-gutter-md">
+            <q-field
+              class="col-12 col-md-6"
+              stack-label
+              label="Subject to moratorium"
+              hint="Optional"
+              bottom-slots>
+              <q-checkbox
+                :value="hippRequest.hasMoratorium"
+                @input="update({path:'hippRequest.hasMoratorium', value: $event})"
+                />
+            </q-field>
+
+            <form-field-validated-input
+              class="col-12 col-md-6"
+              v-if="hippRequest.hasMoratorium"
+              filled
+              name="hippRequest.moratoriumDate"
+              attribute="Date moratorium ends"
+              label="Date moratorium ends (YYYY/MM/DD)"
+              :value="formattedMoratoriumDate"
+              @input="setFormattedMoratoriumDate($event)"
+              @blur="$v.hippRequest.moratoriumDate.$touch"
+              >
+
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy>
+                    <q-date
+                      :value="formattedMoratoriumDate"
+                      @input="setFormattedMoratoriumDate($event)"
+                      @blur="$v.hippRequest.moratoriumDate.$touch"
+                      />
+                  </q-popup-proxy>
+                </q-icon>
+
+            </form-field-validated-input>
           </q-card-section>
         </q-card>
 
@@ -123,6 +166,16 @@ timespan.set({
 
 import axios from 'axios';
 const path = require('path');
+
+// custom validators
+const validMoratorium = (value, vm) => {
+  if (vm.hasMoratorium) {
+    // only needs date if the moratorium check has been set
+    return !_.isNil(vm.moratoriumDate)
+  } else {
+    return true
+  }
+};
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler],
@@ -164,11 +217,26 @@ export default Vue.extend({
 
     setFormattedRequestDate(requestDate) {
       if (_.isNil(requestDate)) {
-        this.update('hippRequest.requestDate', undefined)
+        this.update({path:'hippRequest.requestDate', value:undefined})
         return
       }
       let d = Date.parse(requestDate)
       this.update({path:'hippRequest.requestDate', value:d})
+    },
+
+    setFormattedMoratoriumDate(requestDate) {
+      this.tmpMoratoriumDateEntry = requestDate;
+      // check if no text provided, or if the string contains two / chars
+      if (_.isNil(requestDate) || (requestDate.match(/\//g) || []).length != 2) {
+        this.update({path:'hippRequest.moratoriumDate', value:undefined})
+        return
+      }
+      let d = Date.parse(requestDate)
+      if (_.isNaN(d)) {
+        this.update({path:'hippRequest.moratoriumDate', value:undefined})
+        return
+      }
+      this.update({path:'hippRequest.moratoriumDate', value:d})
     },
 
     submit() {
@@ -242,6 +310,15 @@ export default Vue.extend({
       let formattedString = date.formatDate(d, 'YYYY/MM/DD')
       return formattedString
     },
+    formattedMoratoriumDate: function() {
+      if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.projectMetadata.moratoriumDate)) {
+        const d = new Date();
+        d.setTime(this.hippRequest.moratoriumDate);
+        let formattedString = date.formatDate(d, 'YYYY/MM/DD')
+        this.tmpMoratoriumDateEntry = formattedString
+      }
+      return this.tmpMoratoriumDateEntry
+    },
 
   },
 
@@ -256,6 +333,7 @@ export default Vue.extend({
       area: {},
       businessJustification: {},
       costBenefit: {},
+      moratoriumDate: {validMoratorium},
     }
   },
 
@@ -268,11 +346,17 @@ export default Vue.extend({
         this.fetchData();
       }
     },
+    'hippRequest.hasMoratorium': function (newM, oldM) {
+      this.$v.hippRequest.moratoriumDate.$touch()
+    },
   },
 
   data() {
     return {
-      validationMessagesOverride: {}
+      tmpMoratoriumDateEntry: undefined,
+      validationMessagesOverride: {
+        validMoratorium: "Must provide valid moratorium date"
+      }
     }
   }
 });

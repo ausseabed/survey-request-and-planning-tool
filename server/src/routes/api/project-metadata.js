@@ -108,6 +108,9 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   project.tenderer = req.body.tenderer;
   project.surveyors = req.body.surveyors;
 
+  project.hasMoratorium = req.body.hasMoratorium;
+  project.moratoriumDate = req.body.moratoriumDate;
+
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
   project.areaOfInterest = geojson;
 

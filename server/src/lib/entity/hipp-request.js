@@ -71,10 +71,24 @@ export class HippRequest {
       nullable: false,
       default: false,
   })
-  deleted = false;
+  hasMoratorium;
+
+  @Column({
+      type:"timestamp with time zone",
+      transformer: new DateTransformer(),
+      nullable: true,
+  })
+  moratoriumDate;
 
   @OneToMany(
     type => HippRequestAttachment,
     attachment => attachment.entity)
   attachments;
+
+  @Column({
+      type:"bool",
+      nullable: false,
+      default: false,
+  })
+  deleted = false;
 }

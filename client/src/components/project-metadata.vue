@@ -363,7 +363,7 @@
                      :error="$v.startDate.$error"
                      error-label="Start date is required">
               <template v-slot:control>
-                <q-date landscape
+                <q-date :landscape="$q.platform.is.desktop"
                   :value="formattedStartDate"
                   @input="setFormattedStartDate($event)"
                   @blur="$v.startDate.$touch" />
@@ -386,6 +386,49 @@
               type="textarea"
               >
             </q-input>
+          </q-card-section>
+        </q-card>
+
+        <q-card class="full-width">
+          <q-card-section>
+            <div class="text-h6"> Moratorium </div>
+          </q-card-section>
+          <q-card-section class="row q-col-gutter-md">
+            <q-field
+              class="col-12 col-md-6"
+              stack-label
+              label="Subject to moratorium"
+              hint="Optional"
+              bottom-slots>
+              <q-checkbox
+                :value="projectMetadata.hasMoratorium"
+                @input="update('projectMetadata.hasMoratorium', $event)"
+                />
+            </q-field>
+
+            <form-field-validated-input
+              class="col-12 col-md-6"
+              v-if="projectMetadata.hasMoratorium"
+              filled
+              name="projectMetadata.moratoriumDate"
+              attribute="Date moratorium ends"
+              label="Date moratorium ends (YYYY/MM/DD)"
+              :value="formattedMoratoriumDate"
+              @input="setFormattedMoratoriumDate($event)"
+              @blur="$v.projectMetadata.moratoriumDate.$touch"
+              >
+
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy>
+                    <q-date
+                      :value="formattedMoratoriumDate"
+                      @input="setFormattedMoratoriumDate($event)"
+                      @blur="$v.projectMetadata.moratoriumDate.$touch"
+                      />
+                  </q-popup-proxy>
+                </q-icon>
+
+            </form-field-validated-input>
           </q-card-section>
         </q-card>
 
@@ -448,6 +491,14 @@ const validSurveyApplicationNameOther = (value, vm) => {
     return true;
   }
 }
+const validMoratorium = (value, vm) => {
+  if (vm.hasMoratorium) {
+    // only needs date if the moratorium check has been set
+    return !_.isNil(vm.moratoriumDate)
+  } else {
+    return true
+  }
+};
 
 const otherSurveyPurpose = {
   name: 'Other',
@@ -553,6 +604,21 @@ export default Vue.extend({
 
     setStartDate(startDate) {
       this.$store.commit('projectMetadata/setStartDate', startDate);
+    },
+
+    setFormattedMoratoriumDate(requestDate) {
+      this.tmpMoratoriumDateEntry = requestDate;
+      // check if no text provided, or if the string contains two / chars
+      if (_.isNil(requestDate) || (requestDate.match(/\//g) || []).length != 2) {
+        this.update('projectMetadata.moratoriumDate', undefined)
+        return
+      }
+      let d = Date.parse(requestDate)
+      if (_.isNaN(d)) {
+        this.update('projectMetadata.moratoriumDate', undefined)
+        return
+      }
+      this.update('projectMetadata.moratoriumDate', d)
     },
 
     setSelectedSurveyApplicationGroup(group) {
@@ -827,6 +893,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
+      projectMetadata: 'projectMetadata/projectMetadata',
       id: 'projectMetadata/id',
       surveyName: 'projectMetadata/surveyName',
       projectStatus: 'projectMetadata/projectStatus',
@@ -905,6 +972,15 @@ export default Vue.extend({
       });
       return orgs;
     },
+    formattedMoratoriumDate: function() {
+      if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.projectMetadata.moratoriumDate)) {
+        const d = new Date();
+        d.setTime(this.projectMetadata.moratoriumDate);
+        let formattedString = date.formatDate(d, 'YYYY/MM/DD')
+        this.tmpMoratoriumDateEntry = formattedString
+      }
+      return this.tmpMoratoriumDateEntry
+    },
   },
 
   validations: {
@@ -929,6 +1005,9 @@ export default Vue.extend({
       required,
       minLength:minLength(1),
       validDataCaptureType
+    },
+    projectMetadata: {
+      moratoriumDate: {validMoratorium},
     },
   },
 
@@ -966,7 +1045,10 @@ export default Vue.extend({
         this.$store.commit('projectMetadata/setSurveyApplication', newSa);
       }
 
-    }
+    },
+    'projectMetadata.hasMoratorium': function (newM, oldM) {
+      this.$v.projectMetadata.moratoriumDate.$touch()
+    },
   },
 
   data() {
@@ -975,12 +1057,14 @@ export default Vue.extend({
       orgSearchTerms: '',
       matchingProjMetas:undefined,
       showFloatingButtons: false,
+      tmpMoratoriumDateEntry: undefined,
       validationMessagesOverride: {
         validDataCaptureType:
           "Selected data capture types are not valid for instrument.",
         validSurveyApplicationNameOther: "Survey purpose name is required.",
         validSurveyApplicationGroupNameOther:
-          "Survey purpose category name is required."
+          "Survey purpose category name is required.",
+        validMoratorium: "Must provide valid moratorium date"
       }
     }
   }

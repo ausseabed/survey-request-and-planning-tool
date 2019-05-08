@@ -18,6 +18,9 @@ function initialState() {
       area: undefined,
       businessJustification: undefined,
       costBenefit: undefined,
+
+      hasMoratorium: false,
+      moratoriumDate: undefined,
     },
     hippRequests:[],  // list of hipp requests, minimal detail
     requestStatus: RequestStatus.NOT_REQUESTED,

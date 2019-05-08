@@ -103,6 +103,20 @@ export class ProjectMetadata {
   })
   surveyId = undefined;
 
+  @Column({
+      type:"bool",
+      nullable: false,
+      default: false,
+  })
+  hasMoratorium;
+
+  @Column({
+      type:"timestamp with time zone",
+      transformer: new DateTransformer(),
+      nullable: true,
+  })
+  moratoriumDate;
+
   @ManyToOne(
     type => Organisation,
     organisation => organisation.tenderProjectMetadatas,

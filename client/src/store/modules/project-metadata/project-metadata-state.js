@@ -25,6 +25,9 @@ function initialState() {
       surveyId: null,
       tenderer: null,
       surveyors: [],
+
+      hasMoratorium: false,
+      moratoriumDate: undefined,
     },
     surveyApplicationGroupNameOther:undefined,
     surveyApplicationNameOther:undefined,

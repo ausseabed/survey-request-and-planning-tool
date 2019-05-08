@@ -67,6 +67,7 @@ module.exports = function (ctx) {
         'QTd',
         'QUploader',
         'QLinearProgress',
+        'QPopupProxy',
       ],
 
       directives: [

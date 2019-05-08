@@ -311,7 +311,7 @@ export default Vue.extend({
       return formattedString
     },
     formattedMoratoriumDate: function() {
-      if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.projectMetadata.moratoriumDate)) {
+      if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.hippRequest.moratoriumDate)) {
         const d = new Date();
         d.setTime(this.hippRequest.moratoriumDate);
         let formattedString = date.formatDate(d, 'YYYY/MM/DD')

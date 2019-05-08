@@ -3,71 +3,153 @@
     <div class="row q-pt-md q-pl-md q-col-gutter-md fit ">
       <div class="column col-4 full-height">
 
-        <q-card class="column no-margin col justify-between">
-          <div class="col-auto">
-            <q-card-section>
-              <div class="text-h5">Projects</div>
-            </q-card-section>
-            <q-separator />
-          </div>
-          <q-card-section class="column col" style="padding:0px">
-            <q-scroll-area class="fit">
-              <q-list no-border padding
-                @mouseleave.native="mouseleaveMatchingProjMeta">
+        <q-card class="column col">
 
-                <q-item clickable
-                  v-for="matchingProjMeta in matchingProjMetas"
-                  :key="matchingProjMeta.id"
-                  @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
-                  class="column"
-                  >
-                  <div class="row">
-                    <q-item-section>
-                      <q-item-label>{{matchingProjMeta.surveyName}}</q-item-label>
-                      <q-item-label caption>{{matchingProjMeta.projectStatus}}</q-item-label>
-                    </q-item-section>
+          <q-tabs
+            v-model="tab"
+            class="bg-secondary text-white"
+          >
+            <q-tab name="projects" label="Projects" icon="layers"/>
+            <q-tab name="requests" label="Requests" icon="device_hub"/>
+          </q-tabs>
+          <div class="fat-spacer bg-secondary"></div>
 
-                    <q-item-section side top>
-                      <q-item-label caption>{{getProjectStartDateString(matchingProjMeta)}}</q-item-label>
-                      <div>
-                        <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
+          <q-tab-panels v-model="tab" animated class="col">
+            <q-tab-panel name="projects" class="column col-auto no-padding">
+
+              <!-- <q-card-section class="column col" style="padding:0px"> -->
+                <q-scroll-area class="col">
+                  <q-list no-border padding
+                    @mouseleave.native="mouseleaveMatchingProjMeta">
+
+                    <q-item clickable
+                      v-for="matchingProjMeta in matchingProjMetas"
+                      :key="matchingProjMeta.id"
+                      @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta, false)"
+                      class="column"
+                      >
+                      <div class="row">
+                        <q-item-section>
+                          <q-item-label>{{matchingProjMeta.surveyName}}</q-item-label>
+                          <q-item-label caption>{{matchingProjMeta.projectStatus}}</q-item-label>
+                        </q-item-section>
+
+                        <q-item-section side top>
+                          <q-item-label caption>{{getDateString(matchingProjMeta.startDate)}}</q-item-label>
+                          <div>
+                            <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
+                          </div>
+                        </q-item-section>
                       </div>
-                    </q-item-section>
+                      <q-item-section>
+                        <transition-expand>
+                          <div v-if="activeProjMetaId == matchingProjMeta.id">
+                            <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
+                              :to="`/survey/${matchingProjMeta.id}/summary`">
+                            </q-btn>
+                            <q-btn outline size="sm" color="primary" label="Specs" class="q-mt-xs q-ml-xs"
+                              :to="`/survey/${matchingProjMeta.id}/specifications`">
+                            </q-btn>
+                            <q-btn outline size="sm" color="primary" label="Deliverables" class="q-mt-xs q-ml-xs"
+                              :to="`/survey/${matchingProjMeta.id}/deliverables`">
+                            </q-btn>
+                            <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
+                              :to="`/survey/${matchingProjMeta.id}/attachments`">
+                            </q-btn>
+                          </div>
+                        </transition-expand>
+
+                      </q-item-section>
+                    </q-item>
+
+                  </q-list>
+
+                </q-scroll-area>
+                <!-- <div class="fat-spacer bg-secondary"></div> -->
+
+                <div class="full-width column">
+                  <q-separator style="height:1px;"/>
+                  <div class="row justify-end q-py-sm q-mx-md">
+                    <!-- <q-btn flat label="add request"
+                      align="right"
+                      :to="'/hipp-request/new'">
+                      <q-tooltip>
+                        Create new HIPP request
+                      </q-tooltip>
+                    </q-btn> -->
+                    <q-btn flat label="add project"
+                      icon="add"
+                      :to="'/survey/new'">
+                      <q-tooltip>
+                        Create new survey project
+                      </q-tooltip>
+                    </q-btn>
                   </div>
-                  <q-item-section>
-                    <transition-expand>
-                      <div v-if="activeProjMetaId == matchingProjMeta.id">
-                        <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
-                          :to="`/survey/${matchingProjMeta.id}/summary`">
-                        </q-btn>
-                        <q-btn outline size="sm" color="primary" label="Specs" class="q-mt-xs q-ml-xs"
-                          :to="`/survey/${matchingProjMeta.id}/specifications`">
-                        </q-btn>
-                        <q-btn outline size="sm" color="primary" label="Deliverables" class="q-mt-xs q-ml-xs"
-                          :to="`/survey/${matchingProjMeta.id}/deliverables`">
-                        </q-btn>
-                        <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
-                          :to="`/survey/${matchingProjMeta.id}/attachments`">
-                        </q-btn>
-                      </div>
-                    </transition-expand>
 
-                  </q-item-section>
-                </q-item>
+                </div>
+            </q-tab-panel>
 
-              </q-list>
+            <q-tab-panel name="requests" class="column col-auto no-padding">
 
-            </q-scroll-area>
+              <q-scroll-area class="col">
+                <q-list no-border padding
+                  @mouseleave.native="mouseleaveMatchingProjMeta"
+                  >
 
-          </q-card-section>
-          <div class="col-auto">
-            <q-separator />
-            <q-card-actions align="right">
-              <q-btn flat icon="add" label="Add project"
-                :to="'/survey/new'">
-              </q-btn>
-            </q-card-actions>
-          </div>
+                  <q-item clickable
+                    v-for="hippRequest in hippRequests"
+                    :key="hippRequest.id"
+                    @mouseover.native="mouseoverMatchingProjMeta(hippRequest, false)"
+                    class="column"
+                    >
+                    <div class="row">
+                      <q-item-section>
+                        <q-item-label>{{hippRequest.name}}</q-item-label>
+                        <q-item-label caption>{{hippRequest.areaName}}</q-item-label>
+                      </q-item-section>
+
+                      <q-item-section side top>
+                        <q-item-label caption>{{getDateString(hippRequest.requestDate)}}</q-item-label>
+                        <!-- <div>
+                          <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
+                        </div> -->
+                      </q-item-section>
+                    </div>
+                    <q-item-section>
+                      <transition-expand>
+                        <div v-if="activeProjMetaId == hippRequest.id">
+                          <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
+                            :to="`/hipp-request/${hippRequest.id}/summary`">
+                          </q-btn>
+                          <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
+                            :to="`/hipp-request/${hippRequest.id}/attachments`">
+                          </q-btn>
+                        </div>
+                      </transition-expand>
+
+                    </q-item-section>
+                  </q-item>
+
+                </q-list>
+
+              </q-scroll-area>
+
+              <div class="full-width column">
+                <q-separator style="height:1px;"/>
+                <div class="row justify-end q-py-sm q-mx-md">
+                  <q-btn flat label="add request"
+                    align="right" icon="add"
+                    :to="'/hipp-request/new'">
+                    <q-tooltip>
+                      Create new HIPP request
+                    </q-tooltip>
+                  </q-btn>
+                </div>
+              </div>
+
+            </q-tab-panel>
+          </q-tab-panels>
+
         </q-card>
 
       </div>
@@ -86,6 +168,7 @@
 <script>
 import { date } from 'quasar'
 import Vue from 'vue'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 
 import TransitionExpand from './transition-expand.vue';
@@ -108,9 +191,13 @@ export default Vue.extend({
       this.debounceExtents(extents);
     };
     this.fetchProjects(this.map.getExtents());
+    this.getHippRequests();
   },
 
   methods: {
+    ...mapActions('hippRequest', [
+      'getHippRequests',
+    ]),
     heightTweak (offset) {
       return {
         minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
@@ -149,9 +236,11 @@ export default Vue.extend({
       this.fetchProjects(extents);
     }, 500),
 
-    mouseoverMatchingProjMeta(matchingProjMeta) {
+    mouseoverMatchingProjMeta(matchingProjMeta, updateMap) {
       this.activeProjMetaId = matchingProjMeta.id;
-      this.map.highlightFeatureId(matchingProjMeta.id);
+      if (updateMap) {
+        this.map.highlightFeatureId(matchingProjMeta.id);
+      }
     },
     mouseleaveMatchingProjMeta() {
       //clears selection in map
@@ -159,9 +248,9 @@ export default Vue.extend({
       this.map.highlightFeatureId(undefined);
     },
 
-    getProjectStartDateString(projectMetadata) {
+    getDateString(aDate) {
       const ts = new Date();
-      ts.setTime(projectMetadata.startDate);
+      ts.setTime(aDate);
       let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
       return formattedString;
     },
@@ -185,9 +274,16 @@ export default Vue.extend({
 
   },
 
+  computed: {
+    ...mapGetters('hippRequest', [
+      'hippRequests',
+    ]),
+  },
+
   data() {
     return {
       map: null,
+      tab: 'projects',
       matchingProjMetas:undefined,
       activeProjMetaId:undefined,
     }
@@ -198,5 +294,10 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus">
+
+.fat-spacer {
+  width:100%;
+  height: 2px;
+}
 
 </style>

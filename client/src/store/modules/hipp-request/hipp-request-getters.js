@@ -2,6 +2,10 @@ export const hippRequest = state => {
   return state.hippRequest;
 }
 
+export const hippRequests = state => {
+  return state.hippRequests;
+}
+
 export const requestStatus = state => {
   return state.requestStatus;
 }

@@ -68,6 +68,9 @@ module.exports = function (ctx) {
         'QUploader',
         'QLinearProgress',
         'QPopupProxy',
+        'QTab',
+        'QTabPanels',
+        'QTabPanel',
       ],
 
       directives: [

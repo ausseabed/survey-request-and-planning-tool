@@ -4,7 +4,8 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated } from '../utils';
+import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon
+  } from '../utils';
 import { HippRequest } from '../../lib/entity/hipp-request';
 
 
@@ -58,7 +59,13 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
 router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   var hippRequest = new HippRequest()
-  _.merge(hippRequest, req.body);
+  _.merge(hippRequest, req.body)
+
+  if (!_.isNil(req.body.areaOfInterest)) {
+    let geojson = geojsonToMultiPolygon(req.body.areaOfInterest)
+    hippRequest.areaOfInterest = geojson
+  }
+
 
   hippRequest = await getConnection()
   .getRepository(HippRequest)

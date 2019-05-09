@@ -71,13 +71,25 @@
             </form-field-validated-input>
 
             <form-field-validated-input
-              name="hippRequest.pointOfContactDetails"
+              name="hippRequest.pointOfContactEmail"
               label="Contact email"
               attribute="Contact email"
-              :value="hippRequest.pointOfContactDetails"
-              @input="update({path:'hippRequest.pointOfContactDetails', value:$event})"
-              @blur="$v.hippRequest.pointOfContactDetails.$touch"
+              :value="hippRequest.pointOfContactEmail"
+              @input="update({path:'hippRequest.pointOfContactEmail', value:$event})"
+              @blur="$v.hippRequest.pointOfContactEmail.$touch"
               type="email"
+              >
+            </form-field-validated-input>
+
+            <form-field-validated-input
+              name="hippRequest.pointOfContactPhone"
+              label="Contact phone number"
+              attribute="Contact phone number"
+              hint="Optional"
+              :value="hippRequest.pointOfContactPhone"
+              @input="update({path:'hippRequest.pointOfContactPhone', value:$event})"
+              @blur="$v.hippRequest.pointOfContactPhone.$touch"
+              type="text"
               >
             </form-field-validated-input>
 
@@ -93,6 +105,27 @@
             </form-field-validated>
 
             <form-field-validated-input
+              name="hippRequest.comments"
+              attribute="Comments"
+              label="Comments"
+              hint="Optional"
+              :value="hippRequest.comments"
+              @input="update({path:'hippRequest.comments', value:$event})"
+              @blur="$v.hippRequest.comments.$touch"
+              type="textarea"
+              >
+            </form-field-validated-input>
+
+          </q-card-section>
+        </q-card>
+
+        <q-card class="full-width">
+          <q-card-section>
+            <div class="text-h6"> Area of Interest </div>
+          </q-card-section>
+          <q-card-section>
+
+            <form-field-validated-input
               name="hippRequest.areaName"
               attribute="Area Name"
               label="Name of the Area to be surveyed"
@@ -103,8 +136,46 @@
               >
             </form-field-validated-input>
 
+            <q-field
+              label="Area (optional)"
+              stack-label
+              >
+              <div class="column">
+                <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
+                <div class="row full-width justify-between items-center q-pb-sm">
+                  <div v-if="drawingAreaOfInterest"
+                    class="q-body-1 text-faded col">
+                    Click endpoint to complete line
+                  </div>
+                  <div v-else
+                    class="q-body-1 text-faded col">
+                    Drag and drop shapefile (zip) or geojson onto map, or click the draw shape button in map to manually create request area.
+                  </div>
+                  <div class="map-buttons q-gutter-sm col">
+                    <div class="row justify-between q-gutter-sm">
+                      <div class="col">
+                        <q-btn class="no-margin full-width" icon="cloud_upload" label="Upload"
+                          @click="selectAreaOfInterestFile">
+                        </q-btn>
+                      </div>
+                      <div class="col">
+                        <input type="file" id="dataPath" v-on:change="setAreaOfInterestFile" ref="fileInput" hidden />
+                        <q-btn class="no-margin full-width" icon="clear" label="Clear"
+                          :disable="!hippRequest.areaOfInterest"
+                          @click="update({path:'hippRequest.areaOfInterest', value:undefined })">
+                        </q-btn>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </q-field>
+
+
+
           </q-card-section>
         </q-card>
+
 
         <q-card class="full-width">
           <q-card-section>
@@ -195,7 +266,22 @@ export default Vue.extend({
     this.getFormData();
   },
 
-  mounted() {
+  async mounted() {
+    var olmap = OlMap(this.$refs.mapDiv, {
+      basemap: "osm"
+    })
+    await olmap.initMap();
+    this.map = olmap;
+    this.map.onAdd = (geojson) => {
+      this.update({path: "hippRequest.areaOfInterest", value: geojson });
+    }
+    this.map.drawStart = () => {
+      this.drawingAreaOfInterest = true;
+    }
+    this.map.drawEnd = () => {
+      this.drawingAreaOfInterest = false;
+    }
+
     this.fetchData();
   },
 
@@ -302,6 +388,14 @@ export default Vue.extend({
       // gets the list of all orgs, not just those associated to this project
       this.getOrganisations();
     },
+
+    selectAreaOfInterestFile () {
+      this.$refs.fileInput.click();
+    },
+    setAreaOfInterestFile (event) {
+      console.log(event);
+      this.map.addFile(event.target.files[0]);
+    },
   },
 
   computed: {
@@ -338,8 +432,10 @@ export default Vue.extend({
       name: { required, minLength:minLength(1) },
       requestingAgency: { required },
       requestorName: { required },
-      pointOfContactDetails: { required, email },
+      pointOfContactEmail: { required, email },
+      pointOfContactPhone: {},
       requestDate: { required },
+      comments: {},
       areaName: {required},
       area: {},
       businessJustification: {},
@@ -360,10 +456,18 @@ export default Vue.extend({
     'hippRequest.hasMoratorium': function (newM, oldM) {
       this.$v.hippRequest.moratoriumDate.$touch()
     },
+    'hippRequest.areaOfInterest': function (newArea, oldArea) {
+      this.map.clear();
+      if (newArea) {
+        this.map.addGeojsonFeature(newArea);
+      }
+    },
   },
 
   data() {
     return {
+      drawingAreaOfInterest: false,
+      map: undefined,
       tmpMoratoriumDateEntry: undefined,
       validationMessagesOverride: {
         validMoratorium: "Must provide valid moratorium date"

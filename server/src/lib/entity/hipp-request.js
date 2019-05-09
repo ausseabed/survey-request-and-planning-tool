@@ -32,7 +32,13 @@ export class HippRequest {
       type:"varchar",
       nullable: true,
   })
-  pointOfContactDetails;
+  pointOfContactEmail;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  pointOfContactPhone;
 
   //stored as date type in the database, but transformer handles marshalling
   // to/from the database and the UTC millisecond ints used by the web services
@@ -79,6 +85,19 @@ export class HippRequest {
       nullable: true,
   })
   moratoriumDate;
+
+  @Column("geometry", {
+    spatialFeatureType: "MultiPolygon",
+    srid: 4326,
+    nullable: true,
+  })
+  areaOfInterest;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  comments;
 
   @OneToMany(
     type => HippRequestAttachment,

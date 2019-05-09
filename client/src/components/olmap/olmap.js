@@ -172,8 +172,11 @@ var OlMap = function (target, options) {
       map.getView().fit(MapConstants.WMTS_DEFAULT_EXTENT);
       map.getView().setZoom(map.getView().getZoom() + 1);
 
-      function startDrawInteraction() {
+      var startDrawInteraction = () => {
         map.addInteraction(drawInteraction);
+        if (typeof this.drawStart === 'function') {
+          this.drawStart();
+        }
       }
 
       drawInteraction.on('drawend', (event) => {
@@ -187,6 +190,9 @@ var OlMap = function (target, options) {
           var geojsonStr = writer.writeFeatures(features);
 
           this.onAdd(JSON.parse(geojsonStr));
+        }
+        if (typeof this.drawEnd === 'function') {
+          this.drawEnd();
         }
       }, source);
 

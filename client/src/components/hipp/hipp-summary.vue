@@ -137,7 +137,7 @@
             </form-field-validated-input>
 
             <q-field
-              label="Area (optional)"
+              label="Area of interest (optional)"
               stack-label
               >
               <div class="column">
@@ -171,6 +171,31 @@
               </div>
             </q-field>
 
+            <div class="row q-col-gutter-md q-pt-md">
+              <form-field-validated-input
+                class="col-xs-12 col-sm-6"
+                name="hippRequest.area"
+                attribute="Area"
+                label="Area (eg; km^2)"
+                hint="Optional"
+                :value="hippRequest.area"
+                @input="update({path:'hippRequest.area', value:$event})"
+                @blur="$v.hippRequest.area.$touch"
+                type="text"
+                >
+              </form-field-validated-input>
+
+              <form-field-validated-input
+                class="col-xs-12 col-sm-6"
+                disable
+                name="hippRequest.moratoriumDate"
+                attribute="Calculated area"
+                hint="Area calculated from area of interest"
+                label="Calculated area"
+                :value="calculatedArea"
+                >
+              </form-field-validated-input>
+            </div>
 
 
           </q-card-section>
@@ -183,7 +208,7 @@
           </q-card-section>
           <q-card-section class="row q-col-gutter-md">
             <q-field
-              class="col-12 col-md-6"
+              class="col-xs-12 col-sm-6"
               stack-label
               label="Subject to moratorium"
               hint="Optional"
@@ -195,7 +220,7 @@
             </q-field>
 
             <form-field-validated-input
-              class="col-12 col-md-6"
+              class="col-xs-12 col-sm-6"
               v-if="hippRequest.hasMoratorium"
               filled
               name="hippRequest.moratoriumDate"
@@ -424,6 +449,21 @@ export default Vue.extend({
       }
       return this.tmpMoratoriumDateEntry
     },
+    calculatedArea: function() {
+      if (_.isNil(this.map)) {
+        return undefined
+      } else {
+        let calcArea = this.map.getArea()
+        let strArea = undefined
+        if (calcArea > 10000) {
+          strArea = `${Math.round(calcArea / 1000000 * 100) / 100} km^2`
+        } else {
+          strArea = `${Math.round(calcArea * 100) / 100} m^2`
+        }
+        return strArea
+      }
+
+    }
 
   },
 

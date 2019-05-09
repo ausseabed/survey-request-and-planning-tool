@@ -366,6 +366,28 @@ var OlMap = function (target, options) {
         return null;
       }
     },
+    getArea: function () {
+      var currentProj = this.map.getView().getProjection();
+      var metersProj = ol.proj.get('EPSG:3857');
+
+
+      var features = this.source.getFeatures();
+      var totalArea = 0.0;
+      features.forEach(feature => {
+        var featureGeom = feature.getGeometry();
+
+        if (
+          featureGeom instanceof ol.geom.Polygon ||
+          featureGeom instanceof ol.geom.MultiPolygon
+        ) {
+          var geomClone = featureGeom.clone();
+          geomClone.transform(currentProj, metersProj);
+          totalArea += ol.Sphere.getArea(geomClone);
+        }
+
+      });
+      return totalArea;
+    },
     clear: function () {
       if (this.source) {
         this.source.clear();

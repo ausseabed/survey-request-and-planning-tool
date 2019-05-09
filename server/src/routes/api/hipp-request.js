@@ -74,7 +74,14 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   // because the saved version of org doesn't include all attribs
   hippRequest = await getConnection()
   .getRepository(HippRequest)
-  .findOne(hippRequest.id)
+  .findOne(
+    hippRequest.id,
+    {
+      relations: [
+        "requestingAgency",
+      ]
+    }
+  )
   return res.json(hippRequest)
 }));
 

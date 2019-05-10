@@ -17,3 +17,15 @@ export const requestError = state => {
 export const dirty = state => {
   return state.dirty;
 }
+
+export const riskMatrix = state => {
+  return state.riskMatrix;
+}
+
+export const chartProductQualityImpactRequirements = state => {
+  return state.chartProductQualityImpactRequirements;
+}
+
+export const surveyQualityRequirements = state => {
+  return state.surveyQualityRequirements;
+}

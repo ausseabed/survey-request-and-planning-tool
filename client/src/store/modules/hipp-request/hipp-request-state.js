@@ -23,11 +23,23 @@ function initialState() {
       comments: undefined,
       hasMoratorium: false,
       moratoriumDate: undefined,
+
+      surveyQualityRequirements: undefined,
+      surveyQualityRequirementsComments: undefined,
+      chartProductQualityImpactRequirements: undefined,
+      chartProductQualityImpactRequirementsComments: undefined,
+
+      riskData: {},
+      riskIssues: undefined,
     },
     hippRequests:[],  // list of hipp requests, minimal detail
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
     dirty: false,
+
+    riskMatrix: {},
+    chartProductQualityImpactRequirements: [],
+    surveyQualityRequirements: [],
   }
 }
 

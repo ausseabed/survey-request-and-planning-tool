@@ -34,8 +34,20 @@ const mutations = {
   },
 
   [types.SET_DIRTY] (state, dirty) {
-    return state.dirty = dirty;
-  }
+    state.dirty = dirty;
+  },
+
+  [types.SET_CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS] (state, reqs) {
+    state.chartProductQualityImpactRequirements = reqs
+  },
+
+  [types.SET_SURVEY_QUALITY_REQUIREMENTS] (state, reqs) {
+    state.surveyQualityRequirements = reqs
+  },
+
+  [types.SET_RISK_MATRIX] (state, riskMatrix) {
+    state.riskMatrix = riskMatrix
+  },
 }
 
 export default {

@@ -6,10 +6,27 @@ import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon
   } from '../utils';
-import { HippRequest } from '../../lib/entity/hipp-request';
+import { HippRequest, SURVEY_QUALITY_REQUIREMENTS,
+  CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
+  from '../../lib/entity/hipp-request';
 
 
 var router = express.Router();
+
+router.get('/survey-quality-requirements', async function (req, res) {
+  return res.json(SURVEY_QUALITY_REQUIREMENTS);
+});
+
+router.get(
+  '/chart-product-quality-impact-requirements',
+  async function (req, res) {
+
+  return res.json(CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS);
+});
+
+router.get('/risk-matrix', async function (req, res) {
+  return res.json(RISK_MATRIX);
+});
 
 // Gets a list of HIPP Requests
 router.get('/', asyncMiddleware(async function (req, res) {

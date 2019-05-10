@@ -69,3 +69,34 @@ export const saveHippRequest = async ({ commit, state }) => {
   });
 
 }
+
+
+export const getRiskMatrix = ({ commit, state }) => {
+  var url_endpoint = '/api/hipp-request/risk-matrix';
+
+  return Vue.axios.get(url_endpoint)
+  .then((response) => {
+    commit(mutTypes.SET_RISK_MATRIX, response.data);
+  })
+}
+
+export const getChartProductQualityImpactRequirements = ({ commit, state }) => {
+  var url_endpoint = '/api/hipp-request/chart-product-quality-impact-requirements';
+
+  return Vue.axios.get(url_endpoint)
+  .then((response) => {
+    commit(
+      mutTypes.SET_CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS,
+      response.data
+    );
+  })
+}
+
+export const getSurveyQualityRequirements = ({ commit, state }) => {
+  var url_endpoint = '/api/hipp-request/survey-quality-requirements';
+
+  return Vue.axios.get(url_endpoint)
+  .then((response) => {
+    commit(mutTypes.SET_SURVEY_QUALITY_REQUIREMENTS, response.data);
+  })
+}

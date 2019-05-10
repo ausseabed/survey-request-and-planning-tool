@@ -204,6 +204,73 @@
 
         <q-card class="full-width">
           <q-card-section>
+            <div class="text-h6"> Quality </div>
+          </q-card-section>
+          <q-card-section class="column q-col-gutter-md">
+            <form-field-validated-select
+              class="col-12"
+              multiple
+              name="hippRequest.surveyQualityRequirements"
+              attribute="Survey Quality Requirements"
+              label="Survey Quality Requirements"
+              :value="hippRequest.surveyQualityRequirements"
+              @input="update({path:'hippRequest.surveyQualityRequirements', value:$event})"
+              :options="surveyQualityRequirements"
+              option-label="label"
+              option-value="value"
+              emit-value map-options
+              @blur="$v.hippRequest.surveyQualityRequirements.$touch"
+              clearable
+              >
+            </form-field-validated-select>
+
+            <form-field-validated-input
+              name="hippRequest.surveyQualityRequirementsComments"
+              attribute="Survey Quality Requirements Comments"
+              label="Survey Quality Requirements Comments"
+              hint="Optional"
+              :value="hippRequest.surveyQualityRequirementsComments"
+              @input="update({path:'hippRequest.surveyQualityRequirementsComments', value:$event})"
+              @blur="$v.hippRequest.surveyQualityRequirementsComments.$touch"
+              type="textarea"
+              >
+            </form-field-validated-input>
+
+            <form-field-validated-select
+              class="col-12"
+              multiple
+              name="hippRequest.chartProductQualityImpactRequirements"
+              attribute="Chart Product Quality Impact Requirements"
+              label="Chart Product Quality Impact Requirements"
+              :value="hippRequest.chartProductQualityImpactRequirements"
+              @input="update({path:'hippRequest.chartProductQualityImpactRequirements', value:$event})"
+              :options="chartProductQualityImpactRequirements"
+              option-label="label"
+              option-value="value"
+              emit-value map-options
+              @blur="$v.hippRequest.chartProductQualityImpactRequirements.$touch"
+              clearable
+              >
+            </form-field-validated-select>
+
+            <form-field-validated-input
+              name="hippRequest.chartProductQualityImpactRequirementsComments"
+              attribute="Chart Product Quality Impact Requirements Comments"
+              label="Chart Product Quality Impact Requirements Comments"
+              hint="Optional"
+              :value="hippRequest.chartProductQualityImpactRequirementsComments"
+              @input="update({path:'hippRequest.chartProductQualityImpactRequirementsComments', value:$event})"
+              @blur="$v.hippRequest.chartProductQualityImpactRequirementsComments.$touch"
+              type="textarea"
+              >
+            </form-field-validated-input>
+
+          </q-card-section>
+        </q-card>
+
+
+        <q-card class="full-width">
+          <q-card-section>
             <div class="text-h6"> Moratorium </div>
           </q-card-section>
           <q-card-section class="row q-col-gutter-md">
@@ -314,6 +381,9 @@ export default Vue.extend({
     ...mapActions('hippRequest', [
       'getHippRequest',
       'saveHippRequest',
+      'getRiskMatrix',
+      'getChartProductQualityImpactRequirements',
+      'getSurveyQualityRequirements',
     ]),
     ...mapActions('organisation', [
       'getOrganisations',
@@ -412,6 +482,11 @@ export default Vue.extend({
       this.setDeletedOrganisations(false);
       // gets the list of all orgs, not just those associated to this project
       this.getOrganisations();
+
+      // get misc lists for populating drop downs
+      this.getRiskMatrix();
+      this.getChartProductQualityImpactRequirements();
+      this.getSurveyQualityRequirements();
     },
 
     selectAreaOfInterestFile () {
@@ -427,6 +502,9 @@ export default Vue.extend({
     ...mapGetters('hippRequest', [
       'hippRequest',
       'dirty',
+      'riskMatrix',
+      'chartProductQualityImpactRequirements',
+      'surveyQualityRequirements',
     ]),
     ...mapGetters('organisation', [
       'organisations',
@@ -481,6 +559,13 @@ export default Vue.extend({
       businessJustification: {},
       costBenefit: {},
       moratoriumDate: {validMoratorium},
+
+      surveyQualityRequirements: { required, minLength:minLength(1) },
+      surveyQualityRequirementsComments: {},
+      chartProductQualityImpactRequirements: { required, minLength:minLength(1) },
+      chartProductQualityImpactRequirementsComments: {},
+
+      riskIssues: {},
     }
   },
 

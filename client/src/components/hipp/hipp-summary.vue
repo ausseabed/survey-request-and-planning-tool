@@ -268,6 +268,21 @@
           </q-card-section>
         </q-card>
 
+        <q-card class="full-width">
+          <q-card-section>
+            <div class="text-h6"> Risk </div>
+          </q-card-section>
+          <q-card-section class="row q-col-gutter-md">
+
+            <risk-widget
+              :risk-matrix="riskMatrix"
+              :risk-data="riskData"
+              >
+            </risk-widget>
+
+          </q-card-section>
+        </q-card>
+
 
         <q-card class="full-width">
           <q-card-section>
@@ -332,6 +347,8 @@ import * as orgMutTypes
 import OlMap from './../olmap/olmap';
 import { required, email, minLength } from 'vuelidate/lib/validators';
 
+import RiskWidget from '../controls/risk/risk-widget';
+
 const timespan = require('readable-timespan');
 timespan.set({
   lessThanFirst: 'now',
@@ -353,7 +370,9 @@ const validMoratorium = (value, vm) => {
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler],
-
+  components: {
+    'risk-widget': RiskWidget
+  },
   beforeMount() {
     this.getFormData();
   },
@@ -593,6 +612,7 @@ export default Vue.extend({
     return {
       drawingAreaOfInterest: false,
       map: undefined,
+      riskData: [],
       tmpMoratoriumDateEntry: undefined,
       validationMessagesOverride: {
         validMoratorium: "Must provide valid moratorium date"

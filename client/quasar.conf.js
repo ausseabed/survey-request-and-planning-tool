@@ -71,6 +71,7 @@ module.exports = function (ctx) {
         'QTab',
         'QTabPanels',
         'QTabPanel',
+        'QChip'
       ],
 
       directives: [

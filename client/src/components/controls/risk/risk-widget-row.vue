@@ -16,7 +16,6 @@
         :options="levelOptions"
       >
       </q-select>
-      <!-- <div class="bg-grey"> -Level- </div> -->
     </div>
     <div class="col-3">
       <q-select
@@ -25,18 +24,27 @@
         :options="timeframeOptions"
       >
       </q-select>
-      <!-- <div class="bg-grey"> -Timeframe- </div> -->
     </div>
-    <div class="col-1">
+    <div class="col-1 row">
       <div
-        class="fit row rounded-borders risk-priority justify-center"
+        class="col row rounded-borders risk-priority justify-center"
         :style="{'background-color':priorityColor}">
         <div class="column self-center risk-priority">
           {{priority}}
         </div>
 
       </div>
-      <!-- <div class="bg-grey"> -Priority- </div> -->
+      <div class="column justify-center q-pl-xs">
+        <q-btn
+          flat color="primary" icon="close" class="remove-button no-padding"
+          @click="$emit('remove-risk', riskDataRow)"
+          >
+          <q-tooltip>
+            Remove
+          </q-tooltip>
+        </q-btn>
+      </div>
+
     </div>
   </div>
 </template>
@@ -56,7 +64,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    removeRisk() {
 
+    }
   },
   computed: {
     priority: function () {
@@ -108,7 +118,15 @@ export default Vue.extend({
   font-weight: 600;
   font-size: 16pt;
   color: white;
-  text-align: center
+  text-align: center;
 }
 
+.remove-button {
+  min-height:36px;
+  height:36px;
+  margin-top:-8px;
+  margin-bottom:-8px;
+  padding-top:0px;
+  padding-bottom:0px;
+}
 </style>

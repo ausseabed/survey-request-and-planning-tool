@@ -14,7 +14,8 @@
         class="full-width"
         v-for="(riskRow, index) of riskData" :key="index"
         :risk-data-row="riskRow"
-        :risk-matrix="riskMatrix">
+        :risk-matrix="riskMatrix"
+        @remove-risk="removeRisk($event)">
       </risk-widget-row>
     </template>
     <div class="row full-width">
@@ -60,6 +61,12 @@ export default Vue.extend({
         level: undefined,
         timeframe: undefined,
       })
+    },
+    removeRisk(riskDataRow) {
+      var index = this.riskData.indexOf(riskDataRow)
+      if (index > -1) {
+        this.riskData.splice(index, 1)
+      }
     }
   },
   computed: {

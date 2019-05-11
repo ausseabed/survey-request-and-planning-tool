@@ -3,7 +3,8 @@
     <div class="col-xs-10 col-sm-5">
       <q-input
         outlined dense
-        v-model="riskDataRow.name"
+        :value="riskDataRow.name"
+        @input="update('name', $event)"
         autogrow
         type="textarea"
       >
@@ -22,7 +23,8 @@
     <div class="col-xs-5 col-sm-3">
       <q-select
         outlined dense
-        v-model="riskDataRow.level"
+        :value="riskDataRow.level"
+        @input="update('level', $event)"
         :options="levelOptions"
       >
       </q-select>
@@ -30,7 +32,8 @@
     <div class="col-xs-5 col-sm-3">
       <q-select
         outlined dense
-        v-model="riskDataRow.timeframe"
+        :value="riskDataRow.timeframe"
+        @input="update('timeframe', $event)"
         :options="timeframeOptions"
       >
       </q-select>
@@ -63,6 +66,8 @@
 import _ from 'lodash'
 import Vue from 'vue'
 
+const UPDATED_RISK = 'updated-risk';
+
 export default Vue.extend({
   props: [
     'riskMatrix',
@@ -74,8 +79,14 @@ export default Vue.extend({
     }
   },
   methods: {
-    removeRisk() {
-
+    update(property, event) {
+      this.$emit(
+        UPDATED_RISK,
+        {
+          property:property,
+          riskDataRow:this.riskDataRow,
+          value : event
+        });
     }
   },
   computed: {

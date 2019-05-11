@@ -1,6 +1,5 @@
 <template>
-  <form-wrapper :validator="$v" :messages="validationMessagesOverride"
-    class="row justify-center">
+  <form-wrapper :validator="$v" :messages="validationMessagesOverride">
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
@@ -276,7 +275,8 @@
 
             <risk-widget
               :risk-matrix="riskMatrix"
-              :risk-data="riskData"
+              :risk-data="hippRequest.riskData"
+              @updated-risks="risksUpdated($event)"
               >
             </risk-widget>
 
@@ -534,6 +534,10 @@ export default Vue.extend({
       console.log(event);
       this.map.addFile(event.target.files[0]);
     },
+    risksUpdated(event) {
+      let path = `hippRequest.riskData${event.path}`
+      this.update({path:path, value:event.value})
+    }
   },
 
   computed: {
@@ -625,15 +629,6 @@ export default Vue.extend({
         this.map.addGeojsonFeature(newArea);
       }
     },
-    'riskData': {
-      handler: function (oldRisks, newRisks) {
-        this.update({path:'hippRequest.riskData', value:newRisks})
-        if (this.loadingData) {
-          this.setDirty(false)
-        }
-      },
-      deep: true,
-    },
   },
 
   data() {
@@ -641,7 +636,6 @@ export default Vue.extend({
       loadingData: false,
       drawingAreaOfInterest: false,
       map: undefined,
-      riskData: [],
       tmpMoratoriumDateEntry: undefined,
       validationMessagesOverride: {
         validMoratorium: "Must provide valid moratorium date"

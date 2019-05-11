@@ -15,7 +15,8 @@
         v-for="(riskRow, index) of riskData" :key="index"
         :risk-data-row="riskRow"
         :risk-matrix="riskMatrix"
-        @remove-risk="removeRisk($event)">
+        @remove-risk="removeRisk($event)"
+        @updated-risk="updatedRisk($event)">
       </risk-widget-row>
     </template>
     <div class="row full-width">
@@ -35,8 +36,11 @@
 <script>
 
 import Vue from 'vue'
+import _ from 'lodash'
 
 import RiskWidgetRow from './risk-widget-row'
+
+const UPDATED_RISKS = 'updated-risks';
 
 export default Vue.extend({
   props: [
@@ -56,18 +60,30 @@ export default Vue.extend({
       return `Risk (${this.riskData.length + 1})`
     },
     addRisk() {
-      this.riskData.push({
+      let defLevel = Object.keys(this.riskMatrix)[0]
+      let defTimeframe = Object.keys(this.riskMatrix[defLevel])[0]
+
+      let clonedRiskData = _.cloneDeep(this.riskData)
+      clonedRiskData.push({
         name:this.getNewName(),
-        level: undefined,
-        timeframe: undefined,
+        level: defLevel,
+        timeframe: defTimeframe,
       })
+      this.$emit(UPDATED_RISKS, { path:'', value : clonedRiskData });
     },
     removeRisk(riskDataRow) {
       var index = this.riskData.indexOf(riskDataRow)
+      let clonedRiskData = _.cloneDeep(this.riskData)
       if (index > -1) {
-        this.riskData.splice(index, 1)
+        clonedRiskData.splice(index, 1)
       }
-    }
+      this.$emit(UPDATED_RISKS, { path:'', value : clonedRiskData });
+    },
+    updatedRisk(event) {
+      let index = this.riskData.indexOf(event.riskDataRow)
+      let path = `[${index}].${event.property}`
+      this.$emit(UPDATED_RISKS, { path:path, value : event.value });
+    },
   },
   computed: {
 

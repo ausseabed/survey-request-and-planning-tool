@@ -1,36 +1,35 @@
 <template>
   <q-page :style-fn="heightTweak" >
-    <div class="overflow-hidden fit">
-      <div class="column col-4 full-height">
-        <q-toolbar class="q-py-none bg-secondary text-white">
-          <q-toolbar-title class="column">
-            <div>
-              {{hippRequest.name}}
-            </div>
-            <div class="tabs-toolbar-sub-title">
-              HIPP Request
-            </div>
-          </q-toolbar-title>
+    <div class="column full-height">
+      <q-toolbar class="col-auto q-py-none bg-secondary text-white">
+        <q-toolbar-title class="column">
+          <div>
+            {{hippRequest.name}}
+          </div>
+          <div class="tabs-toolbar-sub-title">
+            HIPP Request
+          </div>
+        </q-toolbar-title>
 
-          <q-tabs align="right">
-            <q-route-tab
-              default
-              icon="notes"
-              label="Request"
-              :to="`/hipp-request/${id}/summary`"
-              exact
-            />
-            <q-route-tab
-              icon="attach_file"
-              label="Attachments"
-              :to="`/hipp-request/${id}/attachments`"
-              exact
-            />
-          </q-tabs>
+        <q-tabs align="right">
+          <q-route-tab
+            default
+            icon="notes"
+            label="Request"
+            :to="`/hipp-request/${id}/summary`"
+            exact
+          />
+          <q-route-tab
+            icon="attach_file"
+            label="Attachments"
+            :to="`/hipp-request/${id}/attachments`"
+            exact
+          />
+        </q-tabs>
 
-        </q-toolbar>
-
-        <div class="column col" style="overflow-y: auto;">
+      </q-toolbar>
+      <div class="col">
+        <div class="full-height scroll">
           <router-view></router-view>
         </div>
       </div>

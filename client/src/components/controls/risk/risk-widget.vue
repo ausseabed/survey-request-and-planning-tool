@@ -6,7 +6,7 @@
       <div class="col-3 risk-column-heading">Timeframe</div>
       <div class="col-1 risk-column-heading">Priority</div>
     </div>
-    <div v-if="riskData.length == 0" class="row justify-center">
+    <div v-if="riskData && riskData.length == 0" class="row justify-center">
       <div>No risks entered</div>
     </div>
     <template v-else>

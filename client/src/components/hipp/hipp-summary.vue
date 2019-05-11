@@ -272,13 +272,25 @@
           <q-card-section>
             <div class="text-h6"> Risk </div>
           </q-card-section>
-          <q-card-section class="row q-col-gutter-md">
+          <q-card-section class="column q-col-gutter-md items-stretch">
 
             <risk-widget
               :risk-matrix="riskMatrix"
               :risk-data="riskData"
               >
             </risk-widget>
+
+            <form-field-validated-input
+              name="hippRequest.riskIssues"
+              attribute="Risk Issues"
+              label="Risk Issues"
+              hint="Optional"
+              :value="hippRequest.riskIssues"
+              @input="update({path:'hippRequest.riskIssues', value:$event})"
+              @blur="$v.hippRequest.riskIssues.$touch"
+              type="textarea"
+              >
+            </form-field-validated-input>
 
           </q-card-section>
         </q-card>

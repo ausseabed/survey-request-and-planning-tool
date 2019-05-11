@@ -419,7 +419,9 @@ export default Vue.extend({
     fetchData () {
       if (this.$route.params.id) {
         // if id given, then load this hipp request
-        this.getHippRequest({ id: this.$route.params.id })
+        this.getHippRequest({ id: this.$route.params.id }).then(hr => {
+          this.riskData = this.hippRequest.riskData
+        })
       } else {
         // a new hipp request so clear whatever is in store
         this.resetHippRequest()
@@ -605,6 +607,12 @@ export default Vue.extend({
       if (newArea) {
         this.map.addGeojsonFeature(newArea);
       }
+    },
+    'riskData': {
+      handler: function (oldRisks, newRisks) {
+        this.update({path:'hippRequest.riskData', value:newRisks})
+      },
+      deep: true,
     },
   },
 

@@ -72,6 +72,9 @@ export default Vue.extend({
     priority: function () {
       if (_.isNil(this.riskDataRow.level) || _.isNil(this.riskDataRow.timeframe)) {
         return "-"
+      } else if (Object.keys(this.riskMatrix).length == 0) {
+        // isNil type check for an observed value
+        return "-"
       } else {
         return this.riskMatrix[this.riskDataRow.level][this.riskDataRow.timeframe].toString()
       }
@@ -91,12 +94,19 @@ export default Vue.extend({
       }
     },
     levelOptions: function () {
+      // isNil type check for an observed value
+      if (Object.keys(this.riskMatrix).length == 0) {
+        return []
+      }
       let opts = Object.keys(this.riskMatrix).map(key => {
         return key
       })
       return opts
     },
     timeframeOptions: function () {
+      if (Object.keys(this.riskMatrix).length == 0) {
+        return []
+      }
       // get the first attrib
       let firstLevel = Object.keys(this.riskMatrix)[0]
       let timeframes = this.riskMatrix[firstLevel]

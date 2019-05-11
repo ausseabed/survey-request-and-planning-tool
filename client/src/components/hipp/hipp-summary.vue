@@ -28,7 +28,7 @@
         </q-btn>
       </q-page-sticky>
 
-      <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md">
+      <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
         <div v-if="!hippRequest.id" class="text-h5"> New HIPP Request </div>
         <q-card class="full-width">
           <q-card-section>
@@ -431,8 +431,13 @@ export default Vue.extend({
     fetchData () {
       if (this.$route.params.id) {
         // if id given, then load this hipp request
+        this.loadingData = true
         this.getHippRequest({ id: this.$route.params.id }).then(hr => {
           this.riskData = this.hippRequest.riskData
+          if (_.isNil(this.riskData)) {
+            this.riskData = []
+          }
+          this.loadingData = false
         })
       } else {
         // a new hipp request so clear whatever is in store
@@ -623,6 +628,9 @@ export default Vue.extend({
     'riskData': {
       handler: function (oldRisks, newRisks) {
         this.update({path:'hippRequest.riskData', value:newRisks})
+        if (this.loadingData) {
+          this.setDirty(false)
+        }
       },
       deep: true,
     },
@@ -630,6 +638,7 @@ export default Vue.extend({
 
   data() {
     return {
+      loadingData: false,
       drawingAreaOfInterest: false,
       map: undefined,
       riskData: [],

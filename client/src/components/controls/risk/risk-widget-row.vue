@@ -1,6 +1,6 @@
 <template>
   <div class="row q-col-gutter-sm">
-    <div class="col-5">
+    <div class="col-xs-10 col-sm-5">
       <q-input
         outlined dense
         v-model="riskDataRow.name"
@@ -9,7 +9,17 @@
       >
       </q-input>
     </div>
-    <div class="col-3">
+    <div class="xs col-xs-2 column justify-center q-pl-xs">
+      <q-btn
+        flat color="primary" icon="close" class="remove-button no-padding"
+        @click="$emit('remove-risk', riskDataRow)"
+        >
+        <q-tooltip>
+          Remove
+        </q-tooltip>
+      </q-btn>
+    </div>
+    <div class="col-xs-5 col-sm-3">
       <q-select
         outlined dense
         v-model="riskDataRow.level"
@@ -17,7 +27,7 @@
       >
       </q-select>
     </div>
-    <div class="col-3">
+    <div class="col-xs-5 col-sm-3">
       <q-select
         outlined dense
         v-model="riskDataRow.timeframe"
@@ -25,7 +35,7 @@
       >
       </q-select>
     </div>
-    <div class="col-1 row">
+    <div class="col-xs-2 col-sm-1 row">
       <div
         class="col row rounded-borders risk-priority justify-center"
         :style="{'background-color':priorityColor}">
@@ -34,7 +44,7 @@
         </div>
 
       </div>
-      <div class="column justify-center q-pl-xs">
+      <div class="sm column justify-center q-pl-xs">
         <q-btn
           flat color="primary" icon="close" class="remove-button no-padding"
           @click="$emit('remove-risk', riskDataRow)"

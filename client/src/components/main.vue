@@ -1,7 +1,7 @@
 <template>
   <q-page :style-fn="heightTweak" >
     <div class="row q-pt-md q-pl-md q-col-gutter-md fit ">
-      <div class="column col-4 full-height">
+      <div class="column col-xs-12 col-sm-4 full-height">
 
         <q-card class="column col">
 
@@ -153,7 +153,7 @@
         </q-card>
 
       </div>
-      <div class="col-8 full-height">
+      <div class="sm col-sm-8 full-height">
         <q-card class="fit">
           <div ref="mapDiv" id="mapDiv" class="full-height"></div>
         </q-card>

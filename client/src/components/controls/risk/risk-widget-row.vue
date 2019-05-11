@@ -69,15 +69,15 @@ export default Vue.extend({
     priorityColor: function () {
       let priority = this.priority
       if (priority == "-") {
-        return "grey"
+        return "#b5b5b5" //grey
       } else if (priority == "1") {
-        return "red"
+        return "#ff4747" // red
       } else if (priority == "2") {
-        return "blue"
+        return "#6a6aff" // blue
       } else if (priority == "3") {
-        return "green"
+        return "#339c33" // green
       } else {
-        return "pink"
+        return "pink" // shouldn't happen
       }
     },
     levelOptions: function () {

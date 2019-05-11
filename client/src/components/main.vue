@@ -153,7 +153,7 @@
         </q-card>
 
       </div>
-      <div class="sm col-sm-8 full-height">
+      <div class="gt-xs col-sm-8 full-height">
         <q-card class="fit">
           <div ref="mapDiv" id="mapDiv" class="full-height"></div>
         </q-card>

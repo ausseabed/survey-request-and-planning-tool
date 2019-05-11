@@ -1,6 +1,6 @@
 <template>
   <div class="column full-width q-col-gutter-sm">
-    <div class="sm row q-col-gutter-sm full-width">
+    <div class="gt-xs row q-col-gutter-sm full-width">
       <div class="col-5 risk-column-heading"></div>
       <div class="col-3 risk-column-heading">Level</div>
       <div class="col-3 risk-column-heading">Timeframe</div>

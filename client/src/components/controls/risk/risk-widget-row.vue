@@ -44,7 +44,7 @@
         </div>
 
       </div>
-      <div class="sm column justify-center q-pl-xs">
+      <div class="gt-xs column justify-center q-pl-xs">
         <q-btn
           flat color="primary" icon="close" class="remove-button no-padding"
           @click="$emit('remove-risk', riskDataRow)"

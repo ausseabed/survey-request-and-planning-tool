@@ -5,7 +5,7 @@
     </router-link>
 
     <q-toolbar-title>
-      <router-link to="/" style="color: white; text-decoration:none;" class="sm">
+      <router-link to="/" style="color: white; text-decoration:none;" class="gt-xs">
         {{ title }}
       </router-link>
 

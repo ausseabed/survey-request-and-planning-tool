@@ -19,7 +19,7 @@
       </risk-widget-row>
     </template>
     <div class="row full-width">
-      <div class="col-4 row justify-end">
+      <div class="col-4 row">
         <q-btn
           flat color="primary"
           label="Add Risk"

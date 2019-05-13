@@ -25,6 +25,12 @@
             :to="`/hipp-request/${id}/attachments`"
             exact
           />
+          <q-route-tab
+            icon="layers"
+            label="Projects"
+            :to="`/hipp-request/${id}/projects`"
+            exact
+          />
         </q-tabs>
 
       </q-toolbar>

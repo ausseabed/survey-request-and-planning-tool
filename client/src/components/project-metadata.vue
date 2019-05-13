@@ -595,7 +595,12 @@ export default Vue.extend({
           this.setDirty(false);
         });
       } else {
-        this.RESET_PROJECT_METADATA();
+        if (_.isNil(this.$route.query.reset) || this.$route.query.reset) {
+          // don't reset the metadata if the `reset` query param is set to
+          // true. It's likely the project metadata has been pre-populated with
+          // some information we care about (such as from a hipp request)
+          this.RESET_PROJECT_METADATA();
+        }
         // need to clear the selected options here, otherwise they persist
         // to a new survey
         this.$store.commit(

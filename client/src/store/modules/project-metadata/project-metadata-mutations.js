@@ -99,6 +99,18 @@ const mutations = {
     return state.dirty = dirty;
   },
 
+  [types.SET_PROJECT_METADATA_LIST_FILTER] (state, listfilterparams) {
+    return state.projectMetadataListFilter = listfilterparams;
+  },
+
+  [types.UPDATE_PROJECT_METADATA_LIST_FILTER] (state, { path, value }) {
+    _.set(state.projectMetadataListFilter, path, _.cloneDeep(value))
+  },
+
+  [types.SET_PROJECT_METADATA_LIST] (state, pmlist) {
+    return state.projectMetadataList = pmlist;
+  },
+
 }
 
 export default {

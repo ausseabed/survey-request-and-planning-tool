@@ -175,6 +175,9 @@ import TransitionExpand from './transition-expand.vue';
 import { errorHandler } from './mixins/error-handling'
 import OlMap from './olmap/olmap';
 
+import * as pmMutTypes
+  from '../store/modules/project-metadata/project-metadata-mutation-types'
+
 export default Vue.extend({
   mixins: [errorHandler],
   components: {
@@ -195,6 +198,9 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapMutations('projectMetadata', [
+      pmMutTypes.SET_AOI,
+    ]),
     ...mapActions('hippRequest', [
       'getHippRequests',
     ]),
@@ -215,7 +221,7 @@ export default Vue.extend({
           [extents[0],extents[1]],
         ]]]
       }
-      this.$store.commit('projectMetadata/setAoi', geojson);
+      this.SET_AOI(geojson)
       this.$store.dispatch(
         'projectMetadata/checkAoi', { id: this.id })
       .then(matchingProjMetas => {

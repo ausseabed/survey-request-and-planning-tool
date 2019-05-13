@@ -1,5 +1,6 @@
 import Administration from 'components/administration.vue'
 import HippMain from 'components/hipp/hipp-main.vue'
+import HippProjects from 'components/hipp/hipp-projects.vue'
 import HippSummary from 'components/hipp/hipp-summary.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
@@ -82,6 +83,10 @@ const routes = [
           path: 'attachments',
           component: SurveyFile,
           props: {attachesTo:"hipp-request"}
+        },
+        {
+          path: 'projects',
+          component: HippProjects,
         },
       ]
     },

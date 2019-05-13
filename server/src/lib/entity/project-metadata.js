@@ -1,8 +1,9 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
-  JoinTable, OneToMany} from "typeorm";
+  JoinTable, OneToMany, JoinColumn} from "typeorm";
 
 import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
+import { HippRequest } from './hipp-request';
 import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
 import { SurveyApplication } from './survey-application';
@@ -138,6 +139,14 @@ export class ProjectMetadata {
     type => SurveyDeliverable,
     sd => sd.projectMetadata)
   deliverables;
+
+  @ManyToOne(
+    type => HippRequest,
+    hippRequest => hippRequest.projects,
+    { nullable: true }
+  )
+  @JoinColumn({ name: "hippRequestId" })
+  hippRequest;
 
   @Column({
       type:"bool",

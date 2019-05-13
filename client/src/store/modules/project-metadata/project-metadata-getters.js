@@ -99,3 +99,11 @@ export const surveyApplicationGroupNameOther = state => {
 export const dirty = state => {
   return state.dirty;
 }
+
+export const projectMetadataListFilter = state => {
+  return state.projectMetadataListFilter;
+}
+
+export const projectMetadataList = state => {
+  return state.projectMetadataList;
+}

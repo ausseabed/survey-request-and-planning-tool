@@ -1,0 +1,155 @@
+<template>
+
+  <div class="row justify-center fit">
+
+    <div v-if="loading">Loading...</div>
+
+    <div style="width: 900px; max-width: 900px;" class="column no-wrap fit">
+      <div class="q-pa-md fit">
+        <q-card class="fit column">
+          <q-card-section>
+            <div class="text-h6"> Linked Projects </div>
+          </q-card-section>
+          <q-separator style="height:1px;"/>
+          <q-card-section class="column col no-padding">
+            <div
+              v-if="!projectMetadataList || projectMetadataList.length == 0"
+              class="row justify-center fit"
+              >
+              <div class="column justify-center text-light">
+                No survey projects have been created for this HIPP Request.
+              </div>
+            </div>
+            <q-scroll-area
+              v-else
+              class="fit">
+              <q-list no-border padding>
+
+                <q-item clickable
+                  v-for="pm in projectMetadataList"
+                  :key="pm.id"
+                  class="column"
+                  >
+                  <div class="row">
+                    <q-item-section>
+                      <q-item-label>{{pm.surveyName}}</q-item-label>
+                      <q-item-label caption>{{pm.projectStatus}}</q-item-label>
+                    </q-item-section>
+
+                    <q-item-section side top>
+                      <q-item-label caption>{{getDateString(pm.startDate)}}</q-item-label>
+                      <!-- <div>
+                        <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
+                      </div> -->
+                    </q-item-section>
+                  </div>
+                </q-item>
+
+              </q-list>
+
+            </q-scroll-area>
+
+          </q-card-section>
+          <q-separator style="height:1px;"/>
+          <q-card-section class="row justify-end">
+            <q-btn
+              flat icon="add" label="Add project"
+              @click="addProject()"
+              >
+            </q-btn>
+          </q-card-section>
+        </q-card>
+      </div>
+
+    </div>
+  </div>
+</template>
+<script>
+import Vue from 'vue'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+const _ = require('lodash');
+import { errorHandler } from '../mixins/error-handling'
+import { date } from 'quasar'
+import * as pmMutTypes
+  from '../../store/modules/project-metadata/project-metadata-mutation-types'
+
+
+import axios from 'axios';
+const path = require('path');
+
+
+export default Vue.extend({
+  mixins: [errorHandler],
+
+  mounted() {
+
+  },
+
+  methods: {
+    ...mapActions('projectMetadata', [
+      'getProjectMetadataList',
+    ]),
+    ...mapMutations('projectMetadata', [
+      pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
+      pmMutTypes.RESET_PROJECT_METADATA,
+    ]),
+    ...mapMutations('projectMetadata', {
+      'projectMetadataUpdate': pmMutTypes.UPDATE,
+      'projectSetDirty': pmMutTypes.SET_DIRTY,
+    }),
+
+    addProject() {
+      this.RESET_PROJECT_METADATA();
+      let clonedHippReq = _.cloneDeep(this.hippRequest);
+      this.projectMetadataUpdate(
+        {path:'projectMetadata.hippRequest', value:clonedHippReq}
+      );
+      this.projectSetDirty(false);
+      this.$router.push({ path: `/survey/new`, query: {reset:false} })
+    },
+
+    getDateString(dateUtcMilliseconds) {
+      const ts = new Date();
+      ts.setTime(dateUtcMilliseconds);
+      let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
+      return formattedString;
+    },
+
+
+
+  },
+
+  computed: {
+    ...mapGetters('projectMetadata',[
+      'projectMetadataList',
+      'projectMetadataListFilter',
+    ]),
+    ...mapGetters('hippRequest',[
+      'hippRequest',
+    ]),
+  },
+
+  watch: {
+    'hippRequest.id': {
+      handler: function (newId, oldId) {
+        let hrfilter = _.isNil(newId) ? undefined : {'hipp-request': newId}
+        this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
+      },
+      immediate: true,
+    },
+    'projectMetadataListFilter': {
+      handler: function (newFilter, oldFilter) {
+        this.getProjectMetadataList()
+      },
+      immediate: true,
+    },
+  },
+
+  data() {
+    return {
+      loading: false,
+    }
+  }
+});
+
+</script>

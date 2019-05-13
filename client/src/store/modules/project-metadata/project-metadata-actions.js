@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { EventBus } from './../../../event-bus';
+import _ from 'lodash';
 
 import * as mutTypes from './project-metadata-mutation-types'
 
@@ -56,6 +57,27 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
       commit(mutTypes.RESET_PROJECT_METADATA)
       commit(mutTypes.UPDATE, { path: 'projectMetadata', value: response.data })
       commit(mutTypes.SET_DIRTY, false);
+      resolve(response.data);
+    })
+    .catch((error) => {
+      reject(error);
+    });
+  });
+
+}
+
+export const getProjectMetadataList = ({ commit, state }) => {
+  var url_endpoint = '/api/project-metadata/';
+  var getConfig = {};
+  if (!_.isNil(state.projectMetadataListFilter)) {
+    let params = {params: state.projectMetadataListFilter};
+    _.merge(getConfig, params);
+  }
+
+  return new Promise((resolve, reject) => {
+    Vue.axios.get(url_endpoint, getConfig)
+    .then((response) => {
+      commit(mutTypes.SET_PROJECT_METADATA_LIST, response.data)
       resolve(response.data);
     })
     .catch((error) => {

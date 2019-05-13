@@ -22,7 +22,7 @@ router.get('/valid-statuses', async function (req, res) {
 // Gets a list of project metadata
 router.get('/', async function (req, res) {
 
-  let projects = await getConnection()
+  let projectsQuery = getConnection()
   .getRepository(ProjectMetadata)
   .createQueryBuilder("project_metadata")
   .select(["project_metadata.id", "project_metadata.surveyName",
@@ -31,7 +31,11 @@ router.get('/', async function (req, res) {
     `project_metadata.deleted = :deleted`,
     {deleted: false}
   )
-  .getMany();
+  if (!_.isNil(req.query['hipp-request'])) {
+    projectsQuery = projectsQuery.andWhere(`"project_metadata"."hippRequestId" = :hrid`,
+      {hrid: req.query['hipp-request']})
+  }
+  let projects = await projectsQuery.getMany();
 
   return res.json(projects);
 });
@@ -50,6 +54,7 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
         "surveyApplication",
         "tenderer",
         "surveyors",
+        "hippRequest",
       ]
     }
   );
@@ -110,6 +115,8 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   project.hasMoratorium = req.body.hasMoratorium;
   project.moratoriumDate = req.body.moratoriumDate;
+
+  project.hippRequest = req.body.hippRequest;
 
   let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
   project.areaOfInterest = geojson;

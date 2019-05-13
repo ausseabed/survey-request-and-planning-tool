@@ -5,6 +5,7 @@ import { DateTransformer } from './utils';
 
 import { HippRequestAttachment } from './hipp-request-attachment';
 import { Organisation } from './organisation';
+import { ProjectMetadata } from './project-metadata';
 
 
 export const SURVEY_QUALITY_REQUIREMENTS = [
@@ -212,6 +213,11 @@ export class HippRequest {
     type => HippRequestAttachment,
     attachment => attachment.entity)
   attachments;
+
+  @OneToMany(
+    type => ProjectMetadata,
+    projectMetadata => projectMetadata.hippRequest)
+  projects;
 
   @Column({
       type:"bool",

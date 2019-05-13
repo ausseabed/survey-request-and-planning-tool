@@ -1,7 +1,8 @@
 // import * as actions from './uav-project-metadata-actions'
 import * as actions from './project-metadata-actions'
 import * as getters from './project-metadata-getters'
-import * as mutations from './project-metadata-mutations'
+import mutations from './project-metadata-mutations'
+import * as types from './project-metadata-mutation-types'
 
 function initialState() {
   return {
@@ -32,6 +33,7 @@ function initialState() {
     surveyApplicationGroupNameOther:undefined,
     surveyApplicationNameOther:undefined,
     surveyApplicationIdOther:undefined,
+    projectMetadatas:[],
     projectStatuses:[],
     validDataCaptureTypeIds:new Set(),
     dirty:false,
@@ -44,15 +46,15 @@ export default {
   getters,
   actions,
   mutations: {
-    reset(state) {
+    [types.RESET] (state) {
       const s = initialState()
       Object.keys(s).forEach(key => {
         state[key] = s[key]
       })
     },
-    resetProjectMetadata(state) {
+    [types.RESET_PROJECT_METADATA] (state) {
       state.projectMetadata = initialState().projectMetadata;
     },
-    ...mutations
+    ...mutations.mutations
   }
 }

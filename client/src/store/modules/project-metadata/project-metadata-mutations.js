@@ -1,106 +1,106 @@
-export const update = (state, { path, value }) => {
-  _.set(state, path, _.cloneDeep(value))
-  state.dirty = true;
-}
+import * as types from './project-metadata-mutation-types'
 
-export const replace = (state, updated_state) => {
-  Object.assign(state, updated_state);
-  state.dirty = true;
-}
+const mutations = {
+  [types.UPDATE] (state, { path, value }) {
+    _.set(state, path, _.cloneDeep(value))
+    state.dirty = true;
+  },
 
-export const setAoi = (state, geojson) => {
+  [types.REPLACE] (state, updated_state) {
+    Object.assign(state, updated_state);
+    state.dirty = true;
+  },
 
-  state.projectMetadata.areaOfInterest = geojson;
-  state.dirty = true;
-}
+  [types.SET_AOI] (state, geojson) {
+    state.projectMetadata.areaOfInterest = geojson;
+    state.dirty = true;
+  },
 
-export const setInstrumentTypes = (state, instrumentTypes) => {
-  state.projectMetadata.instrumentTypes = instrumentTypes;
+  [types.SET_INSTRUMENT_TYPES] (state, instrumentTypes) {
+    state.projectMetadata.instrumentTypes = instrumentTypes;
 
-  // update list of valid data capture types based on what instruments have
-  // been selected.
-  let idSet = new Set();
-  for (const instType of state.projectMetadata.instrumentTypes) {
-    for (const dtcType of instType.dataCaptureTypes) {
-      idSet.add(dtcType.id);
+    // update list of valid data capture types based on what instruments have
+    // been selected.
+    let idSet = new Set();
+    for (const instType of state.projectMetadata.instrumentTypes) {
+      for (const dtcType of instType.dataCaptureTypes) {
+        idSet.add(dtcType.id);
+      }
     }
-  }
-  state.validDataCaptureTypeIds = idSet;
-  state.dirty = true;
-  // This was the old approach to automatically update list of selected
-  // data capture types. Now handled by presenting validation error.
-  // if (state.projectMetadata.dataCaptureTypes === undefined) {
-  //   return;
-  // }
-  // // setting the list of instrument types can cause the list of dataCaptureTypes
-  // // to be updated. A DataCaptureType will be removed if there is no instrument
-  // // to support it.
-  // state.projectMetadata.dataCaptureTypes
-  //   = state.projectMetadata.dataCaptureTypes.filter( dct =>
-  //   {
-  //     return state.validDataCaptureTypeIds.has(dct.id);
-  //   });
+    state.validDataCaptureTypeIds = idSet;
+    state.dirty = true;
+  },
+
+  [types.SET_DATA_CAPTURE_TYPES] (state, dataCaptureTypes) {
+    state.projectMetadata.dataCaptureTypes = dataCaptureTypes;
+    state.dirty = true;
+  },
+
+  [types.ADD_ORGANISATION] (state, organisation) {
+    state.projectMetadata.organisations.push(organisation);
+    state.dirty = true;
+  },
+
+  [types.SET_ORGANISATIONS] (state, organisations) {
+    state.projectMetadata.organisations = organisations;
+    state.dirty = true;
+  },
+
+  [types.REMOVE_ORGANISATION] (state, organisations) {
+    state.projectMetadata.organisations = organisations;
+    state.dirty = true;
+  },
+
+  [types.REMOVE_ORGANISATION] (state, organisation) {
+    let index = state.projectMetadata.organisations.findIndex(function (o) {
+      return o.id == organisation.id;
+    });
+    state.projectMetadata.organisations.splice(index, 1);
+    state.dirty = true;
+  },
+
+  [types.SET_START_DATE] (state, startDate) {
+    state.projectMetadata.startDate = startDate;
+    state.dirty = true;
+  },
+
+  [types.SET_SURVEY_APPLICATION] (state, surveyApplication) {
+    state.projectMetadata.surveyApplication = surveyApplication;
+    state.dirty = true;
+  },
+
+  [types.SET_PROJECT_STATUSES] (state, statuses) {
+    state.projectStatuses = statuses;
+  },
+
+  [types.SET_SURVEYORS] (state, organisations) {
+    state.projectMetadata.surveyors = organisations;
+    state.dirty = true;
+  },
+
+  [types.SET_TENDERER] (state, organisation) {
+    state.projectMetadata.tenderer = organisation;
+    state.dirty = true;
+  },
+
+  [types.SET_SURVEY_APPLICATION_ID_OTHER] (state, surveyApplicationIdOther) {
+    return state.surveyApplicationIdOther = surveyApplicationIdOther;
+  },
+
+  [types.SET_SURVEY_APPLICATION_NAME_OTHER] (state, surveyApplicationNameOther) {
+    return state.surveyApplicationNameOther = surveyApplicationNameOther;
+  },
+
+  [types.SET_SURVEY_APPLICATION_GROUP_NAME_OTHER] (state, surveyApplicationGroupNameOther) {
+    return state.surveyApplicationGroupNameOther = surveyApplicationGroupNameOther;
+  },
+
+  [types.SET_DIRTY] (state, dirty) {
+    return state.dirty = dirty;
+  },
+
 }
 
-export const setDataCaptureTypes = (state, dataCaptureTypes) => {
-  state.projectMetadata.dataCaptureTypes = dataCaptureTypes;
-  state.dirty = true;
-}
-
-export const addOrganisation = (state, organisation) => {
-  state.projectMetadata.organisations.push(organisation);
-  state.dirty = true;
-}
-
-export const setOrganisations = (state, organisations) => {
-  state.projectMetadata.organisations = organisations;
-  state.dirty = true;
-}
-
-export const removeOrganisation = (state, organisation) => {
-  let index = state.projectMetadata.organisations.findIndex(function (o) {
-    return o.id == organisation.id;
-  });
-  state.projectMetadata.organisations.splice(index, 1);
-  state.dirty = true;
-}
-
-export const setStartDate = (state, startDate) => {
-  state.projectMetadata.startDate = startDate;
-  state.dirty = true;
-}
-
-export const setSurveyApplication = (state, surveyApplication) => {
-  state.projectMetadata.surveyApplication = surveyApplication;
-  state.dirty = true;
-}
-
-export const setProjectStatuses = (state, statuses) => {
-  state.projectStatuses = statuses;
-}
-
-export const setSurveyors = (state, organisations) => {
-  state.projectMetadata.surveyors = organisations;
-  state.dirty = true;
-}
-
-export const setTenderer = (state, organisation) => {
-  state.projectMetadata.tenderer = organisation;
-  state.dirty = true;
-}
-
-export const setSurveyApplicationIdOther = (state, surveyApplicationIdOther) => {
-  return state.surveyApplicationIdOther = surveyApplicationIdOther;
-}
-
-export const setSurveyApplicationNameOther = (state, surveyApplicationNameOther) => {
-  return state.surveyApplicationNameOther = surveyApplicationNameOther;
-}
-
-export const setSurveyApplicationGroupNameOther = (state, surveyApplicationGroupNameOther) => {
-  return state.surveyApplicationGroupNameOther = surveyApplicationGroupNameOther;
-}
-
-export const setDirty = (state, dirty) => {
-  return state.dirty = dirty;
+export default {
+  mutations
 }

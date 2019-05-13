@@ -448,6 +448,8 @@ import { DirtyRouteGuard } from './mixins/dirty-route-guard'
 import { errorHandler } from './mixins/error-handling'
 import * as orgMutTypes
   from '../store/modules/organisation/organisation-mutation-types'
+import * as pmMutTypes
+  from '../store/modules/project-metadata/project-metadata-mutation-types'
 
 const timespan = require('readable-timespan');
 timespan.set({
@@ -532,9 +534,24 @@ export default Vue.extend({
   methods: {
 
     ...mapMutations('projectMetadata', {
-      'setDirty': 'setDirty',
-      'setProjectOrganisations': 'setOrganisations'
+      'setDirty': pmMutTypes.SET_DIRTY,
+      'setProjectOrganisations': pmMutTypes.SET_ORGANISATIONS,
+      'updateProjectMetadata': pmMutTypes.UPDATE,
     }),
+    ...mapMutations('projectMetadata', [
+      pmMutTypes.RESET_PROJECT_METADATA,
+      pmMutTypes.SET_START_DATE,
+      pmMutTypes.SET_TENDERER,
+      pmMutTypes.SET_SURVEYORS,
+      pmMutTypes.SET_AOI,
+      pmMutTypes.SET_INSTRUMENT_TYPES,
+      pmMutTypes.SET_DATA_CAPTURE_TYPES,
+      pmMutTypes.SET_SURVEY_APPLICATION_ID_OTHER,
+      pmMutTypes.SET_SURVEY_APPLICATION_NAME_OTHER,
+      pmMutTypes.SET_SURVEY_APPLICATION_GROUP_NAME_OTHER,
+      pmMutTypes.SET_SURVEY_APPLICATION,
+      pmMutTypes.REMOVE_ORGANISATION,
+    ]),
     ...mapMutations('organisation', {
       'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
     }),
@@ -578,7 +595,7 @@ export default Vue.extend({
           this.setDirty(false);
         });
       } else {
-        this.$store.commit('projectMetadata/resetProjectMetadata');
+        this.RESET_PROJECT_METADATA();
         // need to clear the selected options here, otherwise they persist
         // to a new survey
         this.$store.commit(
@@ -591,7 +608,7 @@ export default Vue.extend({
     },
 
     update(key, event) {
-      this.$store.commit('projectMetadata/update', {
+      this.updateProjectMetadata({
         path: key,
         value: event
       })
@@ -603,7 +620,7 @@ export default Vue.extend({
     },
 
     setStartDate(startDate) {
-      this.$store.commit('projectMetadata/setStartDate', startDate);
+      this.SET_START_DATE(startDate)
     },
 
     setFormattedMoratoriumDate(requestDate) {
@@ -638,17 +655,15 @@ export default Vue.extend({
     },
 
     setSelectedTenderer(organisation) {
-      this.$store.commit('projectMetadata/setTenderer',
-        organisation);
+      this.SET_TENDERER(organisation);
     },
 
     setSelectedSurveyors(organisations) {
-      this.$store.commit('projectMetadata/setSurveyors',
-        organisations);
+      this.SET_SURVEYORS(organisations);
     },
 
     setAoi(geojson) {
-      this.$store.commit('projectMetadata/setAoi', geojson);
+      this.SET_AOI(geojson);
       this.$v.areaOfInterest.$touch();
 
       this.matchingProjMeta = [];
@@ -685,69 +700,26 @@ export default Vue.extend({
         });
         this.setDataCaptureTypes(dataCapTypes);
       }
-      //
-      // if (projectMetadata.tenderer) {
-      //   let org = this.organisations.find(o => {
-      //     return o.id == projectMetadata.tenderer.id;
-      //   });
-      //   if (org.deleted) {
-      //     org = undefined;
-      //   }
-      //   this.setSelectedTenderer(org);
-      // }
-      //
-      // if (projectMetadata.surveyors) {
-      //   let orgs = projectMetadata.surveyors.map(outerOrg => {
-      //     return this.organisations.find(innerOrg => {
-      //       return outerOrg.id == innerOrg.id;
-      //     })
-      //   });
-      //   orgs = orgs.filter(org => {
-      //     return !org.deleted;
-      //   })
-      //   this.setSelectedSurveyors(orgs);
-      // }
-      //
-      // if (projectMetadata.organisations) {
-      //   let orgs = projectMetadata.organisations.map(outerOrg => {
-      //     const inOrgListOrg = this.organisations.find(innerOrg => {
-      //       return outerOrg.id == innerOrg.id;
-      //     });
-      //     return inOrgListOrg;
-      //   });
-      //   orgs = orgs.filter(org => {
-      //     return !org.deleted;
-      //   })
-      //   this.setProjectOrganisations(orgs);
-      // }
-      //
       this.setDirty(false);
     },
 
     setInstrumentTypes(instrumentTypes) {
-      this.$store.commit(
-        'projectMetadata/setInstrumentTypes',
-        instrumentTypes);
-      this.$v.projectDataCaptureTypes.$touch();
+      this.SET_INSTRUMENT_TYPES(instrumentTypes)
+      this.$v.projectDataCaptureTypes.$touch()
     },
 
     setDataCaptureTypes(dataCaptureTypes) {
-      this.$store.commit(
-        'projectMetadata/setDataCaptureTypes',
-        dataCaptureTypes);
+      this.SET_DATA_CAPTURE_TYPES(dataCaptureTypes)
     },
 
     setSurveyApplicationIdOther(name) {
-      return this.$store.commit(
-        'projectMetadata/setSurveyApplicationIdOther', name);
+      return this.SET_SURVEY_APPLICATION_ID_OTHER(name)
     },
     setSurveyApplicationNameOther(name) {
-      return this.$store.commit(
-        'projectMetadata/setSurveyApplicationNameOther', name);
+      return this.SET_SURVEY_APPLICATION_NAME_OTHER(name)
     },
     setSurveyApplicationGroupNameOther(name) {
-      return this.$store.commit(
-        'projectMetadata/setSurveyApplicationGroupNameOther', name);
+      return this.SET_SURVEY_APPLICATION_GROUP_NAME_OTHER(name)
     },
 
     submit() {
@@ -767,7 +739,7 @@ export default Vue.extend({
         sa.name = this.selectedSurveyApplication.name == "Other" ? this.surveyApplicationNameOther : this.selectedSurveyApplication.name;
         sa.id = this.surveyApplicationIdOther;
       }
-      this.$store.commit('projectMetadata/setSurveyApplication', sa);
+      this.SET_SURVEY_APPLICATION(sa)
 
       const isNew = _.isNil(this.id) || (this.id.length == 0);
 
@@ -805,7 +777,7 @@ export default Vue.extend({
       } else {
         // no id, so hasn't been saved. I this case reset form and go back
         // to main page.
-        this.$store.commit('projectMetadata/resetProjectMetadata');
+        this.RESET_PROJECT_METADATA()
         this.$router.replace({ path: `/` });
       }
     },
@@ -873,7 +845,7 @@ export default Vue.extend({
       })
     },
     removeOrganisation(org) {
-      this.$store.commit('projectMetadata/removeOrganisation',org);
+      this.REMOVE_ORGANISATION(org)
       this.$v.projectOrganisations.$touch();
     },
 
@@ -1042,7 +1014,7 @@ export default Vue.extend({
       // of form. Calling the mutation results in a dirty state which shouln't
       // be the case on form load.
       if (!_.isNil(newSa) && !_.isNil(oldSa) && newSa.id != oldSa.id) {
-        this.$store.commit('projectMetadata/setSurveyApplication', newSa);
+        this.SET_SURVEY_APPLICATION(newSa)
       }
 
     },

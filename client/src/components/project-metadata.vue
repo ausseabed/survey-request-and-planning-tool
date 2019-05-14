@@ -139,6 +139,27 @@
 
         <q-card class="full-width">
           <q-card-section>
+            <div class="text-h6"> HIPP Request </div>
+          </q-card-section>
+          <q-card-section>
+            <form-field-validated-select
+              name="hippRequest"
+              label="Current HIPP requests"
+              hint="Optional"
+              :value="hippRequest"
+              @input="update('projectMetadata.hippRequest', $event)"
+              :options="hippRequests"
+              option-label="name"
+              option-value="id"
+              @blur="$v.hippRequest.$touch"
+              clearable
+              >
+            </form-field-validated-select>
+          </q-card-section>
+        </q-card>
+
+        <q-card class="full-width">
+          <q-card-section>
             <div class="text-h6">Area of Interest</div>
           </q-card-section>
           <q-card-section class="column">
@@ -442,7 +463,7 @@
 <script>
 import Vue from 'vue'
 import { date } from 'quasar'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { DirtyRouteGuard } from './mixins/dirty-route-guard'
 import { errorHandler } from './mixins/error-handling'
@@ -532,7 +553,9 @@ export default Vue.extend({
   },
 
   methods: {
-
+    ...mapActions('hippRequest', [
+      'getHippRequests'
+    ]),
     ...mapMutations('projectMetadata', {
       'setDirty': pmMutTypes.SET_DIRTY,
       'setProjectOrganisations': pmMutTypes.SET_ORGANISATIONS,
@@ -813,6 +836,7 @@ export default Vue.extend({
     },
 
     getFormData() {
+      this.getHippRequests();
       // only get non-deleted organisations
       this.setDeletedOrganisations(null);
       // gets the list of all orgs, not just those associated to this project
@@ -902,7 +926,11 @@ export default Vue.extend({
       surveyApplicationNameOther: 'projectMetadata/surveyApplicationNameOther',
       surveyApplicationGroupNameOther: 'projectMetadata/surveyApplicationGroupNameOther',
       dirty: 'projectMetadata/dirty',
+      hippRequest: 'projectMetadata/hippRequest',
     }),
+    ...mapGetters('hippRequest', [
+      'hippRequests'
+    ]),
     formattedStartDate: function() {
       const d = new Date();
       d.setTime(this.startDate);
@@ -986,6 +1014,7 @@ export default Vue.extend({
     projectMetadata: {
       moratoriumDate: {validMoratorium},
     },
+    hippRequest: {}
   },
 
   watch: {

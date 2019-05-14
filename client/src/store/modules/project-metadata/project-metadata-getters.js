@@ -107,3 +107,7 @@ export const projectMetadataListFilter = state => {
 export const projectMetadataList = state => {
   return state.projectMetadataList;
 }
+
+export const hippRequest = state => {
+  return state.projectMetadata.hippRequest;
+}

@@ -29,6 +29,7 @@ function initialState() {
 
       hasMoratorium: false,
       moratoriumDate: undefined,
+      hippRequest: undefined,
     },
     surveyApplicationGroupNameOther:undefined,
     surveyApplicationNameOther:undefined,

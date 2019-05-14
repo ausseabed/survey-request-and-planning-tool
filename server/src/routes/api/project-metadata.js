@@ -31,6 +31,7 @@ router.get('/', async function (req, res) {
     `project_metadata.deleted = :deleted`,
     {deleted: false}
   )
+  .orderBy("project_metadata.surveyName")
   if (!_.isNil(req.query['hipp-request'])) {
     projectsQuery = projectsQuery.andWhere(`"project_metadata"."hippRequestId" = :hrid`,
       {hrid: req.query['hipp-request']})

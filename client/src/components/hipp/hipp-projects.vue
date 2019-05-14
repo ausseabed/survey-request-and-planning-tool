@@ -29,18 +29,32 @@
                   v-for="pm in projectMetadataList"
                   :key="pm.id"
                   class="column"
+                  :to="`/survey/${pm.id}/summary/`"
                   >
-                  <div class="row">
-                    <q-item-section>
-                      <q-item-label>{{pm.surveyName}}</q-item-label>
-                      <q-item-label caption>{{pm.projectStatus}}</q-item-label>
+                  <div class="row" style="min-height:100px;">
+                    <q-item-section class="column col-sm-6 col-xs-12">
+                      <div class="fit column justify-start q-pb-sm">
+                        <q-item-label>{{pm.surveyName}}</q-item-label>
+                        <q-item-label caption>{{pm.projectStatus}}</q-item-label>
+                        <q-item-label caption>{{getDateString(pm.startDate)}}</q-item-label>
+                      </div>
                     </q-item-section>
 
-                    <q-item-section side top>
-                      <q-item-label caption>{{getDateString(pm.startDate)}}</q-item-label>
-                      <!-- <div>
+                    <!-- <q-item-section side top>
+
+                      <div>
                         <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
-                      </div> -->
+                      </div>
+                    </q-item-section> -->
+                    <q-item-section class="col-sm-6 col-xs-12 thumbnail-background tn-img-parent rounded-borders justify-center">
+                      <img
+                        class="tn-img-parent q-pa-sm self-center"
+                        :src="`api/project-metadata/${pm.id}/thumbnail`">
+                      </img>
+                      <div class="top-left q-pa-sm rounded-borders" style="background-color:rgba(255, 255, 255, 0.5);">
+                        <div class="text-light">Project AOI</div>
+                      </div>
+
                     </q-item-section>
                   </div>
                 </q-item>
@@ -153,3 +167,34 @@ export default Vue.extend({
 });
 
 </script>
+
+<style>
+.thumbnail-background {
+  background: #efefef;
+  margin-left: 0px !important;
+  position: relative;
+}
+.thumbnail {
+  display: block;
+    max-width:230px;
+    max-height:95px;
+    width: auto;
+    height: auto;
+}
+.top-left {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+}
+
+.tn-img-parent {
+  width: 100px;
+}
+
+.tn-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+</style>

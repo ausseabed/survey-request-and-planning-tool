@@ -40,6 +40,79 @@ router.get('/', async function (req, res) {
   return res.json(projects);
 });
 
+router.get('/:id/thumbnail', asyncMiddleware(async function (req, res) {
+
+  const extents = await getConnection()
+  .createQueryBuilder()
+  .select([`ST_XMin("extent")`, `ST_XMax("extent")`, `ST_YMin("extent")`, `ST_YMax("extent")`])
+  .from(subQuery => {
+      return subQuery
+          .select('ST_Extent("project_metadata"."areaOfInterest")', 'extent')
+          .from(ProjectMetadata, "project_metadata")
+          .where("project_metadata.id = :id", { id: req.params.id });
+  }, "extent")
+  .getRawOne();
+
+  let center = {
+    x: (extents.st_xmax + extents.st_xmin)/2,
+    y: (extents.st_ymax + extents.st_ymin)/2
+  }
+  let dX = extents.st_xmax - extents.st_xmin
+  let dY = extents.st_ymax - extents.st_ymin
+  let maxDelta = dX > dY ? dX : dY
+  let newExtents = {
+    minX: center.x - maxDelta/2,
+    maxX: center.x + maxDelta/2,
+    minY: center.y - maxDelta/2,
+    maxY: center.y + maxDelta/2,
+  }
+
+  let rasterSize = 800
+  let scale = maxDelta / rasterSize
+  // let projectImage = await getConnection()
+  // .getRepository(ProjectMetadata)
+  // .createQueryBuilder("project_metadata")
+  // .select(`ST_MakeEmptyRaster(${rasterSize},${rasterSize},${newExtents.minX}, ${newExtents.maxY}, ${scale}, ${scale}, 0,0,4326)`, 'imageData')
+  // .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  // .getRawOne();
+
+  let nrq = `ST_MakeEmptyRaster(${rasterSize},${rasterSize},${newExtents.minX}, ${newExtents.maxY}, ${scale}, ${-1*scale}, 0,0,4326)`
+
+  let projectImage = await getConnection()
+  .getRepository(ProjectMetadata)
+  .createQueryBuilder("project_metadata")
+  .select(`ST_AsPNG(ST_AsRaster("project_metadata"."areaOfInterest",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[97, 173, 216], ARRAY[255,255,255]))`, 'imageData')
+  .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  .getRawOne();
+
+  // let projectImage = await getConnection()
+  // .getRepository(ProjectMetadata)
+  // .createQueryBuilder("project_metadata")
+  // .select(`ST_AsPNG(ST_AsRaster(ST_Buffer(ST_Boundary("project_metadata"."areaOfInterest"), 0.02,\'join=round\'),${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[118,154,118], ARRAY[255,255,255]))`, 'imageData')
+  // .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  // .getRawOne();
+
+
+  // let projectExtent = await getConnection()
+  // .getRepository(ProjectMetadata)
+  // .createQueryBuilder("project_metadata")
+  // .select('ST_Extent("project_metadata"."areaOfInterest")', 'extent')
+  // .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  // .getRawOne();
+  // console.log(projectExtent)
+
+
+  // let projectImage = await getConnection()
+  // .getRepository(ProjectMetadata)
+  // .createQueryBuilder("project_metadata")
+  // .select('ST_AsPNG(ST_AsRaster(ST_Buffer(ST_Boundary("project_metadata"."areaOfInterest"), 0.02,\'join=round\'),400,400,ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[118,154,118], ARRAY[255,255,255]))', 'imageData')
+  // .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  // .getRawOne();
+
+  res.writeHead(200, {'Content-Type': 'image/png' });
+  res.end(projectImage.imageData, 'binary');
+}))
+
 // gets a single project metadata
 router.get('/:id', asyncMiddleware(async function (req, res) {
   let project = await getConnection()

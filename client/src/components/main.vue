@@ -124,6 +124,9 @@
                           <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
                             :to="`/hipp-request/${hippRequest.id}/attachments`">
                           </q-btn>
+                          <q-btn outline size="sm" color="primary" label="Projects" class="q-mt-xs q-ml-xs"
+                            :to="`/hipp-request/${hippRequest.id}/projects`">
+                          </q-btn>
                         </div>
                       </transition-expand>
 

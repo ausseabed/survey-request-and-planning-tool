@@ -40,6 +40,7 @@ router.get('/', asyncMiddleware(async function (req, res) {
     `hipp_request.deleted = :deleted`,
     {deleted: false}
   )
+  .orderBy("hipp_request.name")
   .getMany();
 
   return res.json(projects);

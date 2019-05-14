@@ -128,9 +128,5 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus">
-.mobile-tabs {
-  padding-left: 2px;
-  padding-right: 2px;
-}
 
 </style>

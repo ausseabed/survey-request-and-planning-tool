@@ -12,7 +12,7 @@
             </div>
           </q-toolbar-title>
 
-          <q-tabs align="right">
+          <q-tabs class="gt-xs" align="right">
             <q-route-tab
               default
               icon="notes"
@@ -35,6 +35,34 @@
             <q-route-tab
               icon="attach_file"
               label="Attachments"
+              :to="`/survey/${id}/attachments`"
+              exact
+            />
+          </q-tabs>
+
+          <q-tabs class="lt-sm" align="right">
+            <q-route-tab
+              default
+              class="mobile-tabs"
+              icon="notes"
+              :to="`/survey/${id}/summary`"
+              exact
+            />
+            <q-route-tab
+              class="mobile-tabs"
+              icon="assignment"
+              :to="`/survey/${id}/specifications`"
+              exact
+            />
+            <q-route-tab
+              class="mobile-tabs"
+              icon="ballot"
+              :to="`/survey/${id}/deliverables`"
+              exact
+            />
+            <q-route-tab
+              class="mobile-tabs"
+              icon="attach_file"
               :to="`/survey/${id}/attachments`"
               exact
             />

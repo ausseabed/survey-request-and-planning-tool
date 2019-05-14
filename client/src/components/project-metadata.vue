@@ -144,7 +144,7 @@
           <q-card-section>
             <form-field-validated-select
               name="hippRequest"
-              label="Current HIPP requests"
+              label="HIPP request"
               hint="Optional"
               :value="hippRequest"
               @input="update('projectMetadata.hippRequest', $event)"

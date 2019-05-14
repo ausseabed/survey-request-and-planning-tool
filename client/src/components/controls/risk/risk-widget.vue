@@ -57,13 +57,22 @@ export default Vue.extend({
   },
   methods: {
     getNewName() {
-      return `Risk (${this.riskData.length + 1})`
+      if (this.riskData instanceof Array) {
+        return `Risk (${this.riskData.length + 1})`
+      } else {
+        return 'Risk (1)'
+      }
     },
     addRisk() {
       let defLevel = Object.keys(this.riskMatrix)[0]
       let defTimeframe = Object.keys(this.riskMatrix[defLevel])[0]
 
-      let clonedRiskData = _.cloneDeep(this.riskData)
+      let clonedRiskData = undefined
+      if (this.riskData instanceof Array) {
+        clonedRiskData = _.cloneDeep(this.riskData)
+      } else {
+        clonedRiskData = []
+      }
       clonedRiskData.push({
         name:this.getNewName(),
         level: defLevel,

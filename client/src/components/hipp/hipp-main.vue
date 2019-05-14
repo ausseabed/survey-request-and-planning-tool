@@ -11,7 +11,7 @@
           </div>
         </q-toolbar-title>
 
-        <q-tabs align="right">
+        <q-tabs class="gt-xs" align="right">
           <q-route-tab
             default
             icon="notes"
@@ -28,6 +28,28 @@
           <q-route-tab
             icon="layers"
             label="Projects"
+            :to="`/hipp-request/${id}/projects`"
+            exact
+          />
+        </q-tabs>
+
+        <q-tabs dense class="lt-sm" align="right">
+          <q-route-tab
+            default
+            class="mobile-tabs"
+            icon="notes"
+            :to="`/hipp-request/${id}/summary`"
+            exact
+          />
+          <q-route-tab
+            class="mobile-tabs"
+            icon="attach_file"
+            :to="`/hipp-request/${id}/attachments`"
+            exact
+          />
+          <q-route-tab
+            class="mobile-tabs"
+            icon="layers"
             :to="`/hipp-request/${id}/projects`"
             exact
           />
@@ -106,6 +128,9 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus">
-
+.mobile-tabs {
+  padding-left: 2px;
+  padding-right: 2px;
+}
 
 </style>

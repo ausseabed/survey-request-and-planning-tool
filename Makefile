@@ -3,7 +3,7 @@ PROD=-f docker-compose-base.yml -f docker-compose-prod.yml
 
 # Running things
 run:
-	docker-compose $(DEV) up www
+	docker-compose $(DEV) up www api
 
 run-prod:
 	docker-compose $(PROD) up

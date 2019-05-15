@@ -153,7 +153,9 @@ export default Vue.extend({
     },
     'projectMetadataListFilter': {
       handler: function (newFilter, oldFilter) {
-        this.getProjectMetadataList()
+        if (!_.isNil(this.hippRequest.id)) {
+          this.getProjectMetadataList()
+        }
       },
       immediate: true,
     },

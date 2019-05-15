@@ -82,6 +82,7 @@ module.exports = function (ctx) {
       plugins: [
         'Dialog',
         'Notify',
+        'Cookies',
       ]
 
       // iconSet: 'ionicons-v4'

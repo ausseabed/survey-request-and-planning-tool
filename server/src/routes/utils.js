@@ -16,16 +16,23 @@ export const asyncMiddleware = fn => (req, res, next) => {
 
 // Raise 401 if user is not authenticated
 export function isAuthenticated(req, res, next) {
-    if (req.headers.authorization) {
-        var verified_user = auth.verify(req.headers.authorization);
-        if (verified_user) {
-            req.user = verified_user;
-            return next();
-        }
-    }
+  // requests coming from Axois use a header, other (eg from img src)
+  // requests use a cookie
+  const authToken =
+    req.headers.authorization ?
+      req.headers.authorization :
+      req.cookies.Authorization
 
-    // Send unauthrized response if we get here
-    res.status(401).send('Unauthorized');
+  if (authToken) {
+    var verified_user = auth.verify(authToken);
+    if (verified_user) {
+      req.user = verified_user;
+      return next();
+    }
+  }
+
+  // Send unauthrized response if we get here
+  res.status(401).send('Unauthorized');
 }
 
 // Appends user to req is authenticated, will not 401

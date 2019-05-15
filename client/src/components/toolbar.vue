@@ -77,12 +77,14 @@
         console.log("Show profile here");
       },
       logout() {
+        this.$q.cookies.remove('Authorization');
         this.$auth.logout();
         this.isAuthenticated = this.$auth.isAuthenticated();
         this.$router.push('/login');
       },
       auth() {
         if (this.$auth.isAuthenticated()) {
+          this.$q.cookies.remove('Authorization')
           this.$auth.logout()
         }
 

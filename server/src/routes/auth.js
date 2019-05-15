@@ -107,6 +107,7 @@ function crcsiAuth(req, res) {
         name: user.name
       }, cert_priv, { expiresIn: 30 * 24 * 60 * 60, algorithm: 'RS256' });
 
+      res.setHeader('Set-Cookie', `Authorization=Bearer ${signed_jwt} ; Path=/`);
       return res.json({ 'access_token': signed_jwt });
     });
   })

@@ -20,7 +20,7 @@ router.get('/valid-statuses', async function (req, res) {
 });
 
 // Gets a list of project metadata
-router.get('/', async function (req, res) {
+router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   let projectsQuery = getConnection()
   .getRepository(ProjectMetadata)
@@ -39,9 +39,9 @@ router.get('/', async function (req, res) {
   let projects = await projectsQuery.getMany();
 
   return res.json(projects);
-});
+}));
 
-router.get('/:id/thumbnail', asyncMiddleware(async function (req, res) {
+router.get('/:id/thumbnail', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   const extents = await getConnection()
   .createQueryBuilder()

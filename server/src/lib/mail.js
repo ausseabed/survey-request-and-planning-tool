@@ -46,8 +46,6 @@ export default async function sendTestEmail() {
       text: "Hello from QA4MBES?", // plain text body
       html: "<b>Hello from QA4MBES?</b>" // html body
     };
-    console.log(transportOptions);
-    console.log(mailDetails);
     let info = await transporter.sendMail(mailDetails);
 
 }

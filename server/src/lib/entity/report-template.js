@@ -50,4 +50,23 @@ export class ReportTemplate {
       nullable: true,
   })
   created;
+
+  @Column({
+      type:"bool",
+      nullable: false,
+      default: true,
+  })
+  valid;
+
+  @Column({
+    type: "json",
+    nullable: true
+  })
+  parameters = undefined;
+
+  @Column({
+    type: "json",
+    nullable: true
+  })
+  errors = undefined;
 }

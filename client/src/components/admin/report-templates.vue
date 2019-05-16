@@ -84,81 +84,22 @@
             Active Templates
           </div>
 
-          <q-card
+          <report-template-card
             v-for="template in activeTemplates"
+            :template="template"
             :key="template.id">
-            <q-card-section class="row">
-              <div class="col text-subtitle1">
-                {{template.name}}
-              </div>
-              <div class="col-auto">
-                <q-btn
-                  type="a"
-                  :href="`/api/report-template/${template.id}/download`"
-                  round flat icon="cloud_download">
-                  <q-tooltip>
-                    Download template
-                  </q-tooltip>
-                </q-btn>
-              </div>
-            </q-card-section>
-            <q-separator />
-            <q-card-section class="column q-gutter-sm">
-              <div>
-                <div class="caption-text text-weight-light">Type:</div>
-                <div class="q-pl-md">{{template.templateType}}</div>
-              </div>
-              <div>
-                <div class="caption-text text-weight-light">Filename:</div>
-                <div class="q-pl-md">{{template.fileName}}</div>
-              </div>
-              <div>
-                <div class="caption-text text-weight-light">Created:</div>
-                <div class="q-pl-md">{{getDateString(template.created)}}</div>
-              </div>
-            </q-card-section>
-          </q-card>
+          </report-template-card>
 
           <div class="text-light text-h6 q-pt-md">
             Old Templates
           </div>
 
-          <q-card
+          <report-template-card
             class="q-mt-sm"
             v-for="template in inactiveTemplates"
+            :template="template"
             :key="template.id">
-            <q-card-section class="row">
-              <div class="col text-subtitle1">
-                {{template.name}}
-              </div>
-              <div class="col-auto">
-                <q-btn
-                  type="a"
-                  :href="`/api/report-template/${template.id}/download`"
-                  round flat icon="cloud_download">
-                  <q-tooltip>
-                    Download template
-                  </q-tooltip>
-                </q-btn>
-              </div>
-            </q-card-section>
-            <q-separator />
-            <q-card-section class="column q-gutter-sm">
-              <div>
-                <div class="caption-text text-weight-light">Type:</div>
-                <div class="q-pl-md">{{template.templateType}}</div>
-              </div>
-              <div>
-                <div class="caption-text text-weight-light">Filename:</div>
-                <div class="q-pl-md">{{template.fileName}}</div>
-              </div>
-              <div>
-                <div class="caption-text text-weight-light">Created:</div>
-                <div class="q-pl-md">{{getDateString(template.created)}}</div>
-              </div>
-            </q-card-section>
-          </q-card>
-
+          </report-template-card>
 
         </div>
       </div>
@@ -168,7 +109,6 @@
 </template>
 
 <script>
-import { date } from 'quasar'
 import Vue from 'vue'
 const _ = require('lodash');
 import { mapActions, mapGetters, mapMutations } from 'vuex'
@@ -178,10 +118,13 @@ import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
 import * as mTypes
   from '../../store/modules/organisation/organisation-mutation-types'
-
+import ReportTemplateCard from './report-template-card'
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler],
+  components: {
+    'report-template-card': ReportTemplateCard
+  },
   beforeMount() {
     this.getFormData();
   },
@@ -250,12 +193,6 @@ export default Vue.extend({
       this.reportTemplateFile = undefined;
     },
 
-    getDateString(aDate) {
-      const ts = new Date();
-      ts.setTime(aDate);
-      let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
-      return formattedString;
-    },
   },
 
   validations: {

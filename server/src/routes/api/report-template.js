@@ -1,9 +1,13 @@
 import _ from 'lodash'
 import boom from 'boom'
+var Docxtemplater = require('docxtemplater')
 import express from 'express'
 import formidable from 'formidable'
 import fs from 'fs'
+var InspectModule = require("docxtemplater/js/inspect-module")
+var JSZip = require('jszip')
 import stream from 'stream'
+
 
 
 import { getConnection } from 'typeorm'
@@ -107,6 +111,31 @@ async function saveAndUpdateReportType(reportTemplate) {
   })
 }
 
+function validateData(data, reportTemplate) {
+  var zip = new JSZip(data)
+
+  var doc = new Docxtemplater()
+  doc.loadZip(zip)
+  var iModule = InspectModule()
+  doc.attachModule(iModule)
+  try {
+    doc.render()
+    var tags = iModule.getAllTags()
+    reportTemplate.parameters = tags
+    reportTemplate.valid = true
+  }
+  catch (error) {
+    var e = {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+        properties: error.properties,
+    }
+    reportTemplate.errors = e
+    reportTemplate.valid = false
+  }
+}
+
 //upload for a new template, form includes fields that are needed by DB
 router.put('/upload', isAuthenticated,
   asyncMiddleware(async function (req, res) {
@@ -123,7 +152,8 @@ router.put('/upload', isAuthenticated,
   })
   .on('file', async (name, file) => {
     rt.fileName = file.name
-    const data = fs.readFileSync(file.path);
+    const data = fs.readFileSync(file.path)
+    validateData(data, rt)
     rt.blob = data
   })
   .on('aborted', () => {

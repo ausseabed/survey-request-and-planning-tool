@@ -3,6 +3,7 @@ import boom from 'boom'
 import express from 'express'
 import formidable from 'formidable'
 import fs from 'fs'
+import stream from 'stream'
 
 
 import { getConnection } from 'typeorm'
@@ -73,7 +74,7 @@ router.get(
       readStream.end(data);
       res.set(
         'Content-disposition', 'attachment; filename=' + rt.fileName);
-      res.set('Content-length', rt.length);
+      res.set('Content-length', rt.blob.length);
       res.set('Content-Type', rt.mimeType);
       readStream.pipe(res);
 

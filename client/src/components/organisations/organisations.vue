@@ -1,14 +1,14 @@
 <template>
 
-  <div class="q-my-md fit">
+  <div class="fit">
     <div class="fit">
-      <div class="row q-gutter-sm fit content-stretch">
-        <div class="col-sm-12 ol-lg-12 col-xl-6 self-stretch ">
+      <div class="row q-col-gutter-sm fit items-stretch">
+        <div class="col-sm-12 col-md-6">
           <q-card class="fit column">
             <q-card-section>
               <div class="text-h6">Organisations</div>
             </q-card-section>
-            <q-separator />
+            <q-separator style="height:1px"/>
             <q-card-section class="full-height col" style="padding:0px">
               <div v-if="organisations.length == 0">
                 No organisations.
@@ -49,8 +49,8 @@
           </q-card>
         </div>
 
-        <div class="col-sm-12 col-lg-12 col-xl-6 self-start">
-          <q-card v-if="activeOrganisation" class="fit">
+        <div class="col-sm-12 col-md-6">
+          <q-card v-if="activeOrganisation">
             <q-card-section class="row">
               <div class="text-h6">
                 <strong v-if="activeOrganisation.deleted">Deleted - </strong>
@@ -113,8 +113,8 @@
             </div>
 
           </q-card>
-          <div v-else class="no-active-organisation column justify-center items-center">
-            <div>
+          <div v-else class="no-active-organisation column justify-center">
+            <div class="self-center">
               No organisation selected.
             </div>
           </div>

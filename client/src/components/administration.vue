@@ -1,47 +1,59 @@
 <template>
-  <!-- <q-layout view="hHh Lpr lFf"> -->
-  <q-page class="q-mt-md col">
+  <q-layout
+    view="hHh Lpr lff"
+    container style="height: calc(100vh - 54px); min-height: calc(100vh - 54px);"
+    class="shadow-2 rounded-borders">
     <q-drawer
       side="left"
       v-model="left"
-      behavior="desktop"
-      class="admin-side-bar"
+      :width="300"
+      :breakpoint="500"
+      show-if-above
+      bordered
+      content-class="bg-grey-3"
     >
       <q-scroll-area class="fit">
-        <!-- <q-list-header>Administration</q-list-header> -->
         <div class="admin-heading">Administration</div>
-        <q-separator class="q-mb-md" />
+        <q-separator style="height:2px" class="q-mb-md" />
+
         <q-item to="/admin/users">
-          <q-item-section icon="supervisor_account">
+          <q-item-section avatar>
+            <q-icon name="supervisor_account" />
+          </q-item-section>
+          <q-item-section>
             <q-item-label>Users</q-item-label>
             <q-item-label caption>Manage user accounts</q-item-label>
           </q-item-section>
         </q-item>
         <q-item to="/admin/organisations">
-          <q-item-section icon="account_balance">
+          <q-item-section avatar>
+            <q-icon name="account_balance" />
+          </q-item-section>
+          <q-item-section>
             <q-item-label>Organisations</q-item-label>
             <q-item-label caption>Manage organisations</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator  class="q-my-sm" />
+        <q-item to="/admin/organisations">
+          <q-item-section avatar>
+            <q-icon name="library_books" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Report templates</q-item-label>
+            <q-item-label caption>Upload new report templates</q-item-label>
           </q-item-section>
         </q-item>
 
       </q-scroll-area>
     </q-drawer>
 
-    <div class="admin-content">
-      <router-view />
-      <!-- <div>foo bar</div>
-      <div style="padding: 25px 16px 16px;">
-        <p class="caption" v-for="n in 150" :key="`left-${n}`">
-          <em>Left Panel has intended scroll</em>
-        </p>
-      </div> -->
-    </div>
-  </q-page>
-  <!-- </q-layout> -->
-
-
-
-
+    <q-page-container>
+      <q-page padding style="height: calc(100vh - 54px); min-height: calc(100vh - 54px);">
+        <router-view />
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
@@ -71,16 +83,4 @@ export default {
   padding: 16px;
 }
 
-.admin-side-bar > aside {
-  margin-top: 16px;
-  margin-left: 16px;
-  margin-bottom: 16px;
-}
-
-.admin-content {
-  margin-left: 32px;
-  margin-right: 16px;
-  height: calc(100vh - 66px - 16px);
-  min-height: calc(100vh - 66px - 16px);
-}
 </style>

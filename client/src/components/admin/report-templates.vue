@@ -54,7 +54,9 @@
                       :multiple="false"
                       accept=".docx"
                       :auto-expand="true"
-                      :factory="uploadFiles"
+                      url="/api/report-template/upload/"
+                      method="PUT"
+                      :fields="[{name: 'name', value: reportTemplateName}, {name: 'templateType', value: reportTemplateType}]"
                       @start="uploadStarted"
                       @finish="uploadFinished"
                       @failed="uploadFailed"
@@ -203,10 +205,8 @@ export default Vue.extend({
       if (this.fileUploadFailed) {
         this.notifyError(`Failed to upload`);
       } else {
-        this.$refs.uploader.reset();
         this.notifySuccess("Successfully uploaded report template");
       }
-
       this.getReportTemplates();
     },
 
@@ -216,17 +216,6 @@ export default Vue.extend({
       console.log(xhr);
     },
 
-    uploadFiles (files) {
-      let data = new FormData();
-      for (const file of files) {
-        data.append('file', file, file.name);
-      }
-      data.append('name', this.reportTemplateName);
-      data.append('templateType', this.reportTemplateType);
-
-      const uploadUrl = `/api/report-template/upload/`;
-      return axios.put(uploadUrl, data);
-    },
 
     addedFile (files) {
       // we only allow a single file here, so this works (same goes for

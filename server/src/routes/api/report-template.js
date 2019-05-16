@@ -24,7 +24,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   .getRepository(ReportTemplate)
   .find({
     where:whereOpts,
-    created: {name: 'ASC'}
+    order: {created: 'DESC'}
   });
   return res.json(templates);
 }));
@@ -104,8 +104,6 @@ async function saveAndUpdateReportType(reportTemplate) {
     await getConnection().getRepository(ReportTemplate)
     .save(reportTemplate)
   })
-
-
 }
 
 //upload for a new template, form includes fields that are needed by DB
@@ -120,11 +118,9 @@ router.put('/upload', isAuthenticated,
 
   new formidable.IncomingForm().parse(req)
   .on('field', (name, field) => {
-    console.log('Field', name, field)
     rt[name] = field
   })
   .on('file', async (name, file) => {
-    console.log(`file name is ${file.name}`)
     rt.fileName = file.name
     const data = fs.readFileSync(file.path);
     rt.blob = data
@@ -136,10 +132,8 @@ router.put('/upload', isAuthenticated,
     console.error('Error', err)
     throw err
   })
-  .on('end', () => {
-    console.log(rt)
-    console.log("end")
-    saveAndUpdateReportType(rt)
+  .on('end', async () => {
+    await saveAndUpdateReportType(rt)
     res.end();
   })
 }));

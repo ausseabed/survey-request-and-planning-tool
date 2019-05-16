@@ -7,6 +7,7 @@ import Main from 'components/main.vue'
 import Organisations from 'components/organisations/organisations.vue'
 import ProjectMain from 'components/project-main.vue'
 import ProjectMetadata from 'components/project-metadata.vue'
+import ReportTemplates from 'components/admin/report-templates.vue'
 import SurveyDeliverables from 'components/survey-deliverables.vue'
 import SurveyFile from 'components/survey-file.vue'
 import SurveyTechnicalSpecification from 'components/survey-technical-specification.vue'
@@ -33,6 +34,10 @@ const routes = [
         {
             path: '',
             component: Organisations
+        },
+        {
+          path: 'report-templates',
+          component: ReportTemplates
         },
       ]
     },

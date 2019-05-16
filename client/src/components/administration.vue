@@ -35,7 +35,7 @@
           </q-item-section>
         </q-item>
         <q-separator  class="q-my-sm" />
-        <q-item to="/admin/organisations">
+        <q-item to="/admin/report-templates">
           <q-item-section avatar>
             <q-icon name="library_books" />
           </q-item-section>

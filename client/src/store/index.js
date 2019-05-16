@@ -12,6 +12,7 @@ import techSpec from './modules/tech-spec/tech-spec-state'
 import surveyFile from './modules/survey-file/survey-file-state'
 import deliverable from './modules/deliverable/deliverable-state'
 import hippRequest from './modules/hipp-request/hipp-request-state'
+import reportTemplate from './modules/report-template/report-template-state'
 
 
 Vue.use(Vuex)
@@ -29,6 +30,7 @@ export default new Vuex.Store({
     surveyFile,
     deliverable,
     hippRequest,
+    reportTemplate,
   },
   strict: debug
 })

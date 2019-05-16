@@ -12,6 +12,7 @@ var techSpecRoutes = require('./api/tech-spec');
 var referenceSystemRoutes = require('./api/reference-system');
 var deliverableRoutes = require('./api/deliverable');
 var hippRequestRoutes = require('./api/hipp-request');
+var reportTemplateRoutes = require('./api/report-template');
 
 import { isAuthenticated } from './utils';
 
@@ -29,6 +30,6 @@ router
 .use('/reference-system', referenceSystemRoutes)
 .use('/deliverable', deliverableRoutes)
 .use('/hipp-request', hippRequestRoutes)
-
+.use('/report-template', reportTemplateRoutes)
 
 module.exports = router;

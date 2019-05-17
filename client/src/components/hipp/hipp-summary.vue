@@ -203,6 +203,38 @@
 
         <q-card class="full-width">
           <q-card-section>
+            <div class="text-h6"> Business </div>
+          </q-card-section>
+          <q-card-section class="column q-col-gutter-md">
+            <form-field-validated-input
+              name="hippRequest.businessJustification"
+              attribute="Business Justification"
+              label="Business Justification"
+              hint="Optional"
+              :value="hippRequest.businessJustification"
+              @input="update({path:'hippRequest.businessJustification', value:$event})"
+              @blur="$v.hippRequest.businessJustification.$touch"
+              type="textarea"
+              >
+            </form-field-validated-input>
+
+            <form-field-validated-input
+              name="hippRequest.costBenefit"
+              attribute="Cost Benefit"
+              label="Cost Benefit"
+              hint="Optional"
+              :value="hippRequest.costBenefit"
+              @input="update({path:'hippRequest.costBenefit', value:$event})"
+              @blur="$v.hippRequest.costBenefit.$touch"
+              type="textarea"
+              >
+            </form-field-validated-input>
+          </q-card-section>
+        </q-card>
+
+
+        <q-card class="full-width">
+          <q-card-section>
             <div class="text-h6"> Quality </div>
           </q-card-section>
           <q-card-section class="column q-col-gutter-md">

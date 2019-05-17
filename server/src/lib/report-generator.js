@@ -2,6 +2,8 @@ import _ from 'lodash'
 var expressions= require('angular-expressions')
 const boom = require('boom')
 var Docxtemplater = require('docxtemplater')
+import { getConnection } from 'typeorm';
+var ImageModule = require('docxtemplater-image-module-free')
 var InspectModule = require("docxtemplater/js/inspect-module")
 var JSZip = require('jszip')
 var moment = require('moment')
@@ -15,9 +17,11 @@ expressions.filters.lower = function(input) {
 
 
 export class ReportGenerator {
-  constructor(entity, reportTemplate) {
+  constructor(entity, entityType, reportTemplate) {
     this.entity = entity
+    this.entityType = entityType
     this.reportTemplate = reportTemplate
+    this.imageSize = 400
   }
 
   getFilename() {
@@ -34,6 +38,47 @@ export class ReportGenerator {
     let err = boom.notImplemented(
       `ReportGenerator.getData needs to be overwritten by child class`);
     throw err;
+  }
+
+  async getDbImage(attrName) {
+    const extents = await getConnection()
+    .createQueryBuilder()
+    .select([`ST_XMin("extent")`, `ST_XMax("extent")`, `ST_YMin("extent")`, `ST_YMax("extent")`])
+    .from(subQuery => {
+      return subQuery
+        .select(`ST_Extent("${attrName}")`, 'extent')
+        .from(this.entityType)
+        .where(`"id" = :id`, { id: this.entity.id });
+    }, "extent")
+    .getRawOne();
+
+    let center = {
+      x: (extents.st_xmax + extents.st_xmin)/2,
+      y: (extents.st_ymax + extents.st_ymin)/2
+    }
+    let dX = extents.st_xmax - extents.st_xmin
+    let dY = extents.st_ymax - extents.st_ymin
+    let maxDelta = dX > dY ? dX : dY
+    let newExtents = {
+      minX: center.x - maxDelta/2,
+      maxX: center.x + maxDelta/2,
+      minY: center.y - maxDelta/2,
+      maxY: center.y + maxDelta/2,
+    }
+
+    let rasterSize = this.imageSize
+    let scale = maxDelta / rasterSize
+
+    let nrq = `ST_MakeEmptyRaster(${rasterSize},${rasterSize},${newExtents.minX}, ${newExtents.maxY}, ${scale}, ${-1*scale}, 0,0,4326)`
+
+    let dbImage = await getConnection()
+    .getRepository(this.entityType)
+    .createQueryBuilder()
+    .select(`ST_AsPNG(ST_AsRaster("${attrName}",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[97, 173, 216], ARRAY[255,255,255]))`, 'imageData')
+    .where(`"id" = :id`, {id: this.entity.id})
+    .getRawOne();
+
+    return dbImage.imageData
   }
 
   getTemplate() {
@@ -72,12 +117,32 @@ export class ReportGenerator {
     return moment(value).utcOffset(10).format(formatString)
   }
 
-  generate() {
+  generate(writeData, res) {
     // performs the substitution of the entity values into teh report template
-    var zip = new JSZip(this.getTemplate())
 
-    var doc = new Docxtemplater()
-    doc.loadZip(zip)
+    var imgOpts = {}
+    imgOpts.centered = false; //Set to true to always center images
+    imgOpts.fileType = "docx"; //Or pptx
+    imgOpts.getImage =  (tagValue, tagName) => {
+      return new Promise(async (resolve, reject) => { // <--- this line
+        try {
+          const img = await this.getDbImage(tagValue)
+          return resolve(img);
+        } catch(error) {
+          return reject(error);
+        }
+      })
+    }
+    imgOpts.getSize = function(img, tagValue, tagName) {
+      //img is the image returned by opts.getImage()
+      //tagValue is 'examples/image.png'
+      //tagName is 'image'
+      //tip: you can use node module 'image-size' here
+      return [150, 150]
+    }
+    var imageModule = new ImageModule(imgOpts)
+
+    var zip = new JSZip(this.getTemplate())
 
     var angularParser = function(tag) {
       return {
@@ -86,37 +151,42 @@ export class ReportGenerator {
         }
       }
     }
-    const opts = {
-      parser:angularParser
-    }
-    doc.setOptions(opts)
+
+    var doc = new Docxtemplater()
+    .loadZip(zip)
+    .setOptions({parser:angularParser})
+    .attachModule(imageModule)
+    .compile()
 
     const params = this.getData()
-    doc.setData(params)
 
-    try {
-      doc.render()
-    }
-    catch (error) {
-      var e = {
-          message: error.message,
-          name: error.name,
-          stack: error.stack,
-          properties: error.properties,
+    doc.resolveData(params).then(() =>  {
+      try {
+        doc.render()
       }
-      throw error
-    }
+      catch (error) {
+        var e = {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+            properties: error.properties,
+        }
+        throw error
+      }
 
-    var buf = doc.getZip().generate({type: 'nodebuffer'})
-    return buf
+      var buf = doc.getZip().generate({type: 'nodebuffer'})
+      // return buf
+      writeData(res, buf, this, this.reportTemplate)
+    })
+
   }
 }
 
 
 export class HippRequestReportGenerator extends ReportGenerator {
 
-  constructor (entity, reportTemplate) {
-    super(entity, reportTemplate)
+  constructor (entity, entityType, reportTemplate) {
+    super(entity, entityType, reportTemplate)
   }
 
   getFilename() {
@@ -159,7 +229,11 @@ export class HippRequestReportGenerator extends ReportGenerator {
         this.entityAttributeValue('chartProductQualityImpactRequirements'),
       riskIssues: this.entityAttributeValue('riskIssues'),
       attachments: this.entityAttributeValue('attachments'),
+      areaOfInterest: 'areaOfInterest',
     }
+
+
+
     return data
   }
 

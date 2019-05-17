@@ -48,9 +48,9 @@ router.get('/:id/thumbnail', isAuthenticated, asyncMiddleware(async function (re
   .select([`ST_XMin("extent")`, `ST_XMax("extent")`, `ST_YMin("extent")`, `ST_YMax("extent")`])
   .from(subQuery => {
       return subQuery
-          .select('ST_Extent("project_metadata"."areaOfInterest")', 'extent')
-          .from(ProjectMetadata, "project_metadata")
-          .where("project_metadata.id = :id", { id: req.params.id });
+          .select('ST_Extent("areaOfInterest")', 'extent')
+          .from(ProjectMetadata)
+          .where(`"id" = :id`, { id: req.params.id });
   }, "extent")
   .getRawOne();
 
@@ -81,9 +81,9 @@ router.get('/:id/thumbnail', isAuthenticated, asyncMiddleware(async function (re
 
   let projectImage = await getConnection()
   .getRepository(ProjectMetadata)
-  .createQueryBuilder("project_metadata")
-  .select(`ST_AsPNG(ST_AsRaster("project_metadata"."areaOfInterest",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[97, 173, 216], ARRAY[255,255,255]))`, 'imageData')
-  .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  .createQueryBuilder()
+  .select(`ST_AsPNG(ST_AsRaster("areaOfInterest",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[97, 173, 216], ARRAY[255,255,255]))`, 'imageData')
+  .where(`"id" = :id`, {id: req.params.id})
   .getRawOne();
 
   // let projectImage = await getConnection()

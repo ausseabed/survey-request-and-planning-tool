@@ -26,7 +26,7 @@ const router = express.Router()
 // relationships is used to build query to get entity and related info
 const TEMPLATE_TYPE_MAP = {
   'HIPP Request': {
-    entity: HippRequest,
+    entityType: HippRequest,
     reportGenerator: HippRequestReportGenerator,
     relations: [
       'requestingAgency',
@@ -34,6 +34,17 @@ const TEMPLATE_TYPE_MAP = {
       'attachments.attachment'
     ],
   },
+}
+
+function writeData(res, reportData, reportGen, reportTemplate) {
+  // callback function that get called by the report generator when done
+  const readStream = new stream.PassThrough()
+  readStream.end(reportData)
+  res.set(
+    'Content-disposition', 'attachment; filename=' + reportGen.getFilename())
+  res.set('Content-length', reportData.length)
+  res.set('Content-Type', reportTemplate.mimeType)
+  readStream.pipe(res)
 }
 
 
@@ -56,7 +67,7 @@ router.get('/generate/:templateType/:entityId', isAuthenticated,
   }
 
   const templateDetails = TEMPLATE_TYPE_MAP[templateType]
-  const entityRepo = getConnection().getRepository(templateDetails.entity)
+  const entityRepo = getConnection().getRepository(templateDetails.entityType)
 
   // get the entity (eg; HippRequest, ProjectMetadata), the values from this
   // will be fed into the generated report
@@ -65,7 +76,7 @@ router.get('/generate/:templateType/:entityId', isAuthenticated,
 
   if (_.isNil(entity) || entity.deleted) {
     let err = boom.notFound(
-      `Entity ${templateDetails.entity} ${entityId} does not exist`);
+      `Entity ${templateDetails.entityType} ${entityId} does not exist`);
     throw err;
   }
 
@@ -93,19 +104,9 @@ router.get('/generate/:templateType/:entityId', isAuthenticated,
 
   // create a new instance of the report generator class defined in the
   // TEMPLATE_TYPE_MAP
-  const reportGen = new templateDetails.reportGenerator(entity, reportTemplate)
-  const reportData = reportGen.generate()
-
-  // console.log(entity)
-  // console.log(reportGen.getData())
-
-  const readStream = new stream.PassThrough()
-  readStream.end(reportData)
-  res.set(
-    'Content-disposition', 'attachment; filename=' + reportGen.getFilename())
-  res.set('Content-length', reportData.length)
-  res.set('Content-Type', reportTemplate.mimeType)
-  readStream.pipe(res)
+  const reportGen = new templateDetails.reportGenerator(
+    entity, templateDetails.entityType, reportTemplate)
+  reportGen.generate(writeData, res)
 }));
 
 

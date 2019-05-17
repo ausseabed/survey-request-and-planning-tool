@@ -30,7 +30,8 @@ const TEMPLATE_TYPE_MAP = {
     reportGenerator: HippRequestReportGenerator,
     relations: [
       'requestingAgency',
-      'attachments'
+      'attachments',
+      'attachments.attachment'
     ],
   },
 }
@@ -95,8 +96,8 @@ router.get('/generate/:templateType/:entityId', isAuthenticated,
   const reportGen = new templateDetails.reportGenerator(entity, reportTemplate)
   const reportData = reportGen.generate()
 
-  // console.log(reportGen.getData())
   // console.log(entity)
+  // console.log(reportGen.getData())
 
   const readStream = new stream.PassThrough()
   readStream.end(reportData)

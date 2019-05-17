@@ -1,9 +1,18 @@
 import _ from 'lodash'
+var expressions= require('angular-expressions')
 const boom = require('boom')
 var Docxtemplater = require('docxtemplater')
 var InspectModule = require("docxtemplater/js/inspect-module")
 var JSZip = require('jszip')
 var moment = require('moment')
+
+
+expressions.filters.lower = function(input) {
+  // This condition should be used to make sure that if your input is undefined, your output will be undefined as well and will not throw an error
+  if(!input) return input;
+  return input.toLowerCase();
+}
+
 
 export class ReportGenerator {
   constructor(entity, reportTemplate) {
@@ -69,6 +78,18 @@ export class ReportGenerator {
 
     var doc = new Docxtemplater()
     doc.loadZip(zip)
+
+    var angularParser = function(tag) {
+      return {
+        get: tag === '.' ? function(s){ return s;} : function(s) {
+          return expressions.compile(tag.replace(/(’|“|”)/g, "'"))(s)
+        }
+      }
+    }
+    const opts = {
+      parser:angularParser
+    }
+    doc.setOptions(opts)
 
     const params = this.getData()
     doc.setData(params)

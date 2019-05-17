@@ -4,7 +4,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
 import { DateTransformer } from './utils';
 
 export const REPORT_TEMPLATE_TYPES = [
-  "Hipp Request",
+  "HIPP Request",
 ];
 
 @Entity()

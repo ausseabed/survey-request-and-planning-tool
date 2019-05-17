@@ -13,10 +13,100 @@ import stream from 'stream'
 import { getConnection } from 'typeorm'
 
 import { asyncMiddleware, isAuthenticated } from '../utils'
+import { HippRequest } from '../../lib/entity/hipp-request'
+import { ReportGenerator, HippRequestReportGenerator }
+  from '../../lib/report-generator'
 import { ReportTemplate, REPORT_TEMPLATE_TYPES }
   from '../../lib/entity/report-template'
 
 const router = express.Router()
+
+
+// one entry for each REPORT_TEMPLATE_TYPES in the entity/report-template.js
+// relationships is used to build query to get entity and related info
+const TEMPLATE_TYPE_MAP = {
+  'HIPP Request': {
+    entity: HippRequest,
+    reportGenerator: HippRequestReportGenerator,
+    relations: [
+      'requestingAgency',
+      'attachments'
+    ],
+  },
+}
+
+
+// Gets a list of organisations
+router.get('/generate/:templateType/:entityId', isAuthenticated,
+  asyncMiddleware(async function (req, res) {
+
+  const entityId = req.params.entityId;
+  const templateType = req.params.templateType;
+
+  if (_.isNil(entityId) || _.isNil(templateType)) {
+    let err = boom.badRequest(`entityId and templateType must be specified ` +
+      `(eg; /generate/:templateType/:entityId)`)
+    throw err
+  }
+
+  if (!(templateType in TEMPLATE_TYPE_MAP)) {
+    let err = boom.badRequest(`Template type ${templateType} is not defined`)
+    throw err
+  }
+
+  const templateDetails = TEMPLATE_TYPE_MAP[templateType]
+  const entityRepo = getConnection().getRepository(templateDetails.entity)
+
+  // get the entity (eg; HippRequest, ProjectMetadata), the values from this
+  // will be fed into the generated report
+  let entity = await entityRepo
+  .findOne(entityId, {relations: templateDetails.relations})
+
+  if (_.isNil(entity) || entity.deleted) {
+    let err = boom.notFound(
+      `Entity ${templateDetails.entity} ${entityId} does not exist`);
+    throw err;
+  }
+
+  // get the active report template for this type, making sure to select the
+  // attribs needed.
+  const reportTemplate = await getConnection().getRepository(ReportTemplate)
+  .createQueryBuilder("report_template")
+  .select([
+    "report_template.id",
+    "report_template.templateType",
+    "report_template.fileName",
+    "report_template.active",
+    "report_template.mimeType",
+    "report_template.storage",
+    "report_template.blob"
+  ])
+  .where(
+    `"templateType" = :templateType`,
+    {templateType: templateType}
+  ).andWhere(
+    `"active" = :active`,
+    {active: true}
+  )
+  .getOne();
+
+  // create a new instance of the report generator class defined in the
+  // TEMPLATE_TYPE_MAP
+  const reportGen = new templateDetails.reportGenerator(entity, reportTemplate)
+  const reportData = reportGen.generate()
+
+  // console.log(reportGen.getData())
+  // console.log(entity)
+
+  const readStream = new stream.PassThrough()
+  readStream.end(reportData)
+  res.set(
+    'Content-disposition', 'attachment; filename=' + reportGen.getFilename())
+  res.set('Content-length', reportData.length)
+  res.set('Content-Type', reportTemplate.mimeType)
+  readStream.pipe(res)
+}));
+
 
 // Gets a list of organisations
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {

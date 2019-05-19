@@ -42,8 +42,6 @@ export const downloadFile = async ({commit, state}, payload) => {
     onDownloadProgress: (progressEvent) => {
       let percentCompleted = Math.round(
         (progressEvent.loaded * 100) / progressEvent.total);
-      console.log(progressEvent.lengthComputable);
-      console.log(percentCompleted);
 
       commit(
         mutTypes.SET_FILE_PROGRESS,

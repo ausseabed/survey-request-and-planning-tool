@@ -50,7 +50,8 @@
           ref="uploader"
           multiple
           :auto-expand="true"
-          :factory="uploadFiles"
+          :url="`/api/attachment/${attachesTo}/${attachesToId}/upload/`"
+          method="PUT"
           @start="uploadStarted"
           @finish="uploadFinished"
           @failed="uploadFailed"/>
@@ -110,24 +111,6 @@ export default Vue.extend({
       ts.setTime(dateUtcMilliseconds);
       let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
       return formattedString;
-    },
-
-    uploadFiles (files) {
-      // we need to return a Promise
-      // (resolves when upload is done, rejects when there's an error)
-      let data = new FormData();
-      for (const file of files) {
-        data.append('file', file, file.name);
-      }
-
-      //
-      // var config = {
-      //   onUploadProgress: function(progressEvent) {
-      //     updateProgress(progressEvent.loaded / progressEvent.total);
-      //   }
-      // };
-      const uploadUrl = `/api/attachment/${this.attachesTo}/${this.attachesToId}/upload/`;
-      return axios.put(uploadUrl, data);
     },
 
     uploadStarted () {

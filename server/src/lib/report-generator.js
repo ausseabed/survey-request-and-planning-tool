@@ -276,7 +276,12 @@ export class ReportGenerator {
 
     var doc = new Docxtemplater()
     .loadZip(zip)
-    .setOptions({parser:angularParser})
+    .setOptions(
+      {
+        parser:angularParser,
+        linebreaks: true
+      }
+    )
     .attachModule(imageModule)
     .compile()
 

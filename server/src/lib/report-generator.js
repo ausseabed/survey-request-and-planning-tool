@@ -226,7 +226,6 @@ export class ReportGenerator {
     imgOpts.getSize = function(img, tagValue, tagName) {
       //tagValue is what is included in word doc template
       //tagName is the value in the data dict
-      console.log(`${tagName}  : val ${tagValue}`)
       const tagValueBits = tagName.split('_')
       let sizeStr = 'md'
       if (tagValueBits.length > 1) {
@@ -242,7 +241,7 @@ export class ReportGenerator {
       } else if (sizeStr == 'xl' || sizeStr == 'extralarge') {
         size = [1000, 1000]
       }
-      return [400, 400]
+      return size
     }
     var imageModule = new ImageModule(imgOpts)
 

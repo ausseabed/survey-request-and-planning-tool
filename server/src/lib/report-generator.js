@@ -1,4 +1,5 @@
 import _ from 'lodash'
+var Axios = require('axios')
 var expressions= require('angular-expressions')
 const boom = require('boom')
 var Docxtemplater = require('docxtemplater')
@@ -7,6 +8,7 @@ var ImageModule = require('docxtemplater-image-module-free')
 var InspectModule = require("docxtemplater/js/inspect-module")
 var JSZip = require('jszip')
 var moment = require('moment')
+var sharp = require('sharp')
 
 
 expressions.filters.lower = function(input) {
@@ -21,7 +23,7 @@ export class ReportGenerator {
     this.entity = entity
     this.entityType = entityType
     this.reportTemplate = reportTemplate
-    this.imageSize = 400
+    this.imageSize = 800
   }
 
   getFilename() {
@@ -40,7 +42,21 @@ export class ReportGenerator {
     throw err;
   }
 
-  async getDbImage(attrName) {
+  mergeImageKeys(attrName, data) {
+    // adds all the tags for the various image sizes the user can include
+    // in the template
+    data[`${attrName}`] = attrName
+    data[`${attrName}_sm`] = attrName
+    data[`${attrName}_md`] = attrName
+    data[`${attrName}_lg`] = attrName
+    data[`${attrName}_xl`] = attrName
+    data[`${attrName}_small`] = attrName
+    data[`${attrName}_medium`] = attrName
+    data[`${attrName}_large`] = attrName
+    data[`${attrName}_extralarge`] = attrName
+  }
+
+  async getDbImage_old(attrName) {
     const extents = await getConnection()
     .createQueryBuilder()
     .select([`ST_XMin("extent")`, `ST_XMax("extent")`, `ST_YMin("extent")`, `ST_YMax("extent")`])
@@ -81,6 +97,70 @@ export class ReportGenerator {
     return dbImage.imageData
   }
 
+  async getExtents(attrName) {
+    const extents = await getConnection()
+    .createQueryBuilder()
+    .select([`ST_XMin("extent")`, `ST_XMax("extent")`, `ST_YMin("extent")`, `ST_YMax("extent")`])
+    .from(subQuery => {
+      return subQuery
+        .select(`ST_Extent("${attrName}")`, 'extent')
+        .from(this.entityType)
+        .where(`"id" = :id`, { id: this.entity.id });
+    }, "extent")
+    .getRawOne();
+
+    let center = {
+      x: (extents.st_xmax + extents.st_xmin)/2,
+      y: (extents.st_ymax + extents.st_ymin)/2
+    }
+    let dX = extents.st_xmax - extents.st_xmin
+    let dY = extents.st_ymax - extents.st_ymin
+    let maxDelta = dX > dY ? dX : dY
+    maxDelta = maxDelta * 1.1 // 10% buffer around regions bounding box
+    let newExtents = {
+      minX: center.x - maxDelta/2,
+      maxX: center.x + maxDelta/2,
+      minY: center.y - maxDelta/2,
+      maxY: center.y + maxDelta/2,
+    }
+    return newExtents
+  }
+
+  async getDbImage(attrName, extents) {
+
+    let entityMd = getConnection().getMetadata(this.entityType)
+    let tableName = entityMd.tableName
+
+    let rasterSize = this.imageSize
+    const dX = extents.maxX - extents.minX
+    const dY = extents.maxY - extents.minY
+    const maxDelta = dX > dY ? dX : dY
+    let scale = maxDelta / rasterSize
+    let bufferWidth = maxDelta / 350.0
+
+
+    let nrq = `ST_MakeEmptyRaster(${rasterSize},${rasterSize},${extents.minX}, ${extents.maxY}, ${scale}, ${-1*scale}, 0,0,4326)`
+    let aoiRaster = `ST_AsRaster("${attrName}",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[255, 0, 0, 55], ARRAY[255,255,255, 0])`
+    let aoiRasterBoundary = `ST_AsRaster(ST_Buffer(ST_Boundary("${attrName}"), ${bufferWidth},\'join=round\'),${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[255, 0, 0, 255], ARRAY[255,255,255, 0])`
+
+    const innSel = `SELECT ${aoiRasterBoundary} as rast from ${tableName} where "id" = '${this.entity.id}' UNION ALL SELECT ${aoiRaster} as rast from ${tableName} where "id" = '${this.entity.id}' UNION ALL SELECT ${nrq}`;
+
+    const mergedRaster = await getConnection()
+    .query(`select ST_AsPNG(ST_Union(rast, 'FIRST')) "imageData" from (${innSel}) foo`)
+
+    return mergedRaster[0].imageData
+  }
+
+  async getBaseMapImage(extents) {
+    const sizeX = this.imageSize
+    const sizeY = this.imageSize
+    const wmsBase = `http://gaservices.ga.gov.au/site_7/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer/export`
+    const wmsBB = `BBOX=${extents.minX}%2C${extents.minY}%2C${extents.maxX}%2C${extents.maxY}`
+    const baseMapUrl = `${wmsBase}?F=image&FORMAT=PNG32&TRANSPARENT=true&SIZE=${sizeX}%2C${sizeY}&${wmsBB}&BBOXSR=4326&IMAGESR=4326&DPI=180`
+    let res = await Axios.get(baseMapUrl, {responseType: 'arraybuffer'})
+    return res.data
+  }
+
   getTemplate() {
     // gets the data from the report template. Currently only support DB
     // storage (not s3), but the idea is that here is where the data would
@@ -118,7 +198,7 @@ export class ReportGenerator {
   }
 
   generate(writeData, res) {
-    // performs the substitution of the entity values into teh report template
+    // performs the substitution of the entity values into the report template
 
     var imgOpts = {}
     imgOpts.centered = false; //Set to true to always center images
@@ -126,19 +206,43 @@ export class ReportGenerator {
     imgOpts.getImage =  (tagValue, tagName) => {
       return new Promise(async (resolve, reject) => { // <--- this line
         try {
-          const img = await this.getDbImage(tagValue)
-          return resolve(img);
+          const attrName = tagValue
+          const extents = await this.getExtents(attrName)
+          const dbImg = await this.getDbImage(attrName, extents)
+          const bmImg = await this.getBaseMapImage(extents)
+
+          const mergedImg = await sharp(bmImg)
+          .modulate({saturation: 0.7})
+          .composite([{ input: dbImg}])
+          .png()
+          .toBuffer()
+
+          return resolve(mergedImg);
         } catch(error) {
           return reject(error);
         }
       })
     }
     imgOpts.getSize = function(img, tagValue, tagName) {
-      //img is the image returned by opts.getImage()
-      //tagValue is 'examples/image.png'
-      //tagName is 'image'
-      //tip: you can use node module 'image-size' here
-      return [150, 150]
+      //tagValue is what is included in word doc template
+      //tagName is the value in the data dict
+      console.log(`${tagName}  : val ${tagValue}`)
+      const tagValueBits = tagName.split('_')
+      let sizeStr = 'md'
+      if (tagValueBits.length > 1) {
+        sizeStr = tagValueBits[1].toLowerCase()
+      }
+      let size = [400, 400]
+      if (sizeStr == 'sm' || sizeStr == 'small') {
+        size = [200, 200]
+      } else if (sizeStr == 'md' || sizeStr == 'medium') {
+        size = [400, 400]
+      } else if (sizeStr == 'lg' || sizeStr == 'large') {
+        size = [800, 800]
+      } else if (sizeStr == 'xl' || sizeStr == 'extralarge') {
+        size = [1000, 1000]
+      }
+      return [400, 400]
     }
     var imageModule = new ImageModule(imgOpts)
 
@@ -229,10 +333,9 @@ export class HippRequestReportGenerator extends ReportGenerator {
         this.entityAttributeValue('chartProductQualityImpactRequirements'),
       riskIssues: this.entityAttributeValue('riskIssues'),
       attachments: this.entityAttributeValue('attachments'),
-      areaOfInterest: 'areaOfInterest',
     }
 
-
+    this.mergeImageKeys('areaOfInterest', data)
 
     return data
   }

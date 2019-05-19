@@ -16,6 +16,21 @@
         >
           <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save summary</q-tooltip>
         </q-btn>
+        <q-btn
+          @click="generateReport({id: hippRequest.id, templateType: 'HIPP Request'})"
+          :disable="!hippRequest.id"
+          :loading="reportDownloading"
+          round
+          color="primary"
+          icon="description"
+          class="q-ml-sm">
+          <q-tooltip>
+            Download HIPP Request report
+          </q-tooltip>
+          <template v-slot:loading>
+            <q-spinner-facebook />
+          </template>
+        </q-btn>
         <q-btn :disable="!hippRequest.id"
           round
           color="primary"
@@ -451,6 +466,9 @@ export default Vue.extend({
     ...mapActions('organisation', [
       'getOrganisations',
     ]),
+    ...mapActions('reportTemplate', [
+      'generateReport',
+    ]),
     ...mapMutations('hippRequest', {
       'setDirty': hippMutTypes.SET_DIRTY,
       'update': hippMutTypes.UPDATE,
@@ -582,6 +600,9 @@ export default Vue.extend({
     ]),
     ...mapGetters('organisation', [
       'organisations',
+    ]),
+    ...mapGetters('reportTemplate', [
+      'reportDownloading',
     ]),
     formattedRequestDate: function() {
       if (_.isNil(this.hippRequest.requestDate)) {

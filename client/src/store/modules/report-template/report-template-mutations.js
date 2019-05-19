@@ -19,6 +19,13 @@ const mutations = {
     });
   },
 
+  [types.SET_REPORT_PROGRESS] (state, progress) {
+    state.reportProgress = progress;
+  },
+
+  [types.SET_REPORT_DOWNLOADING] (state, downloading) {
+    state.reportDownloading = downloading;
+  },
 }
 
 export default {

@@ -12,6 +12,9 @@ function initialState() {
 
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
+
+    reportProgress: undefined,
+    reportDownloading: false,
   }
 }
 

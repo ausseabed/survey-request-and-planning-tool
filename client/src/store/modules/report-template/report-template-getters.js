@@ -13,3 +13,11 @@ export const requestStatus = state => {
 export const requestError = state => {
   return state.requestError;
 }
+
+export const reportProgress = state => {
+  return state.reportProgress;
+}
+
+export const reportDownloading = state => {
+  return state.reportDownloading;
+}

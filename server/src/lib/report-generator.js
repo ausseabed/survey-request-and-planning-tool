@@ -349,6 +349,8 @@ export class HippRequestReportGenerator extends ReportGenerator {
         this.entityAttributeValue('surveyQualityRequirementsComments'),
       chartProductQualityImpactRequirements:
         this.entityAttributeValue('chartProductQualityImpactRequirements'),
+      chartProductQualityImpactRequirementsComments:
+        this.entityAttributeValue('chartProductQualityImpactRequirementsComments'),
       riskIssues: this.entityAttributeValue('riskIssues'),
       attachments: this.entityAttributeValue('attachments'),
       hasAreaOfInterest: !_.isNil(this.entity.areaOfInterest),

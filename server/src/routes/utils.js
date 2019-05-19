@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const boom = require('boom');
 
 var auth = require('../lib/auth')();
@@ -27,6 +28,17 @@ export function isAuthenticated(req, res, next) {
     var verified_user = auth.verify(authToken);
     if (verified_user) {
       req.user = verified_user;
+
+      if (req.headers.authorization && _.isNil(req.cookies.Authorization)) {
+        // then the header has a valid auth token, but it hasn't been set in
+        // the cookie. New logins will have the cookie set, but existing
+        // users wont (so do it here).
+        // Todo; this could probably be removed in future one everyone's old
+        // auth tokens have expired
+        res.setHeader(
+          'Set-Cookie', `Authorization=${req.headers.authorization} ; Path=/`);
+      }
+
       return next();
     }
   }

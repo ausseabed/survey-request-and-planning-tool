@@ -116,7 +116,7 @@ export class ReportGenerator {
     let dX = extents.st_xmax - extents.st_xmin
     let dY = extents.st_ymax - extents.st_ymin
     let maxDelta = dX > dY ? dX : dY
-    maxDelta = maxDelta * 1.1 // 10% buffer around regions bounding box
+    maxDelta = maxDelta * 1.3 // 30% buffer around regions bounding box
     let newExtents = {
       minX: center.x - maxDelta/2,
       maxX: center.x + maxDelta/2,
@@ -157,8 +157,19 @@ export class ReportGenerator {
     const wmsBase = `http://gaservices.ga.gov.au/site_7/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer/export`
     const wmsBB = `BBOX=${extents.minX}%2C${extents.minY}%2C${extents.maxX}%2C${extents.maxY}`
     const baseMapUrl = `${wmsBase}?F=image&FORMAT=PNG32&TRANSPARENT=true&SIZE=${sizeX}%2C${sizeY}&${wmsBB}&BBOXSR=4326&IMAGESR=4326&DPI=180`
-    let res = await Axios.get(baseMapUrl, {responseType: 'arraybuffer'})
-    return res.data
+    try {
+      let res = await Axios.get(baseMapUrl, {responseType: 'arraybuffer'})
+      return res.data
+    } catch(error) {
+      console.log(error)
+      const noBaseMapImg =
+        await sharp('src/lib/report-generator-nobasemap.png')
+        .resize(sizeX, sizeY)
+        .png()
+        .toBuffer()
+      return noBaseMapImg
+    }
+
   }
 
   getTemplate() {
@@ -207,6 +218,14 @@ export class ReportGenerator {
       return new Promise(async (resolve, reject) => { // <--- this line
         try {
           const attrName = tagValue
+          if (_.isNil(this.entity[attrName])) {
+            console.log("no region" )
+            const noRegionImg =
+              await sharp('src/lib/report-generator-noregion.png')
+              .png()
+              .toBuffer()
+            return resolve(noRegionImg);
+          }
           const extents = await this.getExtents(attrName)
           const dbImg = await this.getDbImage(attrName, extents)
           const bmImg = await this.getBaseMapImage(extents)
@@ -332,6 +351,7 @@ export class HippRequestReportGenerator extends ReportGenerator {
         this.entityAttributeValue('chartProductQualityImpactRequirements'),
       riskIssues: this.entityAttributeValue('riskIssues'),
       attachments: this.entityAttributeValue('attachments'),
+      hasAreaOfInterest: !_.isNil(this.entity.areaOfInterest),
     }
 
     this.mergeImageKeys('areaOfInterest', data)

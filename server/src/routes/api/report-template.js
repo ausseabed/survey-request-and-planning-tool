@@ -41,7 +41,8 @@ function writeData(res, reportData, reportGen, reportTemplate) {
   const readStream = new stream.PassThrough()
   readStream.end(reportData)
   res.set(
-    'Content-disposition', 'attachment; filename=' + reportGen.getFilename())
+    'Content-disposition',
+    `attachment; filename=${reportGen.getFilename()}.docx`)
   res.set('Content-length', reportData.length)
   res.set('Content-Type', reportTemplate.mimeType)
   readStream.pipe(res)
@@ -54,6 +55,14 @@ router.get('/generate/:templateType/:entityId', isAuthenticated,
 
   const entityId = req.params.entityId;
   const templateType = req.params.templateType;
+  const format = _.isNil(req.query['format']) ?
+    'docx' :
+    req.query['format']
+
+  if (!(format == 'docx' || format == 'csv')) {
+    let err = boom.badRequest(`format must be 'docx' or 'csv' not '${format}'`)
+    throw err
+  }
 
   if (_.isNil(entityId) || _.isNil(templateType)) {
     let err = boom.badRequest(`entityId and templateType must be specified ` +
@@ -106,7 +115,20 @@ router.get('/generate/:templateType/:entityId', isAuthenticated,
   // TEMPLATE_TYPE_MAP
   const reportGen = new templateDetails.reportGenerator(
     entity, templateDetails.entityType, reportTemplate)
-  reportGen.generate(writeData, res)
+
+  if (format == 'docx') {
+    reportGen.generate(writeData, res)
+  } else {
+    const csv = reportGen.getCsvData()
+
+    res.set(
+      'Content-disposition',
+      `attachment; filename=${reportGen.getFilename()}.csv`)
+    res.set('Content-length', csv.length)
+    res.set('Content-Type', 'text/csv')
+    res.send(csv)
+  }
+
 }));
 
 

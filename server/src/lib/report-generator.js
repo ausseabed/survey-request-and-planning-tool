@@ -8,6 +8,7 @@ var ImageModule = require('docxtemplater-image-module-free')
 var InspectModule = require("docxtemplater/js/inspect-module")
 var JSZip = require('jszip')
 var moment = require('moment')
+const { Parser } = require('json2csv')
 var sharp = require('sharp')
 
 
@@ -28,8 +29,8 @@ export class ReportGenerator {
 
   getFilename() {
     // returns a filename that is used in the reponse header. It's what the
-    // downloaded file will be named.
-    let fn = `${this.reportTemplate.templateType}.docx`
+    // downloaded file will be named. Do not include extension here.
+    let fn = `${this.reportTemplate.templateType}`
     fn = fn.replace(' ', '-')
     return fn
   }
@@ -40,6 +41,12 @@ export class ReportGenerator {
     let err = boom.notImplemented(
       `ReportGenerator.getData needs to be overwritten by child class`);
     throw err;
+  }
+
+  getRawDataFields() {
+    // returns a list of the fields that will be exported to the raw output
+    // these must match the keys returned by getData
+    return []
   }
 
   mergeImageKeys(attrName, data) {
@@ -305,7 +312,26 @@ export class ReportGenerator {
       // return buf
       writeData(res, buf, this, this.reportTemplate)
     })
+  }
 
+  getCsvData() {
+    // uses json2csv to convert data object into csv string
+    const fields = this.getRawDataFields()
+    // following tweaks to the newline char were tested on excel for macOS,
+    // this may / may not work on windows
+    const json2csvParser = new Parser({
+      fields,
+      eol: '\r\n'
+    })
+    const entityData = this.getData()
+    for (const [key, value] of Object.entries(entityData)) {
+      if (typeof value === 'string' || value instanceof String) {
+        entityData[key] = value.replace(/\n/g, '\r\n')
+      }
+    }
+    // needs an array of data
+    const csvData = json2csvParser.parse([entityData])
+    return csvData
   }
 }
 
@@ -318,8 +344,8 @@ export class HippRequestReportGenerator extends ReportGenerator {
 
   getFilename() {
     // returns a filename that is used in the reponse header. It's what the
-    // downloaded file will be named.
-    let fn = `${this.reportTemplate.templateType} ${this.entity.name}.docx`
+    // downloaded file will be named. Do not include extension here.
+    let fn = `${this.reportTemplate.templateType} ${this.entity.name}`
     fn = fn.replace(' ', '-')
     return fn
   }
@@ -364,6 +390,28 @@ export class HippRequestReportGenerator extends ReportGenerator {
     this.mergeImageKeys('areaOfInterest', data)
 
     return data
+  }
+
+  getRawDataFields() {
+    let rawFields = [
+      'id',
+      'name',
+      'requestingAgency.name',
+      'requestingAgency.abn',
+      'requestorName',
+      'pointOfContactEmail',
+      'pointOfContactPhone',
+      'requestDate',
+      'areaName',
+      'areaValue',
+      'businessJustification',
+      'costBenefit',
+      'hasMoratorium',
+      'comments',
+      'surveyQualityRequirementsComments',
+      'chartProductQualityImpactRequirementsComments',
+    ]
+    return rawFields
   }
 
 }

@@ -5,41 +5,50 @@
       <q-page-sticky
         position="top-right"
         :offset="hippRequest.id ? [18, 18+66] : [18, 18]"
-        style="z-index:100">
+        style="z-index:100" >
 
-        <q-btn
-          round
-          color="primary"
-          @click="submit"
-          icon="save"
-          class="q-ml-sm"
-        >
-          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save summary</q-tooltip>
-        </q-btn>
-        <q-btn
-          @click="generateReport({id: hippRequest.id, templateType: 'HIPP Request'})"
-          :disable="!hippRequest.id"
-          :loading="reportDownloading"
-          round
-          color="primary"
-          icon="description"
-          class="q-ml-sm">
-          <q-tooltip>
-            Download HIPP Request report
-          </q-tooltip>
-          <template v-slot:loading>
-            <q-spinner-facebook />
-          </template>
-        </q-btn>
-        <q-btn :disable="!hippRequest.id"
-          round
-          color="primary"
-          @click="deleteHippRequest"
-          icon="delete"
-          class="q-ml-sm"
-        >
-          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete project</q-tooltip>
-        </q-btn>
+        <div class="row q-gutter-x-sm">
+          <q-btn
+            round
+            color="primary"
+            @click="submit"
+            icon="save"
+          >
+            <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save summary</q-tooltip>
+          </q-btn>
+          <q-btn
+            @click="generateReport({id: hippRequest.id, templateType: 'HIPP Request'})"
+            :disable="!hippRequest.id"
+            :loading="reportDownloading"
+            round
+            color="primary"
+            icon="description">
+            <q-tooltip>
+              Download HIPP Request report
+            </q-tooltip>
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+          <q-btn
+            type="a"
+            :href="`/api/report-template/generate/HIPP Request/${hippRequest.id}?format=csv`"
+            round
+            color="primary"
+            icon="dehaze">
+            <q-tooltip>
+              Download as CSV
+            </q-tooltip>
+          </q-btn>
+          <q-btn :disable="!hippRequest.id"
+            round
+            color="primary"
+            @click="deleteHippRequest"
+            icon="delete"
+          >
+            <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete project</q-tooltip>
+          </q-btn>
+        </div>
       </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">

@@ -24,6 +24,10 @@ const routes = [
           component: Users,
         },
         {
+          path: 'users/:id',
+          component: Users,
+        },
+        {
           path: 'organisations',
           component: Organisations,
         },

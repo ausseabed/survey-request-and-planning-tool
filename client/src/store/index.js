@@ -13,6 +13,8 @@ import surveyFile from './modules/survey-file/survey-file-state'
 import deliverable from './modules/deliverable/deliverable-state'
 import hippRequest from './modules/hipp-request/hipp-request-state'
 import reportTemplate from './modules/report-template/report-template-state'
+import user from './modules/user/user-state'
+import role from './modules/role/role-state'
 
 
 Vue.use(Vuex)
@@ -31,6 +33,8 @@ export default new Vuex.Store({
     deliverable,
     hippRequest,
     reportTemplate,
+    user,
+    role,
   },
   strict: debug
 })

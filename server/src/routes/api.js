@@ -13,6 +13,7 @@ var referenceSystemRoutes = require('./api/reference-system');
 var deliverableRoutes = require('./api/deliverable');
 var hippRequestRoutes = require('./api/hipp-request');
 var reportTemplateRoutes = require('./api/report-template');
+var roleRoutes = require('./api/role');
 
 import { isAuthenticated } from './utils';
 
@@ -31,5 +32,6 @@ router
 .use('/deliverable', deliverableRoutes)
 .use('/hipp-request', hippRequestRoutes)
 .use('/report-template', reportTemplateRoutes)
+.use('/role', roleRoutes)
 
 module.exports = router;

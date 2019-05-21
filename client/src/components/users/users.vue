@@ -21,7 +21,7 @@
                     :to="`/admin/users/${user.id}`"
                     >
                       <q-item-label>
-                        {{user.name}}
+                        {{user.name}} ({{user.email}})
                       </q-item-label>
                   </q-item>
                 </q-list>
@@ -38,11 +38,11 @@
 
         <div class="col-sm-12 col-md-6">
           <q-card v-if="activeUser">
-            <q-card-section class="row">
+            <q-card-section class="column">
               <div class="text-h6">
-                <strong v-if="activeUser.deleted">Deleted - </strong>
-                <span v-bind:class="{ usernamedeleted: activeUser.deleted }"> {{activeUser.name}} </span>
+                {{activeUser.name}}
               </div>
+              <div class="text-subtitle2">{{activeUser.email}}</div>
             </q-card-section>
             <q-separator />
             <q-card-section>

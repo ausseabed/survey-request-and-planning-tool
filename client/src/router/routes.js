@@ -8,6 +8,7 @@ import Organisations from 'components/organisations/organisations.vue'
 import ProjectMain from 'components/project-main.vue'
 import ProjectMetadata from 'components/project-metadata.vue'
 import ReportTemplates from 'components/admin/report-templates.vue'
+import Roles from 'components/admin/roles.vue'
 import SurveyDeliverables from 'components/survey-deliverables.vue'
 import SurveyFile from 'components/survey-file.vue'
 import SurveyTechnicalSpecification from 'components/survey-technical-specification.vue'
@@ -19,6 +20,10 @@ const routes = [
       path: '/admin',
       component: Administration,
       children: [
+        {
+            path: '',
+            component: Organisations
+        },
         {
           path: 'users',
           component: Users,
@@ -36,8 +41,12 @@ const routes = [
           component: Organisations,
         },
         {
-            path: '',
-            component: Organisations
+          path: 'roles',
+          component: Roles,
+        },
+        {
+          path: 'roles/:id',
+          component: Roles,
         },
         {
           path: 'report-templates',

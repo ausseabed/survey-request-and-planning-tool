@@ -34,6 +34,15 @@
             <q-item-label caption>Manage organisations</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item to="/admin/roles">
+          <q-item-section avatar>
+            <q-icon name="list" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Roles</q-item-label>
+            <q-item-label caption>View role permissions</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-separator  class="q-my-sm" />
         <q-item to="/admin/report-templates">
           <q-item-section avatar>

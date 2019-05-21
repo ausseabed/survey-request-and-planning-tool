@@ -32,7 +32,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     throw err
   }
 
-  user = await getConnection()
+  let user = await getConnection()
   .getRepository(User)
   .findOne(req.body.id)
 
@@ -54,7 +54,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   // be selective in what gets returned, auth tokens aren't needed here
   user = await getConnection()
-  .getRepository(Organisation)
+  .getRepository(User)
   .findOne(user.id, {
     select: ['id', 'name', 'email'],
     relations: ['role'],

@@ -15,7 +15,7 @@ export class addedRoleTable1558404570591 implements MigrationInterface {
         // attributes to true. It's the admin user; so should be able to do
         // anything.
         for (let [key, value] of Object.entries(adminRoleEntity)) {
-            if (key.startsWith('is') || key.startsWith('is')) {
+            if (key.startsWith('is') || key.startsWith('can')) {
               adminRoleEntity[key] = true;
             }
         }

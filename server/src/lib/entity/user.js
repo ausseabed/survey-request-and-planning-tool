@@ -1,4 +1,6 @@
-import {Entity, PrimaryColumn, Column} from "typeorm";
+import {Entity, PrimaryColumn, Column, ManyToOne} from "typeorm";
+
+import { Role } from './role'
 
 @Entity()
 export class User {
@@ -26,4 +28,7 @@ export class User {
 
   @Column("varchar")
   refreshToken = undefined;
+
+  @ManyToOne(type => Role, role => role.users)
+  role;
 }

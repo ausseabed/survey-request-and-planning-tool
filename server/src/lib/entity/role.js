@@ -1,4 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+
+import { User } from './user'
 
 // Role determines what a user can/can't do in the application. New attribs
 // will be added to this entity as new capability is added that need to be
@@ -31,6 +33,9 @@ export class Role {
     default: false
   })
   isDefault;
+
+  @OneToMany(type => User, user => user.role)
+  users;
 
   // following attribs are all permissions related to what this role can do
 

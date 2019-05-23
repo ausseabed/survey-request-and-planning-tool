@@ -12,7 +12,7 @@ export const getHippRequest = async ({ commit, state }, payload) => {
 
     const response = await Vue.axios.get(urlEndpoint);
     const hippRequest = response.data;
-
+    hippRequest.areaOfInterest = Object.freeze(hippRequest.areaOfInterest);
     commit(mutTypes.UPDATE, {path: 'hippRequest', value: hippRequest});
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
     commit(mutTypes.SET_DIRTY, false);

@@ -452,7 +452,10 @@ export default Vue.extend({
     await olmap.initMap();
     this.map = olmap;
     this.map.onAdd = (geojson) => {
-      this.update({path: "hippRequest.areaOfInterest", value: geojson });
+      this.update({
+        path: "hippRequest.areaOfInterest",
+        value: Object.freeze(geojson)
+      });
     }
     this.map.drawStart = () => {
       this.drawingAreaOfInterest = true;
@@ -492,10 +495,6 @@ export default Vue.extend({
         // if id given, then load this hipp request
         this.loadingData = true
         this.getHippRequest({ id: this.$route.params.id }).then(hr => {
-          this.riskData = this.hippRequest.riskData
-          if (_.isNil(this.riskData)) {
-            this.riskData = []
-          }
           this.loadingData = false
         })
       } else {

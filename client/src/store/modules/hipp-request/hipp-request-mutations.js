@@ -5,7 +5,7 @@ import * as types from './hipp-request-mutation-types'
 const mutations = {
   [types.UPDATE] (state, { path, value }) {
     state.dirty = true;
-    _.set(state, path, _.cloneDeep(value))
+    _.set(state, path, value)
   },
 
   [types.SET_REQUEST_STATUS] (state, status) {

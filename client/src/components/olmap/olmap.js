@@ -1,7 +1,7 @@
 const ol = require('openlayers');
 require('openlayers/dist/ol.css');
 import Vue from 'vue'
-
+import simplify from '@turf/simplify'
 import * as MapConstants from './map-constants'
 
 var shp = require('shpjs');
@@ -196,36 +196,8 @@ var OlMap = function (target, options) {
         }
       }, source);
 
-      dragAndDropInteraction.on('addfeatures', (event) => {
-        var ext = event.file.name.split('.').pop();
-        var features = null;
-        if (ext == 'zip') {
-          var reader = new FileReader();
-          reader.onload = (function (e) {
-            shp(e.target.result).then(function (geojson) {
-              features = (new ol.format.GeoJSON()).readFeatures(geojson);
-              this.addFeatures(source, features);
-
-              if (typeof this.onAdd === 'function') {
-                var writer = new ol.format.GeoJSON();
-                var geojsonStr = writer.writeFeatures(features);
-                this.onAdd(JSON.parse(geojsonStr));
-              }
-
-            }.bind(this));
-          }).bind(this);
-          reader.readAsArrayBuffer(event.file);
-        }
-        else {
-          features = event.features;
-          this.addFeatures(source, features);
-
-          if (typeof this.onAdd === 'function') {
-            var writer = new ol.format.GeoJSON();
-            var geojsonStr = writer.writeFeatures(features);
-            this.onAdd(JSON.parse(geojsonStr));
-          }
-        }
+      dragAndDropInteraction.on('addfeatures', async (event) => {
+        this.addFile(event.file)
       }, source);
 
       this.map = map;
@@ -262,7 +234,11 @@ var OlMap = function (target, options) {
         var reader = new FileReader();
         reader.onload = (function (e) {
           shp(e.target.result).then(function (geojson) {
+
+            var smplOptions = {tolerance: 0.0005, highQuality: false};
+            geojson = simplify(geojson, smplOptions);
             features = (new ol.format.GeoJSON()).readFeatures(geojson);
+
             this.addFeatures(this.source, features);
 
             if (typeof this.onAdd === 'function') {

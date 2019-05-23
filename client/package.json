@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@turf/helpers": "^6.1.4",
+    "@turf/simplify": "^5.1.5",
     "axios": "^0.18.0",
     "js-file-download": "^0.4.5",
     "openlayers": "^4.6.5",

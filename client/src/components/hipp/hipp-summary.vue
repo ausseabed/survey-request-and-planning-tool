@@ -163,12 +163,16 @@
               label="Area of interest (optional)"
               stack-label
               >
-              <div class="column">
+              <div class="column full-width">
                 <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
                 <div class="row full-width justify-between items-center q-pb-sm">
                   <div v-if="drawingAreaOfInterest"
                     class="q-body-1 text-faded col">
                     Click endpoint to complete line
+                  </div>
+                  <div v-else-if="addingFile" class="q-body-1 text-faded col column">
+                    <div class="q-body-1 text-faded"> Processing file </div>
+                    <q-linear-progress indeterminate />
                   </div>
                   <div v-else
                     class="q-body-1 text-faded col">
@@ -178,6 +182,7 @@
                     <div class="row justify-between q-gutter-sm">
                       <div class="col">
                         <q-btn class="no-margin full-width" icon="cloud_upload" label="Upload"
+                          :disable="addingFile"
                           @click="selectAreaOfInterestFile">
                         </q-btn>
                       </div>
@@ -457,6 +462,12 @@ export default Vue.extend({
         value: Object.freeze(geojson)
       });
     }
+    this.map.onFileAddStart = () => {
+      this.addingFile = true;
+    }
+    this.map.onFileAddDone = () => {
+      this.addingFile = false;
+    }
     this.map.drawStart = () => {
       this.drawingAreaOfInterest = true;
     }
@@ -694,6 +705,7 @@ export default Vue.extend({
 
   data() {
     return {
+      addingFile: false,
       loadingData: false,
       drawingAreaOfInterest: false,
       map: undefined,

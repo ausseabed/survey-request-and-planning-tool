@@ -2,6 +2,7 @@ const ol = require('openlayers');
 require('openlayers/dist/ol.css');
 import Vue from 'vue'
 import simplify from '@turf/simplify'
+const spawn = require('threads').spawn;
 import * as MapConstants from './map-constants'
 
 var shp = require('shpjs');
@@ -196,7 +197,8 @@ var OlMap = function (target, options) {
         }
       }, source);
 
-      dragAndDropInteraction.on('addfeatures', async (event) => {
+      dragAndDropInteraction.on('addfeatures', (event) => {
+        console.log("drop")
         this.addFile(event.file)
       }, source);
 
@@ -227,7 +229,69 @@ var OlMap = function (target, options) {
     getExtents: function() {
       return this.map.getView().calculateExtent();
     },
+    addFileInBackground: function (file) {
+      // THIS ONLY WORKS IN DEV
+      // in a prod build the babel transpliation seems to mess with variable
+      // and method naming resulting in a bunch of 'XXXXX is undefined'
+      // possible solution: https://webpack.js.org/loaders/worker-loader/
+      if (typeof this.onFileAddStart === 'function') {
+        this.onFileAddStart();
+      }
+      // use a web worker to run the shp load and simplification operation
+      // this should run quicker, and allows the UI to be responsive while
+      // processing is occuring
+      const thread = spawn(function(input, done) {
+        // including theses dependencies via `require(...)` doesn't work
+        // hence the following
+        importScripts('https://unpkg.com/shpjs@latest/dist/shp.js');
+        importScripts('https://npmcdn.com/@turf/turf@5.1.6/turf.min.js');
+        let fileFeatures = undefined;
+        file = input.file;
+
+        var ext = file.name.split('.').pop();
+        var features = null;
+        if (ext == 'zip') {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            shp(e.target.result).then(function (geojson) {
+              var smplOptions = {tolerance: 0.0005, highQuality: false};
+              var simpleGeojson = turf.simplify(geojson, smplOptions);
+              done({ features : simpleGeojson});
+            });
+          };
+          reader.readAsArrayBuffer(file);
+        } else {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const jsonObj = JSON.parse(event.target.result);
+            done({ features : jsonObj});
+          };
+          reader.readAsText(file);
+        }
+      });
+
+      thread
+      .send({ file : file })
+      .on('message', (response) => {
+        const fileFeatures = (new ol.format.GeoJSON()).readFeatures(response.features);
+        if (typeof this.onAdd === 'function') {
+          var writer = new ol.format.GeoJSON();
+          var geojsonStr = writer.writeFeatures(fileFeatures);
+          this.onAdd(JSON.parse(geojsonStr));
+        }
+
+        if (typeof this.onFileAddDone === 'function') {
+          this.onFileAddDone();
+        }
+        thread.kill();
+      })
+
+    },
     addFile: function (file) {
+      if (typeof this.onFileAddStart === 'function') {
+        this.onFileAddStart();
+      }
+
       var ext = file.name.split('.').pop();
       var features = null;
       if (ext == 'zip') {
@@ -247,6 +311,10 @@ var OlMap = function (target, options) {
               this.onAdd(JSON.parse(geojsonStr));
             }
 
+            if (typeof this.onFileAddDone === 'function') {
+              this.onFileAddDone();
+            }
+
           }.bind(this));
         }).bind(this);
         reader.readAsArrayBuffer(file);
@@ -263,6 +331,9 @@ var OlMap = function (target, options) {
             // var writer = new ol.format.GeoJSON();
             // var geojsonStr = writer.writeFeatures(features);
             this.onAdd(features);
+          }
+          if (typeof this.onFileAddDone === 'function') {
+            this.onFileAddDone();
           }
         };
         reader.readAsText(file);
@@ -326,6 +397,8 @@ var OlMap = function (target, options) {
     },
     onAdd: null,
     onExtentsChange: null,
+    onFileAddStart: null,
+    onFileAddDone: null,
     set: function (value) {
       if (value) {
         this.addFeatures(this.source, (new ol.format.GeoJSON()).readFeatures(JSON.parse(value)));

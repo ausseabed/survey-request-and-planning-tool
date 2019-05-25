@@ -1,7 +1,9 @@
 const _ = require('lodash');
 const boom = require('boom');
+import { getConnection } from 'typeorm';
 
 var auth = require('../lib/auth')();
+import { User } from '../lib/entity/user';
 
 import { multiPolygon, multiLineString, multiPoint } from "@turf/helpers";
 
@@ -15,8 +17,9 @@ export const asyncMiddleware = fn => (req, res, next) => {
   });
 };
 
+
 // Raise 401 if user is not authenticated
-export function isAuthenticated(req, res, next) {
+export const isAuthenticated = async (req, res, next) => {
   // requests coming from Axois use a header, other (eg from img src)
   // requests use a cookie
   const authToken =
@@ -24,28 +27,44 @@ export function isAuthenticated(req, res, next) {
       req.headers.authorization :
       req.cookies.Authorization
 
-  if (authToken) {
-    var verified_user = auth.verify(authToken);
-    if (verified_user) {
-      req.user = verified_user;
-
-      if (req.headers.authorization && _.isNil(req.cookies.Authorization)) {
-        // then the header has a valid auth token, but it hasn't been set in
-        // the cookie. New logins will have the cookie set, but existing
-        // users wont (so do it here).
-        // Todo; this could probably be removed in future one everyone's old
-        // auth tokens have expired
-        res.setHeader(
-          'Set-Cookie', `Authorization=${req.headers.authorization} ; Path=/`);
-      }
-
-      return next();
-    }
+  if (_.isNil(authToken)) {
+    res.status(401).send('Unauthorized');
+    return
   }
 
-  // Send unauthrized response if we get here
-  res.status(401).send('Unauthorized');
-}
+  try {
+    var verified_user = auth.verify(authToken);
+
+    const userId = verified_user.id
+    const existingUser = await getConnection().getRepository(User)
+    .findOne(
+      userId,
+      {
+        relations: ['role']
+      }
+    );
+    if (_.isNil(existingUser)) {
+      res.status(401).send('Unauthorized');
+      return
+    }
+
+    req.user = existingUser;
+
+    if (req.headers.authorization && _.isNil(req.cookies.Authorization)) {
+      // then the header has a valid auth token, but it hasn't been set in
+      // the cookie. New logins will have the cookie set, but existing
+      // users wont (so do it here).
+      // Todo; this could probably be removed in future one everyone's old
+      // auth tokens have expired
+      res.setHeader(
+        'Set-Cookie', `Authorization=${req.headers.authorization} ; Path=/`);
+    }
+
+    return next();
+  } catch(err) {
+    res.status(401).send('Unauthorized');
+  }
+};
 
 // Appends user to req is authenticated, will not 401
 export function authenticatedUser(req, res, next) {

@@ -1,12 +1,10 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-import { updateDeliverableDefinitions, updateSurveyApplications }
+import { updateDeliverableDefinitions }
   from '../migration-utils';
 
 const deliverableDefinitions =
   require('./deliverable-definitions.json');
-const surveyApplications =
-  require('./specification-defaults.json');
 
 
 export class applicationsUpdate011556842785139 implements MigrationInterface {
@@ -15,8 +13,6 @@ export class applicationsUpdate011556842785139 implements MigrationInterface {
       await updateDeliverableDefinitions(
         queryRunner, deliverableDefinitions);
 
-      await updateSurveyApplications(
-        queryRunner, surveyApplications);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

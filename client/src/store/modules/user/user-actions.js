@@ -8,6 +8,7 @@ export const saveUser = ({ commit, state }, payload) => {
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   return new Promise((resolve, reject) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+
     Vue.axios.post('/api/user', payload)
     .then((response) => {
       commit(mutTypes.UPDATE_USER, response.data);

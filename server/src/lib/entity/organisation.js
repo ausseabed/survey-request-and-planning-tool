@@ -3,8 +3,8 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
 
 import { HippRequest } from './hipp-request';
 import { ProjectMetadata } from './project-metadata';
-import { TechSpec }
-  from './tech-spec';
+import { TechSpec } from './tech-spec';
+import { User } from './user'
 
 @Entity()
 export class Organisation {
@@ -47,4 +47,7 @@ export class Organisation {
     type => HippRequest,
     hippRequest => hippRequest.requestingAgency)
   requestingAgencyHipp;
+
+  @OneToMany(type => User, user => user.organisation)
+  users;
 }

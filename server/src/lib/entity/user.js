@@ -1,5 +1,6 @@
 import {Entity, PrimaryColumn, Column, ManyToOne} from "typeorm";
 
+import { Organisation } from './organisation'
 import { Role } from './role'
 
 @Entity()
@@ -31,4 +32,7 @@ export class User {
 
   @ManyToOne(type => Role, role => role.users)
   role;
+
+  @ManyToOne(type => Organisation, org => org.users)
+  organisation;
 }

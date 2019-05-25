@@ -64,6 +64,19 @@
                   </form-field-validated-input>
 
                   <form-field-validated-select
+                    name="activeUser.organisation"
+                    label="Organisation"
+                    attribute="Organisation"
+                    :value="activeUser.organisation"
+                    @input="updateActiveUserValue({path:'organisation', value:$event})"
+                    :options="organisations"
+                    @blur="$v.activeUser.organisation.$touch"
+                    option-value="id"
+                    option-label="name"
+                    >
+                  </form-field-validated-select>
+
+                  <form-field-validated-select
                     name="activeUser.role"
                     label="Role"
                     attribute="Role"
@@ -133,6 +146,9 @@ export default Vue.extend({
       'dirty',
       'users',
     ]),
+    ...mapGetters('organisation', [
+      'organisations',
+    ]),
     ...mapGetters('role', [
       'roles',
     ]),
@@ -142,6 +158,9 @@ export default Vue.extend({
     ...mapActions('user', [
       'getUsers',
       'saveUser',
+    ]),
+    ...mapActions('organisation', [
+      'getOrganisations',
     ]),
     ...mapActions('role', [
       'getRoles',
@@ -154,6 +173,7 @@ export default Vue.extend({
 
     getFormData() {
       this.getRoles();
+      this.getOrganisations();
       this.getUsers().then(() => {
         this.updateActiveUser();
       });
@@ -201,6 +221,7 @@ export default Vue.extend({
     activeUser: {
       name: { required },
       role: { required },
+      organisation: { },
     }
   },
 

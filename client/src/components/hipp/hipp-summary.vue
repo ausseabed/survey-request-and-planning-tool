@@ -70,15 +70,16 @@
             </form-field-validated-input>
 
             <form-field-validated-select
-              name="hippRequest.requestingAgency"
-              attribute="Requesting Agency"
-              label="Requesting Agency"
-              :value="hippRequest.requestingAgency"
-              @input="update({path:'hippRequest.requestingAgency', value:$event})"
+              name="hippRequest.requestingAgencies"
+              attribute="Requesting Agencies"
+              label="Requesting Agencies"
+              multiple use-chips
+              :value="hippRequest.requestingAgencies"
+              @input="update({path:'hippRequest.requestingAgencies', value:$event})"
               :options="organisations"
               option-label="name"
               option-value="id"
-              @blur="$v.hippRequest.requestingAgency.$touch"
+              @blur="$v.hippRequest.requestingAgencies.$touch"
               >
             </form-field-validated-select>
 
@@ -662,7 +663,7 @@ export default Vue.extend({
   validations: {
     hippRequest: {
       name: { required, minLength:minLength(1) },
-      requestingAgency: { required },
+      requestingAgencies: { required, minLength:minLength(1) },
       requestorName: { required },
       pointOfContactEmail: { required, email },
       pointOfContactPhone: {},

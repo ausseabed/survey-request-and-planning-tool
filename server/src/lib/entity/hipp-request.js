@@ -90,11 +90,11 @@ export class HippRequest {
   @Column("varchar")
   name;
 
-  @ManyToOne(
+  @ManyToMany(
     type => Organisation,
-    organisation => organisation.requestingAgencyHipp,
-    { nullable: true })
-  requestingAgency;
+    organisation => organisation.requestingAgenciesHipp)
+  @JoinTable()
+  requestingAgencies;
 
   @Column({
       type:"varchar",

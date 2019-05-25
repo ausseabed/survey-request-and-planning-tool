@@ -43,10 +43,10 @@ export class Organisation {
     projectMetadata => projectMetadata.surveyors)
   surveyorProjectMetadatas;
 
-  @OneToMany(
+  @ManyToMany(
     type => HippRequest,
-    hippRequest => hippRequest.requestingAgency)
-  requestingAgencyHipp;
+    hippRequest => hippRequest.requestingAgencies)
+  requestingAgenciesHipp;
 
   @OneToMany(type => User, user => user.organisation)
   users;

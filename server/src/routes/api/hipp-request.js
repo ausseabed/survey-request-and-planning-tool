@@ -55,7 +55,7 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
     req.params.id,
     {
       relations: [
-        "requestingAgency",
+        "requestingAgencies",
       ]
     }
   );
@@ -96,7 +96,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     hippRequest.id,
     {
       relations: [
-        "requestingAgency",
+        "requestingAgencies",
       ]
     }
   )

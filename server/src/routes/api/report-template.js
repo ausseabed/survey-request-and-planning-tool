@@ -29,7 +29,7 @@ const TEMPLATE_TYPE_MAP = {
     entityType: HippRequest,
     reportGenerator: HippRequestReportGenerator,
     relations: [
-      'requestingAgency',
+      'requestingAgencies',
       'attachments',
       'attachments.attachment'
     ],

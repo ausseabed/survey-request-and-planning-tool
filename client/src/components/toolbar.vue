@@ -119,6 +119,13 @@
       description() {
         return process.env.DESCRIPTION;
       }
+    },
+    watch: {
+      // call again the method if the route changes
+      '$route': function (newRoute, oldRoute) {
+        this.isAuthenticated = this.$auth.isAuthenticated();
+      },
     }
+
   });
 </script>

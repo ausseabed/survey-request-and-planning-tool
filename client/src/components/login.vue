@@ -2,11 +2,16 @@
   <q-page :style-fn="heightTweak" >
     <div class="overflow-hidden fit">
       <q-card inline class="q-ma-sm fixed-center">
-        <q-card-section>
-          Login
-          <span slot="subtitle">You are not logged in.</span>
-          <q-icon slot="right" name="error_outline" size="70px" color="red" />
-        </q-card-section>
+        <q-item>
+          <q-item-section avatar>
+            <q-avatar icon="error_outline" text-color="white" color="red" size="70px" font-size="60px"></q-avatar>
+          </q-item-section>
+
+          <q-item-section>
+            <q-item-label>Login</q-item-label>
+            <q-item-label caption>You are not logged in.</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-card-section>
           Please log in using the top right toolbar button.
         </q-card-section>

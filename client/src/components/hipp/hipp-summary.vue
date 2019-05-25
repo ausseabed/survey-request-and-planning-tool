@@ -217,7 +217,6 @@
               <form-field-validated-input
                 class="col-xs-12 col-sm-6"
                 disable
-                name="hippRequest.moratoriumDate"
                 attribute="Calculated area"
                 hint="Area calculated from area of interest"
                 label="Calculated area"

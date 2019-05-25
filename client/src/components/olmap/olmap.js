@@ -117,7 +117,6 @@ var OlMap = function (target, options) {
         interactions: ol.interaction.defaults().extend(
           [dragAndDropInteraction, selectInteraction]),
         controls: ol.control.defaults().extend([
-          new ol.control.FullScreen(),
           new DrawPolygonControl(),
         ]),
         layers: [

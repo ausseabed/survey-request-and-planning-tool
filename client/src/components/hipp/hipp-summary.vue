@@ -33,6 +33,7 @@
           <q-btn
             type="a"
             :href="`/api/report-template/generate/HIPP Request/${hippRequest.id}?format=csv`"
+            :disable="!hippRequest.id"
             round
             color="primary"
             icon="dehaze">

@@ -1,6 +1,7 @@
 const ol = require('openlayers');
 require('openlayers/dist/ol.css');
 import Vue from 'vue'
+import _ from 'lodash'
 import simplify from '@turf/simplify'
 const spawn = require('threads').spawn;
 import * as MapConstants from './map-constants'
@@ -8,7 +9,10 @@ import * as MapConstants from './map-constants'
 var shp = require('shpjs');
 var OlMap = function (target, options) {
   return {
-    initMap: async function () {
+    initMap: async function (includeDrawButton) {
+      if (_.isNil(includeDrawButton)) {
+        includeDrawButton = true;
+      }
       var source = new ol.source.Vector();
       var sourceIntersecting = new ol.source.Vector();
       var dragAndDropInteraction = new ol.interaction.DragAndDrop({
@@ -113,12 +117,15 @@ var OlMap = function (target, options) {
         (MapConstants.WMTS_DEFAULT_EXTENT[1] + MapConstants.WMTS_DEFAULT_EXTENT[3] / 2)
       ];
 
+      let controls = []
+      if (includeDrawButton) {
+        controls.push(new DrawPolygonControl())
+      }
+
       var map = new ol.Map({
         interactions: ol.interaction.defaults().extend(
           [dragAndDropInteraction, selectInteraction]),
-        controls: ol.control.defaults().extend([
-          new DrawPolygonControl(),
-        ]),
+        controls: ol.control.defaults().extend(controls),
         layers: [
           new ol.layer.Tile({
             source: baseMap

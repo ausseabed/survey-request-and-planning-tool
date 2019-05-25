@@ -191,7 +191,7 @@ export default Vue.extend({
     var olmap = OlMap(this.$refs.mapDiv, {
       basemap: "osm"
     })
-    await olmap.initMap();
+    await olmap.initMap(false);
     this.map = olmap;
     this.map.onExtentsChange = (extents) => {
       this.debounceExtents(extents);

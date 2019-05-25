@@ -14,6 +14,7 @@ var resolve = require('path').resolve;
 
 import { getConnection } from 'typeorm';
 import { User } from '../lib/entity/user';
+import { Role } from '../lib/entity/role';
 
 var router = express.Router();
 var querystring = require('querystring');
@@ -72,6 +73,9 @@ function crcsiAuth(req, res) {
       await userRepo.save(existingUser);
       user = existingUser;
     } else {
+      const roleRepo = getConnection().getRepository(Role);
+      const defaultRole = await roleRepo.findOne({isDefault: true});
+
       const newUser = new User();
       newUser.id = user_id;
       newUser.issuer = "crcsi";
@@ -83,6 +87,9 @@ function crcsiAuth(req, res) {
       newUser.name = userScope.name;
       newUser.accessToken = userScope.access_token;
       newUser.refreshToken = userScope.refresh_token;
+      if (!_.isNil(defaultRole)) {
+        newUser.role = defaultRole;
+      }
       await userRepo.save(newUser);
       user = newUser;
     }

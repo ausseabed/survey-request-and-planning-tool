@@ -118,9 +118,17 @@ export class HippRequest {
   // to/from the database and the UTC millisecond ints used by the web services
   @Column({
       type:"timestamp with time zone",
-      transformer: new DateTransformer()
+      transformer: new DateTransformer(),
+      nullable: true,
   })
-  requestDate;
+  requestDateStart;
+
+  @Column({
+      type:"timestamp with time zone",
+      transformer: new DateTransformer(),
+      nullable: true,
+  })
+  requestDateEnd;
 
   @Column({
       type:"varchar",

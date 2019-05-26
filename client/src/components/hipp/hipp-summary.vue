@@ -118,16 +118,33 @@
               >
             </form-field-validated-input>
 
-            <form-field-validated
-              name="hippRequest.requestDate"
-              label="Request Date"
-              attribute="Request Date"
-              >
-              <q-date :landscape="$q.platform.is.desktop"
-                :value="formattedRequestDate"
-                @input="setFormattedRequestDate($event)"
-                @blur="$v.hippRequest.requestDate.$touch" />
-            </form-field-validated>
+            <div class="column col-12 q-pt-md">
+              <div class="date-range-field-label">Date range</div>
+              <div class="row q-col-gutter-md">
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  name="hippRequest.requestDateStart"
+                  attribute="Start date"
+                  label="Start date (YYYY/MM/DD)"
+                  :date="hippRequest.requestDateStart"
+                  @updated-date="update({path:'hippRequest.requestDateStart', value:$event})"
+                  @blur="$v.hippRequest.requestDateStart.$touch"
+                  >
+                </form-field-validated-date>
+
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  name="hippRequest.requestDateEnd"
+                  attribute="End date"
+                  label="End date (YYYY/MM/DD)"
+                  :date="hippRequest.requestDateEnd"
+                  @updated-date="update({path:'hippRequest.requestDateEnd', value:$event})"
+                  @blur="$v.hippRequest.requestDateEnd.$touch"
+                  >
+                </form-field-validated-date>
+              </div>
+            </div>
+
 
             <form-field-validated-input
               name="hippRequest.comments"
@@ -375,29 +392,17 @@
                 />
             </q-field>
 
-            <form-field-validated-input
+            <form-field-validated-date
               class="col-xs-12 col-sm-6"
               v-if="hippRequest.hasMoratorium"
-              filled
               name="hippRequest.moratoriumDate"
               attribute="Date moratorium ends"
               label="Date moratorium ends (YYYY/MM/DD)"
-              :value="formattedMoratoriumDate"
-              @input="setFormattedMoratoriumDate($event)"
+              :date="hippRequest.moratoriumDate"
+              @updated-date="update({path:'hippRequest.moratoriumDate', value:$event})"
               @blur="$v.hippRequest.moratoriumDate.$touch"
               >
-
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy>
-                    <q-date
-                      :value="formattedMoratoriumDate"
-                      @input="setFormattedMoratoriumDate($event)"
-                      @blur="$v.hippRequest.moratoriumDate.$touch"
-                      />
-                  </q-popup-proxy>
-                </q-icon>
-
-            </form-field-validated-input>
+            </form-field-validated-date>
           </q-card-section>
         </q-card>
 
@@ -667,7 +672,8 @@ export default Vue.extend({
       requestorName: { required },
       pointOfContactEmail: { required, email },
       pointOfContactPhone: {},
-      requestDate: { required },
+      requestDateStart: { required },
+      requestDateEnd: { required },
       comments: {},
       areaName: {required},
       area: {},
@@ -721,5 +727,10 @@ export default Vue.extend({
 </script>
 
 <style>
-
+.date-range-field-label {
+  color: rgba(0,0,0,0.6);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
+}
 </style>

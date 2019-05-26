@@ -118,6 +118,12 @@ export class ProjectMetadata {
   })
   moratoriumDate;
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  moratoriumComment;
+
   @ManyToOne(
     type => Organisation,
     organisation => organisation.tenderProjectMetadatas,

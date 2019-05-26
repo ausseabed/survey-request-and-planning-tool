@@ -109,7 +109,7 @@
                       </q-item-section>
 
                       <q-item-section side top>
-                        <q-item-label caption>{{getDateString(hippRequest.requestDate)}}</q-item-label>
+                        <q-item-label caption>{{getDateString(hippRequest.requestDateStart)}}</q-item-label>
                         <!-- <div>
                           <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
                         </div> -->

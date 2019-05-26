@@ -168,6 +168,12 @@ export class HippRequest {
   })
   moratoriumDate;
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  moratoriumComment;
+
   @Column("geometry", {
     spatialFeatureType: "MultiPolygon",
     srid: 4326,

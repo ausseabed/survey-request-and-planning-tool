@@ -35,7 +35,8 @@ router.get('/', asyncMiddleware(async function (req, res) {
   .getRepository(HippRequest)
   .createQueryBuilder("hipp_request")
   .select(["hipp_request.id", "hipp_request.name",
-    "hipp_request.requestDate", "hipp_request.areaName"])
+    "hipp_request.requestDateStart", "hipp_request.requestDateEnd",
+    "hipp_request.areaName"])
   .where(
     `hipp_request.deleted = :deleted`,
     {deleted: false}

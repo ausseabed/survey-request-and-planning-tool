@@ -14,7 +14,8 @@ function initialState() {
       requestorName: undefined,
       pointOfContactEmail: undefined,
       pointOfContactPhone: undefined,
-      requestDate: undefined,
+      requestDateStart: undefined,
+      requestDateEnd: undefined,
       areaName: undefined,
       area: undefined,
       businessJustification: undefined,
@@ -23,6 +24,7 @@ function initialState() {
       comments: undefined,
       hasMoratorium: false,
       moratoriumDate: undefined,
+      moratoriumComment: undefined,
 
       surveyQualityRequirements: undefined,
       surveyQualityRequirementsComments: undefined,

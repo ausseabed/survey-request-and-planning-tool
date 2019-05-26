@@ -379,30 +379,48 @@
           <q-card-section>
             <div class="text-h6"> Moratorium </div>
           </q-card-section>
-          <q-card-section class="row q-col-gutter-md">
-            <q-field
-              class="col-xs-12 col-sm-6"
-              stack-label
-              label="Subject to moratorium"
-              hint="Optional"
-              bottom-slots>
-              <q-checkbox
-                :value="hippRequest.hasMoratorium"
-                @input="update({path:'hippRequest.hasMoratorium', value: $event})"
-                />
-            </q-field>
+          <q-card-section >
+            <div class="column">
+              <div class="row q-col-gutter-md">
+                <q-field
+                  class="col-xs-12 col-sm-6"
+                  stack-label
+                  label="Subject to moratorium"
+                  hint="Optional"
+                  bottom-slots>
+                  <q-checkbox
+                    :value="hippRequest.hasMoratorium"
+                    @input="update({path:'hippRequest.hasMoratorium', value: $event})"
+                    />
+                </q-field>
 
-            <form-field-validated-date
-              class="col-xs-12 col-sm-6"
-              v-if="hippRequest.hasMoratorium"
-              name="hippRequest.moratoriumDate"
-              attribute="Date moratorium ends"
-              label="Date moratorium ends (YYYY/MM/DD)"
-              :date="hippRequest.moratoriumDate"
-              @updated-date="update({path:'hippRequest.moratoriumDate', value:$event})"
-              @blur="$v.hippRequest.moratoriumDate.$touch"
-              >
-            </form-field-validated-date>
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  v-if="hippRequest.hasMoratorium"
+                  name="hippRequest.moratoriumDate"
+                  attribute="Date moratorium ends"
+                  label="Date moratorium ends (YYYY/MM/DD)"
+                  :date="hippRequest.moratoriumDate"
+                  @updated-date="update({path:'hippRequest.moratoriumDate', value:$event})"
+                  @blur="$v.hippRequest.moratoriumDate.$touch"
+                  >
+                </form-field-validated-date>
+              </div>
+
+              <form-field-validated-input
+                v-if="hippRequest.hasMoratorium"
+                name="hippRequest.moratoriumComment"
+                attribute="Moratorium Comments"
+                label="Moratorium Comments"
+                hint="Optional"
+                :value="hippRequest.moratoriumComment"
+                @input="update({path:'hippRequest.moratoriumComment', value:$event})"
+                @blur="$v.hippRequest.moratoriumComment.$touch"
+                type="textarea"
+                >
+              </form-field-validated-input>
+            </div>
+
           </q-card-section>
         </q-card>
 
@@ -681,7 +699,8 @@ export default Vue.extend({
         area: {},
         businessJustification: {},
         costBenefit: {},
-        moratoriumDate: {validMoratorium},
+        moratoriumDate: {},
+        moratoriumComment: {},
 
         surveyQualityRequirements: { required, minLength:minLength(1) },
         surveyQualityRequirementsComments: {},

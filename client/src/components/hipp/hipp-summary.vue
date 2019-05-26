@@ -424,7 +424,8 @@ import * as hippMutTypes
 import * as orgMutTypes
   from '../../store/modules/organisation/organisation-mutation-types'
 import OlMap from './../olmap/olmap';
-import { required, email, minLength } from 'vuelidate/lib/validators';
+import { required, email, minLength, minValue, maxValue }
+  from 'vuelidate/lib/validators';
 
 import RiskWidget from '../controls/risk/risk-widget';
 
@@ -665,28 +666,30 @@ export default Vue.extend({
 
   },
 
-  validations: {
-    hippRequest: {
-      name: { required, minLength:minLength(1) },
-      requestingAgencies: { required, minLength:minLength(1) },
-      requestorName: { required },
-      pointOfContactEmail: { required, email },
-      pointOfContactPhone: {},
-      requestDateStart: { required },
-      requestDateEnd: { required },
-      comments: {},
-      areaName: {required},
-      area: {},
-      businessJustification: {},
-      costBenefit: {},
-      moratoriumDate: {validMoratorium},
+  validations() {
+    return {
+      hippRequest: {
+        name: { required, minLength:minLength(1) },
+        requestingAgencies: { required, minLength:minLength(1) },
+        requestorName: { required },
+        pointOfContactEmail: { required, email },
+        pointOfContactPhone: {},
+        requestDateStart: { required, maxValue:maxValue(this.hippRequest.requestDateEnd) },
+        requestDateEnd: { required, minValue:minValue(this.hippRequest.requestDateStart) },
+        comments: {},
+        areaName: {required},
+        area: {},
+        businessJustification: {},
+        costBenefit: {},
+        moratoriumDate: {validMoratorium},
 
-      surveyQualityRequirements: { required, minLength:minLength(1) },
-      surveyQualityRequirementsComments: {},
-      chartProductQualityImpactRequirements: { required, minLength:minLength(1) },
-      chartProductQualityImpactRequirementsComments: {},
+        surveyQualityRequirements: { required, minLength:minLength(1) },
+        surveyQualityRequirementsComments: {},
+        chartProductQualityImpactRequirements: { required, minLength:minLength(1) },
+        chartProductQualityImpactRequirementsComments: {},
 
-      riskIssues: {},
+        riskIssues: {},
+      }
     }
   },
 
@@ -718,7 +721,9 @@ export default Vue.extend({
       map: undefined,
       tmpMoratoriumDateEntry: undefined,
       validationMessagesOverride: {
-        validMoratorium: "Must provide valid moratorium date"
+        validMoratorium: "Must provide valid moratorium date",
+        minValue: '{attribute} is before start date.',
+        maxValue: '{attribute} is after end date.',
       }
     }
   }

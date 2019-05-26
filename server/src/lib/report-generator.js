@@ -360,19 +360,32 @@ export class HippRequestReportGenerator extends ReportGenerator {
       requestorName: this.entityAttributeValue('requestorName'),
       pointOfContactEmail: this.entityAttributeValue('pointOfContactEmail'),
       pointOfContactPhone: this.entityAttributeValue('pointOfContactPhone'),
-      requestDate:
+      requestDateStart:
         this.getDateString(
-          this.entityAttributeValue('requestDate'),
+          this.entityAttributeValue('requestDateStart'),
           'DD/MM/YYYY'),
-      requestDateLong:
+      requestDateStartLong:
         this.getDateString(
-          this.entityAttributeValue('requestDate'),
+          this.entityAttributeValue('requestDateStart'),
+          'MMMM Do YYYY'),
+      requestDateEnd:
+        this.getDateString(
+          this.entityAttributeValue('requestDateEnd'),
+          'DD/MM/YYYY'),
+      requestDateEndLong:
+        this.getDateString(
+          this.entityAttributeValue('requestDateEnd'),
           'MMMM Do YYYY'),
       areaName: this.entityAttributeValue('areaName'),
       areaValue: this.entityAttributeValue('area'),
       businessJustification: this.entityAttributeValue('businessJustification'),
       costBenefit: this.entityAttributeValue('costBenefit'),
       hasMoratorium: this.entityAttributeValue('hasMoratorium'),
+      moratoriumDate:
+        this.getDateString(
+          this.entityAttributeValue('moratoriumDate'),
+          'DD/MM/YYYY'),
+      moratoriumComment: this.entityAttributeValue('moratoriumComment'),
       comments: this.entityAttributeValue('comments'),
       surveyQualityRequirements:
         this.entityAttributeValue('surveyQualityRequirements'),
@@ -401,12 +414,15 @@ export class HippRequestReportGenerator extends ReportGenerator {
       'requestorName',
       'pointOfContactEmail',
       'pointOfContactPhone',
-      'requestDate',
+      'requestDateStart',
+      'requestDateEnd',
       'areaName',
       'areaValue',
       'businessJustification',
       'costBenefit',
       'hasMoratorium',
+      'moratoriumDate',
+      'moratoriumComment',
       'comments',
       'surveyQualityRequirementsComments',
       'chartProductQualityImpactRequirementsComments',

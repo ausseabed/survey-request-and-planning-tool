@@ -13,7 +13,7 @@ var router = express.Router();
 // Gets a list of organisations
 router.get(
   '/',
-  [isAuthenticated, permitPermission('isAdmin')],
+  [isAuthenticated],
   asyncMiddleware(async function (req, res) {
 
   const whereOpts = {};

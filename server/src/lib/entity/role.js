@@ -47,7 +47,7 @@ export class Role {
   canAddTemplate;
 
   @Column({type: "bool", nullable: false, default: false})
-  canViewTemplate;
+  canEditTemplate;
 
   @Column({type: "bool", nullable: false, default: false})
   canEditOrganisation;

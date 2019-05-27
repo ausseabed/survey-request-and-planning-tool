@@ -1,7 +1,7 @@
 {
   "name": "qa4mbes-web",
   "version": "0.0.1",
-  "description": "Quality assurance for Unpersonned Aerial Vehicles (UAV) collected data",
+  "description": "Ausseabed request and planning tool",
   "productName": "ASB Request and Planning Tool",
   "cordovaId": "org.cordova.quasar.app",
   "author": "",

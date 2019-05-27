@@ -40,7 +40,7 @@ export const isAuthenticated = async (req, res, next) => {
     .findOne(
       userId,
       {
-        relations: ['role']
+        relations: ['role', 'organisation']
       }
     );
     if (_.isNil(existingUser)) {

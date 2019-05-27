@@ -89,4 +89,15 @@ export class Role {
   @Column({type: "bool", nullable: false, default: false})
   canEditOrgHippRequests;
 
+
+  // Attachment permissions. These apply to project and hipp requests
+  @Column({type: "bool", nullable: false, default: false})
+  canViewAttachments;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canUploadAttachments;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canDeleteAttachments;
+
 }

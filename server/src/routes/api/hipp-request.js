@@ -4,8 +4,8 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon
-  } from '../utils';
+import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
+  permitOrgBasedPermission } from '../utils';
 import { HippRequest, SURVEY_QUALITY_REQUIREMENTS,
   CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
   from '../../lib/entity/hipp-request';
@@ -29,9 +29,9 @@ router.get('/risk-matrix', async function (req, res) {
 });
 
 // Gets a list of HIPP Requests
-router.get('/', asyncMiddleware(async function (req, res) {
+router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
-  let projects = await getConnection()
+  let hippRequestQuery = getConnection()
   .getRepository(HippRequest)
   .createQueryBuilder("hipp_request")
   .select(["hipp_request.id", "hipp_request.name",
@@ -41,15 +41,44 @@ router.get('/', asyncMiddleware(async function (req, res) {
     `hipp_request.deleted = :deleted`,
     {deleted: false}
   )
-  .orderBy("hipp_request.name")
-  .getMany();
 
-  return res.json(projects);
+  if (hasPermission(req.user.role, 'canViewAllHippRequests')) {
+    // then no additional where clauses
+  } else if (hasPermission(req.user.role, 'canViewOrgHippRequests')) {
+    // need to filter list to include only hipp requests that include the
+    // org this user is assigned.
+    hippRequestQuery = hippRequestQuery
+    .innerJoin("hipp_request.requestingAgencies", "organisation")
+    .andWhere(
+      `organisation.id = :orgId`,
+      {orgId: req.user.organisation.id}
+    )
+  } else {
+    let err = boom.forbidden(
+      `Missing permission required to list HIPP Requests`);
+    throw err;
+  }
+
+  hippRequestQuery = hippRequestQuery.orderBy("hipp_request.name")
+
+  const hippRequests = await hippRequestQuery.getMany()
+  return res.json(hippRequests);
 }));
 
 
 // gets a single HIPP Request
-router.get('/:id', asyncMiddleware(async function (req, res) {
+router.get(
+  '/:id',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission(
+      HippRequest,
+      ['requestingAgencies'],
+      'canViewAllHippRequests',
+      'canViewOrgHippRequests')
+  ],
+  asyncMiddleware(async function (req, res) {
+
   let hippRequest = await getConnection()
   .getRepository(HippRequest)
   .findOne(
@@ -75,7 +104,19 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
 
 
 // creates a new organisation
-router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+router.post(
+  '/',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission(
+      HippRequest,
+      ['requestingAgencies'],
+      'canEditAllHippRequests',
+      'canEditOrgHippRequests',
+      'canAddHippRequest',
+    )
+  ],
+  asyncMiddleware(async function (req, res) {
 
   var hippRequest = new HippRequest()
   _.merge(hippRequest, req.body)

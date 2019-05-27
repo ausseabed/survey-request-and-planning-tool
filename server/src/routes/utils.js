@@ -66,17 +66,21 @@ export const isAuthenticated = async (req, res, next) => {
   }
 };
 
+export const hasPermission = (role, permission) => {
+  if (_.isNil(role)) {
+    return false;
+  } else if (role.hasOwnProperty(permission)) {
+    return role[permission];
+  } else {
+    console.log(`permission ${permission} does not exist?`)
+    return false;
+  }
+}
 
 // middleware for doing role-based permissions
 export function permitPermission(allowedPermission) {
   const isAllowed = role => {
-    if (_.isNil(role)) {
-      return false;
-    } else if (role.hasOwnProperty(allowedPermission)) {
-      return role[allowedPermission];
-    } else {
-      return false;
-    }
+    return hasPermission(role, allowedPermission)
   };
 
   // return a middleware
@@ -85,6 +89,85 @@ export function permitPermission(allowedPermission) {
       next(); // role is allowed, so continue on the next middleware
     else {
       response.status(403).json({message: "Forbidden"}); // user is forbidden
+    }
+  }
+}
+
+// middleware for doing role-based permissions
+export function permitOrgBasedPermission(
+  entityType,
+  organisationAttributes,
+  allowedPermissionAll,
+  allowedPermissionOrg,
+  allowedPermissionNoEntityId = undefined) {
+
+  // eg; if trying to add a new entity (instead of editing existing)
+  const isAllowedNoEntityId = role => {
+    if (_.isNil(allowedPermissionNoEntityId)) {
+      return false
+    }
+    return hasPermission(role, allowedPermissionNoEntityId)
+  };
+
+  const isAllowed = (user, orglist) => {
+    const role = user.role;
+    if (hasPermission(role, allowedPermissionAll)) {
+      // user has the permission that lets them view all of this role
+      return true
+    } else if (
+      !_.isNil(user.organisation) &&
+      hasPermission(role, allowedPermissionOrg))
+    {
+      // user has the permission that only lets them view this entity if the
+      // entity is linked to their organisation
+      const matchingOrg = orglist.find((innOrg) => {
+        return innOrg.id === user.organisation.id;
+      })
+      // if a matchin org is found, then the user can view this entity
+      return !_.isNil(matchingOrg)
+    } else {
+      return false
+    }
+  };
+
+
+  return async (request, response, next) => {
+    const allOrgs = []
+
+    let eid = request.params.id ? request.params.id : request.body.id
+    if (_.isNil(eid)) {
+      if (request.user && isAllowedNoEntityId(request.user.role))
+        next();
+      else {
+        response.status(403).json({message: "Forbidden"});
+      }
+    } else {
+      // get the entity, but only the id attribute and the attributes that link
+      // to one or more organisations
+      let entity = await getConnection()
+      .getRepository(entityType)
+      .findOne(
+        eid,
+        {
+          select: ['id'],
+          relations: organisationAttributes
+        }
+      );
+
+      // aggregate the various list of organisations associated with this
+      // entity into the one array
+      for (let orgsAttrName of organisationAttributes) {
+        let orgs = entity[orgsAttrName]
+        if (!_.isNil(orgs)) {
+          allOrgs.push(...orgs)
+        }
+      }
+
+      if (request.user && isAllowed(request.user, allOrgs))
+        next(); // role is allowed, so continue on the next middleware
+      else {
+        response.status(403).json({message: "Forbidden"});
+      }
     }
   }
 }

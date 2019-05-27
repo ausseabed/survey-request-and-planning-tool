@@ -4,14 +4,18 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated } from '../utils';
+import { asyncMiddleware, isAuthenticated, permitPermission } from '../utils';
 import { Organisation } from '../../lib/entity/organisation';
 
 
 var router = express.Router();
 
 // Gets a list of organisations
-router.get('/', asyncMiddleware(async function (req, res) {
+router.get(
+  '/',
+  [isAuthenticated, permitPermission('isAdmin')],
+  asyncMiddleware(async function (req, res) {
+
   const whereOpts = {};
   if (!_.isNil(req.query['deleted'])) {
     whereOpts.deleted = req.query['deleted'];
@@ -27,7 +31,10 @@ router.get('/', asyncMiddleware(async function (req, res) {
 }));
 
 // creates a new organisation
-router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+router.post(
+  '/',
+  [isAuthenticated, permitPermission('canEditOrganisation')],
+  asyncMiddleware(async function (req, res) {
 
   var org = new Organisation()
   _.merge(org, req.body);
@@ -44,7 +51,9 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 }));
 
 router.delete(
-  '/:id', isAuthenticated, asyncMiddleware(async function (req, res) {
+  '/:id',
+  [isAuthenticated, permitPermission('canEditOrganisation')],
+  asyncMiddleware(async function (req, res) {
 
   const orgRepo = getConnection().getRepository(Organisation);
 

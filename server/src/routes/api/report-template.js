@@ -12,7 +12,7 @@ import stream from 'stream'
 
 import { getConnection } from 'typeorm'
 
-import { asyncMiddleware, isAuthenticated } from '../utils'
+import { asyncMiddleware, isAuthenticated, permitPermission } from '../utils'
 import { HippRequest } from '../../lib/entity/hipp-request'
 import { ReportGenerator, HippRequestReportGenerator }
   from '../../lib/report-generator'
@@ -50,7 +50,9 @@ function writeData(res, reportData, reportGen, reportTemplate) {
 
 
 // Gets a list of organisations
-router.get('/generate/:templateType/:entityId', isAuthenticated,
+router.get(
+  '/generate/:templateType/:entityId',
+  [isAuthenticated],
   asyncMiddleware(async function (req, res) {
 
   const entityId = req.params.entityId;
@@ -132,8 +134,12 @@ router.get('/generate/:templateType/:entityId', isAuthenticated,
 }));
 
 
-// Gets a list of organisations
-router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+// Gets a list of report templates
+router.get(
+  '/',
+  [isAuthenticated, permitPermission('isAdmin')],
+  asyncMiddleware(async function (req, res) {
+
   const whereOpts = {};
   if (!_.isNil(req.query['active'])) {
     whereOpts.active = req.query['active'];
@@ -150,7 +156,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
 router.get(
   '/:id/download',
-  isAuthenticated,
+  [isAuthenticated, permitPermission('isAdmin')],
   asyncMiddleware(async function (req, res) {
 
     const id = req.params.id;
@@ -251,7 +257,9 @@ function validateData(data, reportTemplate) {
 }
 
 //upload for a new template, form includes fields that are needed by DB
-router.put('/upload', isAuthenticated,
+router.put(
+  '/upload',
+  [isAuthenticated, permitPermission('canEditTemplate')],
   asyncMiddleware(async function (req, res) {
 
   let rt = new ReportTemplate()

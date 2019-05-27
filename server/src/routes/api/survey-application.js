@@ -4,13 +4,17 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated } from '../utils';
+import { asyncMiddleware, isAuthenticated, permitPermission } from '../utils';
 import { SurveyApplication } from '../../lib/entity/survey-application';
 
 
 var router = express.Router();
 
-router.get('/group-names', asyncMiddleware(async function (req, res) {
+router.get(
+  '/group-names',
+  [isAuthenticated],
+  asyncMiddleware(async function (req, res) {
+
   // get a list of the unique group names for survey applications. This supports
   // the two stage selection process of survey applications
   const userSub = req.query['user-submitted'];
@@ -40,7 +44,11 @@ router.get('/group-names', asyncMiddleware(async function (req, res) {
   return res.json(grpNames);
 }));
 
-router.get('/:id', asyncMiddleware(async function (req, res) {
+router.get(
+  '/:id',
+  [isAuthenticated],
+  asyncMiddleware(async function (req, res) {
+
   let sa = await getConnection()
   .getRepository(SurveyApplication)
   .findOne(req.params.id);
@@ -58,7 +66,11 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
 }));
 
 // Gets a list of survey applications
-router.get('/', asyncMiddleware(async function (req, res) {
+router.get(
+  '/',
+  [isAuthenticated],
+  asyncMiddleware(async function (req, res) {
+
   const whereOpts = {deleted: false};
   if (!_.isNil(req.query['group'])) {
     whereOpts.group = req.query['group'];

@@ -4,14 +4,17 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated } from '../utils';
+import { asyncMiddleware, isAuthenticated, permitPermission } from '../utils';
 import { User } from '../../lib/entity/user';
 
 
 var router = express.Router();
 
 // Gets a list of users
-router.get('/', asyncMiddleware(async function (req, res) {
+router.get(
+  '/',
+  [isAuthenticated, permitPermission('isAdmin')],
+  asyncMiddleware(async function (req, res) {
 
   let users = await getConnection()
   .getRepository(User)
@@ -24,7 +27,11 @@ router.get('/', asyncMiddleware(async function (req, res) {
 }));
 
 // updates a user
-router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+router.post(
+  '/',
+  [isAuthenticated, permitPermission('canEditUser')],
+  asyncMiddleware(async function (req, res) {
+
   // new users are never created here, they get made on first authentication
   // as they need a valida OAuth based set of credentials
   if (_.isNil(req.body.id)) {

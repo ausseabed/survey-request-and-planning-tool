@@ -66,6 +66,30 @@ export const isAuthenticated = async (req, res, next) => {
   }
 };
 
+
+// middleware for doing role-based permissions
+export function permitPermission(allowedPermission) {
+  const isAllowed = role => {
+    if (_.isNil(role)) {
+      return false;
+    } else if (role.hasOwnProperty(allowedPermission)) {
+      return role[allowedPermission];
+    } else {
+      return false;
+    }
+  };
+
+  // return a middleware
+  return (request, response, next) => {
+    if (request.user && isAllowed(request.user.role))
+      next(); // role is allowed, so continue on the next middleware
+    else {
+      response.status(403).json({message: "Forbidden"}); // user is forbidden
+    }
+  }
+}
+
+
 // Appends user to req is authenticated, will not 401
 export function authenticatedUser(req, res, next) {
     if (req.headers.authorization) {

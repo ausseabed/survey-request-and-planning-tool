@@ -4,14 +4,18 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated } from '../utils';
+import { asyncMiddleware, isAuthenticated, permitPermission } from '../utils';
 import { Role } from '../../lib/entity/role';
 
 
 var router = express.Router();
 
 // Gets a list of roles
-router.get('/', asyncMiddleware(async function (req, res) {
+router.get(
+  '/',
+  [isAuthenticated, permitPermission('isAdmin')],
+  asyncMiddleware(async function (req, res) {
+
   const whereOpts = {};
   if (!_.isNil(req.query['deleted'])) {
     whereOpts.deleted = req.query['deleted'];
@@ -27,7 +31,10 @@ router.get('/', asyncMiddleware(async function (req, res) {
 }));
 
 // creates/saves a new role
-router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+router.post(
+  '/',
+  [isAuthenticated, permitPermission('canEditRole')],
+  asyncMiddleware(async function (req, res) {
 
   var role = new Role()
   _.merge(role, req.body);
@@ -43,7 +50,9 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 }));
 
 router.delete(
-  '/:id', isAuthenticated, asyncMiddleware(async function (req, res) {
+  '/:id',
+  [isAuthenticated, permitPermission('canEditRole')],
+  asyncMiddleware(async function (req, res) {
 
   const roleRepo = getConnection().getRepository(Role);
 

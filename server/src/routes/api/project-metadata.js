@@ -4,7 +4,8 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon }
+import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
+  hasPermission, permitOrgBasedPermission }
   from '../utils';
 import { ProjectMetadata, PROJECT_STATUSES }
   from '../../lib/entity/project-metadata';
@@ -36,12 +37,41 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     projectsQuery = projectsQuery.andWhere(`"project_metadata"."hippRequestId" = :hrid`,
       {hrid: req.query['hipp-request']})
   }
+
+  if (hasPermission(req.user.role, 'canViewAllProjects')) {
+    // then no additional where clauses
+  } else if (hasPermission(req.user.role, 'canViewOrgProjects')) {
+    // need to filter list to include only projects that include the
+    // org this user is assigned.
+    projectsQuery = projectsQuery
+    .innerJoin("project_metadata.organisations", "organisation")
+    .andWhere(
+      `organisation.id = :orgId`,
+      {orgId: req.user.organisation.id}
+    )
+  } else {
+    let err = boom.forbidden(
+      `Missing permission required to list HIPP Requests`);
+    throw err;
+  }
+
   let projects = await projectsQuery.getMany();
 
   return res.json(projects);
 }));
 
-router.get('/:id/thumbnail', isAuthenticated, asyncMiddleware(async function (req, res) {
+
+router.get(
+  '/:id/thumbnail',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canViewAllProjects',
+      allowedPermissionOrg: 'canViewOrgProjects'})
+  ],
+  asyncMiddleware(async function (req, res) {
 
   const extents = await getConnection()
   .createQueryBuilder()
@@ -115,7 +145,17 @@ router.get('/:id/thumbnail', isAuthenticated, asyncMiddleware(async function (re
 }))
 
 // gets a single project metadata
-router.get('/:id', asyncMiddleware(async function (req, res) {
+router.get(
+  '/:id',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canViewAllProjects',
+      allowedPermissionOrg: 'canViewOrgProjects'})
+  ],
+  asyncMiddleware(async function (req, res) {
   let project = await getConnection()
   .getRepository(ProjectMetadata)
   .findOne(
@@ -145,8 +185,21 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
   return res.json(project);
 }));
 
+
 // create new project metadata
-router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+router.post(
+  '/',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canEditAllProjects',
+      allowedPermissionOrg: 'canEditOrgProjects',
+      allowedPermissionNoEntityId: 'canAddProject',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
 
   var project = new ProjectMetadata()
   if (req.body.id) {
@@ -205,8 +258,19 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   return res.json(project)
 }));
 
+
 router.delete(
-  '/:id', isAuthenticated, asyncMiddleware(async function (req, res) {
+  '/:id',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canEditAllProjects',
+      allowedPermissionOrg: 'canEditOrgProjects',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
 
   const projMetaRepo = getConnection().getRepository(ProjectMetadata);
   const techSpecRepo = getConnection().getRepository(TechSpec);

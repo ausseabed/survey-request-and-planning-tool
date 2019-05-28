@@ -7,8 +7,7 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
-  geojsonToMultiLineString, geojsonToMultiPoint, isUuid }
+import { asyncMiddleware, isAuthenticated, isUuid, permitOrgBasedPermission }
   from '../utils';
 import { Attachment } from '../../lib/entity/attachment';
 import { HippRequest } from '../../lib/entity/hipp-request';
@@ -20,21 +19,45 @@ import { SurveyAttachment } from '../../lib/entity/survey-attachment';
  // How do the attachments link to each entity. 'survey' is a projectMetadata
  // entry. A projectMetadata entries attachments are linked via the
  // SurveyAttachment table.
+ // organisation attributes are used for the authorisation middleware check
 const attachmentmap = {
   'survey': {
     entity: ProjectMetadata,
-    attachment: SurveyAttachment
+    attachment: SurveyAttachment,
+    organisationAttributes: ['organisations'],
   },
   'hipp-request': {
     entity: HippRequest,
-    attachment: HippRequestAttachment
+    attachment: HippRequestAttachment,
+    organisationAttributes: ['requestingAgencies'],
   },
+}
+
+function attachmentPermit(allowedPermissionAll, allowedPermissionOrg) {
+  const entityTypeFn = (request) => {
+    let attachDetails = attachmentmap[request.params.entityType]
+    return attachDetails.entity
+  }
+  const orgAttrsFn = (request) => {
+    let attachDetails = attachmentmap[request.params.entityType]
+    return attachDetails.organisationAttributes
+  }
+  return permitOrgBasedPermission({
+    entityTypeFn:entityTypeFn,
+    organisationAttributesFn:orgAttrsFn,
+    allowedPermissionAll,
+    allowedPermissionOrg})
 }
 
 
 var router = express.Router();
 
-router.delete('/:entityType/:id/delete/:fileId', isAuthenticated,
+router.delete(
+  '/:entityType/:id/delete/:fileId',
+  [
+    isAuthenticated,
+    attachmentPermit('canDeleteAllAttachments', 'canDeleteOrgAttachments')
+  ],
   asyncMiddleware(async function(req, res){
 
   const entityType = req.params.entityType;
@@ -71,7 +94,12 @@ router.delete('/:entityType/:id/delete/:fileId', isAuthenticated,
 }));
 
 
-router.get('/:entityType/:id/download/:name', isAuthenticated,
+router.get(
+  '/:entityType/:id/download/:name',
+  [
+    isAuthenticated,
+    attachmentPermit('canViewAllAttachments', 'canViewOrgAttachments')
+  ],
   asyncMiddleware(async function(req, res){
 
   const entityType = req.params.entityType;
@@ -149,7 +177,12 @@ router.get('/:entityType/:id/download/:name', isAuthenticated,
 
 
 
-router.get('/:entityType/:id',
+router.get(
+  '/:entityType/:id',
+  [
+    isAuthenticated,
+    attachmentPermit('canViewAllAttachments', 'canViewOrgAttachments')
+  ],
   asyncMiddleware(async function(req, res){
   // gets a  list of survey files for the given project id
 
@@ -199,7 +232,12 @@ async function saveFile(file, entity, attachRepo) {
   return entityAttachment;
 }
 
-router.put('/:entityType/:id/upload', isAuthenticated,
+router.put(
+  '/:entityType/:id/upload',
+  [
+    isAuthenticated,
+    attachmentPermit('canUploadAllAttachments', 'canUploadOrgAttachments')
+  ],
   asyncMiddleware(async function (req, res) {
 
   const entityType = req.params.entityType;

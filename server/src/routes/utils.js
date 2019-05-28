@@ -101,15 +101,15 @@ export function permitPermission(allowedPermission) {
 //   organisationAttributes: ['orgs'],
 //   organisationAttributesFn: getorgattrs,
 //   allowedPermissionAll: 'cangetallprojs',
+//   allowedPermissionAllFn: getcangetallprojs,
 //   allowedPermissionOrg: 'cangetorgprojs',
+//   allowedPermissionOrgFn: getcangetorgprojs,
 //   allowedPermissionNoEntityId: 'canaddproj',
 // }
 
 
 // middleware for doing role-based permissions
 export function permitOrgBasedPermission(params) {
-  const allowedPermissionAll = params.allowedPermissionAll
-  const allowedPermissionOrg = params.allowedPermissionOrg
   const allowedPermissionNoEntityId = params.allowedPermissionNoEntityId
 
   // eg; if trying to add a new entity (instead of editing existing)
@@ -120,7 +120,7 @@ export function permitOrgBasedPermission(params) {
     return hasPermission(role, allowedPermissionNoEntityId)
   };
 
-  const isAllowed = (user, orglist) => {
+  const isAllowed = (user, orglist, allowedPermissionAll, allowedPermissionOrg) => {
     const role = user.role;
     if (hasPermission(role, allowedPermissionAll)) {
       // user has the permission that lets them view all of this role
@@ -175,6 +175,23 @@ export function permitOrgBasedPermission(params) {
           "organisationAttributesFn");
       }
 
+      let allowedPermissionAll = params.allowedPermissionAll
+      if (_.isNil(allowedPermissionAll) && !_.isNil(params.allowedPermissionAllFn)) {
+        allowedPermissionAll = params.allowedPermissionAllFn(request)
+      }
+      if (_.isNil(allowedPermissionAll)) {
+        throw new Error("Must provide either allowedPermissionAll or " +
+          "allowedPermissionAllFn");
+      }
+      let allowedPermissionOrg = params.allowedPermissionOrg
+      if (_.isNil(allowedPermissionOrg) && !_.isNil(params.allowedPermissionOrgFn)) {
+        allowedPermissionOrg = params.allowedPermissionOrgFn(request)
+      }
+      if (_.isNil(allowedPermissionOrg)) {
+        throw new Error("Must provide either allowedPermissionOrg or " +
+          "allowedPermissionOrgFn");
+      }
+
       // get the entity, but only the id attribute and the attributes that link
       // to one or more organisations
       let entity = await getConnection()
@@ -196,9 +213,12 @@ export function permitOrgBasedPermission(params) {
         }
       }
 
-      if (request.user && isAllowed(request.user, allOrgs))
+      if (
+        request.user &&
+        isAllowed(request.user, allOrgs, allowedPermissionAll, allowedPermissionOrg))
+      {
         next(); // role is allowed, so continue on the next middleware
-      else {
+      } else {
         response.status(403).json({message: "Forbidden"});
       }
     }

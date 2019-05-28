@@ -8,7 +8,7 @@ import * as rs from '../../lib/reference-system'
 var router = express.Router();
 
 // Gets a list of valid positioning requirements
-router.get('/', asyncMiddleware(async function (req, res) {
+router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   const type = req.query.type;
   if (!type) {

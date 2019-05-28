@@ -12,7 +12,8 @@ import stream from 'stream'
 
 import { getConnection } from 'typeorm'
 
-import { asyncMiddleware, isAuthenticated, permitPermission } from '../utils'
+import { asyncMiddleware, isAuthenticated, permitPermission,
+  permitOrgBasedPermission } from '../utils'
 import { HippRequest } from '../../lib/entity/hipp-request'
 import { ReportGenerator, HippRequestReportGenerator }
   from '../../lib/report-generator'
@@ -24,9 +25,13 @@ const router = express.Router()
 
 // one entry for each REPORT_TEMPLATE_TYPES in the entity/report-template.js
 // relationships is used to build query to get entity and related info
+// organisation attributes are used for the authorisation middleware check
 const TEMPLATE_TYPE_MAP = {
   'HIPP Request': {
     entityType: HippRequest,
+    allowedPermissionAll: 'canViewAllHippRequests',
+    allowedPermissionOrg: 'canViewOrgHippRequests',
+    organisationAttributes: ['requestingAgencies'],
     reportGenerator: HippRequestReportGenerator,
     relations: [
       'requestingAgencies',
@@ -49,13 +54,30 @@ function writeData(res, reportData, reportGen, reportTemplate) {
 }
 
 
+function reportGenPermit() {
+  return permitOrgBasedPermission({
+    entityTypeFn:(request) => {
+      return TEMPLATE_TYPE_MAP[request.params.templateType].entityType
+    },
+    organisationAttributesFn:(request) => {
+      return TEMPLATE_TYPE_MAP[request.params.templateType].organisationAttributes
+    },
+    allowedPermissionAllFn:(request) => {
+      return TEMPLATE_TYPE_MAP[request.params.templateType].allowedPermissionAll
+    },
+    allowedPermissionOrgFn:(request) => {
+      return TEMPLATE_TYPE_MAP[request.params.templateType].allowedPermissionOrg
+    },
+  })
+}
+
 // Gets a list of organisations
 router.get(
-  '/generate/:templateType/:entityId',
-  [isAuthenticated],
+  '/generate/:templateType/:id',
+  [isAuthenticated, reportGenPermit()],
   asyncMiddleware(async function (req, res) {
 
-  const entityId = req.params.entityId;
+  const entityId = req.params.id;
   const templateType = req.params.templateType;
   const format = _.isNil(req.query['format']) ?
     'docx' :

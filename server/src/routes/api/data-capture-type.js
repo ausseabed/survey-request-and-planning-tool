@@ -10,7 +10,7 @@ import { DataCaptureType } from '../../lib/entity/data-capture-type';
 var router = express.Router();
 
 // Gets a list of instrument types
-router.get('/', async function (req, res) {
+router.get('/', isAuthenticated, async function (req, res) {
   const whereOpts = _.isNil(req.query['user-submitted']) ?
     {} :
     {userSubmitted: (req.query['user-submitted'] == 'true')}

@@ -71,11 +71,11 @@ router.get(
   '/:id',
   [
     isAuthenticated,
-    permitOrgBasedPermission(
-      HippRequest,
-      ['requestingAgencies'],
-      'canViewAllHippRequests',
-      'canViewOrgHippRequests')
+    permitOrgBasedPermission({
+      entityType:HippRequest,
+      organisationAttributes: ['requestingAgencies'],
+      allowedPermissionAll: 'canViewAllHippRequests',
+      allowedPermissionOrg: 'canViewOrgHippRequests'})
   ],
   asyncMiddleware(async function (req, res) {
 
@@ -108,13 +108,13 @@ router.post(
   '/',
   [
     isAuthenticated,
-    permitOrgBasedPermission(
-      HippRequest,
-      ['requestingAgencies'],
-      'canEditAllHippRequests',
-      'canEditOrgHippRequests',
-      'canAddHippRequest',
-    )
+    permitOrgBasedPermission({
+      entityType: HippRequest,
+      organisationAttributes: ['requestingAgencies'],
+      allowedPermissionAll: 'canEditAllHippRequests',
+      allowedPermissionOrg: 'canEditOrgHippRequests',
+      allowedPermissionNoEntityId: 'canAddHippRequest',
+    })
   ],
   asyncMiddleware(async function (req, res) {
 

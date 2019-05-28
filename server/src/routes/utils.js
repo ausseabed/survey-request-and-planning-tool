@@ -93,13 +93,24 @@ export function permitPermission(allowedPermission) {
   }
 }
 
+
+// Following middleware takes an object as follows
+// {
+//   entityType: HippRequest,
+//   entityTypeFn: getetypes,
+//   organisationAttributes: ['orgs'],
+//   organisationAttributesFn: getorgattrs,
+//   allowedPermissionAll: 'cangetallprojs',
+//   allowedPermissionOrg: 'cangetorgprojs',
+//   allowedPermissionNoEntityId: 'canaddproj',
+// }
+
+
 // middleware for doing role-based permissions
-export function permitOrgBasedPermission(
-  entityType,
-  organisationAttributes,
-  allowedPermissionAll,
-  allowedPermissionOrg,
-  allowedPermissionNoEntityId = undefined) {
+export function permitOrgBasedPermission(params) {
+  const allowedPermissionAll = params.allowedPermissionAll
+  const allowedPermissionOrg = params.allowedPermissionOrg
+  const allowedPermissionNoEntityId = params.allowedPermissionNoEntityId
 
   // eg; if trying to add a new entity (instead of editing existing)
   const isAllowedNoEntityId = role => {
@@ -142,6 +153,28 @@ export function permitOrgBasedPermission(
         response.status(403).json({message: "Forbidden"});
       }
     } else {
+      // In some cases we know up front what the entity type and org attrs
+      // are. In other cases we will only know when the request comes in
+      // (eg; attachments which may link to projects or hipp requests); for
+      // this reason we allow a function to be passed in.
+      let entityType = undefined;
+      if (!_.isNil(params.entityType)) {
+        entityType = params.entityType;
+      } else if (!_.isNil(params.entityTypeFn)) {
+        entityType = params.entityTypeFn(request);
+      } else  {
+        throw new Error("Must provide either entityType or entityTypeFn");
+      }
+      let organisationAttributes = undefined;
+      if (!_.isNil(params.organisationAttributes)) {
+        organisationAttributes = params.organisationAttributes;
+      } else if (!_.isNil(params.organisationAttributesFn)) {
+        organisationAttributes = params.organisationAttributesFn(request);
+      } else {
+        throw new Error("Must provide either organisationAttributes or " +
+          "organisationAttributesFn");
+      }
+
       // get the entity, but only the id attribute and the attributes that link
       // to one or more organisations
       let entity = await getConnection()

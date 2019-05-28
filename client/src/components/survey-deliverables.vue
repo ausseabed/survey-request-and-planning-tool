@@ -285,7 +285,10 @@ export default Vue.extend({
     deleteDeliverable(deliverable) {
       this.$store.dispatch(
         'deliverable/deleteDeliverable',
-        {id: deliverable.id});
+        {
+          pid: this.projectMetadata.id,
+          did: deliverable.id
+        });
     },
     deleteAllDeliverables() {
       this.deliverableList.forEach((d) => {

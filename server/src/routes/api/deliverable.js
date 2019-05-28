@@ -4,16 +4,19 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated }
+import { asyncMiddleware, isAuthenticated, permitOrgBasedPermission }
   from '../utils';
-
+import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { DeliverableDefinition } from '../../lib/entity/deliverable-definition';
 import { SurveyDeliverable } from '../../lib/entity/survey-deliverable';
 
 var router = express.Router();
 
 // Gets a list of all deliverables that are available within the application
-router.get('/definition-list', asyncMiddleware(async function (req, res) {
+router.get(
+  '/definition-list',
+  isAuthenticated,
+  asyncMiddleware(async function (req, res) {
 
   let orgs = await getConnection()
   .getRepository(DeliverableDefinition)
@@ -31,7 +34,18 @@ router.get('/definition-list', asyncMiddleware(async function (req, res) {
 }));
 
 // Gets a  list of all deliverables assigned to this survey
-router.get('/:id/list', asyncMiddleware(async function (req, res) {
+router.get(
+  '/:id/list',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType: ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canViewAllProjects',
+      allowedPermissionOrg: 'canViewOrgProjects',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
   const id = req.params.id;
 
   let surveyDeliverables = await getConnection()
@@ -48,7 +62,17 @@ router.get('/:id/list', asyncMiddleware(async function (req, res) {
 }));
 
 router.post(
-  '/:id/list', isAuthenticated, asyncMiddleware(async function (req, res) {
+  '/:id/list',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType: ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canEditAllProjects',
+      allowedPermissionOrg: 'canEditOrgProjects',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
 
   const deliverables = req.body;
   let deliverableEntities = deliverables.map((d) => {
@@ -65,14 +89,25 @@ router.post(
 }));
 
 router.delete(
-  '/:id/', isAuthenticated, asyncMiddleware(async function (req, res) {
-  const id = req.params.id;
+  '/:id/:did/',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType: ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canEditAllProjects',
+      allowedPermissionOrg: 'canEditOrgProjects',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  const did = req.params.did;
 
   await getConnection()
   .createQueryBuilder()
   .delete()
   .from(SurveyDeliverable)
-  .where("id = :id", { id: id })
+  .where("id = :did", { did: did })
   .execute();
 
   res.end();

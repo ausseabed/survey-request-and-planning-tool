@@ -87,7 +87,7 @@ export const saveDeliverableList = async ({ commit, state }, payload) => {
 }
 
 export const deleteDeliverable = async ({ commit, state }, payload) => {
-  const urlEndpoint = `/api/deliverable/${payload.id}/`;
+  const urlEndpoint = `/api/deliverable/${payload.pid}/${payload.did}/`;
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
 
@@ -97,7 +97,7 @@ export const deleteDeliverable = async ({ commit, state }, payload) => {
     const response = await Vue.axios.delete(urlEndpoint);
 
     const newList = state.deliverableList.filter((d) => {
-      return d.id != payload.id;
+      return d.id != payload.did;
     });
 
     commit(mutTypes.SET_DELIVERABLE_LIST, newList);

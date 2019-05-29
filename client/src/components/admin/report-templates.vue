@@ -5,7 +5,7 @@
       <div class="row q-col-gutter-sm full-width">
 
         <div class="column full-width">
-          <q-card>
+          <q-card v-if="hasPermission('canEditTemplate')">
             <q-card-section class="row">
               <div class="text-h6">
                 Upload new template
@@ -56,7 +56,7 @@
                       :auto-expand="true"
                       url="/api/report-template/upload/"
                       method="PUT"
-                      :fields="[{name: 'name', value: reportTemplateName}, {name: 'templateType', value: reportTemplateType}]"
+                      :form-fields="[{name: 'name', value: reportTemplateName}, {name: 'templateType', value: reportTemplateType}]"
                       @start="uploadStarted"
                       @finish="uploadFinished"
                       @failed="uploadFailed"
@@ -115,13 +115,14 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { required } from 'vuelidate/lib/validators';
 
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
+import { permission } from './../mixins/permission'
 import { errorHandler } from './../mixins/error-handling'
 import * as mTypes
   from '../../store/modules/organisation/organisation-mutation-types'
 import ReportTemplateCard from './report-template-card'
 
 export default Vue.extend({
-  mixins: [DirtyRouteGuard, errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler, permission],
   components: {
     'report-template-card': ReportTemplateCard
   },
@@ -192,7 +193,6 @@ export default Vue.extend({
     removedFile (files) {
       this.reportTemplateFile = undefined;
     },
-
   },
 
   validations: {

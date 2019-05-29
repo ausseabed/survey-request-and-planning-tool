@@ -4,7 +4,8 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon }
+import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
+  hasPermission }
   from '../utils';
 import { ProjectMetadata } from '../../lib/entity/project-metadata';
 
@@ -24,7 +25,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       JSON.stringify(geojson.geometry) :
       JSON.stringify(geojson);
 
-  let projects = await getConnection()
+  let projectsQuery = getConnection()
   .getRepository(ProjectMetadata)
   .createQueryBuilder("project_metadata")
   .where(
@@ -38,8 +39,26 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     {deleted: false}
   )
   .orderBy("project_metadata.startDate")
-  .getMany();
 
+  if (hasPermission(req.user.role, 'canViewAllProjects')) {
+    // then no additional where clauses
+  } else if (hasPermission(req.user.role, 'canViewOrgProjects')) {
+    // need to filter list to include only projects that include the
+    // org this user is assigned.
+    projectsQuery = projectsQuery
+    .innerJoin("project_metadata.organisations", "organisation")
+    .andWhere(
+      `organisation.id = :orgId`,
+      {orgId: req.user.organisation.id}
+    )
+  } else {
+    let err = boom.forbidden(
+      `Missing permission required to list HIPP Requests`);
+    throw err;
+  }
+
+
+  let projects = await projectsQuery.getMany();
   return res.json(projects);
 }))
 

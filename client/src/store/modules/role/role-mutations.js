@@ -50,6 +50,10 @@ const mutations = {
     state.dirty = true;
     _.set(state.activeRole, path, _.cloneDeep(value))
   },
+
+  [types.SET_USER_ROLE] (state, role) {
+    state.userRole = role;
+  },
 }
 
 export default {

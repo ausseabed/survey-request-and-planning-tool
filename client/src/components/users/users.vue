@@ -60,6 +60,7 @@
                     @input="updateActiveUserValue({path:'name', value:$event})"
                     @blur="$v.activeUser.name.$touch"
                     type="text"
+                    :readonly="!hasPermission('canEditUser')"
                     >
                   </form-field-validated-input>
 
@@ -73,6 +74,7 @@
                     @blur="$v.activeUser.organisation.$touch"
                     option-value="id"
                     option-label="name"
+                    :readonly="!hasPermission('canEditUser')"
                     >
                   </form-field-validated-select>
 
@@ -86,13 +88,17 @@
                     @blur="$v.activeUser.role.$touch"
                     option-value="id"
                     option-label="name"
+                    :readonly="!hasPermission('canEditUser')"
                     >
                   </form-field-validated-select>
                 </div>
 
               </form-wrapper>
             </q-card-section>
-            <div class="col-auto">
+            <div
+              v-if="hasPermission('canEditUser')"
+              class="col-auto"
+              >
               <q-separator />
               <q-card-actions align="right">
                 <q-btn flat icon="save"
@@ -124,13 +130,14 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { required } from 'vuelidate/lib/validators';
 
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
+import { permission } from './../mixins/permission'
 import { errorHandler } from './../mixins/error-handling'
 import * as mTypes
   from '../../store/modules/user/user-mutation-types'
 
 
 export default Vue.extend({
-  mixins: [DirtyRouteGuard, errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler, permission],
   beforeMount() {
     this.getFormData();
   },

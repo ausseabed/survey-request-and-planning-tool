@@ -7,7 +7,7 @@ import * as types from './project-metadata-mutation-types'
 function initialState() {
   return {
     projectMetadata: {
-      id: "",
+      id: undefined,
       surveyName: null,
       organisations: [],
       contactPerson: null,

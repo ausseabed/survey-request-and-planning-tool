@@ -33,7 +33,7 @@
                 <q-checkbox
                   class="q-pl-sm"
                   :value="deletedOrganisations"
-                  @change="setDeletedOrganisationsChange($event)"
+                  @input="setDeletedOrganisationsChange($event)"
                   toggle-indeterminate
                 >
                   <div class="q-pl-sm"><small>Show deleted</small></div>

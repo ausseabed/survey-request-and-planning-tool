@@ -19,7 +19,9 @@
       </q-tooltip>
     </q-btn>
     <q-item v-if="isAuthenticated">
-      <q-item-section>
+      <q-item-section
+        v-if="hasPermission('isAdmin')"
+        >
         <q-btn flat round dense icon="settings" to="/admin">
           <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Administration</q-tooltip>
         </q-btn>
@@ -56,10 +58,12 @@
   import Vue from 'vue'
   import { mapActions, mapMutations } from 'vuex'
 
+  import { permission } from './mixins/permission'
   import * as mutRoleTypes
     from '../store/modules/role/role-mutation-types'
 
   export default Vue.extend({
+    mixins: [permission],
     data() {
       return {
         isAuthenticated: this.$auth.isAuthenticated()

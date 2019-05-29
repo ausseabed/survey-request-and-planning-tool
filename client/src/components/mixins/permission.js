@@ -8,13 +8,25 @@ export const permission = {
   },
   methods: {
     hasPermission(permission) {
+      // support passing in a single permission, or an array of permissions.
+      // if a single permission is passed in, the convert it to an array.
+      const permissions = Array.isArray(permission) ? permission : [permission]
       if (_.isNil(this.userRole)) {
+        // no role, so default to not having this permission
         return false
       } else {
-        if (!_.has(this.userRole, permission)) {
-          throw new Error(`Permission ${permission} does not exist on role`)
+        let res = false;
+        // loop through all given permissions. This method returns true if the
+        // role has one of the permissions.
+        for (let perm of permissions) {
+          if (!_.has(this.userRole, permission)) {
+            throw new Error(`Permission ${permission} does not exist on role`)
+          }
+          if (this.userRole[permission]) {
+            res = true;
+          }
         }
-        return this.userRole[permission]
+        return res
       }
     },
   }

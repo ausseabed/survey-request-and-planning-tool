@@ -226,18 +226,6 @@ export function permitOrgBasedPermission(params) {
 }
 
 
-// Appends user to req is authenticated, will not 401
-export function authenticatedUser(req, res, next) {
-    if (req.headers.authorization) {
-        var verified_user = auth.verify(req.headers.authorization);
-        if (verified_user) {
-            req.user = verified_user;
-        }
-    }
-
-    return next();
-}
-
 export function isUuid(testString) {
   return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(testString);
 }

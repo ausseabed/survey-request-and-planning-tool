@@ -12,7 +12,7 @@ var path = require('path');
 var hash = require('object-hash');
 var RouteError = require('./route-error');
 
-import { isAuthenticated, authenticatedUser } from './utils';
+import { isAuthenticated } from './utils';
 
 /* GET home page. */
 router.get('/', function (req, res) {

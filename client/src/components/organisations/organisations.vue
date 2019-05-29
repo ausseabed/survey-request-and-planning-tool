@@ -65,33 +65,39 @@
                 class="overflow-hidden"
               >
                 <div class="column q-gutter-sm">
-                  <form-field-validated-input :label-width="2"
-                           name="activeOrganisation.name"
-                           attribute="Name"
-                           label="Name"
-                           :value="activeOrganisation.name"
-                            @input="updateActiveOrganisationValue({path:'name', value:$event})"
-                            @blur="$v.activeOrganisation.name.$touch"
-                            type="text"
-                           >
+                  <form-field-validated-input
+                    name="activeOrganisation.name"
+                    attribute="Name"
+                    label="Name"
+                    :value="activeOrganisation.name"
+                    @input="updateActiveOrganisationValue({path:'name', value:$event})"
+                    @blur="$v.activeOrganisation.name.$touch"
+                    type="text"
+                    :readonly="!hasPermission('canEditOrganisation')"
+                   >
                   </form-field-validated-input>
 
-                  <form-field-validated-input :label-width="2"
-                           name="activeOrganisation.abn"
-                           attribute="ABN"
-                           label="ABN"
-                           helper="Optional"
-                           :value="activeOrganisation.abn"
-                                    @input="updateActiveOrganisationValue({path:'abn', value:$event})"
-                                    @blur="$v.activeOrganisation.abn.$touch"
-                                    type="text" >
+                  <form-field-validated-input
+                    name="activeOrganisation.abn"
+                    attribute="ABN"
+                    label="ABN"
+                    helper="Optional"
+                    :value="activeOrganisation.abn"
+                    @input="updateActiveOrganisationValue({path:'abn', value:$event})"
+                    @blur="$v.activeOrganisation.abn.$touch"
+                    type="text"
+                    :readonly="!hasPermission('canEditOrganisation')"
+                    >
                   </form-field-validated-input>
                 </div>
 
               </form-wrapper>
             </q-card-section>
             <!-- @input="updateActiveOrganisation({path:'name', value:$event})" -->
-            <div class="col-auto">
+            <div
+              v-if="hasPermission('canEditOrganisation')"
+              class="col-auto"
+              >
               <q-separator />
               <q-card-actions align="right">
                 <q-btn flat icon="save"
@@ -133,6 +139,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { required } from 'vuelidate/lib/validators';
 
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
+import { permission } from './../mixins/permission'
 import { errorHandler } from './../mixins/error-handling'
 import * as mTypes
   from '../../store/modules/organisation/organisation-mutation-types'
@@ -163,7 +170,7 @@ const duplicateOrganisationAbn = function (value, vm) {
 };
 
 export default Vue.extend({
-  mixins: [DirtyRouteGuard, errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler, permission],
   beforeMount() {
     this.setDeletedOrganisations(null);
     this.getFormData();

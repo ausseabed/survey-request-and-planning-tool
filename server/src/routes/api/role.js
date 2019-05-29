@@ -10,6 +10,28 @@ import { Role } from '../../lib/entity/role';
 
 var router = express.Router();
 
+
+// gets a single role for the current logged in user
+router.get(
+  '/user-role',
+  isAuthenticated,
+  asyncMiddleware(async function (req, res) {
+
+  let role = req.user.role
+
+  if (!role || role.deleted) {
+    let err = boom.notFound(
+      `Currently logged in user has no role`);
+    throw err;
+  }
+
+  // don't return the deleted flag
+  delete role.deleted;
+
+  return res.json(role);
+}));
+
+
 // Gets a list of roles
 router.get(
   '/',
@@ -29,6 +51,7 @@ router.get(
   });
   return res.json(roles);
 }));
+
 
 // creates/saves a new role
 router.post(

@@ -67,16 +67,12 @@
                 </q-scroll-area>
                 <!-- <div class="fat-spacer bg-secondary"></div> -->
 
-                <div class="full-width column">
+                <div
+                  v-if="hasPermission('canAddProject')"
+                  class="full-width column"
+                  >
                   <q-separator style="height:1px;"/>
                   <div class="row justify-end q-py-sm q-mx-md">
-                    <!-- <q-btn flat label="add request"
-                      align="right"
-                      :to="'/hipp-request/new'">
-                      <q-tooltip>
-                        Create new HIPP request
-                      </q-tooltip>
-                    </q-btn> -->
                     <q-btn flat label="add project"
                       icon="add"
                       :to="'/survey/new'">
@@ -137,7 +133,10 @@
 
               </q-scroll-area>
 
-              <div class="full-width column">
+              <div
+                v-if="hasPermission('canAddHippRequest')"
+                class="full-width column"
+                >
                 <q-separator style="height:1px;"/>
                 <div class="row justify-end q-py-sm q-mx-md">
                   <q-btn flat label="add request"
@@ -175,14 +174,15 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 
 import TransitionExpand from './transition-expand.vue';
-import { errorHandler } from './mixins/error-handling'
+import { errorHandler } from './mixins/error-handling';
+import { permission } from './mixins/permission';
 import OlMap from './olmap/olmap';
 
 import * as pmMutTypes
   from '../store/modules/project-metadata/project-metadata-mutation-types'
 
 export default Vue.extend({
-  mixins: [errorHandler],
+  mixins: [errorHandler, permission],
   components: {
     TransitionExpand
   },

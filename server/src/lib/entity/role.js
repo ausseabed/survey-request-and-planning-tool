@@ -43,6 +43,8 @@ export class Role {
   @Column({type: "bool", nullable: false, default: false})
   isAdmin;
 
+  // not used !!!!
+  // Todo: remove
   @Column({type: "bool", nullable: false, default: false})
   canAddTemplate;
 

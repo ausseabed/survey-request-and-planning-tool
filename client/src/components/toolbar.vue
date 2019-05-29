@@ -54,22 +54,24 @@
 </template>
 <script>
   import Vue from 'vue'
-  import { Quasar,
-    QToolbar, QToolbarTitle, QBtn, QTooltip,
-    QItem, QList
-  } from 'quasar'
+  import { mapActions, mapMutations } from 'vuex'
+
+  import * as mutRoleTypes
+    from '../store/modules/role/role-mutation-types'
 
   export default Vue.extend({
-    components: {
-      QToolbar, QToolbarTitle, QBtn, QTooltip,
-      QItem, QList
-    },
     data() {
       return {
         isAuthenticated: this.$auth.isAuthenticated()
       }
     },
     methods: {
+      ...mapActions('role', [
+        'getUserRole',
+      ]),
+      ...mapMutations('role', {
+        'setUserRole': mutRoleTypes.SET_USER_ROLE,
+      }),
       show_settings() {
         console.log("Show settings here");
       },
@@ -79,6 +81,7 @@
       logout() {
         this.$q.cookies.remove('Authorization');
         this.$auth.logout();
+        this.setUserRole(undefined);
         this.isAuthenticated = this.$auth.isAuthenticated();
         this.$router.push('/login');
       },
@@ -92,6 +95,7 @@
         .then(() => {
           this.isAuthenticated = this.$auth.isAuthenticated();
           if (this.isAuthenticated) {
+            this.getUserRole();
             if (this.$route.query.redirect) {
               this.$router.push(this.$route.query.redirect);
             } else {

@@ -40,7 +40,7 @@
         </q-btn>
       </q-page-sticky>
 
-      <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md">
+      <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
         <q-card inline class="full-width">
           <q-card-section>
             <div class="text-h6"> Survey Requirements </div>

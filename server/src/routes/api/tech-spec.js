@@ -5,8 +5,9 @@ const boom = require('boom');
 import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
-  geojsonToMultiLineString, geojsonToMultiPoint }
+  geojsonToMultiLineString, geojsonToMultiPoint, permitOrgBasedPermission }
   from '../utils';
+import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { TechSpec, SURVEY_TYPES, SURVEY_CLASSIFICATIONS,
   GROUND_TRUTHING_METHODS, POSITIONING_REQUIREMENTS, DELIVERY_METHODS }
   from '../../lib/entity/tech-spec';
@@ -48,7 +49,17 @@ router.get('/', async function (req, res) {
 
 
 // gets a single survey technical specification
-router.get('/:id', asyncMiddleware(async function (req, res) {
+router.get(
+  '/:id',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canViewAllProjects',
+      allowedPermissionOrg: 'canViewOrgProjects'})
+  ],
+  asyncMiddleware(async function (req, res) {
   let techSpec = await getConnection()
   .getRepository(TechSpec)
   .findOne(
@@ -68,7 +79,18 @@ router.get('/:id', asyncMiddleware(async function (req, res) {
 }));
 
 // create new survey technical specification
-router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+router.post(
+  '/',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canEditAllProjects',
+      allowedPermissionOrg: 'canEditOrgProjects',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
   var techSpec = new TechSpec();
 
   if (!_.isNil(req.body.surveyType)) {

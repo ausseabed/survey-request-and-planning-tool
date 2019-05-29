@@ -38,7 +38,10 @@
                 >
                   <div class="q-pl-sm"><small>Show deleted</small></div>
                 </q-checkbox>
-                <q-btn flat icon="add"
+                <q-btn
+                  v-if="hasPermission('canEditOrganisation')"
+                  flat
+                  icon="add"
                   label="Add new"
                   to="/admin/organisations/new"
                 >

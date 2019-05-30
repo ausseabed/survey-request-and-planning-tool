@@ -19,7 +19,9 @@
           <div class="fat-spacer bg-secondary"></div>
 
           <q-tab-panels v-model="tab" animated class="col">
-            <q-tab-panel name="projects" class="column col-auto no-padding">
+            <q-tab-panel
+              v-if="hasPermission(['canViewAllProjects', 'canViewOrgProjects'])"
+              name="projects" class="column col-auto no-padding">
 
               <!-- <q-card-section class="column col" style="padding:0px"> -->
                 <q-scroll-area class="col">
@@ -89,7 +91,9 @@
                 </div>
             </q-tab-panel>
 
-            <q-tab-panel name="requests" class="column col-auto no-padding">
+            <q-tab-panel
+              v-if="hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])"
+              name="requests" class="column col-auto no-padding">
 
               <q-scroll-area class="col">
                 <q-list no-border padding
@@ -296,9 +300,19 @@ export default Vue.extend({
   data() {
     return {
       map: null,
-      tab: 'projects',
+      tab: undefined,
       matchingProjMetas:undefined,
       activeProjMetaId:undefined,
+    }
+  },
+
+  watch: {
+    'userRole': function(newRole, oldRole) {
+      if (this.hasPermission(['canViewAllProjects', 'canViewOrgProjects'])) {
+        this.tab = 'projects';
+      } else if (this.hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])) {
+        this.tab = 'requests';
+      }
     }
   }
 

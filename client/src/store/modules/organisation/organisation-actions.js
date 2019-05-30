@@ -93,3 +93,25 @@ export const restoreOrganisation = ({ commit, state }, organisationId) => {
     });
   });
 }
+
+export const getUserOrganisation = ({ commit, state }) => {
+  var url_endpoint = '/api/organisation/user-organisation';
+
+  const params = {};
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  return new Promise((resolve, reject) => {
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+    Vue.axios.get(url_endpoint, {params: params})
+    .then((response) => {
+      commit(mutTypes.SET_USER_ORGANISATION, response.data);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+      resolve(response.data);
+    })
+    .catch((error) => {
+      commit(mutTypes.SET_REQUEST_ERROR, error);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+      reject(error);
+    });
+  });
+}

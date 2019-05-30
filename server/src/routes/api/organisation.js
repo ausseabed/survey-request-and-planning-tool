@@ -10,6 +10,27 @@ import { Organisation } from '../../lib/entity/organisation';
 
 var router = express.Router();
 
+// gets a single role for the current logged in user
+router.get(
+  '/user-organisation',
+  isAuthenticated,
+  asyncMiddleware(async function (req, res) {
+
+  let org = req.user.organisation
+
+  if (!org || org.deleted) {
+    let err = boom.notFound(
+      `Currently logged in user has no organisation`);
+    throw err;
+  }
+
+  // don't return the deleted flag
+  delete org.deleted;
+
+  return res.json(org);
+}));
+
+
 // Gets a list of organisations
 router.get(
   '/',

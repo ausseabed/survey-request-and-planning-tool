@@ -307,13 +307,16 @@ export default Vue.extend({
   },
 
   watch: {
-    'userRole': function(newRole, oldRole) {
-      if (this.hasPermission(['canViewAllProjects', 'canViewOrgProjects'])) {
-        this.tab = 'projects';
-      } else if (this.hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])) {
-        this.tab = 'requests';
-      }
-    }
+    'userRole': {
+      immediate: true,
+      handler(newRole, oldRole) {
+        if (this.hasPermission(['canViewAllProjects', 'canViewOrgProjects'])) {
+          this.tab = 'projects';
+        } else if (this.hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])) {
+          this.tab = 'requests';
+        }
+      },
+    },
   }
 
 });

@@ -22,6 +22,7 @@
     },
     mounted() {
       this.getUserRole();
+      this.getUserOrganisation();
     },
     created() {
       EventBus.$on('redirect', this.redirectURL)
@@ -29,6 +30,9 @@
     methods: {
       ...mapActions('role', [
         'getUserRole',
+      ]),
+      ...mapActions('organisation', [
+        'getUserOrganisation',
       ]),
       resetScroll(el, done) {
         document.documentElement.scrollTop = 0

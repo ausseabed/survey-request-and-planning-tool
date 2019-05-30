@@ -1,13 +1,9 @@
 import Vue from 'vue';
 
-import { ADD_ORGANISATION, CLEAR_ORGANISATION_LIST, SET_DIRTY,
-  SET_ORGANISATIONS, SET_REQUEST_ERROR, SET_REQUEST_STATUS,
-  SET_ACTIVE_ORGANISATION, UPDATE_ACTIVE_ORGANISATION_VALUE,
-  SET_DELETED_ORGANISATIONS }
-  from './organisation-mutation-types';
+import * as types from './organisation-mutation-types';
 
 const mutations = {
-  [ADD_ORGANISATION] (state, organisation) {
+  [types.ADD_ORGANISATION] (state, organisation) {
     const existingIndex = state.organisations.findIndex(existingOrg => {
       return existingOrg.id == organisation.id;
     });
@@ -25,38 +21,42 @@ const mutations = {
     }
   },
 
-  [CLEAR_ORGANISATION_LIST] (state, organisations) {
+  [types.CLEAR_ORGANISATION_LIST] (state, organisations) {
     state.organisations.splice(0, state.organisations.length);
   },
 
-  [SET_ACTIVE_ORGANISATION] (state, organisation) {
+  [types.SET_ACTIVE_ORGANISATION] (state, organisation) {
     state.activeOrganisation = _.cloneDeep(organisation);
     state.dirty = false;
   },
 
-  [SET_DELETED_ORGANISATIONS] (state, deletedOrganisations) {
+  [types.SET_DELETED_ORGANISATIONS] (state, deletedOrganisations) {
     state.deletedOrganisations = deletedOrganisations;
   },
 
-  [SET_DIRTY] (state, dirty) {
+  [types.SET_DIRTY] (state, dirty) {
     state.dirty = dirty;
   },
 
-  [SET_ORGANISATIONS] (state, organisations) {
+  [types.SET_ORGANISATIONS] (state, organisations) {
     state.organisations = organisations;
   },
 
-  [SET_REQUEST_ERROR] (state, error) {
+  [types.SET_REQUEST_ERROR] (state, error) {
     state.requestError = error;
   },
 
-  [SET_REQUEST_STATUS] (state, status) {
+  [types.SET_REQUEST_STATUS] (state, status) {
     state.requestStatus = status;
   },
 
-  [UPDATE_ACTIVE_ORGANISATION_VALUE] (state, { path, value }) {
+  [types.UPDATE_ACTIVE_ORGANISATION_VALUE] (state, { path, value }) {
     state.dirty = true;
     _.set(state.activeOrganisation, path, _.cloneDeep(value))
+  },
+
+  [types.SET_USER_ORGANISATION] (state, org) {
+    state.userOrganisation = org;
   },
 }
 

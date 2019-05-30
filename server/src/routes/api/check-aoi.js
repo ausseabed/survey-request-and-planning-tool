@@ -52,9 +52,10 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       {orgId: req.user.organisation.id}
     )
   } else {
-    let err = boom.forbidden(
-      `Missing permission required to list HIPP Requests`);
-    throw err;
+    return res.json([]);
+    // let err = boom.forbidden(
+    //   `Missing permission required to list HIPP Requests`);
+    // throw err;
   }
 
 

@@ -19,10 +19,10 @@ export const permission = {
         // loop through all given permissions. This method returns true if the
         // role has one of the permissions.
         for (let perm of permissions) {
-          if (!_.has(this.userRole, permission)) {
-            throw new Error(`Permission ${permission} does not exist on role`)
+          if (!_.has(this.userRole, perm)) {
+            throw new Error(`Permission ${perm} does not exist on role`)
           }
-          if (this.userRole[permission]) {
+          if (this.userRole[perm]) {
             res = true;
           }
         }

@@ -4,6 +4,7 @@
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
+        v-if="!readOnly"
         position="top-right"
         :offset="id ? [18, 18+66] : [18, 18]"
         style="z-index:100">
@@ -466,6 +467,7 @@ import { date } from 'quasar'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { DirtyRouteGuard } from './mixins/dirty-route-guard'
+import { permission } from './mixins/permission'
 import { errorHandler } from './mixins/error-handling'
 import * as orgMutTypes
   from '../store/modules/organisation/organisation-mutation-types'
@@ -531,7 +533,7 @@ const otherSurveyPurpose = {
 }
 
 export default Vue.extend({
-  mixins: [DirtyRouteGuard, errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler, permission],
 
   beforeMount() {
     this.getFormData();
@@ -931,6 +933,18 @@ export default Vue.extend({
     ...mapGetters('hippRequest', [
       'hippRequests'
     ]),
+    readOnly: function() {
+      if (this.hasPermission('canEditAllProjects')) {
+        return false
+      } else if (
+        this.hasPermission('canEditOrgProjects') &&
+        this.hasOrganisationLink('projectOrganisations')
+      ) {
+        return false
+      } else {
+        return true
+      }
+    },
     formattedStartDate: function() {
       const d = new Date();
       d.setTime(this.startDate);

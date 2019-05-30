@@ -9,8 +9,12 @@
             v-model="tab"
             class="bg-secondary text-white"
           >
-            <q-tab name="projects" label="Projects" icon="layers"/>
-            <q-tab name="requests" label="Requests" icon="device_hub"/>
+            <q-tab
+              v-if="hasPermission(['canViewAllProjects', 'canViewOrgProjects'])"
+              name="projects" label="Projects" icon="layers"/>
+            <q-tab
+              v-if="hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])"
+              name="requests" label="Requests" icon="device_hub"/>
           </q-tabs>
           <div class="fat-spacer bg-secondary"></div>
 

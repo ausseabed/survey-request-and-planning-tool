@@ -28,11 +28,14 @@
             </q-td>
             <q-td key="actions" :props="props" style="width: 80px; padding-right: 5px; padding-left: 5px;">
               <div class="row justify-center">
-                <q-btn size="md" flat dense
+                <q-btn
+                  size="md" flat dense
                   icon="cloud_download"
                   @click="downloadFile({id: props.row.id, name: props.row.fileName})"
                   :disable="props.row.downloading"/>
-                <q-btn size="md" flat dense
+                <q-btn
+                  v-if="canDelete"
+                  size="md" flat dense
                   icon="delete"
                   @click="deleteFile($event, props.row)"
                   :disable="props.row.downloading"/>
@@ -45,6 +48,7 @@
         </q-table>
 
         <q-uploader
+          v-if="canUpload"
           label="Upload"
           class="full-width"
           ref="uploader"
@@ -63,6 +67,7 @@
 import Vue from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
+import { permission } from './mixins/permission'
 import { errorHandler } from './mixins/error-handling'
 import { date } from 'quasar'
 import * as types
@@ -76,7 +81,7 @@ const path = require('path');
 
 export default Vue.extend({
   props: ['attachesTo'],
-  mixins: [errorHandler],
+  mixins: [errorHandler, permission],
 
   mounted() {
     this.SET_ATTACHES_TO(this.attachesTo)
@@ -142,10 +147,46 @@ export default Vue.extend({
     ...mapGetters('projectMetadata',[
       'projectMetadata',
     ]),
+    ...mapGetters('hippRequest',[
+      'hippRequest',
+    ]),
     ...mapGetters('surveyFile',[
       'files',
       'attachesToId',
     ]),
+    orgLink: function() {
+      let orgLink = undefined
+      if (this.attachesTo === 'survey') {
+        orgLink = 'projectMetadata.organisations'
+      } else if (this.attachesTo === 'hipp-request') {
+        orgLink = 'hippRequest.requestingAgencies'
+      }
+      return orgLink
+    },
+    canDelete: function() {
+      if (this.hasPermission('canDeleteAllAttachments')) {
+        return true
+      } else if (
+        this.hasPermission('canDeleteOrgAttachments') &&
+        this.hasOrganisationLink(this.orgLink)
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
+    canUpload: function() {
+      if (this.hasPermission('canUploadAllAttachments')) {
+        return true
+      } else if (
+        this.hasPermission('canUploadOrgAttachments') &&
+        this.hasOrganisationLink(this.orgLink)
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 
   watch: {

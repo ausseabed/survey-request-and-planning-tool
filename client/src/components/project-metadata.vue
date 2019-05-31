@@ -43,6 +43,7 @@
               @input="update('projectMetadata.surveyName', $event)"
               @blur="$v.surveyName.$touch"
               type="text"
+              :readonly="readOnly"
               >
             </form-field-validated-input>
 
@@ -51,7 +52,9 @@
               hint="Optional"
               :value="surveyId"
               @input="update('projectMetadata.surveyId', $event)"
-              type="text">
+              type="text"
+              :readonly="readOnly"
+              >
             </q-input>
 
             <q-field label="Status" stack-label>
@@ -62,6 +65,7 @@
                   color="secondary"
                   @input="update('projectMetadata.projectStatus', $event)"
                   :options="projectStatusOptions"
+                  :disable="readOnly"
                 />
               </template>
             </q-field>
@@ -77,38 +81,8 @@
               option-label="name"
               option-value="id"
               @blur="$v.projectOrganisations.$touch"
+              :readonly="readOnly"
               >
-               <!-- <div class="row" >
-                 <q-select />
-                 <q-btn flat icon="settings"
-                   to="/admin/organisations">
-                   <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
-                    Manage organisations
-                  </q-tooltip>
-                 </q-btn>
-               </div>
-
-               <template v-if="projectOrganisations.length == 0">
-                 <p class="q-body-2 text-center" style="padding:5px">No organisations selected</p>
-               </template>
-               <template v-else>
-                 <q-list-header>Participating organisations</q-list-header>
-                 <q-list dense>
-                   <q-item dense
-                     v-for="organisation in projectOrganisations"
-                     :key="organisation.id">
-                     <q-item-main :label="organisation.name" />
-                     <q-item-side right>
-                       <q-btn flat icon="close"
-                         @click="removeOrganisation(organisation)">
-                         <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
-                          Remove organisation from this project. Does not delete organisation.
-                        </q-tooltip>
-                       </q-btn>
-                     </q-item-side>
-                   </q-item>
-                 </q-list>
-               </template> -->
             </form-field-validated-select>
 
             <q-input
@@ -120,6 +94,7 @@
               @input="update('projectMetadata.contactPerson', $event)"
               @blur="$v.contactPerson.$touch"
               type="text"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -133,6 +108,7 @@
               @input="update('projectMetadata.email', $event)"
               @blur="$v.email.$touch"
               type="email"
+              :readonly="readOnly"
               >
             </form-field-validated-input>
           </q-card-section>
@@ -154,6 +130,7 @@
               option-value="id"
               @blur="$v.hippRequest.$touch"
               clearable
+              :readonly="readOnly"
               >
             </form-field-validated-select>
           </q-card-section>
@@ -203,13 +180,17 @@
                     </q-btn>
                   </div>
                   <div class="col">
-                    <q-btn class="no-margin full-width" icon="cloud_upload" label="Upload"
+                    <q-btn
+                      v-if="!readOnly"
+                      class="no-margin full-width" icon="cloud_upload" label="Upload"
                       @click="selectAoiFile">
                     </q-btn>
                     <input type="file" id="dataPath" v-on:change="setAoiFile" ref="fileInput" hidden />
                   </div>
                   <div class="col">
-                    <q-btn class="no-margin full-width" icon="clear" label="Clear"
+                    <q-btn
+                      v-if="!readOnly"
+                      class="no-margin full-width" icon="clear" label="Clear"
                       :disable="!areaOfInterest"
                       @click="setAoi(undefined)">
                     </q-btn>
@@ -242,6 +223,7 @@
               @blur="$v.selectedSurveyApplicationGroup.$touch"
               :error="$v.selectedSurveyApplicationGroup.$error"
               error-label="Survey application is required"
+              :readonly="readOnly"
               >
             </q-select>
 
@@ -257,6 +239,7 @@
                   @input="setSurveyApplicationGroupNameOther($event)"
                   @blur="$v.surveyApplicationGroupNameOther.$touch"
                   type="text"
+                  :readonly="readOnly"
                   >
                 </form-field-validated-input>
               </div>
@@ -274,6 +257,7 @@
               option-value="id"
               bottom-slots
               @blur="$v.selectedSurveyApplication.$touch"
+              :readonly="readOnly"
               >
             </q-select>
 
@@ -289,6 +273,7 @@
                   @input="setSurveyApplicationNameOther($event)"
                   @blur="$v.surveyApplicationNameOther.$touch"
                   type="text"
+                  :readonly="readOnly"
                   >
                 </form-field-validated-input>
               </div>
@@ -300,7 +285,9 @@
               :value="quality"
               @input="update('projectMetadata.quality', $event)"
               type="textarea"
-              autogrow>
+              autogrow
+              :readonly="readOnly"
+              >
             </q-input>
 
           </q-card-section>
@@ -319,6 +306,7 @@
               :value="contractNumber"
               @input="update('projectMetadata.contractNumber', $event)"
               type="text"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -330,6 +318,7 @@
               :options="organisationOptions"
               option-label="name"
               option-value="id"
+              :readonly="readOnly"
               >
             </q-select>
 
@@ -342,6 +331,7 @@
               :options="organisationOptions"
               option-label="name"
               option-value="id"
+              :readonly="readOnly"
               >
             </q-select>
 
@@ -351,6 +341,7 @@
               :value="vessel"
               @input="update('projectMetadata.vessel', $event)"
               type="text"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -364,6 +355,7 @@
               option-label="name"
               option-value="id"
               @blur="$v.projectInstrumentTypes.$touch"
+              :readonly="readOnly"
               >
             </form-field-validated-select>
 
@@ -377,13 +369,18 @@
               option-label="displayName"
               option-value="id"
               option-disable="disable"
-              @blur="$v.projectDataCaptureTypes.$touch">
+              @blur="$v.projectDataCaptureTypes.$touch"
+              :readonly="readOnly"
+              >
             </form-field-validated-select>
 
-            <q-field stack-label
-                     label="Start date"
-                     :error="$v.startDate.$error"
-                     error-label="Start date is required">
+            <q-field
+              stack-label
+              label="Start date"
+              :error="$v.startDate.$error"
+              error-label="Start date is required"
+              :readonly="readOnly"
+              >
               <template v-slot:control>
                 <q-date :landscape="$q.platform.is.desktop"
                   :value="formattedStartDate"
@@ -406,6 +403,7 @@
               :value="comment"
               @input="update('projectMetadata.comment', $event)"
               type="textarea"
+              :readonly="readOnly"
               >
             </q-input>
           </q-card-section>
@@ -421,7 +419,9 @@
               stack-label
               label="Subject to moratorium"
               hint="Optional"
-              bottom-slots>
+              bottom-slots
+              :readonly="readOnly"
+              >
               <q-checkbox
                 :value="projectMetadata.hasMoratorium"
                 @input="update('projectMetadata.hasMoratorium', $event)"
@@ -438,6 +438,7 @@
               :value="formattedMoratoriumDate"
               @input="setFormattedMoratoriumDate($event)"
               @blur="$v.projectMetadata.moratoriumDate.$touch"
+              :readonly="readOnly"
               >
 
                 <q-icon name="event" class="cursor-pointer">
@@ -935,11 +936,13 @@ export default Vue.extend({
     ]),
     readOnly: function() {
       if (this.hasPermission('canEditAllProjects')) {
+        // can edit all projects
         return false
       } else if (
         this.hasPermission('canEditOrgProjects') &&
         this.hasOrganisationLink('projectOrganisations')
       ) {
+        // can only edit projects that are linked to user
         return false
       } else {
         return true

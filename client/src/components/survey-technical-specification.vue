@@ -5,6 +5,7 @@
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
+        v-if="!readOnly"
         position="top-right"
         :offset="[18, 18+66]"
         style="z-index:100">
@@ -54,6 +55,7 @@
               :error="$v.techSpec.surveyType.$error"
               error-message="Survey type is required"
               bottom-slots
+              :readonly="readOnly"
             >
               <q-option-group
                 type="radio" inline
@@ -70,6 +72,7 @@
                 :value="techSpec.surveyFrequency"
                 @input="UPDATE({path:'techSpec.surveyFrequency', value: $event})"
                 type="text"
+                :readonly="readOnly"
                 >
               </q-input>
 
@@ -79,6 +82,7 @@
                 :value="techSpec.requirements"
                 @input="UPDATE({path:'techSpec.requirements', value: $event})"
                 type="text"
+                :readonly="readOnly"
                 >
               </q-input>
             </div>
@@ -93,6 +97,7 @@
               map-options
               option-value="value"
               option-label="label"
+              :readonly="readOnly"
               >
             </q-select>
 
@@ -109,6 +114,7 @@
               @input="UPDATE({path:'techSpec.featuresOfInterest', value: $event})"
               type="text"
               @blur="$v.techSpec.featuresOfInterest.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -117,7 +123,9 @@
               hint="Optional"
               :value="techSpec.vesselType"
               @input="UPDATE({path:'techSpec.vesselType', value: $event})"
-              type="text">
+              type="text"
+              :readonly="readOnly"
+              >
             </q-input>
 
             <q-input
@@ -129,6 +137,7 @@
               @input="UPDATE({path:'techSpec.depthRange', value: $event})"
               type="text"
               @blur="$v.techSpec.depthRange.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -139,6 +148,7 @@
               @input="UPDATE({path:'techSpec.frequencyRange', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -149,7 +159,9 @@
             <q-field
               stack-label
               label="Is the data capture time sensitive"
-              hint="Optional">
+              hint="Optional"
+              :readonly="readOnly"
+              >
               <q-checkbox
                 :value="techSpec.timeSensitive"
                 @input="UPDATE({path:'techSpec.timeSensitive', value: $event})"
@@ -164,6 +176,7 @@
               @input="UPDATE({path:'techSpec.timeSensitiveRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -173,7 +186,9 @@
               :error="$v.techSpec.groundTruthing.$error"
               error-message="Ground truthing is required"
               bottom-slots
-              hint="Optional">
+              hint="Optional"
+              :readonly="readOnly"
+              >
               <q-checkbox
                 :value="techSpec.groundTruthing"
                 @input="UPDATE({path:'techSpec.groundTruthing', value: $event})"
@@ -190,6 +205,7 @@
                     :value="techSpec.groundTruthingMethod"
                     @input="UPDATE({path:'techSpec.groundTruthingMethod', value: $event})"
                     :options="validGroundTruthingMethods"
+                    :readonly="readOnly"
                     >
                   </q-select>
                 </div>
@@ -202,6 +218,7 @@
                     :value="techSpec.groundTruthingMethodOther"
                     @input="UPDATE({path:'techSpec.groundTruthingMethodOther', value: $event})"
                     type="text"
+                    :readonly="readOnly"
                     >
                   </q-input>
                 </div>
@@ -215,6 +232,7 @@
               @input="UPDATE({path:'techSpec.groundTruthingRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -225,6 +243,7 @@
               @input="UPDATE({path:'techSpec.mappingCoverageRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -282,6 +301,7 @@
               type="textarea"
               autogrow
               @blur="$v.techSpec.environmentalConditions.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -299,6 +319,7 @@
                     @input="UPDATE({path:'techSpec.positioningRequirement', value: $event})"
                     :options="validPositioningRequirements"
                     @blur="$v.techSpec.positioningRequirement.$touch"
+                    :readonly="readOnly"
                     >
                   </q-select>
                 </div>
@@ -310,6 +331,7 @@
                     :value="techSpec.positioningRequirementOther"
                     @input="UPDATE({path:'techSpec.positioningRequirementOther', value: $event})"
                     type="text"
+                    :readonly="readOnly"
                     >
                   </q-input>
                 </div>
@@ -334,6 +356,7 @@
               @input="UPDATE({path:'techSpec.overlap', value: $event})"
               type="text"
               @blur="$v.techSpec.overlap.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -343,6 +366,7 @@
               :value="techSpec.gridSize"
               @input="UPDATE({path:'techSpec.gridSize', value: $event})"
               type="text"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -355,6 +379,7 @@
               @input="UPDATE({path:'techSpec.swathWidth', value: $event})"
               type="text"
               @blur="$v.techSpec.swathWidth.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -364,6 +389,7 @@
               :value="techSpec.lineSpacing"
               @input="UPDATE({path:'techSpec.lineSpacing', value: $event})"
               type="text"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -373,6 +399,7 @@
               :value="techSpec.maxSurveySpeed"
               @input="UPDATE({path:'techSpec.maxSurveySpeed', value: $event})"
               type="text"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -382,6 +409,7 @@
               :value="techSpec.soundingDensity"
               @input="UPDATE({path:'techSpec.soundingDensity', value: $event})"
               type="text"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -394,6 +422,7 @@
               @input="UPDATE({path:'techSpec.resolution', value: $event})"
               type="text"
               @blur="$v.techSpec.resolution.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -407,6 +436,7 @@
               type="text"
               placeholder="in metres"
               @blur="$v.techSpec.horizontalAccuracy.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -420,6 +450,7 @@
               type="text"
               placeholder="in metres"
               @blur="$v.techSpec.verticalAccuracy.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -436,6 +467,7 @@
               emit-value
               map-options
               @blur="$v.techSpec.horizontalReferenceSystem.$touch"
+              :readonly="readOnly"
               >
               <template v-slot:option="scope">
                 <q-item
@@ -463,6 +495,7 @@
               emit-value
               map-options
               @blur="$v.techSpec.verticalReferenceSystem.$touch"
+              :readonly="readOnly"
               >
               <template v-slot:option="scope">
                 <q-item
@@ -490,6 +523,7 @@
               emit-value
               map-options
               @blur="$v.techSpec.soundingDatum.$touch"
+              :readonly="readOnly"
               >
               <template v-slot:option="scope">
                 <q-item
@@ -517,6 +551,7 @@
               emit-value
               map-options
               @blur="$v.techSpec.spheroid.$touch"
+              :readonly="readOnly"
               >
               <template v-slot:option="scope">
                 <q-item
@@ -545,6 +580,7 @@
               :error="$v.techSpec.deliveryMethods.$error"
               error-message="Delivery method is required"
               bottom-slots
+              :readonly="readOnly"
               >
               <q-option-group
                 type="checkbox"
@@ -565,6 +601,7 @@
               type="textarea"
               autogrow
               @blur="$v.techSpec.deliveryRequirements.$touch"
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -584,6 +621,7 @@
               @input="UPDATE({path:'techSpec.progressReportRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -600,7 +638,9 @@
             <q-field
               label="Tidal gauges to be installed"
               stack-label
-              hint="Optional">
+              hint="Optional"
+              :readonly="readOnly"
+              >
               <q-checkbox
                 :value="techSpec.tidalGauges"
                 @input="UPDATE({path:'techSpec.tidalGauges', value: $event})"
@@ -612,6 +652,7 @@
             <q-field
               label="Location of gauges (optional)"
               stack-label
+              :readonly="readOnly"
               >
               <div class="column">
                 <div ref="mapDivTidalGauge" id="mapDivTidalGauge" style="height:350px;"></div>
@@ -649,6 +690,7 @@
               @input="UPDATE({path:'techSpec.tidalInfrastructureRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -659,6 +701,7 @@
               @input="UPDATE({path:'techSpec.approvalPermitRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -669,6 +712,7 @@
               @input="UPDATE({path:'techSpec.objectDetectionRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -679,6 +723,7 @@
               @input="UPDATE({path:'techSpec.positioningRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -689,6 +734,7 @@
               @input="UPDATE({path:'techSpec.dataGapRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -699,6 +745,7 @@
               @input="UPDATE({path:'techSpec.existingRisks', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -709,6 +756,7 @@
               @input="UPDATE({path:'techSpec.additionalRequirements', value: $event})"
               type="textarea"
               autogrow
+              :readonly="readOnly"
               >
             </q-input>
 
@@ -726,6 +774,7 @@ import Vue from 'vue'
 import { mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { DirtyRouteGuard } from './mixins/dirty-route-guard'
+import { permission } from './mixins/permission'
 import { errorHandler } from './mixins/error-handling'
 import * as types from '../store/modules/tech-spec/tech-spec-mutation-types'
 const uuidv4 = require('uuid/v4');
@@ -746,7 +795,7 @@ import surveyLinesMap from './olmap/survey-lines-map';
 import tidalGaugeMap from './olmap/tidal-gauge-map';
 
 export default Vue.extend({
-  mixins: [DirtyRouteGuard, errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler, permission],
   beforeMount() {
     this.getFormData();
   },
@@ -900,6 +949,20 @@ export default Vue.extend({
     ...mapGetters('projectMetadata',[
       'projectMetadata',
     ]),
+    readOnly: function() {
+      if (this.hasPermission('canEditAllProjects')) {
+        // can edit all projects
+        return false
+      } else if (
+        this.hasPermission('canEditOrgProjects') &&
+        this.hasOrganisationLink('projectMetadata.organisations')
+      ) {
+        // can only edit projects that are linked to user
+        return false
+      } else {
+        return true
+      }
+    },
     surveyTypeOptions: function () {
       const opts = this.validSurveyTypes.map(oo => {
         return {label: oo, value: oo};

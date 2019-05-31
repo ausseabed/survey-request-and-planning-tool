@@ -37,6 +37,7 @@
               label="Attachments"
               :to="`/survey/${id}/attachments`"
               exact
+              v-if="canViewAttachments"
             />
           </q-tabs>
 
@@ -65,6 +66,7 @@
               icon="attach_file"
               :to="`/survey/${id}/attachments`"
               exact
+              v-if="canViewAttachments"
             />
           </q-tabs>
 
@@ -87,9 +89,10 @@ const _ = require('lodash');
 import { mapActions, mapGetters } from 'vuex'
 
 import { errorHandler } from './mixins/error-handling'
+import { permission } from './mixins/permission'
 
 export default Vue.extend({
-  mixins: [errorHandler],
+  mixins: [errorHandler, permission],
 
   mounted() {
     this.fetchData();
@@ -128,6 +131,18 @@ export default Vue.extend({
     ...mapGetters('projectMetadata',[
       'projectMetadata',
     ]),
+    canViewAttachments: function() {
+      if (this.hasPermission('canViewAllAttachments')) {
+        return true
+      } else if (
+        this.hasPermission('canViewOrgAttachments') &&
+        this.hasOrganisationLink('projectMetadata.organisations')
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 
   data() {

@@ -2,6 +2,7 @@
 
   <q-page class="full-height" style="min-height:300px">
     <q-page-sticky
+      v-if="!readOnly"
       position="top-right"
       :offset="[18, 18+66]"
       style="z-index:100">
@@ -32,7 +33,10 @@
       <div class="row q-pl-md q-gutter-md fit ">
         <div class="column col-4 q-gutter-md">
 
-          <q-card class="full-width column">
+          <q-card
+            v-if="!readOnly"
+            class="full-width column"
+            >
             <div class="col-auto">
               <q-card-section class="full-width">
                 <div class="text-h6"> Add deliverables </div>
@@ -69,7 +73,7 @@
             </div>
             <q-card-section class="column col" style="padding:0px">
               <q-scroll-area class="fit" v-if="deliverableList.length != 0">
-                <q-list no-border dense
+                <q-list no-border
                   @mouseleave.native="mouseleaveDeliverableList">
                   <q-item clickable
                     v-for="deliverable in deliverableList"
@@ -80,11 +84,13 @@
                     <q-item-section>
                       {{nameForDefinition(deliverable.definitionId)}}
                     </q-item-section>
-                    <q-item-section side v-if="activeDeliverableId == deliverable.id">
-                      <q-btn flat style="min-height:36px;height:36px;margin-top:-8px;margin-bottom:-8px;padding-top:0px;padding-bottom:0px;" color="primary" icon="close"
-                        @click="deleteDeliverable(deliverable)">
-                      </q-btn>
-                    </q-item-section>
+                    <template v-if="!readOnly">
+                      <q-item-section side v-if="activeDeliverableId == deliverable.id">
+                        <q-btn flat style="min-height:36px;height:36px;margin-top:-8px;margin-bottom:-8px;padding-top:0px;padding-bottom:0px;" color="primary" icon="close"
+                          @click="deleteDeliverable(deliverable)">
+                        </q-btn>
+                      </q-item-section>
+                    </template>
                   </q-item>
                 </q-list>
               </q-scroll-area>
@@ -95,7 +101,10 @@
               </div>
             </q-card-section>
 
-            <div class="col-auto">
+            <div
+              v-if="!readOnly"
+              class="col-auto"
+              >
               <q-separator />
               <q-card-actions align="right">
                 <q-btn flat icon="delete" label="Remove all"
@@ -114,7 +123,8 @@
             <deliverable-list
               :definitionList="definitionList"
               :deliverableList="deliverables"
-              :selectedId="selectedId">
+              :selectedId="selectedId"
+              :readOnly="readOnly">
             </deliverable-list>
           </q-scroll-area>
           <div class="fit column justify-center items-center" v-else>
@@ -133,6 +143,7 @@ import Vue from 'vue'
 import { mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { errorHandler } from './mixins/error-handling'
+import { permission } from './mixins/permission'
 import { date } from 'quasar'
 import { scroll } from 'quasar'
 const { getScrollTarget, setScrollPosition } = scroll
@@ -147,7 +158,7 @@ const path = require('path');
 
 
 export default Vue.extend({
-  mixins: [errorHandler],
+  mixins: [errorHandler, permission],
   components: {
     'deliverable-list': DeliverableList
   },
@@ -347,6 +358,20 @@ export default Vue.extend({
       'requestStatus',
       'requestError',
     ]),
+    readOnly: function() {
+      if (this.hasPermission('canEditAllProjects')) {
+        // can edit all projects
+        return false
+      } else if (
+        this.hasPermission('canEditOrgProjects') &&
+        this.hasOrganisationLink('projectMetadata.organisations')
+      ) {
+        // can only edit projects that are linked to user
+        return false
+      } else {
+        return true
+      }
+    },
     deliverableDefinitionOptions: function () {
       const opts = this.definitionList.map(dd => {
         return {label: dd.name, value: dd};

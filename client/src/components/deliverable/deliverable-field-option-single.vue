@@ -3,6 +3,7 @@
   <q-field
     :label="field.label ? field.label : field.name"
     stack-label
+    :readonly="readOnly"
     >
     <q-option-group
       :value="getValue()"
@@ -17,7 +18,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  props: ['definition', 'field', 'deliverableData'],
+  props: ['definition', 'field', 'deliverableData', 'readOnly'],
   components: {
 
   },

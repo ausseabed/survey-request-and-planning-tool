@@ -5,7 +5,8 @@
       :id="'deliverable-' + deliverable.id"
       :definition="definitionForDeliverable(deliverable)"
       :deliverable="deliverable"
-      :selected="selectedId == deliverable.id">
+      :selected="selectedId == deliverable.id"
+      :readOnly="readOnly">
     </deliverable>
   </div>
 </template>
@@ -20,6 +21,7 @@ export default Vue.extend({
     'definitionList',
     'deliverableList',
     'selectedId',
+    'readOnly',
   ],
   components: {
     'deliverable': Deliverable

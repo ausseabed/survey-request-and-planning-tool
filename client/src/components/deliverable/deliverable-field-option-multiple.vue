@@ -5,6 +5,7 @@
     :value="getValue()"
     :options="valueOptions"
     @input="setValue($event)"
+    :readonly="readOnly"
   />
 
 </template>
@@ -13,7 +14,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  props: ['definition', 'field', 'deliverableData'],
+  props: ['definition', 'field', 'deliverableData', 'readOnly'],
   components: {
 
   },

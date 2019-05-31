@@ -1,9 +1,10 @@
 <template>
-
   <component
     :is="field.type"
     :field="field"
-    :deliverableData="deliverable.data">
+    :deliverableData="deliverable.data"
+    :readOnly="readOnly"
+    >
   </component>
 
 </template>
@@ -18,7 +19,7 @@ import DeliverableFieldOptionMultiple
 import DeliverableFieldOptionSingle from './deliverable-field-option-single';
 
 export default Vue.extend({
-  props: ['definition', 'field', 'deliverable'],
+  props: ['definition', 'field', 'deliverable', 'readOnly'],
   components: {
     'deliverable-field-checkbox': DeliverableFieldCheckbox,
     'deliverable-field-text': DeliverableFieldText,

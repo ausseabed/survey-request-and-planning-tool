@@ -17,7 +17,8 @@
         :key="field.name"
         :field="field"
         :definition="definition"
-        :deliverable="deliverable">
+        :deliverable="deliverable"
+        :readOnly="readOnly">
       </deliverable-field>
     </q-card-section>
   </q-card>
@@ -32,7 +33,7 @@ import DeliverableField from './deliverable-field'
 
 
 export default Vue.extend({
-  props: ['definition', 'deliverable', 'selected'],
+  props: ['definition', 'deliverable', 'selected', 'readOnly'],
   components: {
     'deliverable-field': DeliverableField,
   },

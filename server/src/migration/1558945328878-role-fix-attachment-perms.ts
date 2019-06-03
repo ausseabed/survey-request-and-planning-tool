@@ -35,6 +35,7 @@ export class roleFixAttachmentPerms1558945328878 implements MigrationInterface {
               aRole[key] = true;
             }
         }
+        aRole.isDefault = false;
 
         aRole = await queryRunner.manager
         .getRepository(Role)

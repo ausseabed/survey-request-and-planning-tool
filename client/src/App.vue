@@ -21,8 +21,17 @@
       'toolbar': Toolbar
     },
     mounted() {
-      this.getUserRole();
-      this.getUserOrganisation();
+      if (this.$route.path == '/login' || this.$route.path == '/auth/callback') {
+        // part of the login process, don't request role & org as these will
+        // fail and that causes issues in Safari
+      } else {
+        try {
+          this.getUserRole();
+          this.getUserOrganisation();
+        } catch (error) {
+          console.log(error)
+        }
+      }
     },
     created() {
       EventBus.$on('redirect', this.redirectURL)

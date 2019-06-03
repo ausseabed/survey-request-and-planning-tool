@@ -108,8 +108,12 @@
         .then(() => {
           this.isAuthenticated = this.$auth.isAuthenticated();
           if (this.isAuthenticated) {
-            this.getUserRole();
-            this.getUserOrganisation();
+            try {
+              this.getUserRole();
+              this.getUserOrganisation();
+            } catch (error) {
+              console.log(error)
+            }
             if (this.$route.query.redirect) {
               this.$router.push(this.$route.query.redirect);
             } else {

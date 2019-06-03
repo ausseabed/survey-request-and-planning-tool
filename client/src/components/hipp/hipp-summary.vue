@@ -9,6 +9,7 @@
 
         <div class="row q-gutter-x-sm">
           <q-btn
+            v-if="!readonly"
             round
             color="primary"
             @click="submit"
@@ -41,7 +42,9 @@
               Download as CSV
             </q-tooltip>
           </q-btn>
-          <q-btn :disable="!hippRequest.id"
+          <q-btn
+            v-if="!readonly"
+            :disable="!hippRequest.id"
             round
             color="primary"
             @click="deleteHippRequest"
@@ -67,6 +70,7 @@
               @input="update({path:'hippRequest.name', value:$event})"
               @blur="$v.hippRequest.name.$touch"
               type="text"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -81,6 +85,7 @@
               option-label="name"
               option-value="id"
               @blur="$v.hippRequest.requestingAgencies.$touch"
+              :readonly="readonly"
               >
             </form-field-validated-select>
 
@@ -92,6 +97,7 @@
               @input="update({path:'hippRequest.requestorName', value:$event})"
               @blur="$v.hippRequest.requestorName.$touch"
               type="text"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -103,6 +109,7 @@
               @input="update({path:'hippRequest.pointOfContactEmail', value:$event})"
               @blur="$v.hippRequest.pointOfContactEmail.$touch"
               type="email"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -115,6 +122,7 @@
               @input="update({path:'hippRequest.pointOfContactPhone', value:$event})"
               @blur="$v.hippRequest.pointOfContactPhone.$touch"
               type="text"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -129,6 +137,7 @@
                   :date="hippRequest.requestDateStart"
                   @updated-date="update({path:'hippRequest.requestDateStart', value:$event})"
                   @blur="$v.hippRequest.requestDateStart.$touch"
+                  :readonly="readonly"
                   >
                 </form-field-validated-date>
 
@@ -140,6 +149,7 @@
                   :date="hippRequest.requestDateEnd"
                   @updated-date="update({path:'hippRequest.requestDateEnd', value:$event})"
                   @blur="$v.hippRequest.requestDateEnd.$touch"
+                  :readonly="readonly"
                   >
                 </form-field-validated-date>
               </div>
@@ -155,6 +165,7 @@
               @input="update({path:'hippRequest.comments', value:$event})"
               @blur="$v.hippRequest.comments.$touch"
               type="textarea"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -175,6 +186,7 @@
               @input="update({path:'hippRequest.areaName', value:$event})"
               @blur="$v.hippRequest.areaName.$touch"
               type="text"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -184,7 +196,9 @@
               >
               <div class="column full-width">
                 <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
-                <div class="row full-width justify-between items-center q-pb-sm">
+                <div
+                  v-if="!readonly"
+                  class="row full-width justify-between items-center q-pb-sm">
                   <div v-if="drawingAreaOfInterest"
                     class="q-body-1 text-faded col">
                     Click endpoint to complete line
@@ -229,6 +243,7 @@
                 @input="update({path:'hippRequest.area', value:$event})"
                 @blur="$v.hippRequest.area.$touch"
                 type="text"
+                :readonly="readonly"
                 >
               </form-field-validated-input>
 
@@ -239,6 +254,7 @@
                 hint="Area calculated from area of interest"
                 label="Calculated area"
                 :value="calculatedArea"
+                :readonly="readonly"
                 >
               </form-field-validated-input>
             </div>
@@ -262,6 +278,7 @@
               @input="update({path:'hippRequest.businessJustification', value:$event})"
               @blur="$v.hippRequest.businessJustification.$touch"
               type="textarea"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -274,6 +291,7 @@
               @input="update({path:'hippRequest.costBenefit', value:$event})"
               @blur="$v.hippRequest.costBenefit.$touch"
               type="textarea"
+              :readonly="readonly"
               >
             </form-field-validated-input>
           </q-card-section>
@@ -299,6 +317,7 @@
               emit-value map-options
               @blur="$v.hippRequest.surveyQualityRequirements.$touch"
               clearable
+              :readonly="readonly"
               >
             </form-field-validated-select>
 
@@ -311,6 +330,7 @@
               @input="update({path:'hippRequest.surveyQualityRequirementsComments', value:$event})"
               @blur="$v.hippRequest.surveyQualityRequirementsComments.$touch"
               type="textarea"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -328,6 +348,7 @@
               emit-value map-options
               @blur="$v.hippRequest.chartProductQualityImpactRequirements.$touch"
               clearable
+              :readonly="readonly"
               >
             </form-field-validated-select>
 
@@ -340,6 +361,7 @@
               @input="update({path:'hippRequest.chartProductQualityImpactRequirementsComments', value:$event})"
               @blur="$v.hippRequest.chartProductQualityImpactRequirementsComments.$touch"
               type="textarea"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -355,6 +377,7 @@
             <risk-widget
               :risk-matrix="riskMatrix"
               :risk-data="hippRequest.riskData"
+              :readonly="readonly"
               @updated-risks="risksUpdated($event)"
               >
             </risk-widget>
@@ -368,6 +391,7 @@
               @input="update({path:'hippRequest.riskIssues', value:$event})"
               @blur="$v.hippRequest.riskIssues.$touch"
               type="textarea"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -387,7 +411,9 @@
                   stack-label
                   label="Subject to moratorium"
                   hint="Optional"
-                  bottom-slots>
+                  bottom-slots
+                  :readonly="readonly"
+                  >
                   <q-checkbox
                     :value="hippRequest.hasMoratorium"
                     @input="update({path:'hippRequest.hasMoratorium', value: $event})"
@@ -403,6 +429,7 @@
                   :date="hippRequest.moratoriumDate"
                   @updated-date="update({path:'hippRequest.moratoriumDate', value:$event})"
                   @blur="$v.hippRequest.moratoriumDate.$touch"
+                  :readonly="readonly"
                   >
                 </form-field-validated-date>
               </div>
@@ -417,6 +444,7 @@
                 @input="update({path:'hippRequest.moratoriumComment', value:$event})"
                 @blur="$v.hippRequest.moratoriumComment.$touch"
                 type="textarea"
+                :readonly="readonly"
                 >
               </form-field-validated-input>
             </div>
@@ -437,6 +465,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
+import { permission } from './../mixins/permission'
 import * as hippMutTypes
   from '../../store/modules/hipp-request/hipp-request-mutation-types'
 import * as orgMutTypes
@@ -467,7 +496,7 @@ const validMoratorium = (value, vm) => {
 };
 
 export default Vue.extend({
-  mixins: [DirtyRouteGuard, errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler, permission],
   components: {
     'risk-widget': RiskWidget
   },
@@ -648,6 +677,20 @@ export default Vue.extend({
     ...mapGetters('reportTemplate', [
       'reportDownloading',
     ]),
+    readonly: function() {
+      if (this.hasPermission('canEditAllHippRequests')) {
+        // can edit all projects
+        return false
+      } else if (
+        this.hasPermission('canEditOrgHippRequests') &&
+        this.hasOrganisationLink('hippRequest.requestingAgencies')
+      ) {
+        // can only edit hipp requests that are linked to user
+        return false
+      } else {
+        return true
+      }
+    },
     formattedRequestDate: function() {
       if (_.isNil(this.hippRequest.requestDate)) {
         return undefined;

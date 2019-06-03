@@ -15,11 +15,14 @@
         v-for="(riskRow, index) of riskData" :key="index"
         :risk-data-row="riskRow"
         :risk-matrix="riskMatrix"
+        :readonly="readonly"
         @remove-risk="removeRisk($event)"
         @updated-risk="updatedRisk($event)">
       </risk-widget-row>
     </template>
-    <div class="row full-width">
+    <div
+      v-if="!readonly"
+      class="row full-width">
       <div class="col-4 row">
         <q-btn
           flat color="primary"
@@ -46,6 +49,7 @@ export default Vue.extend({
   props: [
     'riskMatrix',
     'riskData',
+    'readonly',
   ],
   components: {
     'risk-widget-row': RiskWidgetRow

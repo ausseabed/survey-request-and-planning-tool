@@ -7,10 +7,13 @@
         @input="update('name', $event)"
         autogrow
         type="textarea"
+        :readonly="readonly"
       >
       </q-input>
     </div>
-    <div class="xs col-xs-2 column justify-center q-pl-xs">
+    <div
+      v-if="!readonly"
+      class="xs col-xs-2 column justify-center q-pl-xs">
       <q-btn
         flat color="primary" icon="close" class="remove-button no-padding"
         @click="$emit('remove-risk', riskDataRow)"
@@ -26,6 +29,7 @@
         :value="riskDataRow.level"
         @input="update('level', $event)"
         :options="levelOptions"
+        :readonly="readonly"
       >
       </q-select>
     </div>
@@ -35,6 +39,7 @@
         :value="riskDataRow.timeframe"
         @input="update('timeframe', $event)"
         :options="timeframeOptions"
+        :readonly="readonly"
       >
       </q-select>
     </div>
@@ -47,7 +52,9 @@
         </div>
 
       </div>
-      <div class="gt-xs column justify-center q-pl-xs">
+      <div
+        v-if="!readonly"
+        class="gt-xs column justify-center q-pl-xs">
         <q-btn
           flat color="primary" icon="close" class="remove-button no-padding"
           @click="$emit('remove-risk', riskDataRow)"
@@ -72,6 +79,7 @@ export default Vue.extend({
   props: [
     'riskMatrix',
     'riskDataRow',
+    'readonly',
   ],
   data() {
     return {

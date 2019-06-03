@@ -65,7 +65,9 @@
 
           </q-card-section>
           <q-separator style="height:1px;"/>
-          <q-card-section class="row justify-end">
+          <q-card-section
+            v-if="this.hasPermission('canAddProject')"
+            class="row justify-end">
             <q-btn
               flat icon="add" label="Add project"
               @click="addProject()"
@@ -83,6 +85,7 @@ import Vue from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import { errorHandler } from '../mixins/error-handling'
+import { permission } from './../mixins/permission'
 import { date } from 'quasar'
 import * as pmMutTypes
   from '../../store/modules/project-metadata/project-metadata-mutation-types'
@@ -93,7 +96,7 @@ const path = require('path');
 
 
 export default Vue.extend({
-  mixins: [errorHandler],
+  mixins: [errorHandler, permission],
 
   mounted() {
 

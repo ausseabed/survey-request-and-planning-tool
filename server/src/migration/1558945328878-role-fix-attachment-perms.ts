@@ -22,16 +22,25 @@ export class roleFixAttachmentPerms1558945328878 implements MigrationInterface {
             name: "Administrator"
           }
         });
-        aRole.canViewAllAttachments = true
-        aRole.canUploadAllAttachments = true
-        aRole.canDeleteAllAttachments = true
-        aRole.canViewOrgAttachments = true
-        aRole.canUploadOrgAttachments = true
-        aRole.canDeleteOrgAttachments = true
+        if (!aRole) {
+          aRole = new Role()
+          aRole.name = "Administrator"
+          aRole.deleted = false
+        }
+        // loop through all role attributes and set and of the is* and can*
+        // attributes to true. It's the admin user; so should be able to do
+        // anything.
+        for (let [key, value] of Object.entries(aRole)) {
+            if (key.startsWith('is') || key.startsWith('can')) {
+              aRole[key] = true;
+            }
+        }
 
         aRole = await queryRunner.manager
         .getRepository(Role)
         .save(aRole);
+
+
 
         aRole = await queryRunner.manager
         .getRepository(Role)
@@ -40,16 +49,42 @@ export class roleFixAttachmentPerms1558945328878 implements MigrationInterface {
             name: "Basic"
           }
         });
-        aRole.canViewAllAttachments = false
-        aRole.canUploadAllAttachments = false
-        aRole.canDeleteAllAttachments = false
+        if (!aRole) {
+          aRole = new Role()
+          aRole.name = "Basic"
+          aRole.deleted = false
+        }
+        aRole.isDefault = true;
+        aRole.isAdmin = false
+        aRole.canAddTemplate = false
+        aRole.canEditTemplate = false
+        aRole.canEditOrganisation = false
+        aRole.canEditUser = false
+
+        aRole.canAddProject = true
+        aRole.canViewAllProjects = true
+        aRole.canViewOrgProjects = true
+        aRole.canEditAllProjects = false
+        aRole.canEditOrgProjects = true
+
+        aRole.canAddHippRequest = true
+        aRole.canViewAllHippRequests = true
+        aRole.canViewOrgHippRequests = true
+        aRole.canEditAllHippRequests = false
+        aRole.canEditOrgHippRequests = true
+
+        aRole.canViewAllAttachments = true
         aRole.canViewOrgAttachments = true
+        aRole.canUploadAllAttachments = false
         aRole.canUploadOrgAttachments = true
+        aRole.canDeleteAllAttachments = false
         aRole.canDeleteOrgAttachments = true
 
         aRole = await queryRunner.manager
         .getRepository(Role)
         .save(aRole);
+
+
 
         aRole = await queryRunner.manager
         .getRepository(Role)
@@ -58,11 +93,35 @@ export class roleFixAttachmentPerms1558945328878 implements MigrationInterface {
             name: "Basic - restricted to organisation"
           }
         });
+        if (!aRole) {
+          aRole = new Role()
+          aRole.name = "Basic - restricted to organisation"
+          aRole.deleted = false
+        }
+        aRole.isDefault = false;
+        aRole.isAdmin = false
+        aRole.canAddTemplate = false
+        aRole.canEditTemplate = false
+        aRole.canEditOrganisation = false
+        aRole.canEditUser = false
+
+        aRole.canAddProject = false
+        aRole.canViewAllProjects = false
+        aRole.canViewOrgProjects = true
+        aRole.canEditAllProjects = false
+        aRole.canEditOrgProjects = false
+
+        aRole.canAddHippRequest = false
+        aRole.canViewAllHippRequests = false
+        aRole.canViewOrgHippRequests = true
+        aRole.canEditAllHippRequests = false
+        aRole.canEditOrgHippRequests = false
+
         aRole.canViewAllAttachments = false
-        aRole.canUploadAllAttachments = false
-        aRole.canDeleteAllAttachments = false
         aRole.canViewOrgAttachments = true
+        aRole.canUploadAllAttachments = false
         aRole.canUploadOrgAttachments = false
+        aRole.canDeleteAllAttachments = false
         aRole.canDeleteOrgAttachments = false
 
         aRole = await queryRunner.manager

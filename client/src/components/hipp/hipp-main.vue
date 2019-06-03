@@ -24,6 +24,7 @@
             label="Attachments"
             :to="`/hipp-request/${id}/attachments`"
             exact
+            v-if="canViewAttachments"
           />
           <q-route-tab
             icon="layers"
@@ -46,6 +47,7 @@
             icon="attach_file"
             :to="`/hipp-request/${id}/attachments`"
             exact
+            v-if="canViewAttachments"
           />
           <q-route-tab
             class="mobile-tabs"
@@ -74,9 +76,10 @@ const _ = require('lodash');
 import { mapActions, mapGetters } from 'vuex'
 
 import { errorHandler } from './../mixins/error-handling'
+import { permission } from './../mixins/permission'
 
 export default Vue.extend({
-  mixins: [errorHandler],
+  mixins: [errorHandler, permission],
 
   mounted() {
     this.fetchData();
@@ -115,6 +118,18 @@ export default Vue.extend({
     ...mapGetters('hippRequest',[
       'hippRequest',
     ]),
+    canViewAttachments: function() {
+      if (this.hasPermission('canViewAllAttachments')) {
+        return true
+      } else if (
+        this.hasPermission('canViewOrgAttachments') &&
+        this.hasOrganisationLink('hippRequest.requestingAgencies')
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 
   data() {

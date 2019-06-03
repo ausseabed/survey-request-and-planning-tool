@@ -9,6 +9,7 @@ export class addRoleBasicRestricted1558929196468 implements MigrationInterface {
       basicResRole.name = "Basic - restricted to organisation";
       basicResRole.canViewOrgProjects = true;
       basicResRole.canViewOrgHippRequests = true;
+      basicResRole.canViewOrgAttachments = true;
 
       basicResRole = await queryRunner.manager
       .getRepository(Role)

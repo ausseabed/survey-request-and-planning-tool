@@ -51,6 +51,23 @@ export class roleFixAttachmentPerms1558945328878 implements MigrationInterface {
         .getRepository(Role)
         .save(aRole);
 
+        aRole = await queryRunner.manager
+        .getRepository(Role)
+        .findOne({
+          where: {
+            name: "Basic - restricted to organisation"
+          }
+        });
+        aRole.canViewAllAttachments = false
+        aRole.canUploadAllAttachments = false
+        aRole.canDeleteAllAttachments = false
+        aRole.canViewOrgAttachments = true
+        aRole.canUploadOrgAttachments = false
+        aRole.canDeleteOrgAttachments = false
+
+        aRole = await queryRunner.manager
+        .getRepository(Role)
+        .save(aRole);
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

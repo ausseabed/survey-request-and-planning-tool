@@ -8,7 +8,7 @@
               {{projectMetadata.surveyName}}
             </div>
             <div class="tabs-toolbar-sub-title">
-              Survey Project
+              Survey Plan
             </div>
           </q-toolbar-title>
 

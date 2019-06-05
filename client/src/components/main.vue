@@ -11,7 +11,7 @@
           >
             <q-tab
               v-if="hasPermission(['canViewAllProjects', 'canViewOrgProjects'])"
-              name="projects" label="Projects" icon="layers"/>
+              name="projects" label="Plans" icon="layers"/>
             <q-tab
               v-if="hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])"
               name="requests" label="Requests" icon="device_hub"/>
@@ -79,11 +79,11 @@
                   >
                   <q-separator style="height:1px;"/>
                   <div class="row justify-end q-py-sm q-mx-md">
-                    <q-btn flat label="add project"
+                    <q-btn flat label="add plan"
                       icon="add"
                       :to="'/survey/new'">
                       <q-tooltip>
-                        Create new survey project
+                        Create new survey plan
                       </q-tooltip>
                     </q-btn>
                   </div>
@@ -128,7 +128,7 @@
                           <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
                             :to="`/hipp-request/${hippRequest.id}/attachments`">
                           </q-btn>
-                          <q-btn outline size="sm" color="primary" label="Projects" class="q-mt-xs q-ml-xs"
+                          <q-btn outline size="sm" color="primary" label="Plans" class="q-mt-xs q-ml-xs"
                             :to="`/hipp-request/${hippRequest.id}/projects`">
                           </q-btn>
                         </div>
@@ -245,7 +245,7 @@ export default Vue.extend({
         this.map.setGeojsonFeatureIntersecting(areaOfInterests);
       })
       .catch((e) => {
-        this.notify('negative', 'Error fetching projects')
+        this.notify('negative', 'Error fetching plans')
       });
     },
 

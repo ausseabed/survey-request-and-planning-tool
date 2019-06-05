@@ -25,7 +25,7 @@
           icon="delete"
           class="q-ml-sm"
         >
-          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete project</q-tooltip>
+          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete plan</q-tooltip>
         </q-btn>
       </q-page-sticky>
 
@@ -779,7 +779,7 @@ export default Vue.extend({
         if (isNew) {
           this.$router.replace({ path: `/survey/${pmd.id}/summary` })
         }
-        this.notifySuccess('Saved project metadata');
+        this.notifySuccess('Saved plan');
         this.setDirty(false);
       });
     },
@@ -789,8 +789,8 @@ export default Vue.extend({
         // an existing id indicated this project has been saved, so check
         // with user if they really want to delete project.
         this.$q.dialog({
-          title: 'Delete project',
-          message: `Project ${this.surveyName} will be deleted`,
+          title: 'Delete plan',
+          message: `Plan ${this.surveyName} will be deleted`,
           ok: 'Delete',
           cancel: 'Cancel'
         }).then(() => {
@@ -799,7 +799,7 @@ export default Vue.extend({
             'projectMetadata/deleteProjectMetadata',
             { id: this.id }
           ).then(pmd => {
-            this.notifySuccess('Deleted project');
+            this.notifySuccess('Deleted plan');
             this.$router.replace({ path: `/` });
           });
         }).catch(() => {

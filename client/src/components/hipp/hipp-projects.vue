@@ -8,7 +8,7 @@
       <div class="q-pa-md fit">
         <q-card class="fit column">
           <q-card-section>
-            <div class="text-h6"> Linked Projects </div>
+            <div class="text-h6"> Linked Plans </div>
           </q-card-section>
           <q-separator style="height:1px;"/>
           <q-card-section class="column col no-padding">
@@ -17,7 +17,7 @@
               class="row justify-center fit"
               >
               <div class="column justify-center text-light">
-                No survey projects have been created for this HIPP Request.
+                No survey plans have been created for this HIPP Request.
               </div>
             </div>
             <q-scroll-area
@@ -69,7 +69,7 @@
             v-if="this.hasPermission('canAddProject')"
             class="row justify-end">
             <q-btn
-              flat icon="add" label="Add project"
+              flat icon="add" label="Add plan"
               @click="addProject()"
               >
             </q-btn>

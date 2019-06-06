@@ -2,16 +2,10 @@
 
 const DirtyRouteGuard = {
   beforeRouteUpdate (to, from, next) {
-    console.log('beforeRouteUpdate drg');
-    console.log(`dirty = ${this.dirty}`);
-
     this.doGuard(to, from, next);
   },
 
   beforeRouteLeave (to, from, next) {
-    console.log('beforeRouteLeave drg');
-    console.log(`dirty = ${this.dirty}`);
-
     this.doGuard(to, from, next);
   },
 

@@ -18,8 +18,6 @@ var cors = require('cors');
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 
-import {ProjectMetadata} from './lib/entity/project-metadata';
-
 var app = express();
 
 app.use(cors())

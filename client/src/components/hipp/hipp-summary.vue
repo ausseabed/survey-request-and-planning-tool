@@ -682,6 +682,12 @@ export default Vue.extend({
         // can edit all projects
         return false
       } else if (
+        this.hasPermission('canAddHippRequest') &&
+        _.isNil(this.hippRequest.id)
+      ) {
+        // user has permission to add new request, and this is a new request
+        return false
+      } else if (
         this.hasPermission('canEditOrgHippRequests') &&
         this.hasOrganisationLink('hippRequest.requestingAgencies')
       ) {

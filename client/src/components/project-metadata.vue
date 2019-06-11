@@ -939,6 +939,12 @@ export default Vue.extend({
         // can edit all projects
         return false
       } else if (
+        this.hasPermission('canAddProject') &&
+        _.isNil(this.id)
+      ) {
+        // user has permission to add new project, and this is a new project
+        return false
+      } else if (
         this.hasPermission('canEditOrgProjects') &&
         this.hasOrganisationLink('projectOrganisations')
       ) {

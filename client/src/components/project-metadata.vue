@@ -561,6 +561,7 @@ export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
 
   beforeMount() {
+    this.RESET_VALID_DATA_CAPTURE_TYPES();
     this.getFormData();
   },
 
@@ -601,6 +602,7 @@ export default Vue.extend({
       pmMutTypes.SET_SURVEY_APPLICATION_GROUP_NAME_OTHER,
       pmMutTypes.SET_SURVEY_APPLICATION,
       pmMutTypes.REMOVE_ORGANISATION,
+      pmMutTypes.RESET_VALID_DATA_CAPTURE_TYPES,
     ]),
     ...mapMutations('organisation', {
       'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,

@@ -111,6 +111,10 @@ const mutations = {
     return state.projectMetadataList = pmlist;
   },
 
+  [types.RESET_VALID_DATA_CAPTURE_TYPES] (state) {
+    state.validDataCaptureTypeIds = new Set();
+  },
+
 }
 
 export default {

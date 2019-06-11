@@ -401,7 +401,8 @@
               stack-label
               label="Start date"
               :error="$v.startDate.$error"
-              error-label="Start date is required"
+              error-message="Start date is required"
+              bottom-slots
               :readonly="readOnly"
               >
               <template v-slot:control>

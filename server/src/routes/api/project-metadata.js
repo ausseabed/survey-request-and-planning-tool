@@ -167,8 +167,6 @@ router.get(
         "instrumentTypes",
         "dataCaptureTypes",
         "surveyApplication",
-        "tenderer",
-        "surveyors",
         "hippRequest",
       ]
     }

@@ -310,30 +310,25 @@
               >
             </q-input>
 
-            <q-select
+            <q-input
               label="Tenderer"
               hint="Optional"
               :value="tenderer"
-              @input="setSelectedTenderer($event)"
-              :options="organisationOptions"
-              option-label="name"
-              option-value="id"
+              @input="update('projectMetadata.tenderer', $event)"
+              type="text"
               :readonly="readOnly"
               >
-            </q-select>
+            </q-input>
 
-            <q-select
+            <q-input
               label="Surveyors"
               hint="Optional"
-              multiple
               :value="surveyors"
-              @input="setSelectedSurveyors($event)"
-              :options="organisationOptions"
-              option-label="name"
-              option-value="id"
+              @input="update('projectMetadata.surveyors', $event)"
+              type="text"
               :readonly="readOnly"
               >
-            </q-select>
+            </q-input>
 
             <q-input
               label="Vessel"

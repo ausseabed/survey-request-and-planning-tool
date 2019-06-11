@@ -298,7 +298,7 @@
           <q-card-section>
             <div class="text-h6">Supplier</div>
           </q-card-section>
-          <q-card-section dense>
+          <q-card-section>
 
             <q-input
               label="Contract number"
@@ -345,34 +345,62 @@
               >
             </q-input>
 
-            <form-field-validated-select
-              name="projectInstrumentTypes"
-              label="Instrument type"
-              multiple
-              :value="projectInstrumentTypes"
-              @input="setInstrumentTypes($event)"
-              :options="instrumentTypeOptions"
-              option-label="name"
-              option-value="id"
-              @blur="$v.projectInstrumentTypes.$touch"
-              :readonly="readOnly"
+            <q-field
+              class="column q-py-md"
+              :error="$v.projectInstrumentTypes.$error || $v.projectDataCaptureTypes.$error"
+              :error-message="getInstrumentAndDataCaptureTypeError()"
+              bottom-slots
               >
-            </form-field-validated-select>
+              <div class="row q-col-gutter-md q-mb-sm">
+                <div class="column col-xs-12 col-sm-6">
+                  <div class="datatype-column-heading">Instrument type</div>
+                  <q-list bordered padding dense class="col">
+                    <q-item
+                      v-for="instType of instrumentTypes"
+                      :key="instType.id"
+                      tag="label" v-ripple>
+                      <q-item-section side top>
+                        <q-checkbox
+                          :value="instrumentSelected(instType)"
+                          @input="setSelectedInstrument(instType)"
+                          />
+                      </q-item-section>
 
-            <form-field-validated-select
-              name="projectDataCaptureTypes"
-              label="Data to capture"
-              multiple
-              :value="projectDataCaptureTypes"
-              @input="setDataCaptureTypes($event)"
-              :options="dataCaptureTypeOptions"
-              option-label="displayName"
-              option-value="id"
-              option-disable="disable"
-              @blur="$v.projectDataCaptureTypes.$touch"
-              :readonly="readOnly"
-              >
-            </form-field-validated-select>
+                      <q-item-section>
+                        <q-item-label class="cb-label">{{instType.name}}</q-item-label>
+                        <q-item-label caption>
+                          {{instrumentDescription(instType)}}
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+                <div class="column col-xs-12 col-sm-6 ">
+                  <div class="datatype-column-heading">Data to capture</div>
+                  <q-list bordered padding dense class="col">
+                    <q-item
+                      v-for="dataCaptType of dataCaptureTypeOptions"
+                      :key="dataCaptType.id"
+                      :disable="dataCaptType.disable"
+                      tag="label" v-ripple>
+                      <q-item-section side top>
+                        <q-checkbox
+                          :value="dataCaptureTypeSelected(dataCaptType)"
+                          @input="setSelectedDataCaptureType(dataCaptType)"
+                          :disable="dataCaptType.disable"
+                          />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label class="cb-label">{{dataCaptType.name}}</q-item-label>
+                        <q-item-label caption>
+                          {{dataCaptType.displayName}}
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+              </div>
+            </q-field>
 
             <q-field
               stack-label
@@ -581,6 +609,92 @@ export default Vue.extend({
     ...mapMutations('organisation', {
       'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
     }),
+
+    instrumentSelected(instrumentType) {
+      const found = this.projectInstrumentTypes.find((selectedIt) => {
+        return selectedIt.id == instrumentType.id;
+      })
+
+      return !_.isNil(found)
+    },
+    setSelectedInstrument(instrumentType) {
+      const isSelected = this.instrumentSelected(instrumentType);
+      if (isSelected) {
+        // then remove it from the list
+        const newProjectInstrumentTypes = this.projectInstrumentTypes.filter((pit) => {
+          return !(pit.id === instrumentType.id);
+        });
+        this.setInstrumentTypes(newProjectInstrumentTypes);
+      } else {
+        // then add it to the list. Made slightly more complicated by
+        // having to do so via mutation
+        let newProjectInstrumentTypes = _.clone(this.projectInstrumentTypes)
+        newProjectInstrumentTypes.push(instrumentType);
+        this.setInstrumentTypes(newProjectInstrumentTypes);
+      }
+      this.$v.projectInstrumentTypes.$touch()
+    },
+
+    instrumentDescription(instrumentType) {
+      const dataTypeNames = instrumentType.dataCaptureTypes.map((dct) => {
+        return dct.name;
+      })
+      const s = dataTypeNames.length == 1 ? '' : 's'
+      return `Data type${s} - ` + dataTypeNames.join(', ');
+    },
+
+    dataCaptureTypeSelected(dct) {
+      const found = this.projectDataCaptureTypes.find((selectedDct) => {
+        return selectedDct.id == dct.id;
+      })
+      return !_.isNil(found)
+    },
+    setSelectedDataCaptureType(dct) {
+      const isSelected = this.dataCaptureTypeSelected(dct);
+      if (isSelected) {
+        // then remove it from the list
+        const newDcts = this.projectDataCaptureTypes.filter((pit) => {
+          return !(pit.id === dct.id);
+        });
+        this.setDataCaptureTypes(newDcts);
+      } else {
+        // then add it to the list. Made slightly more complicated by
+        // having to do so via mutation
+        let newDcts = _.clone(this.projectDataCaptureTypes);
+        newDcts.push(dct);
+        this.setDataCaptureTypes(newDcts);
+      }
+      this.$v.projectDataCaptureTypes.$touch()
+    },
+    getInstrumentAndDataCaptureTypeError() {
+      // both the intrument type and data capture type lists have a number
+      // of validators, however they are both included in the same field and
+      // therefore only have on error message display. This method merges
+      // the errors present in both lists for display to the user.
+      if (this.$v.projectInstrumentTypes.$error) {
+        if (
+          !this.$v.projectInstrumentTypes.required ||
+          !this.$v.projectInstrumentTypes.minLength
+          ) {
+          return "At least one instrument type is required"
+        } else {
+          return "Invalid instrument type selection"
+        }
+      } else if (this.$v.projectDataCaptureTypes.$error) {
+        if (
+          !this.$v.projectDataCaptureTypes.required ||
+          !this.$v.projectDataCaptureTypes.minLength
+          ) {
+          return "At least one data capture type is required"
+        } else if (!this.$v.projectDataCaptureTypes.validDataCaptureType) {
+          return "Data type(s) cannot be captured by selected instruments."
+        } else {
+          return "Invalid instrument type selection"
+        }
+      }
+      return undefined
+    },
+
 
     fetchData () {
       this.matchingProjMetas = undefined;
@@ -986,8 +1100,8 @@ export default Vue.extend({
       const opts = this.dataCaptureTypes.map(pit => {
         let name =
           this.validDataCaptureTypeIds.has(pit.id) ?
-            pit.name :
-            `${pit.name} - not valid for selected instrument type`;
+            undefined :
+            `Not valid for selected instrument type`;
         pit.disable = !(this.validDataCaptureTypeIds.has(pit.id) || selectedIds.has(pit.id))
         pit.displayName = name
         return pit;
@@ -1116,4 +1230,14 @@ export default Vue.extend({
 .q-select {
   overflow: hidden;
 }
+
+.datatype-column-heading {
+  font-weight: 500;
+  color: #656565;
+}
+
+.cb-label {
+  color: rgb(38, 38, 38);
+}
+
 </style>

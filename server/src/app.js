@@ -18,6 +18,56 @@ var cors = require('cors');
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 
+import { interpret } from 'xstate';
+import { requestRecordMachine } from './routes/state-management';
+
+// const machine = requestRecordMachine;
+const service = interpret(requestRecordMachine).onTransition(state => {
+  console.log(state.value);
+});
+
+service.start();
+service.send('SAVE');
+service.send('FINALIZE');
+service.send('SAVE');
+// service.send('FINALIZE');
+service.send('ACCEPT');
+
+service.stop();
+
+// const runActions = (recordState, evtObj) => {
+//   recordState.actions.forEach((action) => {
+//     console.log(action)
+//     action.exec(evtObj)
+//   });
+// };
+//
+// const { initialState } = requestRecordMachine;
+// console.log(initialState.value);
+// runActions(initialState);
+//
+// let nextState = requestRecordMachine.transition(initialState, 'SAVE');
+// console.log(nextState.actions);
+// runActions(nextState);
+//
+// nextState = requestRecordMachine.transition(nextState, 'FINALIZE');
+// console.log(nextState.value);
+// runActions(nextState);
+//
+// nextState = requestRecordMachine.transition(nextState, 'SAVE');
+// console.log(nextState.value);
+// runActions(nextState);
+//
+// nextState = requestRecordMachine.transition(nextState, 'SAVE');
+// console.log(nextState.value);
+// runActions(nextState);
+//
+// nextState = requestRecordMachine.transition(nextState, 'FINALIZE');
+// console.log(nextState.value);
+// runActions(nextState);
+
+
+
 var app = express();
 
 app.use(cors())

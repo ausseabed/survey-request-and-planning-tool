@@ -31,7 +31,7 @@
                     <q-item clickable
                       v-for="matchingProjMeta in matchingProjMetas"
                       :key="matchingProjMeta.id"
-                      @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta, false)"
+                      @mouseover="mouseoverMatchingProjMeta(matchingProjMeta, true)"
                       class="column"
                       >
                       <div class="row">
@@ -103,7 +103,7 @@
                   <q-item clickable
                     v-for="hippRequest in hippRequests"
                     :key="hippRequest.id"
-                    @mouseover.native="mouseoverMatchingProjMeta(hippRequest, false)"
+                    @mouseover="mouseoverMatchingProjMeta(hippRequest, false)"
                     class="column"
                     >
                     <div class="row">

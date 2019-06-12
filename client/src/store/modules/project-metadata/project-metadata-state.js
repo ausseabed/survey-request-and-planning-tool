@@ -24,8 +24,8 @@ function initialState() {
       surveyApplication: null,
       contractNumber: null,
       surveyId: null,
-      tenderer: null,
-      surveyors: [],
+      tenderer: undefined,
+      surveyors: undefined,
 
       hasMoratorium: false,
       moratoriumDate: undefined,
@@ -37,7 +37,6 @@ function initialState() {
     projectMetadataListFilter:{},
     projectMetadataList:[],
     projectStatuses:[],
-    validDataCaptureTypeIds:new Set(),
     dirty:false,
   }
 }

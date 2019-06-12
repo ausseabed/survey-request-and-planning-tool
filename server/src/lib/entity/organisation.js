@@ -33,16 +33,6 @@ export class Organisation {
     projectMetadata => projectMetadata.organisations)
   projectMetadatas;
 
-  @OneToMany(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.tenderer)
-  tenderProjectMetadatas;
-
-  @ManyToMany(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.surveyors)
-  surveyorProjectMetadatas;
-
   @ManyToMany(
     type => HippRequest,
     hippRequest => hippRequest.requestingAgencies)

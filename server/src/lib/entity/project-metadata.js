@@ -124,16 +124,16 @@ export class ProjectMetadata {
   })
   moratoriumComment;
 
-  @ManyToOne(
-    type => Organisation,
-    organisation => organisation.tenderProjectMetadatas,
-    { nullable: true })
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
   tenderer;
 
-  @ManyToMany(
-    type => Organisation,
-    organisation => organisation.surveyorProjectMetadatas)
-  @JoinTable()
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
   surveyors;
 
   @OneToMany(

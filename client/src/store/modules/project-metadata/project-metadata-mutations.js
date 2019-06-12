@@ -18,16 +18,6 @@ const mutations = {
 
   [types.SET_INSTRUMENT_TYPES] (state, instrumentTypes) {
     state.projectMetadata.instrumentTypes = instrumentTypes;
-
-    // update list of valid data capture types based on what instruments have
-    // been selected.
-    let idSet = new Set();
-    for (const instType of state.projectMetadata.instrumentTypes) {
-      for (const dtcType of instType.dataCaptureTypes) {
-        idSet.add(dtcType.id);
-      }
-    }
-    state.validDataCaptureTypeIds = idSet;
     state.dirty = true;
   },
 

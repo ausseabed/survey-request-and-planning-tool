@@ -37,7 +37,6 @@ function initialState() {
     projectMetadataListFilter:{},
     projectMetadataList:[],
     projectStatuses:[],
-    validDataCaptureTypeIds:new Set(),
     dirty:false,
   }
 }

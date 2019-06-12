@@ -46,12 +46,6 @@ export const dataCaptureTypes = state => {
   return state.projectMetadata.dataCaptureTypes;
 }
 
-export const validDataCaptureTypeIds = state => {
-  // returns a set of data capture type ids that related to the currently
-  // selected instrument types.
-  return state.validDataCaptureTypeIds;
-}
-
 export const surveyApplication = state => {
   return state.projectMetadata.surveyApplication;
 }

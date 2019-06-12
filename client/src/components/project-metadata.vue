@@ -561,7 +561,6 @@ export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
 
   beforeMount() {
-    this.RESET_VALID_DATA_CAPTURE_TYPES();
     this.getFormData();
   },
 
@@ -602,7 +601,6 @@ export default Vue.extend({
       pmMutTypes.SET_SURVEY_APPLICATION_GROUP_NAME_OTHER,
       pmMutTypes.SET_SURVEY_APPLICATION,
       pmMutTypes.REMOVE_ORGANISATION,
-      pmMutTypes.RESET_VALID_DATA_CAPTURE_TYPES,
     ]),
     ...mapMutations('organisation', {
       'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
@@ -701,7 +699,6 @@ export default Vue.extend({
         this.$store.dispatch(
           'projectMetadata/getProjectMetadata', { id: this.$route.params.id })
         .then(projectMetadata => {
-          this.patchSelectLists(projectMetadata);
           this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
             projectMetadata.surveyApplication.group);
 
@@ -812,40 +809,6 @@ export default Vue.extend({
       this.matchingProjMeta = [];
     },
 
-    patchSelectLists(projectMetadata) {
-      // The q-select component seems to rely on the fact that its options
-      // values equal that of the model values array. Equal in this case means
-      // object equality. The problem here is we have a list of all options
-      // fetched from the server, and a seperate server request provides the
-      // list of selected options. The selected option objects appear the same
-      // as the all option objects (same values), but they are not the same
-      // objects.
-      // To fix this we replace the current list of selected objects with the
-      // appropriate objects from the all option list.
-      // This could all be avoided if quasar provided some kind of comparison
-      // function hook :-/
-
-      // TODO - everything here should probably be in the vuex store
-      if (projectMetadata.instrumentTypes) {
-        const instTypes = projectMetadata.instrumentTypes.map(outerIt => {
-          return this.instrumentTypes.find(innerIt => {
-            return outerIt.id == innerIt.id;
-          })
-        });
-        this.setInstrumentTypes(instTypes);
-      }
-
-      if (projectMetadata.dataCaptureTypes) {
-        const dataCapTypes = projectMetadata.dataCaptureTypes.map(outerDct => {
-          return this.dataCaptureTypes.find(innerDct => {
-            return outerDct.id == innerDct.id;
-          })
-        });
-        this.setDataCaptureTypes(dataCapTypes);
-      }
-      this.setDirty(false);
-    },
-
     setInstrumentTypes(instrumentTypes) {
       this.SET_INSTRUMENT_TYPES(instrumentTypes)
       this.$v.projectDataCaptureTypes.$touch()
@@ -887,7 +850,6 @@ export default Vue.extend({
       const isNew = _.isNil(this.id) || (this.id.length == 0);
 
       this.$store.dispatch('projectMetadata/save').then(pmd => {
-        this.patchSelectLists(pmd);
         if (isNew) {
           this.$router.replace({ path: `/survey/${pmd.id}/summary` })
         }
@@ -1036,7 +998,6 @@ export default Vue.extend({
       contractNumber: 'projectMetadata/contractNumber',
       surveyors: 'projectMetadata/surveyors',
       tenderer: 'projectMetadata/tenderer',
-      validDataCaptureTypeIds: 'projectMetadata/validDataCaptureTypeIds',
       surveyApplicationIdOther: 'projectMetadata/surveyApplicationIdOther',
       surveyApplicationNameOther: 'projectMetadata/surveyApplicationNameOther',
       surveyApplicationGroupNameOther: 'projectMetadata/surveyApplicationGroupNameOther',
@@ -1066,6 +1027,24 @@ export default Vue.extend({
         return true
       }
     },
+    validDataCaptureTypeIds: function() {
+      if (_.isNil(this.instrumentTypes)) {
+        return []
+      }
+      let ids = new Set();
+      for (const selectedInstType of this.projectInstrumentTypes) {
+        // find the instrument type from the instrument type store, because
+        // here it has the list of associated data capture types
+        const instType = this.instrumentTypes.find((it) => {
+          return it.id === selectedInstType.id;
+        })
+        const itdcts = instType.dataCaptureTypes.map((dct) => {
+          return dct.id
+        })
+        itdcts.forEach(item => ids.add(item))
+      }
+      return ids
+    },
     formattedStartDate: function() {
       const d = new Date();
       d.setTime(this.startDate);
@@ -1077,16 +1056,6 @@ export default Vue.extend({
         return {label: pit, value: pit};
       });
       return opts;
-    },
-    instrumentTypeOptions: function () {
-      // select component needs a label and value field
-      // const opts = this.instrumentTypes.map(pit => {
-      //   return {
-      //     label: pit.name,
-      //     value: pit
-      //   }
-      // });
-      return this.instrumentTypes;
     },
     dataCaptureTypeOptions: function () {
       let selectedIds = new Set();

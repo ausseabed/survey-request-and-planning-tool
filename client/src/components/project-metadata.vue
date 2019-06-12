@@ -867,7 +867,7 @@ export default Vue.extend({
           message: `Plan ${this.surveyName} will be deleted`,
           ok: 'Delete',
           cancel: 'Cancel'
-        }).then(() => {
+        }).onOk(() => {
 
           this.$store.dispatch(
             'projectMetadata/deleteProjectMetadata',
@@ -876,8 +876,6 @@ export default Vue.extend({
             this.notifySuccess('Deleted plan');
             this.$router.replace({ path: `/` });
           });
-        }).catch(() => {
-          // Picked "Cancel" or dismissed, nothing to do (just catch error)
         });
       } else {
         // no id, so hasn't been saved. I this case reset form and go back

@@ -111,4 +111,29 @@ export class Role {
   @Column({type: "bool", nullable: false, default: false})
   canDeleteOrgAttachments;
 
+
+  // Record state permissions. These apply to project and hipp requests
+  @Column({type: "bool", nullable: false, default: false})
+  canFinaliseAllRecordState;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canReviseAllRecordState;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canAcceptAllRecordState;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canRemoveAllRecordState;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canFinaliseOrgRecordState;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canReviseOrgRecordState;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canAcceptOrgRecordState;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canRemoveOrgRecordState;
 }

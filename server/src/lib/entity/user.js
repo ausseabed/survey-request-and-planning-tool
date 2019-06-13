@@ -1,6 +1,7 @@
-import {Entity, PrimaryColumn, Column, ManyToOne} from "typeorm";
+import {Entity, PrimaryColumn, Column, ManyToOne, OneToMany} from "typeorm";
 
 import { Organisation } from './organisation'
+import { RecordState } from './record-state'
 import { Role } from './role'
 
 @Entity()
@@ -35,4 +36,7 @@ export class User {
 
   @ManyToOne(type => Organisation, org => org.users)
   organisation;
+
+  @OneToMany(type => RecordState, recordState => recordState.user)
+  recordStates;
 }

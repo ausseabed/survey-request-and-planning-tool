@@ -1,11 +1,12 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
-  JoinTable, OneToMany} from "typeorm";
+  JoinTable, OneToMany, OneToOne, JoinColumn } from "typeorm";
 
 import { DateTransformer } from './utils';
 
 import { HippRequestAttachment } from './hipp-request-attachment';
 import { Organisation } from './organisation';
 import { ProjectMetadata } from './project-metadata';
+import { RecordState } from './record-state';
 
 
 export const SURVEY_QUALITY_REQUIREMENTS = [
@@ -232,6 +233,10 @@ export class HippRequest {
     type => ProjectMetadata,
     projectMetadata => projectMetadata.hippRequest)
   projects;
+
+  @OneToOne(type => RecordState)
+  @JoinColumn()
+  recordState;
 
   @Column({
       type:"bool",

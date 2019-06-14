@@ -18,22 +18,23 @@ var cors = require('cors');
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 
-import { interpret } from 'xstate';
-import { requestRecordMachine } from './routes/state-management';
+// import { interpret } from 'xstate';
+// import { requestRecordMachine } from './routes/state-management';
 
-// const machine = requestRecordMachine;
-const service = interpret(requestRecordMachine).onTransition(state => {
-  console.log(state.value);
-});
+// // const machine = requestRecordMachine;
+// const service = interpret(requestRecordMachine).onTransition(state => {
+//   console.log(state.value);
+// });
 
-service.start();
-service.send('SAVE');
-service.send('FINALIZE');
-service.send('SAVE');
+// service.start();
+// service.send('SAVE');
 // service.send('FINALIZE');
-service.send('ACCEPT');
+// service.send('SAVE');
+// // service.send('FINALIZE');
+// service.send('ACCEPT');
+//
+// service.stop();
 
-service.stop();
 
 // const runActions = (recordState, evtObj) => {
 //   recordState.actions.forEach((action) => {

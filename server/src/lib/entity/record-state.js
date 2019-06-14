@@ -33,6 +33,19 @@ export class RecordState {
   })
   version;
 
+  // "request" OR "plan"
+  @Column({
+    type:"varchar",
+    nullable: false,
+  })
+  recordType;
+
+  @Column({
+    type:"varchar",
+    nullable: true,
+  })
+  changeDescription;
+
   @OneToOne(type => RecordState, recordState => recordState.next, {
     cascade: true,
     nullable: true,

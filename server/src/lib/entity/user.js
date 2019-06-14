@@ -25,10 +25,10 @@ export class User {
   @Column("varchar")
   name = undefined;
 
-  @Column("varchar")
+  @Column("varchar", {select: false})
   accessToken = undefined;
 
-  @Column("varchar")
+  @Column("varchar", {select: false})
   refreshToken = undefined;
 
   @ManyToOne(type => Role, role => role.users)

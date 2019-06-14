@@ -56,6 +56,12 @@
       </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
+        <record-state
+          class="full-width"
+          :entity-type="`hipp-request`"
+          :entity-id="hippRequest.id"
+          >
+        </record-state>
         <div v-if="!hippRequest.id" class="text-h5"> New HIPP Request </div>
         <q-card class="full-width">
           <q-card-section>
@@ -474,6 +480,7 @@ import OlMap from './../olmap/olmap';
 import { required, email, minLength, minValue, maxValue }
   from 'vuelidate/lib/validators';
 
+import RecordState from '../controls/record-state';
 import RiskWidget from '../controls/risk/risk-widget';
 
 const timespan = require('readable-timespan');
@@ -498,7 +505,8 @@ const validMoratorium = (value, vm) => {
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
   components: {
-    'risk-widget': RiskWidget
+    'risk-widget': RiskWidget,
+    'record-state': RecordState,
   },
   beforeMount() {
     this.getFormData();

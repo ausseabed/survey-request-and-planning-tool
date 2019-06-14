@@ -15,6 +15,7 @@ import hippRequest from './modules/hipp-request/hipp-request-state'
 import reportTemplate from './modules/report-template/report-template-state'
 import user from './modules/user/user-state'
 import role from './modules/role/role-state'
+import recordState from './modules/record-state/record-state-state'
 
 
 Vue.use(Vuex)
@@ -35,6 +36,7 @@ export default new Vuex.Store({
     reportTemplate,
     user,
     role,
+    recordState,
   },
   strict: debug
 })

@@ -9,7 +9,7 @@ import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
 import { HippRequest, SURVEY_QUALITY_REQUIREMENTS,
   CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
   from '../../lib/entity/hipp-request';
-import { updatedRecordState } from '../state-management';
+import { updateRecordState } from '../state-management';
 
 
 var router = express.Router();
@@ -129,7 +129,7 @@ router.post(
   }
 
   const changeDesc = _.isNil(req.body.id) ? "New record" : "Updated record"
-  const recordState = await updatedRecordState(
+  const recordState = await updateRecordState(
     HippRequest, req.body.id, req.user, 'request', changeDesc);
 
   hippRequest.recordState = recordState

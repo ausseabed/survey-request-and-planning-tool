@@ -45,6 +45,7 @@ export default Vue.extend({
   methods: {
     ...mapActions('recordState', [
       'getRecordState',
+      'transitionRecordState',
     ]),
     ...mapMutations('recordState', {
       'update': recordStateMutTypes.UPDATE,
@@ -54,6 +55,7 @@ export default Vue.extend({
     },
     onClickEvent(evt) {
       console.log(evt)
+      this.transitionRecordState(evt)
     },
     doClick() {
       console.log(this.hasNextEvent('FINALISE'))

@@ -14,6 +14,7 @@ const requestStates = {
       SAVE: {target: 'draft'},
       FINALISE: {
         target: 'finalised',
+        actions: ['incrementVersion'],
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canFinaliseAllRecordState',
@@ -28,18 +29,21 @@ const requestStates = {
       REVISE: 'underReview',
       ACCEPT: 'accepted'
     },
-    exit: ['logAction'],
+    exit: ['logAction', 'updateDbState'],
   },
   underReview: {
     on: {
       SAVE: 'underReview',
-      FINALISE: 'finalised'
+      FINALISE: {
+        target:'finalised',
+        actions: ['incrementVersion'],
+      }
     },
-    exit: ['logAction'],
+    exit: ['logAction', 'updateDbState'],
   },
   accepted: {
     on: { REMOVE: 'finalised'},
-    exit: ['logAction'],
+    exit: ['logAction', 'updateDbState'],
   },
 }
 
@@ -47,7 +51,7 @@ const requestStates = {
 // creates a state machine for the given record type and entity id
 // user is required to support permission based guards in the state machine.
 export const buildRecordMachine =
-  async (entityType, entityId, user, entityOrgListAttribute) => {
+  async (entityType, entityId, user, entityOrgListAttribute, recordType) => {
 
   // the states, and migrations between them differ based on entity
   // so get the right states for the given entity type
@@ -67,16 +71,25 @@ export const buildRecordMachine =
     entityId,
     {
       select: ['id'],
-      relations: ['recordState', entityOrgListAttribute],
+      relations: [
+        'recordState',
+        entityOrgListAttribute
+      ],
     }
   );
   if (_.isNil(record)) {
     throw new Error(`Missing record ${entityType.name} ${entityId}`);
   }
 
-  const initialState = _.isNil(record.recordState) ?
-    'draft' :
-    record.recordState.state;
+  let recordState = undefined;
+  if (_.isNil(record.recordState)) {
+    recordState = new RecordState();
+    recordState.state = 'draft';
+    recordState.version = 0;
+  } else {
+    recordState = record.recordState;
+  }
+
   const entityOrgs = record[entityOrgListAttribute];
 
   const id = entityType.name + 'Record'
@@ -87,16 +100,24 @@ export const buildRecordMachine =
       entityType: entityType,
       entityId: entityId,
       entityOrgs: entityOrgs,
+      recordType: recordType,
+      recordStateVersion: recordState.version,
     },
-    initial: initialState,
+    initial: recordState.state,
     strict: true,
     states: states
   },{
     actions: {
+      incrementVersion: (context, event) => {
+        if (_.isNil(context.recordStateVersion)) {
+          context.recordStateVersion = 0
+        }
+        context.recordStateVersion += 1;
+      },
       logAction: (context, event) => {
-        console.log('----------');
-        console.log(context);
-        console.log(event);
+        //console.log('----------');
+        //console.log(context);
+        //console.log(event);
       },
     },
     guards: {
@@ -131,8 +152,8 @@ export const buildRecordMachine =
   return machine
 }
 
-export const updatedRecordState =
-  async (entityType, entityId, user, recordType, changeDescription) => {
+export const updateRecordState =
+  async (entityType, entityId, user, recordType) => {
 
   let oldRecordState = undefined
   if (!_.isNil(entityId)) {
@@ -155,7 +176,6 @@ export const updatedRecordState =
   newRecordState.created = Date.now();
   newRecordState.user = user;
   newRecordState.recordType = recordType;
-  newRecordState.changeDescription = changeDescription;
 
   if (_.isNil(oldRecordState)) {
     // no previous record state, so just make a new one

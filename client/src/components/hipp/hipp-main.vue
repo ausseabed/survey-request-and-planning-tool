@@ -28,7 +28,7 @@
           />
           <q-route-tab
             icon="layers"
-            label="Projects"
+            label="Plans"
             :to="`/hipp-request/${id}/projects`"
             exact
           />

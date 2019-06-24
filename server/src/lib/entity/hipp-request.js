@@ -190,6 +190,7 @@ export class HippRequest {
 
   @Column({
     type:"simple-array",
+    nullable: true,
     default: ""
   })
   surveyQualityRequirements = [];
@@ -202,6 +203,7 @@ export class HippRequest {
 
   @Column({
     type:"simple-array",
+    nullable: true,
     default: ""
   })
   chartProductQualityImpactRequirements = [];

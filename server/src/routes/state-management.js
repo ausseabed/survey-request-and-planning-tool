@@ -26,24 +26,52 @@ const requestStates = {
   },
   finalised: {
     on: {
-      REVISE: 'underReview',
-      ACCEPT: 'accepted'
+      REVISE: {
+        target: 'underReview',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canReviseAllRecordState',
+          orgPermission: 'canReviseOrgRecordState',
+        },
+      },
+      ACCEPT: {
+        target:'accepted',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canAcceptAllRecordState',
+          orgPermission: 'canAcceptOrgRecordState',
+        },
+      }
     },
-    exit: ['logAction', 'updateDbState'],
+    exit: ['logAction'],
   },
   underReview: {
     on: {
       SAVE: 'underReview',
       FINALISE: {
         target:'finalised',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canFinaliseAllRecordState',
+          orgPermission: 'canFinaliseOrgRecordState',
+        },
         actions: ['incrementVersion'],
       }
     },
-    exit: ['logAction', 'updateDbState'],
+    exit: ['logAction'],
   },
   accepted: {
-    on: { REMOVE: 'finalised'},
-    exit: ['logAction', 'updateDbState'],
+    on: {
+      REMOVE: {
+        target: 'finalised',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canRemoveAllRecordState',
+          orgPermission: 'canRemoveOrgRecordState',
+        },
+      }
+    },
+    exit: ['logAction'],
   },
 }
 

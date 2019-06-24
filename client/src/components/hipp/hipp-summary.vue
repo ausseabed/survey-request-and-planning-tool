@@ -57,6 +57,7 @@
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
         <record-state
+          v-if="this.hippRequest.id"
           class="full-width"
           :entity-type="`hipp-request`"
           :entity-id="hippRequest.id"
@@ -691,20 +692,24 @@ export default Vue.extend({
       'reportDownloading',
     ]),
     readonly: function() {
+      if (
+        this.hasPermission('canAddHippRequest') &&
+        _.isNil(this.hippRequest.id)
+      ) {
+        // user has permission to add new request, and this is a new request
+        // this is a new request, so no need to worry about record state
+        return false
+      }
+
       if (this.stateReadonly) {
-        // if the state says read only, then no permission can overwrite this
+        // if the state says read only
         return true
       }
       if (this.hasPermission('canEditAllHippRequests')) {
         // can edit all projects
         return false
-      } else if (
-        this.hasPermission('canAddHippRequest') &&
-        _.isNil(this.hippRequest.id)
-      ) {
-        // user has permission to add new request, and this is a new request
-        return false
-      } else if (
+      }
+      else if (
         this.hasPermission('canEditOrgHippRequests') &&
         this.hasOrganisationLink('hippRequest.requestingAgencies')
       ) {

@@ -60,6 +60,7 @@
           class="full-width"
           :entity-type="`hipp-request`"
           :entity-id="hippRequest.id"
+          @updated-state="stateUpdated($event)"
           >
         </record-state>
         <div v-if="!hippRequest.id" class="text-h5"> New HIPP Request </div>
@@ -647,6 +648,7 @@ export default Vue.extend({
     },
 
     getFormData() {
+      this.stateReadonly = true;
       // only get non-deleted organisations
       this.setDeletedOrganisations(false);
       // gets the list of all orgs, not just those associated to this project
@@ -668,7 +670,10 @@ export default Vue.extend({
     risksUpdated(event) {
       let path = `hippRequest.riskData${event.path}`
       this.update({path:path, value:event.value})
-    }
+    },
+    stateUpdated(state) {
+      this.stateReadonly = state.readonly
+    },
   },
 
   computed: {
@@ -686,6 +691,10 @@ export default Vue.extend({
       'reportDownloading',
     ]),
     readonly: function() {
+      if (this.stateReadonly) {
+        // if the state says read only, then no permission can overwrite this
+        return true
+      }
       if (this.hasPermission('canEditAllHippRequests')) {
         // can edit all projects
         return false
@@ -792,9 +801,10 @@ export default Vue.extend({
   data() {
     return {
       addingFile: false,
-      loadingData: false,
       drawingAreaOfInterest: false,
+      loadingData: false,
       map: undefined,
+      stateReadonly: true,
       tmpMoratoriumDateEntry: undefined,
       validationMessagesOverride: {
         validMoratorium: "Must provide valid moratorium date",

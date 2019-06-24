@@ -34,6 +34,7 @@ const moment = require('moment')
 import * as recordStateMutTypes
   from '../../store/modules/record-state/record-state-mutation-types'
 
+const UPDATED_STATE = 'updated-state';
 
 export default Vue.extend({
   props: ['entityType', 'entityId'],
@@ -54,12 +55,8 @@ export default Vue.extend({
       this.getRecordState();
     },
     onClickEvent(evt) {
-      console.log(evt)
       this.transitionRecordState(evt)
     },
-    doClick() {
-      console.log(this.hasNextEvent('FINALISE'))
-    }
   },
   computed: {
     ...mapGetters('recordState', [
@@ -144,6 +141,11 @@ export default Vue.extend({
           this.doUpdate();
         }
       },
+    },
+    'recordState': {
+      handler (newState, oldState) {
+        this.$emit(UPDATED_STATE, newState);
+      }
     },
   }
 });

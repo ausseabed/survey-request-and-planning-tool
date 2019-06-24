@@ -87,6 +87,7 @@ router.get(
   _.merge(result, {
     state: currentState.value,
     nextEvents: nextEvents,
+    readonly: currentState.context.readonly,
   })
 
   return res.json(result);
@@ -156,6 +157,7 @@ router.post(
       return service.nextState(evt).changed;
     })
     newRecordState.nextEvents = nextEvents;
+    newRecordState.readonly = state.context.readonly;
 
     return res.json(newRecordState);
   });

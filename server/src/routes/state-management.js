@@ -22,6 +22,7 @@ const requestStates = {
         },
       },
     },
+    entry: ['makeWriteable'],
     exit: ['logAction'],
   },
   finalised: {
@@ -43,6 +44,7 @@ const requestStates = {
         },
       }
     },
+    entry: ['makeReadonly'],
     exit: ['logAction'],
   },
   underReview: {
@@ -58,6 +60,7 @@ const requestStates = {
         actions: ['incrementVersion'],
       }
     },
+    entry: ['makeWriteable'],
     exit: ['logAction'],
   },
   accepted: {
@@ -71,6 +74,7 @@ const requestStates = {
         },
       }
     },
+    entry: ['makeReadonly'],
     exit: ['logAction'],
   },
 }
@@ -124,12 +128,15 @@ export const buildRecordMachine =
   const machine = Machine({
     id: id,
     context: {
-      user: user,
+      user: user, // current user, used to log changes
       entityType: entityType,
       entityId: entityId,
       entityOrgs: entityOrgs,
       recordType: recordType,
       recordStateVersion: recordState.version,
+      // can the record be modified. Allows state machine to determine if the
+      // record can be modified.
+      readonly: true,
     },
     initial: recordState.state,
     strict: true,
@@ -141,6 +148,12 @@ export const buildRecordMachine =
           context.recordStateVersion = 0
         }
         context.recordStateVersion += 1;
+      },
+      makeReadonly: (context, event) => {
+        context.readonly = true;
+      },
+      makeWriteable: (context, event) => {
+        context.readonly = false;
       },
       logAction: (context, event) => {
         //console.log('----------');

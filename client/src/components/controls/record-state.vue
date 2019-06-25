@@ -46,12 +46,6 @@ export default Vue.extend({
     disableMessage: { type: String, default: "Record must be saved." },
     validationCallback: { type: Function},
   },
-  // props: [
-  //   'entityType',
-  //   'entityId',
-  //   'disable',
-  //   'validationCallback'
-  // ],
   data() {
     return {
 

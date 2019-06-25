@@ -355,6 +355,7 @@
               :error="$v.projectInstrumentTypes.$error || $v.projectDataCaptureTypes.$error"
               :error-message="getInstrumentAndDataCaptureTypeError()"
               bottom-slots
+              :readonly="readonly"
               >
               <div class="row q-col-gutter-md q-mb-sm">
                 <div class="column col-xs-12 col-sm-6">

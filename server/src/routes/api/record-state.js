@@ -15,30 +15,9 @@ import { RecordState } from '../../lib/entity/record-state';
 
 const router = express.Router();
 
-router.get(
-  '/project-metadata/:id',
-  [
-    isAuthenticated,
-    permitOrgBasedPermission({
-      entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
-      allowedPermissionAll: 'canViewAllProjects',
-      allowedPermissionOrg: 'canViewOrgProjects'})
-  ],
-  asyncMiddleware(async function(req, res) {
-
-  const entityId = req.params.id;
-  const machine = await buildRecordMachine(
-    ProjectMetadata, entityId, req.user, 'organisations', 'plan');
-
-  console.log(machine.state)
-
-  return res.json({pres: true});
-}));
-
 
 router.get(
-  '/hipp-request/:id',
+  '/:entityTypeStr/:id',
   [
     isAuthenticated,
     permitOrgBasedPermission({
@@ -50,8 +29,20 @@ router.get(
   asyncMiddleware(async function(req, res) {
 
   const entityId = req.params.id;
+  const entityTypeStr = req.params.entityTypeStr;
+  let entityType = undefined;
+  if (entityTypeStr == 'hipp-request') {
+    entityType = HippRequest
+  } else if (entityTypeStr == 'project-metadata') {
+    entityType = ProjectMetadata
+  } else {
+    let err = boom.badRequest(
+      `Bad request url entityTypeStr should be 'hipp-request' ` +
+      `or 'project-metadata' /:entityTypeStr/:id`);
+    throw err;
+  }
   const machine = await buildRecordMachine(
-    HippRequest, entityId, req.user, 'requestingAgencies', 'request');
+    entityType, entityId, req.user, 'requestingAgencies', 'request');
 
   const service = interpret(machine);
   service.start();
@@ -70,7 +61,7 @@ router.get(
   // we've already queried the db in the `buildRecordMachine` call, but do it
   // again here to get some additional metadata about the currentState
   const record = await getConnection()
-  .getRepository(HippRequest)
+  .getRepository(entityType)
   .findOne(
     entityId,
     {

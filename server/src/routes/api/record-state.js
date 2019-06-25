@@ -102,7 +102,7 @@ router.get(
 // we don't include the `permitOrgBasedPermission` because these checks are
 // handled by the guard checks in the state machine.
 router.post(
-  '/hipp-request/:id',
+  '/:entityTypeStr/:id',
   [
     isAuthenticated,
   ],
@@ -115,9 +115,28 @@ router.post(
     throw err;
   }
 
+  const entityTypeStr = req.params.entityTypeStr;
   const entityId = req.params.id;
-  const machine = await buildRecordMachine(
-    HippRequest, entityId, req.user, 'requestingAgencies', 'request');
+  let machine = undefined;
+  let recordType = undefined;
+  let entityType = undefined;
+
+  if (entityTypeStr == 'hipp-request') {
+    entityType = HippRequest;
+    recordType = 'request';
+    machine = await buildRecordMachine(
+      entityType, entityId, req.user, 'requestingAgencies', recordType);
+  } else if (entityTypeStr == 'project-metadata') {
+    entityType = ProjectMetadata;
+    recordType = 'plan';
+    machine = await buildRecordMachine(
+      entityType, entityId, req.user, 'organisations', recordType);
+  } else {
+    let err = boom.badRequest(
+      `entityTypeStr (/:entityTypeStr/:id) must be 'hipp-request' ` +
+      `or 'project-metadata'`);
+    throw err;
+  }
 
   let newRecordState = undefined;
 
@@ -135,11 +154,11 @@ router.post(
     newRecordState.previous = state.context.recordState;
     newRecordState.user = req.user;
     newRecordState.created = Date.now();
-    newRecordState.recordType = 'request';
+    newRecordState.recordType = recordType;
     newRecordState.version = state.context.recordStateVersion;
 
     let hippRequest = await getConnection()
-    .getRepository(HippRequest)
+    .getRepository(entityType)
     .findOne(
       req.params.id,
       {
@@ -152,7 +171,7 @@ router.post(
     hippRequest.recordState = newRecordState;
 
     hippRequest = await getConnection()
-    .getRepository(HippRequest)
+    .getRepository(entityType)
     .save(hippRequest)
 
     // don't forget to include what the next possible events are, otherwise

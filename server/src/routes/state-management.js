@@ -7,6 +7,59 @@ import { ProjectMetadata } from '../lib/entity/project-metadata';
 import { RecordState } from '../lib/entity/record-state';
 
 
+// state machine definition for the survey plan
+// this state machine differs to the request state machine as it does not
+// include the accepted state
+const planStates = {
+  draft: {
+    on: {
+      SAVE: {target: 'draft'},
+      FINALISE: {
+        target: 'finalised',
+        actions: ['incrementVersion'],
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canFinaliseAllRecordState',
+          orgPermission: 'canFinaliseOrgRecordState',
+        },
+      },
+    },
+    entry: ['makeWriteable'],
+    exit: ['logAction'],
+  },
+  finalised: {
+    on: {
+      REVISE: {
+        target: 'underReview',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canReviseAllRecordState',
+          orgPermission: 'canReviseOrgRecordState',
+        },
+      },
+    },
+    entry: ['makeReadonly'],
+    exit: ['logAction'],
+  },
+  underReview: {
+    on: {
+      SAVE: 'underReview',
+      FINALISE: {
+        target:'finalised',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canFinaliseAllRecordState',
+          orgPermission: 'canFinaliseOrgRecordState',
+        },
+        actions: ['incrementVersion'],
+      }
+    },
+    entry: ['makeWriteable'],
+    exit: ['logAction'],
+  },
+}
+
+
 // state machine definition for the HIPP Request
 const requestStates = {
   draft: {
@@ -91,7 +144,7 @@ export const buildRecordMachine =
   if (entityType == HippRequest) {
     states = requestStates
   } else if (entityType == ProjectMetadata) {
-    throw new Error(`TODO survey plan states`);
+    states = planStates
   } else {
     throw new Error(`Unknown entityType ${entityType.name}`);
   }

@@ -21,6 +21,7 @@ router.get(
   if (!_.isNil(userSub) && (userSub != 'true' || userSub != 'false')) {
     let err = boom.badRequest(
       `Optional "user-submitted" query param must be true or false`);
+    throw err;
   }
 
   const whereOpts = _.isNil(userSub) ?

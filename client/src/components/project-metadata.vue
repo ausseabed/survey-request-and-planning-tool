@@ -4,7 +4,7 @@
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
-        v-if="!readOnly"
+        v-if="!readonly"
         position="top-right"
         :offset="id ? [18, 18+66] : [18, 18]"
         style="z-index:100">
@@ -54,7 +54,7 @@
               @input="update('projectMetadata.surveyName', $event)"
               @blur="$v.surveyName.$touch"
               type="text"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </form-field-validated-input>
 
@@ -64,7 +64,7 @@
               :value="surveyId"
               @input="update('projectMetadata.surveyId', $event)"
               type="text"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-input>
 
@@ -76,7 +76,7 @@
                   color="secondary"
                   @input="update('projectMetadata.projectStatus', $event)"
                   :options="projectStatusOptions"
-                  :disable="readOnly"
+                  :disable="readonly"
                 />
               </template>
             </q-field>
@@ -92,7 +92,7 @@
               option-label="name"
               option-value="id"
               @blur="$v.projectOrganisations.$touch"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </form-field-validated-select>
 
@@ -105,7 +105,7 @@
               @input="update('projectMetadata.contactPerson', $event)"
               @blur="$v.contactPerson.$touch"
               type="text"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-input>
 
@@ -118,7 +118,7 @@
               @input="update('projectMetadata.email', $event)"
               @blur="$v.email.$touch"
               type="email"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </form-field-validated-input>
           </q-card-section>
@@ -140,7 +140,7 @@
               option-value="id"
               @blur="$v.hippRequest.$touch"
               clearable
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </form-field-validated-select>
           </q-card-section>
@@ -191,7 +191,7 @@
                   </div>
                   <div class="col">
                     <q-btn
-                      v-if="!readOnly"
+                      v-if="!readonly"
                       class="no-margin full-width" icon="cloud_upload" label="Upload"
                       @click="selectAoiFile">
                     </q-btn>
@@ -199,7 +199,7 @@
                   </div>
                   <div class="col">
                     <q-btn
-                      v-if="!readOnly"
+                      v-if="!readonly"
                       class="no-margin full-width" icon="clear" label="Clear"
                       :disable="!areaOfInterest"
                       @click="setAoi(undefined)">
@@ -233,7 +233,7 @@
               @blur="$v.selectedSurveyApplicationGroup.$touch"
               :error="$v.selectedSurveyApplicationGroup.$error"
               error-message="Survey application is required"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-select>
 
@@ -249,7 +249,7 @@
                   @input="setSurveyApplicationGroupNameOther($event)"
                   @blur="$v.surveyApplicationGroupNameOther.$touch"
                   type="text"
-                  :readonly="readOnly"
+                  :readonly="readonly"
                   >
                 </form-field-validated-input>
               </div>
@@ -267,7 +267,7 @@
               option-value="id"
               bottom-slots
               @blur="$v.selectedSurveyApplication.$touch"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-select>
 
@@ -283,7 +283,7 @@
                   @input="setSurveyApplicationNameOther($event)"
                   @blur="$v.surveyApplicationNameOther.$touch"
                   type="text"
-                  :readonly="readOnly"
+                  :readonly="readonly"
                   >
                 </form-field-validated-input>
               </div>
@@ -296,7 +296,7 @@
               @input="update('projectMetadata.quality', $event)"
               type="textarea"
               autogrow
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-input>
 
@@ -316,7 +316,7 @@
               :value="contractNumber"
               @input="update('projectMetadata.contractNumber', $event)"
               type="text"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-input>
 
@@ -326,7 +326,7 @@
               :value="tenderer"
               @input="update('projectMetadata.tenderer', $event)"
               type="text"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-input>
 
@@ -336,7 +336,7 @@
               :value="surveyors"
               @input="update('projectMetadata.surveyors', $event)"
               type="text"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-input>
 
@@ -346,7 +346,7 @@
               :value="vessel"
               @input="update('projectMetadata.vessel', $event)"
               type="text"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-input>
 
@@ -413,7 +413,7 @@
               :error="$v.startDate.$error"
               error-message="Start date is required"
               bottom-slots
-              :readonly="readOnly"
+              :readonly="readonly"
               >
               <template v-slot:control>
                 <q-date :landscape="$q.platform.is.desktop"
@@ -437,7 +437,7 @@
               :value="comment"
               @input="update('projectMetadata.comment', $event)"
               type="textarea"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
             </q-input>
           </q-card-section>
@@ -454,7 +454,7 @@
               label="Subject to moratorium"
               hint="Optional"
               bottom-slots
-              :readonly="readOnly"
+              :readonly="readonly"
               >
               <q-checkbox
                 :value="projectMetadata.hasMoratorium"
@@ -472,7 +472,7 @@
               :value="formattedMoratoriumDate"
               @input="setFormattedMoratoriumDate($event)"
               @blur="$v.projectMetadata.moratoriumDate.$touch"
-              :readonly="readOnly"
+              :readonly="readonly"
               >
 
                 <q-icon name="event" class="cursor-pointer">
@@ -1037,7 +1037,7 @@ export default Vue.extend({
     ...mapGetters('hippRequest', [
       'hippRequests'
     ]),
-    readOnly: function() {
+    readonly: function() {
       if (
         this.hasPermission('canAddProject') &&
         _.isNil(this.id)

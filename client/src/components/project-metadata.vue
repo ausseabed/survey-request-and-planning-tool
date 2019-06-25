@@ -714,35 +714,38 @@ export default Vue.extend({
         this.$store.dispatch(
           'projectMetadata/getProjectMetadata', { id: this.$route.params.id })
         .then(projectMetadata => {
-          this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
-            projectMetadata.surveyApplication.group);
+          if (!_.isNil(projectMetadata.surveyApplication)) {
+            this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
+              projectMetadata.surveyApplication.group);
 
-          if (projectMetadata.surveyApplication.userSubmitted) {
-            let saName = projectMetadata.surveyApplication.name;
-            let saId = projectMetadata.surveyApplication.id;
-            let saGroup = projectMetadata.surveyApplication.group;
+            if (projectMetadata.surveyApplication.userSubmitted) {
+              let saName = projectMetadata.surveyApplication.name;
+              let saId = projectMetadata.surveyApplication.id;
+              let saGroup = projectMetadata.surveyApplication.group;
 
-            this.setSurveyApplicationNameOther(saName);
-            this.setSurveyApplicationIdOther(saId);
+              this.setSurveyApplicationNameOther(saName);
+              this.setSurveyApplicationIdOther(saId);
 
-            if (this.surveyApplicationGroups.includes(saGroup)) {
-              this.setSelectedSurveyApplicationGroup(
-                saGroup);
+              if (this.surveyApplicationGroups.includes(saGroup)) {
+                this.setSelectedSurveyApplicationGroup(
+                  saGroup);
+              } else {
+                this.setSurveyApplicationGroupNameOther(saGroup);
+                this.setSelectedSurveyApplicationGroup(
+                  otherSurveyPurpose.group);
+              }
+              this.setSelectedSurveyApplication(
+                otherSurveyPurpose);
+
             } else {
-              this.setSurveyApplicationGroupNameOther(saGroup);
-              this.setSelectedSurveyApplicationGroup(
-                otherSurveyPurpose.group);
+              this.setSelectedSurveyApplication(
+                projectMetadata.surveyApplication);
             }
-            this.setSelectedSurveyApplication(
-              otherSurveyPurpose);
-
-          } else {
-            this.setSelectedSurveyApplication(
-              projectMetadata.surveyApplication);
           }
 
-          this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
-          this.setDirty(false);
+          if (!_.isNil(projectMetadata.areaOfInterest)) {
+            this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
+          }
         });
       } else {
         if (_.isNil(this.$route.query.reset) || this.$route.query.reset) {

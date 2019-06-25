@@ -962,9 +962,6 @@ export default Vue.extend({
       this.map.highlightFeatureId(matchingProjMeta.id);
     },
 
-    hasScrolled (scroll) {
-      this.showFloatingButtons = scroll.position > 30;
-    },
   },
 
   computed: {
@@ -1164,7 +1161,6 @@ export default Vue.extend({
       map: null,
       orgSearchTerms: '',
       matchingProjMetas:undefined,
-      showFloatingButtons: false,
       tmpMoratoriumDateEntry: undefined,
       validationMessagesOverride: {
         validDataCaptureType:

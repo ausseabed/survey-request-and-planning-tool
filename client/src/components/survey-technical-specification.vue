@@ -925,9 +925,6 @@ export default Vue.extend({
       this.mapTidalGauge.addFile(event.target.files[0]);
     },
 
-    hasScrolled (scroll) {
-      this.showFloatingButtons = scroll.position > 30;
-    },
   },
 
   computed: {
@@ -1063,7 +1060,6 @@ export default Vue.extend({
       mapTidalGauge:undefined,
       surveyLinesFile: undefined,
       drawingSurveyLine: false,
-      showFloatingButtons: false,
     }
   }
 });

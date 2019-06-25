@@ -188,10 +188,6 @@ export default Vue.extend({
         'deliverable/getDeliverableList', { id: id })
     },
 
-    hasScrolled (scroll) {
-      this.showFloatingButtons = scroll.position > 30;
-    },
-
     nameForDefinition(definitionId) {
       const defn = this.definitionList.find((def) => {
         return def.id == definitionId;
@@ -400,7 +396,6 @@ export default Vue.extend({
   data() {
     return {
       loading: false,
-      showFloatingButtons: false,
       deliverables: [],
       tempDeliverableDefinitions: [],
       activeDeliverableId: undefined,

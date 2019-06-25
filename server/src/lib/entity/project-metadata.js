@@ -155,7 +155,7 @@ export class ProjectMetadata {
   @JoinColumn({ name: "hippRequestId" })
   hippRequest;
 
-  @OneToOne(type => RecordState)
+  @OneToOne(type => RecordState, { cascade: true })
   @JoinColumn()
   recordState;
 

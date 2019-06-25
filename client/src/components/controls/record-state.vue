@@ -18,8 +18,10 @@
         :key="evt"
         square clickable @click="onClickEvent(evt)"
         class="record-state-chip"
+        :disable="disable"
         >
         {{evt}}
+        <q-tooltip v-if="disable">{{disableMessage}}</q-tooltip>
       </q-chip>
     </div>
   </div>
@@ -37,7 +39,19 @@ import * as recordStateMutTypes
 const UPDATED_STATE = 'updated-state';
 
 export default Vue.extend({
-  props: ['entityType', 'entityId'],
+  props: {
+    entityType: { type: String },
+    entityId: { type: String },
+    disable: { type: Boolean, default: false },
+    disableMessage: { type: String, default: "Record must be saved." },
+    validationCallback: { type: Function},
+  },
+  // props: [
+  //   'entityType',
+  //   'entityId',
+  //   'disable',
+  //   'validationCallback'
+  // ],
   data() {
     return {
 
@@ -55,7 +69,16 @@ export default Vue.extend({
       this.getRecordState();
     },
     onClickEvent(evt) {
-      this.transitionRecordState(evt)
+      if (_.isFunction(this.validationCallback)) {
+        // then it has a validation callback, so call it and make sure that
+        // true is returned.
+        if (this.validationCallback(evt)) {
+          this.transitionRecordState(evt);
+        }
+      } else {
+        this.transitionRecordState(evt);
+      }
+
     },
   },
   computed: {

@@ -61,6 +61,8 @@
           class="full-width"
           :entity-type="`hipp-request`"
           :entity-id="hippRequest.id"
+          :validation-callback="recordStateValidationCallback"
+          :disable="dirty"
           @updated-state="stateUpdated($event)"
           >
         </record-state>
@@ -603,6 +605,8 @@ export default Vue.extend({
     },
 
     submit() {
+      this.validationIntent = 'save';
+
       this.$v.$touch()
 
       if (this.$v.$error) {
@@ -675,6 +679,22 @@ export default Vue.extend({
     stateUpdated(state) {
       this.stateReadonly = state.readonly
     },
+    recordStateValidationCallback(recordStateEvent) {
+      if (recordStateEvent = 'FINALISE') {
+        this.validationIntent = 'final';
+
+        this.$v.$touch();
+
+        if (this.$v.$error) {
+          this.notifyError('Please review fields');
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    }
   },
 
   computed: {
@@ -756,29 +776,57 @@ export default Vue.extend({
   },
 
   validations() {
-    return {
-      hippRequest: {
-        name: { required, minLength:minLength(1) },
-        requestingAgencies: { required, minLength:minLength(1) },
-        requestorName: { required },
-        pointOfContactEmail: { required, email },
-        pointOfContactPhone: {},
-        requestDateStart: { required, maxValue:maxValue(this.hippRequest.requestDateEnd) },
-        requestDateEnd: { required, minValue:minValue(this.hippRequest.requestDateStart) },
-        comments: {},
-        areaName: {required},
-        area: {},
-        businessJustification: {},
-        costBenefit: {},
-        moratoriumDate: {},
-        moratoriumComment: {},
+    if (this.validationIntent == 'save') {
+      return {
+        hippRequest: {
+          name: { required, minLength:minLength(1) },
+          requestingAgencies: { required, minLength:minLength(1) },
+          requestorName: { required },
+          pointOfContactEmail: { required, email },
+          pointOfContactPhone: {},
+          requestDateStart: { },
+          requestDateEnd: { },
+          comments: {},
+          areaName: {required},
+          area: {},
+          businessJustification: {},
+          costBenefit: {},
+          moratoriumDate: {},
+          moratoriumComment: {},
 
-        surveyQualityRequirements: { required, minLength:minLength(1) },
-        surveyQualityRequirementsComments: {},
-        chartProductQualityImpactRequirements: { required, minLength:minLength(1) },
-        chartProductQualityImpactRequirementsComments: {},
+          surveyQualityRequirements: { },
+          surveyQualityRequirementsComments: {},
+          chartProductQualityImpactRequirements: { },
+          chartProductQualityImpactRequirementsComments: {},
 
-        riskIssues: {},
+          riskIssues: {},
+        }
+      }
+    } else if (this.validationIntent == 'final') {
+      return {
+        hippRequest: {
+          name: { required, minLength:minLength(1) },
+          requestingAgencies: { required, minLength:minLength(1) },
+          requestorName: { required },
+          pointOfContactEmail: { required, email },
+          pointOfContactPhone: {},
+          requestDateStart: { required, maxValue:maxValue(this.hippRequest.requestDateEnd) },
+          requestDateEnd: { required, minValue:minValue(this.hippRequest.requestDateStart) },
+          comments: {},
+          areaName: {required},
+          area: {},
+          businessJustification: {},
+          costBenefit: {},
+          moratoriumDate: {},
+          moratoriumComment: {},
+
+          surveyQualityRequirements: { required, minLength:minLength(1) },
+          surveyQualityRequirementsComments: {},
+          chartProductQualityImpactRequirements: { required, minLength:minLength(1) },
+          chartProductQualityImpactRequirementsComments: {},
+
+          riskIssues: {},
+        }
       }
     }
   },
@@ -811,6 +859,7 @@ export default Vue.extend({
       map: undefined,
       stateReadonly: true,
       tmpMoratoriumDateEntry: undefined,
+      validationIntent: 'save', // `save` or `final`
       validationMessagesOverride: {
         validMoratorium: "Must provide valid moratorium date",
         minValue: '{attribute} is before start date.',

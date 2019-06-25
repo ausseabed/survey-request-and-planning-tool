@@ -63,7 +63,8 @@ export class ProjectMetadata {
 
   @Column("geometry", {
     spatialFeatureType: "MultiPolygon",
-    srid: 4326
+    srid: 4326,
+    nullable: true,
   })
   areaOfInterest;
 
@@ -71,7 +72,8 @@ export class ProjectMetadata {
   // to/from the database and the UTC millisecond ints used by the web services
   @Column({
       type:"timestamp with time zone",
-      transformer: new DateTransformer()
+      transformer: new DateTransformer(),
+      nullable: true,
   })
   startDate;
 

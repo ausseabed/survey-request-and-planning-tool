@@ -244,8 +244,10 @@ router.post(
 
   project.hippRequest = req.body.hippRequest;
 
-  let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
-  project.areaOfInterest = geojson;
+  if (!_.isNil(req.body.areaOfInterest)) {
+    let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
+    project.areaOfInterest = geojson;
+  }
 
   // don't let the post request mark a project as deleted
   delete project.deleted;

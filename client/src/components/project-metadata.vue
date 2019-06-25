@@ -100,7 +100,7 @@
               icon="fas fa-user"
               label="Contact person"
               :error="$v.contactPerson.$error"
-              error-label="Contact person is required"
+              error-message="Contact person is required"
               :value="contactPerson"
               @input="update('projectMetadata.contactPerson', $event)"
               @blur="$v.contactPerson.$touch"
@@ -110,7 +110,6 @@
             </q-input>
 
             <form-field-validated-input
-              :label-width="2"
               inset="full"
               name="email"
               icon="fas fa-envelope"
@@ -233,7 +232,7 @@
               bottom-slots
               @blur="$v.selectedSurveyApplicationGroup.$touch"
               :error="$v.selectedSurveyApplicationGroup.$error"
-              error-label="Survey application is required"
+              error-message="Survey application is required"
               :readonly="readOnly"
               >
             </q-select>
@@ -260,7 +259,7 @@
             <q-select
               label="Purpose"
               :error="$v.selectedSurveyApplication.$error"
-              error-label="Survey application is required"
+              error-message="Survey application is required"
               :value="selectedSurveyApplication"
               @input="setSelectedSurveyApplication($event)"
               :options="surveyApplications"
@@ -854,13 +853,15 @@ export default Vue.extend({
       // before sending to the server, update the projectMetadata survey
       // application to account for it possibly being a user submitted
       // survey purpose.
-      let sa = _.cloneDeep(this.selectedSurveyApplication);
-      if (sa.userSubmitted) {
-        sa.group = this.selectedSurveyApplicationGroup == "Other" ? this.surveyApplicationGroupNameOther : this.selectedSurveyApplicationGroup;
-        sa.name = this.selectedSurveyApplication.name == "Other" ? this.surveyApplicationNameOther : this.selectedSurveyApplication.name;
-        sa.id = this.surveyApplicationIdOther;
+      if (!_.isNil(this.selectedSurveyApplication)) {
+        let sa = _.cloneDeep(this.selectedSurveyApplication);
+        if (sa.userSubmitted) {
+          sa.group = this.selectedSurveyApplicationGroup == "Other" ? this.surveyApplicationGroupNameOther : this.selectedSurveyApplicationGroup;
+          sa.name = this.selectedSurveyApplication.name == "Other" ? this.surveyApplicationNameOther : this.selectedSurveyApplication.name;
+          sa.id = this.surveyApplicationIdOther;
+        }
+        this.SET_SURVEY_APPLICATION(sa)
       }
-      this.SET_SURVEY_APPLICATION(sa)
 
       const isNew = _.isNil(this.id) || (this.id.length == 0);
 

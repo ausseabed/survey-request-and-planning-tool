@@ -15,32 +15,13 @@ import { RecordState } from '../../lib/entity/record-state';
 
 const router = express.Router();
 
-
-router.get(
-  '/:entityTypeStr/:id',
-  [
-    isAuthenticated,
-    permitOrgBasedPermission({
-      entityType:HippRequest,
-      organisationAttributes: ['requestingAgencies'],
-      allowedPermissionAll: 'canViewAllHippRequests',
-      allowedPermissionOrg: 'canViewOrgHippRequests'}),
-  ],
-  asyncMiddleware(async function(req, res) {
-
+// the 'permitOrgBasedPermission' middleware checks only work if a request
+// is targetting a hipp request OR project. hence we separate out the response
+// logic into this function so the handlers (below) can include the parameters
+// specific to a hipp request (eg) in the handler definition.
+async function handleGetRequest(req, res, entityType) {
   const entityId = req.params.id;
-  const entityTypeStr = req.params.entityTypeStr;
-  let entityType = undefined;
-  if (entityTypeStr == 'hipp-request') {
-    entityType = HippRequest
-  } else if (entityTypeStr == 'project-metadata') {
-    entityType = ProjectMetadata
-  } else {
-    let err = boom.badRequest(
-      `Bad request url entityTypeStr should be 'hipp-request' ` +
-      `or 'project-metadata' /:entityTypeStr/:id`);
-    throw err;
-  }
+
   const machine = await buildRecordMachine(
     entityType, entityId, req.user, 'requestingAgencies', 'request');
 
@@ -83,8 +64,40 @@ router.get(
 
   return res.json(result);
 
+}
 
+
+router.get(
+  '/hipp-request/:id',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:HippRequest,
+      organisationAttributes: ['requestingAgencies'],
+      allowedPermissionAll: 'canViewAllHippRequests',
+      allowedPermissionOrg: 'canViewOrgHippRequests'}),
+  ],
+  asyncMiddleware(async function(req, res) {
+
+  await handleGetRequest(req, res, HippRequest)
 }));
+
+
+router.get(
+  '/project-metadata/:id',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:HippRequest,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canViewAllProjects',
+      allowedPermissionOrg: 'canViewOrgProjects'}),
+  ],
+  asyncMiddleware(async function(req, res) {
+
+  await handleGetRequest(req, res, ProjectMetadata)
+}));
+
 
 // we don't include the `permitOrgBasedPermission` because these checks are
 // handled by the guard checks in the state machine.

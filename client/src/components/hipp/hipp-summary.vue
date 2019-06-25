@@ -787,7 +787,7 @@ export default Vue.extend({
           requestDateStart: { },
           requestDateEnd: { },
           comments: {},
-          areaName: {required},
+          areaName: {},
           area: {},
           businessJustification: {},
           costBenefit: {},

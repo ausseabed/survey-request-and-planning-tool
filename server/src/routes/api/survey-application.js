@@ -18,7 +18,7 @@ router.get(
   // get a list of the unique group names for survey applications. This supports
   // the two stage selection process of survey applications
   const userSub = req.query['user-submitted'];
-  if (!_.isNil(userSub) && (userSub != 'true' || userSub != 'false')) {
+  if (!_.isNil(userSub) && !(userSub == 'true' || userSub == 'false')) {
     let err = boom.badRequest(
       `Optional "user-submitted" query param must be true or false`);
     throw err;

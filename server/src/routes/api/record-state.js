@@ -19,11 +19,13 @@ const router = express.Router();
 // is targetting a hipp request OR project. hence we separate out the response
 // logic into this function so the handlers (below) can include the parameters
 // specific to a hipp request (eg) in the handler definition.
-async function handleGetRequest(req, res, entityType) {
+async function handleGetRequest(
+  req, res, entityType, orgAttribute, recordType) {
+
   const entityId = req.params.id;
 
   const machine = await buildRecordMachine(
-    entityType, entityId, req.user, 'requestingAgencies', 'request');
+    entityType, entityId, req.user, orgAttribute, recordType);
 
   const service = interpret(machine);
   service.start();
@@ -79,7 +81,7 @@ router.get(
   ],
   asyncMiddleware(async function(req, res) {
 
-  await handleGetRequest(req, res, HippRequest)
+  await handleGetRequest(req, res, HippRequest, 'requestingAgencies', 'request')
 }));
 
 
@@ -88,14 +90,14 @@ router.get(
   [
     isAuthenticated,
     permitOrgBasedPermission({
-      entityType:HippRequest,
+      entityType:ProjectMetadata,
       organisationAttributes: ['organisations'],
       allowedPermissionAll: 'canViewAllProjects',
       allowedPermissionOrg: 'canViewOrgProjects'}),
   ],
   asyncMiddleware(async function(req, res) {
 
-  await handleGetRequest(req, res, ProjectMetadata)
+  await handleGetRequest(req, res, ProjectMetadata, 'organisations', 'plan')
 }));
 
 
@@ -157,7 +159,7 @@ router.post(
     newRecordState.recordType = recordType;
     newRecordState.version = state.context.recordStateVersion;
 
-    let hippRequest = await getConnection()
+    let recordEntity = await getConnection()
     .getRepository(entityType)
     .findOne(
       req.params.id,
@@ -167,12 +169,12 @@ router.post(
         ]
       },
     );
-    newRecordState.previous = hippRequest.recordState;
-    hippRequest.recordState = newRecordState;
+    newRecordState.previous = recordEntity.recordState;
+    recordEntity.recordState = newRecordState;
 
-    hippRequest = await getConnection()
+    recordEntity = await getConnection()
     .getRepository(entityType)
-    .save(hippRequest)
+    .save(recordEntity)
 
     // don't forget to include what the next possible events are, otherwise
     // the UI won't know what to do

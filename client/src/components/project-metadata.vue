@@ -844,6 +844,8 @@ export default Vue.extend({
     },
 
     submit() {
+      this.validationIntent = 'save';
+
       this.$v.$touch()
 
       if (this.$v.$error) {

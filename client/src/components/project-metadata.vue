@@ -30,6 +30,17 @@
       </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
+        <record-state
+          v-if="projectMetadata.id"
+          class="full-width"
+          :entity-type="`project-metadata`"
+          :entity-id="projectMetadata.id"
+          :validation-callback="recordStateValidationCallback"
+          :disable="dirty"
+          @updated-state="stateUpdated($event)"
+          >
+        </record-state>
+        <div v-if="!projectMetadata.id" class="text-h5"> New Plan </div>
         <q-card class="full-width">
           <q-card-section>
             <div class="text-h6"> Basic </div>
@@ -498,6 +509,7 @@ import * as orgMutTypes
   from '../store/modules/organisation/organisation-mutation-types'
 import * as pmMutTypes
   from '../store/modules/project-metadata/project-metadata-mutation-types'
+import RecordState from './controls/record-state';
 
 const timespan = require('readable-timespan');
 timespan.set({
@@ -559,6 +571,9 @@ const otherSurveyPurpose = {
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
+  components: {
+    'record-state': RecordState,
+  },
 
   beforeMount() {
     this.getFormData();
@@ -962,6 +977,25 @@ export default Vue.extend({
       this.map.highlightFeatureId(matchingProjMeta.id);
     },
 
+    stateUpdated(state) {
+      this.stateReadonly = state.readonly
+    },
+    recordStateValidationCallback(recordStateEvent) {
+      if (recordStateEvent = 'FINALISE') {
+        this.validationIntent = 'final';
+
+        this.$v.$touch();
+
+        if (this.$v.$error) {
+          this.notifyError('Please review fields');
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    }
   },
 
   computed: {
@@ -1003,16 +1037,23 @@ export default Vue.extend({
       'hippRequests'
     ]),
     readOnly: function() {
-      if (this.hasPermission('canEditAllProjects')) {
-        // can edit all projects
-        return false
-      } else if (
+      if (
         this.hasPermission('canAddProject') &&
         _.isNil(this.id)
       ) {
         // user has permission to add new project, and this is a new project
         return false
-      } else if (
+      }
+
+      if (this.stateReadonly) {
+        // if the state says read only
+        return true
+      }
+
+      if (this.hasPermission('canEditAllProjects')) {
+        // can edit all projects
+        return false
+      } else  if (
         this.hasPermission('canEditOrgProjects') &&
         this.hasOrganisationLink('projectOrganisations')
       ) {
@@ -1087,33 +1128,59 @@ export default Vue.extend({
     },
   },
 
-  validations: {
-    surveyName: { required },
-    contactPerson: { required },
-    email: { required, email },
-    areaOfInterest: {required },
-    startDate: { required },
-    selectedSurveyApplication: { required },
-    surveyApplicationNameOther: { validSurveyApplicationNameOther },
-    selectedSurveyApplicationGroup: { required },
-    surveyApplicationGroupNameOther: { validSurveyApplicationGroupNameOther },
-    projectOrganisations: {
-      required,
-      minLength:minLength(1)
-    },
-    projectInstrumentTypes: {
-      required,
-      minLength:minLength(1)
-    },
-    projectDataCaptureTypes: {
-      required,
-      minLength:minLength(1),
-      validDataCaptureType
-    },
-    projectMetadata: {
-      moratoriumDate: {validMoratorium},
-    },
-    hippRequest: {}
+  validations() {
+    if (this.validationIntent == 'save') {
+      return {
+        surveyName: { required },
+        contactPerson: { required },
+        email: { required, email },
+        areaOfInterest: { },
+        startDate: { },
+        selectedSurveyApplication: {  },
+        surveyApplicationNameOther: {  },
+        selectedSurveyApplicationGroup: {  },
+        surveyApplicationGroupNameOther: {  },
+        projectOrganisations: {
+          required,
+          minLength:minLength(1)
+        },
+        projectInstrumentTypes: { },
+        projectDataCaptureTypes: { },
+        projectMetadata: {
+          moratoriumDate: { },
+        },
+        hippRequest: {}
+      }
+    } else if (this.validationIntent == 'final') {
+      return {
+        surveyName: { required },
+        contactPerson: { required },
+        email: { required, email },
+        areaOfInterest: {required },
+        startDate: { required },
+        selectedSurveyApplication: { required },
+        surveyApplicationNameOther: { validSurveyApplicationNameOther },
+        selectedSurveyApplicationGroup: { required },
+        surveyApplicationGroupNameOther: { validSurveyApplicationGroupNameOther },
+        projectOrganisations: {
+          required,
+          minLength:minLength(1)
+        },
+        projectInstrumentTypes: {
+          required,
+          minLength:minLength(1)
+        },
+        projectDataCaptureTypes: {
+          required,
+          minLength:minLength(1),
+          validDataCaptureType
+        },
+        projectMetadata: {
+          moratoriumDate: {validMoratorium},
+        },
+        hippRequest: {}
+      }
+    }
   },
 
   watch: {
@@ -1161,7 +1228,9 @@ export default Vue.extend({
       map: null,
       orgSearchTerms: '',
       matchingProjMetas:undefined,
+      stateReadonly: true,
       tmpMoratoriumDateEntry: undefined,
+      validationIntent: 'save', // `save` or `final`
       validationMessagesOverride: {
         validDataCaptureType:
           "Selected data capture types are not valid for instrument.",

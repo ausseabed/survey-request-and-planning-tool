@@ -677,7 +677,11 @@ export default Vue.extend({
       this.update({path:path, value:event.value})
     },
     stateUpdated(state) {
-      this.stateReadonly = state.readonly
+      if (_.isNil(state)) {
+        this.stateReadonly = true
+      } else {
+        this.stateReadonly = state.readonly
+      }
     },
     recordStateValidationCallback(recordStateEvent) {
       if (recordStateEvent = 'FINALISE') {

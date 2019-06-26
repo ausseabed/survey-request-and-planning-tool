@@ -933,6 +933,7 @@ export default Vue.extend({
     },
 
     getFormData() {
+      this.stateReadonly = true;
       this.getHippRequests();
       // only get non-deleted organisations
       this.setDeletedOrganisations(null);
@@ -985,7 +986,11 @@ export default Vue.extend({
     },
 
     stateUpdated(state) {
-      this.stateReadonly = state.readonly
+      if (_.isNil(state)) {
+        this.stateReadonly = true
+      } else {
+        this.stateReadonly = state.readonly
+      }
     },
     recordStateValidationCallback(recordStateEvent) {
       if (recordStateEvent = 'FINALISE') {

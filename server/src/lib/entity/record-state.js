@@ -40,6 +40,13 @@ export class RecordState {
   })
   recordType;
 
+  // the uuid of the hipp request or survey plan (projectmetadata)
+  @Column({
+    type:"uuid",
+    nullable: false,
+  })
+  recordId;
+
   @Column({
     type:"varchar",
     nullable: true,

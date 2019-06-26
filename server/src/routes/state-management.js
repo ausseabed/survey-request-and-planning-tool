@@ -270,6 +270,7 @@ export const updateRecordState =
   newRecordState.created = Date.now();
   newRecordState.user = user;
   newRecordState.recordType = recordType;
+  newRecordState.recordId = entityId;
 
   if (_.isNil(oldRecordState)) {
     // no previous record state, so just make a new one

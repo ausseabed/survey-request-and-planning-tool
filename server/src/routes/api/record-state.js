@@ -5,7 +5,8 @@ import { interpret } from 'xstate';
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, isUuid, permitOrgBasedPermission }
+import { asyncMiddleware, isAuthenticated, isUuid, permitOrgBasedPermission,
+  permitPermission }
   from '../utils';
 
 import { buildRecordMachine, updateRecordState } from '../state-management';
@@ -14,6 +15,54 @@ import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { RecordState } from '../../lib/entity/record-state';
 
 const router = express.Router();
+
+
+router.get(
+  '',
+  [
+    isAuthenticated,
+    permitPermission('isAdmin'),
+  ],
+  asyncMiddleware(async function(req, res) {
+
+  let { start, limit, filter } = req.query;
+
+  start = _.isNil(start) ? 0 : start;
+  limit = _.isNil(limit) ? 0 : limit;
+  limit = limit > 100 ? 100 : limit;  // don't ever allow more than 100
+
+  let qb = getConnection().getRepository(RecordState)
+  .createQueryBuilder("record_state")
+  .leftJoinAndSelect("record_state.user", "user")
+  .leftJoinAndSelect("hipp_request", "hipp_request", 'record_state."recordType" = \'request\' AND hipp_request.id = record_state."recordId"')
+  .leftJoinAndSelect("project_metadata", "project_metadata", 'record_state."recordType" = \'plan\' AND project_metadata.id = record_state."recordId"')
+  .select('record_state.id', 'id')
+  .addSelect('record_state.state', 'state')
+  .addSelect('record_state.created', 'created')
+  .addSelect('record_state.version', 'version')
+  .addSelect('record_state."recordType"', 'recordType')
+  .addSelect('record_state."recordId"', 'recordId')
+  .addSelect('record_state."changeDescription"', 'changeDescription')
+  .addSelect('record_state."previousId"', 'previousId')
+  .addSelect('user.name', 'userName')
+  .addSelect('hipp_request.name', 'hippRequestName')
+  .addSelect('project_metadata."surveyName"', 'projectMetadataName')
+  .orderBy('record_state.created', 'DESC')
+
+  let count = await qb.getCount();
+
+  qb = qb
+  .offset(start)
+  .limit(limit);
+
+  const recordStates = await qb.getRawMany();
+
+  return res.json({
+    count: count,
+    data: recordStates
+  });
+}));
+
 
 // the 'permitOrgBasedPermission' middleware checks only work if a request
 // is targetting a hipp request OR project. hence we separate out the response
@@ -158,6 +207,7 @@ router.post(
     newRecordState.created = Date.now();
     newRecordState.recordType = recordType;
     newRecordState.version = state.context.recordStateVersion;
+    newRecordState.recordId = req.params.id;
 
     let recordEntity = await getConnection()
     .getRepository(entityType)

@@ -53,6 +53,16 @@
             <q-item-label caption>Upload new report templates</q-item-label>
           </q-item-section>
         </q-item>
+        <q-separator  class="q-my-sm" />
+        <q-item to="/admin/record-state-log">
+          <q-item-section avatar>
+            <q-icon name="supervisor_account" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Record State Log</q-item-label>
+            <q-item-label caption>View changes to record state for request and plans</q-item-label>
+          </q-item-section>
+        </q-item>
 
       </q-scroll-area>
     </q-drawer>

@@ -7,6 +7,7 @@ import Main from 'components/main.vue'
 import Organisations from 'components/organisations/organisations.vue'
 import ProjectMain from 'components/project-main.vue'
 import ProjectMetadata from 'components/project-metadata.vue'
+import RecordStateLog from 'components/admin/record-state-log.vue'
 import ReportTemplates from 'components/admin/report-templates.vue'
 import Roles from 'components/admin/roles.vue'
 import SurveyDeliverables from 'components/survey-deliverables.vue'
@@ -51,6 +52,10 @@ const routes = [
         {
           path: 'report-templates',
           component: ReportTemplates
+        },
+        {
+          path: 'record-state-log',
+          component: RecordStateLog
         },
       ]
     },

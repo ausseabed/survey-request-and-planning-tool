@@ -18,7 +18,7 @@
 
         <q-item to="/admin/users">
           <q-item-section avatar>
-            <q-icon name="supervisor_account" />
+            <q-icon name="perm_identity" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Users</q-item-label>

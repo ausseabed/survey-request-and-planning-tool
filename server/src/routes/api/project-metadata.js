@@ -23,11 +23,21 @@ router.get('/valid-statuses', async function (req, res) {
 // Gets a list of project metadata
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
+  let { includeGeometry } = req.query;
+  includeGeometry = _.isNil(includeGeometry) ? 'false' : includeGeometry;
+  includeGeometry = (includeGeometry == 'true'); // convert string to bool
+
   let projectsQuery = getConnection()
   .getRepository(ProjectMetadata)
   .createQueryBuilder("project_metadata")
   .select(["project_metadata.id", "project_metadata.surveyName",
     "project_metadata.startDate", "project_metadata.projectStatus"])
+
+  if (includeGeometry) {
+    projectsQuery = projectsQuery.addSelect("project_metadata.areaOfInterest")
+  }
+
+  projectsQuery = projectsQuery
   .where(
     `project_metadata.deleted = :deleted`,
     {deleted: false}

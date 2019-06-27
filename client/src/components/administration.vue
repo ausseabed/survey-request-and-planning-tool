@@ -60,7 +60,7 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>Record State Log</q-item-label>
-            <q-item-label caption>View changes to record state for request and plans</q-item-label>
+            <q-item-label caption>View changes to record state for requests and plans</q-item-label>
           </q-item-section>
         </q-item>
 

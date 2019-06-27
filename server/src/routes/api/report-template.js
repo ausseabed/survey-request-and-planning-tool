@@ -15,7 +15,9 @@ import { getConnection } from 'typeorm'
 import { asyncMiddleware, isAuthenticated, permitPermission,
   permitOrgBasedPermission } from '../utils'
 import { HippRequest } from '../../lib/entity/hipp-request'
-import { ReportGenerator, HippRequestReportGenerator }
+import { ProjectMetadata } from '../../lib/entity/project-metadata'
+import { ReportGenerator, HippRequestReportGenerator,
+  ProjectMetadataReportGenerator }
   from '../../lib/report-generator'
 import { ReportTemplate, REPORT_TEMPLATE_TYPES }
   from '../../lib/entity/report-template'
@@ -37,6 +39,25 @@ const TEMPLATE_TYPE_MAP = {
       'requestingAgencies',
       'attachments',
       'attachments.attachment'
+    ],
+  },
+  'Plan': {
+    entityType: ProjectMetadata,
+    allowedPermissionAll: 'canViewAllProjects',
+    allowedPermissionOrg: 'canViewOrgProjects',
+    organisationAttributes: ['organisations'],
+    reportGenerator: ProjectMetadataReportGenerator,
+    relations: [
+      'organisations',
+      'dataCaptureTypes',
+      'instrumentTypes',
+      'surveyApplication',
+      'attachments',
+      'attachments.attachment',
+      'deliverables',
+      'hippRequest',
+      'recordState',
+      'techSpec',
     ],
   },
 }

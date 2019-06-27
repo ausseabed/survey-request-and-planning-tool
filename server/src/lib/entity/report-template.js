@@ -5,6 +5,7 @@ import { DateTransformer } from './utils';
 
 export const REPORT_TEMPLATE_TYPES = [
   "HIPP Request",
+  "Plan",
 ];
 
 @Entity()

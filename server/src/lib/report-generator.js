@@ -431,3 +431,44 @@ export class HippRequestReportGenerator extends ReportGenerator {
   }
 
 }
+
+
+export class ProjectMetadataReportGenerator extends ReportGenerator {
+
+  constructor (entity, entityType, reportTemplate) {
+    super(entity, entityType, reportTemplate)
+  }
+
+  getFilename() {
+    // returns a filename that is used in the reponse header. It's what the
+    // downloaded file will be named. Do not include extension here.
+    let fn = `${this.reportTemplate.templateType} ${this.entity.surveyName}`
+    fn = fn.replace(' ', '-')
+    return fn
+  }
+
+  getData () {
+    // do a mapping from the entity attribute names and values to the names
+    // and values that will be passed into the document template.
+    const data = {
+      id: this.entityAttributeValue('id'),
+      name: this.entityAttributeValue('surveyName'),
+      organisations: this.entityAttributeValue('organisations'),
+      hasAreaOfInterest: !_.isNil(this.entity.areaOfInterest),
+    }
+
+    this.mergeImageKeys('areaOfInterest', data)
+
+    return data
+  }
+
+  getRawDataFields() {
+    let rawFields = [
+      'id',
+      'name',
+    ]
+
+    return rawFields
+  }
+
+}

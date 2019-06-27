@@ -4,29 +4,57 @@
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
-        v-if="!readonly"
         position="top-right"
         :offset="id ? [18, 18+66] : [18, 18]"
         style="z-index:100">
 
-        <q-btn
-          round
-          color="primary"
-          @click="submit"
-          icon="save"
-          class="q-ml-sm"
-        >
-          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save summary</q-tooltip>
-        </q-btn>
-        <q-btn :disable="!id"
-          round
-          color="primary"
-          @click="deleteProject"
-          icon="delete"
-          class="q-ml-sm"
-        >
-          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete plan</q-tooltip>
-        </q-btn>
+        <div class="row q-gutter-x-sm">
+          <q-btn
+            v-if="!readonly"
+            round
+            color="primary"
+            @click="submit"
+            icon="save"
+          >
+            <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save summary</q-tooltip>
+          </q-btn>
+
+          <q-btn
+            @click="generateReport({id: projectMetadata.id, templateType: 'Plan'})"
+            :disable="!projectMetadata.id"
+            :loading="reportDownloading"
+            round
+            color="primary"
+            icon="description">
+            <q-tooltip>
+              Download survey plan report
+            </q-tooltip>
+            <template v-slot:loading>
+              <q-spinner-facebook />
+            </template>
+          </q-btn>
+          <q-btn
+            type="a"
+            :href="`/api/report-template/generate/Plan/${projectMetadata.id}?format=csv`"
+            :disable="!projectMetadata.id"
+            round
+            color="primary"
+            icon="dehaze">
+            <q-tooltip>
+              Download as CSV
+            </q-tooltip>
+          </q-btn>
+
+          <q-btn :disable="!id"
+            v-if="!readonly"
+            round
+            color="primary"
+            @click="deleteProject"
+            icon="delete"
+          >
+            <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete plan</q-tooltip>
+          </q-btn>
+        </div>
       </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
@@ -598,6 +626,9 @@ export default Vue.extend({
     ...mapActions('hippRequest', [
       'getHippRequests'
     ]),
+    ...mapActions('reportTemplate', [
+      'generateReport',
+    ]),
     ...mapMutations('projectMetadata', {
       'setDirty': pmMutTypes.SET_DIRTY,
       'setProjectOrganisations': pmMutTypes.SET_ORGANISATIONS,
@@ -1047,6 +1078,9 @@ export default Vue.extend({
     }),
     ...mapGetters('hippRequest', [
       'hippRequests'
+    ]),
+    ...mapGetters('reportTemplate', [
+      'reportDownloading',
     ]),
     readonly: function() {
       if (

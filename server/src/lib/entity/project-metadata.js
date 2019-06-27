@@ -10,6 +10,7 @@ import { RecordState } from './record-state';
 import { SurveyApplication } from './survey-application';
 import { SurveyDeliverable } from './survey-deliverable';
 import { SurveyAttachment } from './survey-attachment';
+import { TechSpec } from './tech-spec';
 
 // valid values for the `projectStatus` attribute
 export const PROJECT_STATUSES = [
@@ -156,6 +157,10 @@ export class ProjectMetadata {
   )
   @JoinColumn({ name: "hippRequestId" })
   hippRequest;
+
+  @OneToOne(type => TechSpec)
+  @JoinColumn({ name: "id" })
+  techSpec;
 
   @OneToOne(type => RecordState, { cascade: true })
   @JoinColumn()

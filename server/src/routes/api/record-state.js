@@ -49,6 +49,13 @@ router.get(
   .addSelect('project_metadata."surveyName"', 'projectMetadataName')
   .orderBy('record_state.created', 'DESC')
 
+  if (!_.isNil(filter)) {
+    qb = qb
+    .where('hipp_request.name ilike :name', {name: '%' + filter + '%' })
+    .orWhere('project_metadata."surveyName" ilike :name', {name: '%' + filter + '%' })
+    .orWhere('user.name ilike :name', {name: '%' + filter + '%' })
+  }
+
   let count = await qb.getCount();
 
   qb = qb
@@ -56,6 +63,15 @@ router.get(
   .limit(limit);
 
   const recordStates = await qb.getRawMany();
+
+  // to make things easier on the client we consolidate the record entity name
+  // into a consistent attribute `entityName`
+  recordStates.forEach(rs => {
+    rs.entityName =
+      _.isNil(rs.hippRequestName) ?
+        rs.projectMetadataName :
+        rs.hippRequestName
+  })
 
   return res.json({
     count: count,

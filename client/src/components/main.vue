@@ -211,6 +211,7 @@ export default Vue.extend({
   methods: {
     ...mapMutations('projectMetadata', [
       pmMutTypes.SET_AOI,
+      pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
     ]),
     ...mapActions('hippRequest', [
       'getHippRequests',
@@ -222,31 +223,23 @@ export default Vue.extend({
       }
     },
     fetchProjects (extents) {
-      const geojson = {
-        type:"MultiPolygon",
-        coordinates:[[[
-          [extents[0],extents[1]],
-          [extents[0],extents[3]],
-          [extents[2],extents[3]],
-          [extents[2],extents[1]],
-          [extents[0],extents[1]],
-        ]]]
-      }
-      this.SET_AOI(geojson)
+      this.SET_PROJECT_METADATA_LIST_FILTER(undefined);
       this.$store.dispatch(
-        'projectMetadata/checkAoi', { id: this.id })
+        'projectMetadata/getProjectMetadataList',
+        {params:{includeGeometry:true}})
       .then(matchingProjMetas => {
         this.matchingProjMetas = matchingProjMetas;
-        const areaOfInterests = matchingProjMetas.map(mpm => {
+
+        const mapableProjects = matchingProjMetas.filter(proj => {
+          return !_.isNil(proj.areaOfInterest);
+        })
+        const areaOfInterests = mapableProjects.map(mpm => {
           let f = mpm.areaOfInterest;
           f.id = mpm.id;
           return f;
         });
         this.map.setGeojsonFeatureIntersecting(areaOfInterests);
       })
-      .catch((e) => {
-        this.notify('negative', 'Error fetching plans')
-      });
     },
 
     debounceExtents: _.debounce(function(extents) {
@@ -255,7 +248,9 @@ export default Vue.extend({
 
     mouseoverMatchingProjMeta(matchingProjMeta, updateMap) {
       this.activeProjMetaId = matchingProjMeta.id;
-      if (updateMap) {
+      if (_.isNil(matchingProjMeta.areaOfInterest)) {
+        this.map.highlightFeatureId(undefined);
+      } else if (updateMap) {
         this.map.highlightFeatureId(matchingProjMeta.id);
       }
     },
@@ -266,6 +261,9 @@ export default Vue.extend({
     },
 
     getDateString(aDate) {
+      if (_.isNil(aDate)) {
+        return 'n/a'
+      }
       const ts = new Date();
       ts.setTime(aDate);
       let formattedString = date.formatDate(ts, 'MMMM D, YYYY');

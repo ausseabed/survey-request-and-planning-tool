@@ -66,9 +66,9 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
 
 }
 
-export const getProjectMetadataList = ({ commit, state }) => {
+export const getProjectMetadataList = ({ commit, state }, payload) => {
   var url_endpoint = '/api/project-metadata/';
-  var getConfig = {};
+  var getConfig = _.isNil(payload) ? {} : payload;
   if (!_.isNil(state.projectMetadataListFilter)) {
     let params = {params: state.projectMetadataListFilter};
     _.merge(getConfig, params);

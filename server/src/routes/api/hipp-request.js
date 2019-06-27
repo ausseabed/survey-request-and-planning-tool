@@ -155,4 +155,36 @@ router.post(
 }));
 
 
+router.delete(
+  '/:id',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType: HippRequest,
+      organisationAttributes: ['requestingAgencies'],
+      allowedPermissionAll: 'canEditAllHippRequests',
+      allowedPermissionOrg: 'canEditOrgHippRequests',
+      allowedPermissionNoEntityId: 'canAddHippRequest',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  const hrRepo = getConnection().getRepository(HippRequest);
+
+  let hr = await hrRepo.findOne(req.params.id);
+
+  if (!hr) {
+    let err = boom.notFound(
+      `HippRequest ${req.params.id} does not exist, cannot delete`);
+    throw err;
+  }
+
+  hr.deleted = true;
+  hr = await hrRepo.save(hr);
+
+  const responseSuccess = { success : 'Deleted'};
+  return res.json(responseSuccess);
+}));
+
+
 module.exports = router;

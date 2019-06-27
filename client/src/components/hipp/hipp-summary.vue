@@ -47,10 +47,10 @@
             :disable="!hippRequest.id"
             round
             color="primary"
-            @click="deleteHippRequest"
+            @click="deleteHippRequestClick"
             icon="delete"
           >
-            <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete project</q-tooltip>
+            <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete HIPP request</q-tooltip>
           </q-btn>
         </div>
       </q-page-sticky>
@@ -551,6 +551,7 @@ export default Vue.extend({
       'getRiskMatrix',
       'getChartProductQualityImpactRequirements',
       'getSurveyQualityRequirements',
+      'deleteHippRequest',
     ]),
     ...mapActions('organisation', [
       'getOrganisations',
@@ -626,7 +627,7 @@ export default Vue.extend({
       })
     },
 
-    deleteHippRequest() {
+    deleteHippRequestClick() {
       if (this.hippRequest.id) {
         // an existing id indicated this project has been saved, so check
         // with user if they really want to delete project.
@@ -636,13 +637,11 @@ export default Vue.extend({
           ok: 'Delete',
           cancel: 'Cancel'
         }).onOk(() => {
-          // this.$store.dispatch(
-          //   'projectMetadata/deleteProjectMetadata',
-          //   { id: this.id }
-          // ).then(pmd => {
-          //   this.notifySuccess('Deleted project');
-          //   this.$router.replace({ path: `/` });
-          // });
+          this.deleteHippRequest({ id: this.hippRequest.id })
+          .then(pmd => {
+            this.notifySuccess('Deleted HIPP Request');
+            this.$router.replace({ path: `/` });
+          });
         })
       } else {
         // no id, so hasn't been saved. I this case reset form and go back

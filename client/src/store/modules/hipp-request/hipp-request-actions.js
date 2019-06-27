@@ -71,6 +71,21 @@ export const saveHippRequest = async ({ commit, state }) => {
 }
 
 
+export const deleteHippRequest = ({ commit, state }, payload) => {
+  var url_endpoint = '/api/hipp-request/' + payload.id;
+  return new Promise((resolve, reject) => {
+    Vue.axios.delete(url_endpoint)
+    .then((response) => {
+      commit(mutTypes.RESET);
+      resolve();
+    })
+    .catch((error) => {
+      reject(error);
+    });
+  });
+}
+
+
 export const getRiskMatrix = ({ commit, state }) => {
   var url_endpoint = '/api/hipp-request/risk-matrix';
 

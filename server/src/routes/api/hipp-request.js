@@ -128,11 +128,13 @@ router.post(
     hippRequest.areaOfInterest = geojson
   }
 
-  const changeDesc = _.isNil(req.body.id) ? "New record" : "Updated record"
-  const recordState = await updateRecordState(
-    HippRequest, req.body.id, req.user, 'request', changeDesc);
-
-  hippRequest.recordState = recordState
+  // TODO fix below, would be nice to add record state when creating new record
+  // But it is not required.
+  // const changeDesc = _.isNil(req.body.id) ? "New record" : "Updated record"
+  // const recordState = await updateRecordState(
+  //   HippRequest, req.body.id, req.user, 'request', changeDesc);
+  //
+  // hippRequest.recordState = recordState
 
   hippRequest = await getConnection()
   .getRepository(HippRequest)

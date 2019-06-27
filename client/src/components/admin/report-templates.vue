@@ -85,6 +85,7 @@
           </div>
 
           <report-template-card
+            class="q-mt-sm"
             v-for="template in activeTemplates"
             :template="template"
             :key="template.id">

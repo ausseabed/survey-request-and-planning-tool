@@ -63,6 +63,19 @@ export class ReportGenerator {
     data[`${attrName}_extralarge`] = attrName
   }
 
+  mergeRecordState(data) {
+    if (_.has(this.entity, 'recordState')) {
+      if (_.isNil(this.entity.recordState)) {
+        data['recordState'] = {
+          'state': 'draft',
+          'version': 0,
+        }
+      } else {
+        data['recordState'] = this.entity.recordState
+      }
+    }
+  }
+
   async getDbImage_old(attrName) {
     const extents = await getConnection()
     .createQueryBuilder()
@@ -204,6 +217,36 @@ export class ReportGenerator {
     }
   }
 
+  flattenObject(ob, excludeList) {
+    var toReturn = {};
+
+    for (var i in ob) {
+      if (!ob.hasOwnProperty(i)) continue;
+      if (excludeList.includes(i)) continue;
+
+      if ((typeof ob[i]) == 'object' && ob[i] !== null) {
+        var flatObject = this.flattenObject(ob[i], excludeList);
+        for (var x in flatObject) {
+            if (!flatObject.hasOwnProperty(x)) continue;
+
+            toReturn[i + '.' + x] = flatObject[x];
+        }
+      } else {
+        toReturn[i] = ob[i];
+      }
+    }
+    return toReturn;
+  }
+
+  namesDict(entity, excludeList) {
+    const res = {}
+    for (const [key, value] of Object.entries(entity)) {
+      if (excludeList.includes(key)) continue;
+      res[key] = value;
+    }
+    return res;
+  }
+
   getDateString(value, formatString) {
     // converts datetime stored in database but retreived as a int by the
     // DateTransformer back into a date. Then converts from UTC to Melbourne
@@ -316,14 +359,15 @@ export class ReportGenerator {
 
   getCsvData() {
     // uses json2csv to convert data object into csv string
-    const fields = this.getRawDataFields()
+    const entityData = this.getData()
+    const fields = this.getRawDataFields(entityData)
     // following tweaks to the newline char were tested on excel for macOS,
     // this may / may not work on windows
     const json2csvParser = new Parser({
       fields,
       eol: '\r\n'
     })
-    const entityData = this.getData()
+
     for (const [key, value] of Object.entries(entityData)) {
       if (typeof value === 'string' || value instanceof String) {
         entityData[key] = value.replace(/\n/g, '\r\n')
@@ -402,10 +446,12 @@ export class HippRequestReportGenerator extends ReportGenerator {
 
     this.mergeImageKeys('areaOfInterest', data)
 
+    this.mergeRecordState(data)
+
     return data
   }
 
-  getRawDataFields() {
+  getRawDataFields(entityData) {
     let rawFields = [
       'id',
       'name',
@@ -426,6 +472,8 @@ export class HippRequestReportGenerator extends ReportGenerator {
       'comments',
       'surveyQualityRequirementsComments',
       'chartProductQualityImpactRequirementsComments',
+      'recordState.state',
+      'recordState.version',
     ]
     return rawFields
   }
@@ -448,27 +496,44 @@ export class ProjectMetadataReportGenerator extends ReportGenerator {
   }
 
   getData () {
-    // do a mapping from the entity attribute names and values to the names
-    // and values that will be passed into the document template.
-    const data = {
-      id: this.entityAttributeValue('id'),
-      name: this.entityAttributeValue('surveyName'),
-      organisations: this.entityAttributeValue('organisations'),
-      hasAreaOfInterest: !_.isNil(this.entity.areaOfInterest),
+
+    const data = this.namesDict(this.entity, [
+      'areaOfInterest', 'startDate', 'moratoriumDate', 'techSpec']);
+
+    data['name'] = this.entityAttributeValue('surveyName');
+    data['hasTechSpec'] = !_.isNil(this.entity.techSpec);
+    if (data['hasTechSpec']) {
+      data['techSpec'] = this.namesDict(
+        this.entity.techSpec,
+        ['surveyLines','tidalGaugeLocations']
+      );
+      data['techSpec']['hasSurveyLines'] = !_.isNil(this.entity.surveyLines);
+      this.mergeImageKeys('surveyLines', data['techSpec']);
+
+    } else {
+      data['techSpec'] = undefined;
     }
 
-    this.mergeImageKeys('areaOfInterest', data)
+    data['hasAreaOfInterest'] = !_.isNil(this.entity.areaOfInterest);
+    this.mergeImageKeys('areaOfInterest', data);
+    this.mergeRecordState(data);
 
     return data
   }
 
-  getRawDataFields() {
-    let rawFields = [
-      'id',
-      'name',
-    ]
+  getRawDataFields(entityData) {
+    const flatData = this.flattenObject(
+      entityData,
+      ['defaults', 'id', 'recordId', 'projectMetadatas']
+    );
 
-    return rawFields
+    const flatDataArray = [];
+    flatDataArray.push('id');
+    for (const [key, value] of Object.entries(flatData)) {
+      flatDataArray.push(key)
+    }
+
+    return flatDataArray
   }
 
 }

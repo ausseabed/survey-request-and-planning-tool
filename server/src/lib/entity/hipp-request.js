@@ -153,12 +153,6 @@ export class HippRequest {
   businessJustification;
 
   @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  costBenefit;
-
-  @Column({
       type:"bool",
       nullable: false,
       default: false,

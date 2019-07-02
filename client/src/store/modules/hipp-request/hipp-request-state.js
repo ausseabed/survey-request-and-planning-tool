@@ -19,7 +19,6 @@ function initialState() {
       requestDateEnd: undefined,
       area: undefined,
       businessJustification: undefined,
-      costBenefit: undefined,
       areaOfInterest: undefined,
       comments: undefined,
       hasMoratorium: false,

@@ -128,7 +128,6 @@
               name="hippRequest.pointOfContactPhone"
               label="Contact phone number"
               attribute="Contact phone number"
-              hint="Optional"
               :value="hippRequest.pointOfContactPhone"
               @input="update({path:'hippRequest.pointOfContactPhone', value:$event})"
               @blur="$v.hippRequest.pointOfContactPhone.$touch"
@@ -159,7 +158,7 @@
             </form-field-validated-input>
 
             <form-field-validated
-              label="Area of interest (optional)"
+              label="Area of interest"
               stack-label
               bottom-slots
               attribute="Area of interest"
@@ -244,23 +243,9 @@
               name="hippRequest.businessJustification"
               attribute="Business Justification"
               label="Business Justification"
-              hint="Optional"
               :value="hippRequest.businessJustification"
               @input="update({path:'hippRequest.businessJustification', value:$event})"
               @blur="$v.hippRequest.businessJustification.$touch"
-              type="textarea"
-              :readonly="readonly"
-              >
-            </form-field-validated-input>
-
-            <form-field-validated-input
-              name="hippRequest.costBenefit"
-              attribute="Cost Benefit"
-              label="Cost Benefit"
-              hint="Optional"
-              :value="hippRequest.costBenefit"
-              @input="update({path:'hippRequest.costBenefit', value:$event})"
-              @blur="$v.hippRequest.costBenefit.$touch"
               type="textarea"
               :readonly="readonly"
               >
@@ -687,7 +672,6 @@ export default Vue.extend({
       }
     },
     recordStateValidationCallback(recordStateEvent) {
-      debugger
       if (recordStateEvent == 'FINALISE') {
         this.validationIntent = 'final';
 
@@ -797,9 +781,8 @@ export default Vue.extend({
           requestDateEnd: { },
           comments: {},
           area: {},
-          areaOfInterest: { required },
+          areaOfInterest: { },
           businessJustification: {},
-          costBenefit: {},
           moratoriumDate: {},
           moratoriumComment: {},
 
@@ -825,8 +808,7 @@ export default Vue.extend({
           comments: {},
           area: {},
           areaOfInterest: { required },
-          businessJustification: {},
-          costBenefit: {},
+          businessJustification: { required },
           moratoriumDate: {},
           moratoriumComment: {},
 

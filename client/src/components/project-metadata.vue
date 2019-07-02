@@ -1024,7 +1024,7 @@ export default Vue.extend({
       }
     },
     recordStateValidationCallback(recordStateEvent) {
-      if (recordStateEvent = 'FINALISE') {
+      if (recordStateEvent == 'FINALISE') {
         this.validationIntent = 'final';
 
         this.$v.$touch();

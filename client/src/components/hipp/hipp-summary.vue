@@ -69,25 +69,14 @@
         <div v-if="!hippRequest.id" class="text-h5"> New HIPP Request </div>
         <q-card class="full-width">
           <q-card-section>
-            <div class="text-h6"> Basic </div>
+            <div class="text-h6"> Requester’s Details </div>
           </q-card-section>
           <q-card-section>
-            <form-field-validated-input
-              name="hippRequest.name"
-              attribute="name"
-              label="Name"
-              :value="hippRequest.name"
-              @input="update({path:'hippRequest.name', value:$event})"
-              @blur="$v.hippRequest.name.$touch"
-              type="text"
-              :readonly="readonly"
-              >
-            </form-field-validated-input>
 
             <form-field-validated-select
               name="hippRequest.requestingAgencies"
-              attribute="Requesting Agencies"
-              label="Requesting Agencies"
+              attribute="Requestor’s Organisation"
+              label="Requestor’s Organisation"
               multiple use-chips
               :value="hippRequest.requestingAgencies"
               @input="update({path:'hippRequest.requestingAgencies', value:$event})"
@@ -106,6 +95,18 @@
               :value="hippRequest.requestorName"
               @input="update({path:'hippRequest.requestorName', value:$event})"
               @blur="$v.hippRequest.requestorName.$touch"
+              type="text"
+              :readonly="readonly"
+              >
+            </form-field-validated-input>
+
+            <form-field-validated-input
+              name="hippRequest.requestorPosition"
+              attribute="Requestor’s Position"
+              label="Requestor’s Position"
+              :value="hippRequest.requestorPosition"
+              @input="update({path:'hippRequest.requestorPosition', value:$event})"
+              @blur="$v.hippRequest.requestorPosition.$touch"
               type="text"
               :readonly="readonly"
               >
@@ -136,49 +137,6 @@
               >
             </form-field-validated-input>
 
-            <div class="column col-12 q-pt-md">
-              <div class="date-range-field-label">Date range</div>
-              <div class="row q-col-gutter-md">
-                <form-field-validated-date
-                  class="col-xs-12 col-sm-6"
-                  name="hippRequest.requestDateStart"
-                  attribute="Start date"
-                  label="Start date (YYYY/MM/DD)"
-                  :date="hippRequest.requestDateStart"
-                  @updated-date="update({path:'hippRequest.requestDateStart', value:$event})"
-                  @blur="$v.hippRequest.requestDateStart.$touch"
-                  :readonly="readonly"
-                  >
-                </form-field-validated-date>
-
-                <form-field-validated-date
-                  class="col-xs-12 col-sm-6"
-                  name="hippRequest.requestDateEnd"
-                  attribute="End date"
-                  label="End date (YYYY/MM/DD)"
-                  :date="hippRequest.requestDateEnd"
-                  @updated-date="update({path:'hippRequest.requestDateEnd', value:$event})"
-                  @blur="$v.hippRequest.requestDateEnd.$touch"
-                  :readonly="readonly"
-                  >
-                </form-field-validated-date>
-              </div>
-            </div>
-
-
-            <form-field-validated-input
-              name="hippRequest.comments"
-              attribute="Comments"
-              label="Comments"
-              hint="Optional"
-              :value="hippRequest.comments"
-              @input="update({path:'hippRequest.comments', value:$event})"
-              @blur="$v.hippRequest.comments.$touch"
-              type="textarea"
-              :readonly="readonly"
-              >
-            </form-field-validated-input>
-
           </q-card-section>
         </q-card>
 
@@ -189,20 +147,23 @@
           <q-card-section>
 
             <form-field-validated-input
-              name="hippRequest.areaName"
+              name="hippRequest.name"
               attribute="Area Name"
               label="Name of the Area to be surveyed"
-              :value="hippRequest.areaName"
-              @input="update({path:'hippRequest.areaName', value:$event})"
-              @blur="$v.hippRequest.areaName.$touch"
+              :value="hippRequest.name"
+              @input="update({path:'hippRequest.name', value:$event})"
+              @blur="$v.hippRequest.name.$touch"
               type="text"
               :readonly="readonly"
               >
             </form-field-validated-input>
 
-            <q-field
+            <form-field-validated
               label="Area of interest (optional)"
               stack-label
+              bottom-slots
+              attribute="Area of interest"
+              name="hippRequest.areaOfInterest"
               >
               <div class="column full-width">
                 <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
@@ -240,7 +201,7 @@
                   </div>
                 </div>
               </div>
-            </q-field>
+            </form-field-validated>
 
             <div class="row q-col-gutter-md q-pt-md">
               <form-field-validated-input
@@ -304,6 +265,49 @@
               :readonly="readonly"
               >
             </form-field-validated-input>
+
+            <div class="column col-12 q-pt-md">
+              <div class="date-range-field-label">Date range</div>
+              <div class="row q-col-gutter-md">
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  name="hippRequest.requestDateStart"
+                  attribute="Start date"
+                  label="Start date (YYYY/MM/DD)"
+                  :date="hippRequest.requestDateStart"
+                  @updated-date="update({path:'hippRequest.requestDateStart', value:$event})"
+                  @blur="$v.hippRequest.requestDateStart.$touch"
+                  :readonly="readonly"
+                  >
+                </form-field-validated-date>
+
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  name="hippRequest.requestDateEnd"
+                  attribute="End date"
+                  label="End date (YYYY/MM/DD)"
+                  :date="hippRequest.requestDateEnd"
+                  @updated-date="update({path:'hippRequest.requestDateEnd', value:$event})"
+                  @blur="$v.hippRequest.requestDateEnd.$touch"
+                  :readonly="readonly"
+                  >
+                </form-field-validated-date>
+              </div>
+            </div>
+
+            <form-field-validated-input
+              name="hippRequest.comments"
+              attribute="Comments"
+              label="Comments"
+              hint="Optional"
+              :value="hippRequest.comments"
+              @input="update({path:'hippRequest.comments', value:$event})"
+              @blur="$v.hippRequest.comments.$touch"
+              type="textarea"
+              :readonly="readonly"
+              >
+            </form-field-validated-input>
+
           </q-card-section>
         </q-card>
 
@@ -683,7 +687,8 @@ export default Vue.extend({
       }
     },
     recordStateValidationCallback(recordStateEvent) {
-      if (recordStateEvent = 'FINALISE') {
+      debugger
+      if (recordStateEvent == 'FINALISE') {
         this.validationIntent = 'final';
 
         this.$v.$touch();
@@ -782,16 +787,17 @@ export default Vue.extend({
     if (this.validationIntent == 'save') {
       return {
         hippRequest: {
-          name: { required, minLength:minLength(1) },
+          name: { required },
           requestingAgencies: { required, minLength:minLength(1) },
           requestorName: { required },
+          requestorPosition: { },
           pointOfContactEmail: { required, email },
           pointOfContactPhone: {},
           requestDateStart: { },
           requestDateEnd: { },
           comments: {},
-          areaName: {},
           area: {},
+          areaOfInterest: { required },
           businessJustification: {},
           costBenefit: {},
           moratoriumDate: {},
@@ -808,16 +814,17 @@ export default Vue.extend({
     } else if (this.validationIntent == 'final') {
       return {
         hippRequest: {
-          name: { required, minLength:minLength(1) },
+          name: { required },
           requestingAgencies: { required, minLength:minLength(1) },
           requestorName: { required },
+          requestorPosition: { },
           pointOfContactEmail: { required, email },
-          pointOfContactPhone: {},
+          pointOfContactPhone: { required },
           requestDateStart: { required, maxValue:maxValue(this.hippRequest.requestDateEnd) },
           requestDateEnd: { required, minValue:minValue(this.hippRequest.requestDateStart) },
           comments: {},
-          areaName: {required},
           area: {},
+          areaOfInterest: { required },
           businessJustification: {},
           costBenefit: {},
           moratoriumDate: {},

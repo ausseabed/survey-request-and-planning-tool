@@ -88,7 +88,10 @@ export class HippRequest {
   @PrimaryGeneratedColumn('uuid')
   id;
 
-  @Column("varchar")
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
   name;
 
   @ManyToMany(
@@ -102,6 +105,12 @@ export class HippRequest {
       nullable: true,
   })
   requestorName;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  requestorPosition;
 
   @Column({
       type:"varchar",
@@ -130,12 +139,6 @@ export class HippRequest {
       nullable: true,
   })
   requestDateEnd;
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  areaName;
 
   @Column({
       type:"varchar",

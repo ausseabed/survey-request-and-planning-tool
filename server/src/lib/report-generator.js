@@ -420,7 +420,7 @@ export class HippRequestReportGenerator extends ReportGenerator {
         this.getDateString(
           this.entityAttributeValue('requestDateEnd'),
           'MMMM Do YYYY'),
-      areaName: this.entityAttributeValue('areaName'),
+      areaName: this.entityAttributeValue('name'),
       areaValue: this.entityAttributeValue('area'),
       businessJustification: this.entityAttributeValue('businessJustification'),
       costBenefit: this.entityAttributeValue('costBenefit'),

@@ -109,7 +109,7 @@
                     <div class="row">
                       <q-item-section>
                         <q-item-label>{{hippRequest.name}}</q-item-label>
-                        <q-item-label caption>{{hippRequest.areaName}}</q-item-label>
+                        <!-- <q-item-label caption>{{hippRequest.areaName}}</q-item-label> -->
                       </q-item-section>
 
                       <q-item-section side top>

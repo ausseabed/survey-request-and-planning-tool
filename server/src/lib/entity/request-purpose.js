@@ -20,6 +20,12 @@ export class RequestPurpose {
   })
   group;
 
+  @Column({
+      type:"int",
+      nullable: false,
+  })
+  groupOrder;
+
   @ManyToMany(
     type => HippRequest,
     hippRequest => hippRequest.purposes)

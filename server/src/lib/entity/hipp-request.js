@@ -7,7 +7,7 @@ import { HippRequestAttachment } from './hipp-request-attachment';
 import { Organisation } from './organisation';
 import { ProjectMetadata } from './project-metadata';
 import { RecordState } from './record-state';
-
+import { RequestPurpose } from './request-purpose';
 
 export const SURVEY_QUALITY_REQUIREMENTS = [
   {
@@ -34,10 +34,6 @@ export const SURVEY_QUALITY_REQUIREMENTS = [
     value:"IHO - 2",
     label:"IHO - 2"
   },
-  {
-    value:"HIPP - Passage",
-    label:"IHO - Passage"
-  }
 ];
 
 export const CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS = [
@@ -222,6 +218,12 @@ export class HippRequest {
       nullable: true,
   })
   riskIssues;
+
+  @ManyToMany(
+    type => RequestPurpose,
+    requestPurpose => requestPurpose.requests)
+  @JoinTable()
+  purposes;
 
   @OneToMany(
     type => HippRequestAttachment,

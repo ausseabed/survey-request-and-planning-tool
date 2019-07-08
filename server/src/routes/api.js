@@ -16,6 +16,7 @@ var reportTemplateRoutes = require('./api/report-template');
 var roleRoutes = require('./api/role');
 var userRoutes = require('./api/user');
 var recordStateRoutes = require('./api/record-state');
+var requestPurposeRoutes = require('./api/request-purpose');
 
 import { isAuthenticated } from './utils';
 
@@ -37,5 +38,6 @@ router
 .use('/role', roleRoutes)
 .use('/user', userRoutes)
 .use('/record-state', recordStateRoutes)
+.use('/request-purpose', requestPurposeRoutes)
 
 module.exports = router;

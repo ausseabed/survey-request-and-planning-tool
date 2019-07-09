@@ -304,43 +304,22 @@
           <q-card-section class="column q-col-gutter-md">
 
             <!-- options-selected-class="text-secondary" -->
-            <q-select
+            <form-field-validated-select-multiple-check
               multiple
+              name="hippRequest.purposes"
+              attribute="Request purpose"
               :value="hippRequest.purposes"
               @input="setRequestPurposes($event)"
               :options="requestPurposeOptions"
-              label="Standard"
+              label="Purpose"
               clearable
               option-label="name"
               option-value="id"
               emit-values map-options
+              @blur="$v.hippRequest.purposes.$touch"
+              :readonly="readonly"
             >
-              <template v-slot:option="scope">
-                <q-item v-if="!scope.opt.group"
-                  v-bind="scope.itemProps"
-                  v-on="scope.itemEvents"
-                >
-                  <q-item-section avatar>
-                    <q-icon v-if="scope.selected" name="check_box" ></q-icon>
-                    <q-icon v-else="scope.selected" name="check_box_outline_blank" ></q-icon>
-                  </q-item-section>
-
-                  <q-item-section>
-                    <q-item-label v-html="scope.opt.name" ></q-item-label>
-                    <!-- <q-item-label caption>{{ scope.opt.description }}</q-item-label> -->
-                  </q-item-section>
-                </q-item>
-                <q-item
-                  class="q-pl-none q-py-none request-purpose-group-item"
-                  v-if="scope.opt.group"
-                  v-bind="scope.itemProps"
-                  v-on="scope.itemEvents"
-                >
-                  <q-item-label header>{{ scope.opt.group }}</q-item-label>
-                </q-item>
-              </template>
-            </q-select>
-
+            </form-field-validated-select-multiple-check>
 
             <form-field-validated-select
               class="col-12"
@@ -865,6 +844,7 @@ export default Vue.extend({
           businessJustification: {},
           moratoriumDate: {},
           moratoriumComment: {},
+          purposes: { },
 
           surveyQualityRequirements: { },
           surveyQualityRequirementsComments: {},
@@ -891,6 +871,7 @@ export default Vue.extend({
           businessJustification: { required },
           moratoriumDate: {},
           moratoriumComment: {},
+          purposes: { },
 
           surveyQualityRequirements: { required, minLength:minLength(1) },
           surveyQualityRequirementsComments: {},

@@ -52,7 +52,6 @@ const mutations = {
 
   [types.SET_REQUEST_PURPOSES] (state, purposes) {
     Vue.set(state.hippRequest, 'purposes', purposes)
-    console.log(`${purposes.length}   and ${state.hippRequest.purposes.length}`)
   },
 }
 

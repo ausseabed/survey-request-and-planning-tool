@@ -24,6 +24,7 @@ function initialState() {
       hasMoratorium: false,
       moratoriumDate: undefined,
       moratoriumComment: undefined,
+      purposes: undefined,
 
       surveyQualityRequirements: undefined,
       surveyQualityRequirementsComments: undefined,

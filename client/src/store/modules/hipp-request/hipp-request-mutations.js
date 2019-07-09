@@ -1,4 +1,5 @@
 const _ = require('lodash');
+import Vue from 'vue'
 
 import * as types from './hipp-request-mutation-types'
 
@@ -47,6 +48,11 @@ const mutations = {
 
   [types.SET_RISK_MATRIX] (state, riskMatrix) {
     state.riskMatrix = riskMatrix
+  },
+
+  [types.SET_REQUEST_PURPOSES] (state, purposes) {
+    Vue.set(state.hippRequest, 'purposes', purposes)
+    console.log(`${purposes.length}   and ${state.hippRequest.purposes.length}`)
   },
 }
 

@@ -16,6 +16,7 @@ import reportTemplate from './modules/report-template/report-template-state'
 import user from './modules/user/user-state'
 import role from './modules/role/role-state'
 import recordState from './modules/record-state/record-state-state'
+import requestPurpose from './modules/request-purpose/request-purpose-state'
 
 
 Vue.use(Vuex)
@@ -37,6 +38,7 @@ export default new Vuex.Store({
     user,
     role,
     recordState,
+    requestPurpose,
   },
   strict: debug
 })

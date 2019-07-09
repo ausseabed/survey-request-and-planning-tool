@@ -299,9 +299,49 @@
 
         <q-card class="full-width">
           <q-card-section>
-            <div class="text-h6"> Quality </div>
+            <div class="text-h6"> Survey Requirements </div>
           </q-card-section>
           <q-card-section class="column q-col-gutter-md">
+
+            <!-- options-selected-class="text-secondary" -->
+            <q-select
+              multiple
+              :value="hippRequest.purposes"
+              @input="setRequestPurposes($event)"
+              :options="requestPurposeOptions"
+              label="Standard"
+              clearable
+              option-label="name"
+              option-value="id"
+              emit-values map-options
+            >
+              <template v-slot:option="scope">
+                <q-item v-if="!scope.opt.group"
+                  v-bind="scope.itemProps"
+                  v-on="scope.itemEvents"
+                >
+                  <q-item-section avatar>
+                    <q-icon v-if="scope.selected" name="check_box" ></q-icon>
+                    <q-icon v-else="scope.selected" name="check_box_outline_blank" ></q-icon>
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label v-html="scope.opt.name" ></q-item-label>
+                    <!-- <q-item-label caption>{{ scope.opt.description }}</q-item-label> -->
+                  </q-item-section>
+                </q-item>
+                <q-item
+                  class="q-pl-none q-py-none request-purpose-group-item"
+                  v-if="scope.opt.group"
+                  v-bind="scope.itemProps"
+                  v-on="scope.itemEvents"
+                >
+                  <q-item-label header>{{ scope.opt.group }}</q-item-label>
+                </q-item>
+              </template>
+            </q-select>
+
+
             <form-field-validated-select
               class="col-12"
               multiple
@@ -548,10 +588,14 @@ export default Vue.extend({
     ...mapActions('reportTemplate', [
       'generateReport',
     ]),
+    ...mapActions('requestPurpose', [
+      'getRequestPurposes',
+    ]),
     ...mapMutations('hippRequest', {
       'setDirty': hippMutTypes.SET_DIRTY,
       'update': hippMutTypes.UPDATE,
       'resetHippRequest': hippMutTypes.RESET_HIPP_REQUEST,
+      'setRequestPurposes': hippMutTypes.SET_REQUEST_PURPOSES,
     }),
     ...mapMutations('organisation', {
       'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
@@ -651,6 +695,7 @@ export default Vue.extend({
       this.getRiskMatrix();
       this.getChartProductQualityImpactRequirements();
       this.getSurveyQualityRequirements();
+      this.getRequestPurposes();
     },
 
     selectAreaOfInterestFile () {
@@ -702,6 +747,9 @@ export default Vue.extend({
     ]),
     ...mapGetters('reportTemplate', [
       'reportDownloading',
+    ]),
+    ...mapGetters('requestPurpose', [
+      'requestPurposes',
     ]),
     readonly: function() {
       if (
@@ -763,6 +811,38 @@ export default Vue.extend({
         return strArea
       }
 
+    },
+    requestPurposeOptions: function() {
+      if (_.isNil(this.requestPurposes) || this.requestPurposes.length == 0) {
+        return []
+      } else {
+        const groupedPurposes = _.groupBy(this.requestPurposes, 'group')
+        let groupedPurposesList = _.values(groupedPurposes)
+        // remove all zero length entries
+        groupedPurposesList = groupedPurposesList.filter(item => {
+          return item.length > 0
+        })
+        // now sort them based on the groupOrder attribute
+        groupedPurposesList.sort((a,b) => {
+          return a[0].groupOrder - b[0].groupOrder
+        })
+        const options = []
+        for (const pl of groupedPurposesList) {
+          options.push({
+            disable: true,
+            group: pl[0].group,
+          })
+          for (const p of pl) {
+            options.push({
+              name: p.name,
+              id: p.id,
+              value: p,
+              description: 'Description here, if we ever add it to the db',
+            })
+          }
+        }
+        return options
+      }
     }
 
   },
@@ -869,5 +949,11 @@ export default Vue.extend({
   font-size: 16px;
   line-height: 20px;
   font-weight: 400;
+}
+
+.request-purpose-group-item {
+    border-top-color: rgba(0, 0, 0, 0.12);
+    border-top-style: solid;
+    border-top-width: 1px;
 }
 </style>

@@ -87,6 +87,7 @@ router.get(
     {
       relations: [
         "requestingAgencies",
+        "purposes",
       ]
     }
   );
@@ -147,6 +148,7 @@ router.post(
     {
       relations: [
         "requestingAgencies",
+        "purposes",
       ]
     }
   )

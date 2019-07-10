@@ -25,6 +25,7 @@ function initialState() {
       moratoriumDate: undefined,
       moratoriumComment: undefined,
       purposes: undefined,
+      dataCaptureTypes: [],
 
       surveyQualityRequirements: undefined,
       surveyQualityRequirementsComments: undefined,

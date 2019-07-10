@@ -3,6 +3,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
 
 import { DateTransformer } from './utils';
 
+import { DataCaptureType } from './data-capture-type';
 import { HippRequestAttachment } from './hipp-request-attachment';
 import { Organisation } from './organisation';
 import { ProjectMetadata } from './project-metadata';
@@ -241,6 +242,12 @@ export class HippRequest {
     requestPurpose => requestPurpose.requests)
   @JoinTable()
   purposes;
+
+  @ManyToMany(
+    type => DataCaptureType,
+    dataCaptureType => dataCaptureType.hippRequests)
+  @JoinTable()
+  dataCaptureTypes;
 
   @OneToMany(
     type => HippRequestAttachment,

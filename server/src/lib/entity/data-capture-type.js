@@ -1,6 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable }
   from "typeorm";
 
+import { HippRequest } from './hipp-request';
 import { InstrumentType } from './instrument-type';
 import { ProjectMetadata } from './project-metadata';
 
@@ -40,4 +41,9 @@ export class DataCaptureType {
     type => ProjectMetadata,
     projectMetadata => projectMetadata.dataCaptureTypes)
   projectMetadatas;
+
+  @ManyToMany(
+    type => HippRequest,
+    hippRequest => hippRequest.dataCaptureTypes)
+  hippRequests;
 }

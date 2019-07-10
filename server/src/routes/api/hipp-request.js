@@ -88,6 +88,7 @@ router.get(
       relations: [
         "requestingAgencies",
         "purposes",
+        "dataCaptureTypes",
       ]
     }
   );
@@ -149,6 +150,7 @@ router.post(
       relations: [
         "requestingAgencies",
         "purposes",
+        "dataCaptureTypes",
       ]
     }
   )

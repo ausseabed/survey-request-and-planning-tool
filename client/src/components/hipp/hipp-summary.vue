@@ -383,6 +383,23 @@
               >
             </form-field-validated-input>
 
+            <form-field-validated-select-multiple-check
+              class="col-12"
+              multiple
+              name="hippRequest.dataCaptureTypes"
+              attribute="Data to Capture"
+              label="Data to Capture"
+              :value="hippRequest.dataCaptureTypes"
+              @input="updateHippRequest({path:'dataCaptureTypes', value:$event})"
+              :options="dataCaptureTypes"
+              option-label="name"
+              option-value="id"
+              @blur="$v.hippRequest.dataCaptureTypes.$touch"
+              clearable
+              :readonly="readonly"
+              >
+            </form-field-validated-select-multiple-check>
+
           </q-card-section>
         </q-card>
 
@@ -570,6 +587,9 @@ export default Vue.extend({
     ...mapActions('requestPurpose', [
       'getRequestPurposes',
     ]),
+    ...mapActions('dataCaptureType', [
+      'getDataCaptureTypes',
+    ]),
     ...mapMutations('hippRequest', {
       'setDirty': hippMutTypes.SET_DIRTY,
       'update': hippMutTypes.UPDATE,
@@ -676,6 +696,12 @@ export default Vue.extend({
       this.getChartProductQualityImpactRequirements();
       this.getSurveyQualityRequirements();
       this.getRequestPurposes();
+      this.getDataCaptureTypes({
+        params: {
+          userSubmitted: false,
+          request: true,
+        }
+      });
     },
 
     selectAreaOfInterestFile () {
@@ -730,6 +756,9 @@ export default Vue.extend({
     ]),
     ...mapGetters('requestPurpose', [
       'requestPurposes',
+    ]),
+    ...mapGetters('dataCaptureType', [
+      'dataCaptureTypes',
     ]),
     readonly: function() {
       if (
@@ -849,6 +878,7 @@ export default Vue.extend({
           moratoriumDate: {},
           moratoriumComment: {},
           purposes: { },
+          dataCaptureTypes: { },
 
           surveyQualityRequirements: { },
           surveyQualityRequirementsComments: {},
@@ -876,6 +906,7 @@ export default Vue.extend({
           moratoriumDate: {},
           moratoriumComment: {},
           purposes: { },
+          dataCaptureTypes: { },
 
           surveyQualityRequirements: { required, minLength:minLength(1) },
           surveyQualityRequirementsComments: {},

@@ -51,10 +51,12 @@ const mutations = {
   },
 
   [types.SET_REQUEST_PURPOSES] (state, purposes) {
+    state.dirty = true;
     Vue.set(state.hippRequest, 'purposes', purposes)
   },
 
   [types.UPDATE_HIPP_REQUEST] (state, { path, value }) {
+    state.dirty = true;
     Vue.set(state.hippRequest, path, value)
   },
 }

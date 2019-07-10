@@ -50,24 +50,29 @@ export const SURVEY_QUALITY_REQUIREMENTS = [
 
 export const CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS = [
   {
+    id:"A1",
     value:"A1",
-    label:"A1"
+    name:"A1"
   },
   {
+    id:"A2",
     value:"A2",
-    label:"A2"
+    name:"A2"
   },
   {
+    id:"B",
     value:"B",
-    label:"B"
+    name:"B"
   },
   {
+    id:"C",
     value:"C",
-    label:"C"
+    name:"C"
   },
   {
+    id:"D",
     value:"D",
-    label:"D"
+    name:"D"
   }
 ];
 

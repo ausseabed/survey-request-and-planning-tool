@@ -352,23 +352,23 @@
               >
             </form-field-validated-input>
 
-            <form-field-validated-select
+            <form-field-validated-select-multiple-check
               class="col-12"
               multiple
               name="hippRequest.chartProductQualityImpactRequirements"
               attribute="Chart Product Quality Impact Requirements"
               label="Chart Product Quality Impact Requirements"
               :value="hippRequest.chartProductQualityImpactRequirements"
-              @input="update({path:'hippRequest.chartProductQualityImpactRequirements', value:$event})"
+              @input="updateHippRequest({path:'chartProductQualityImpactRequirements', value:$event})"
               :options="chartProductQualityImpactRequirements"
-              option-label="label"
+              option-label="name"
               option-value="value"
               emit-value map-options
               @blur="$v.hippRequest.chartProductQualityImpactRequirements.$touch"
               clearable
               :readonly="readonly"
               >
-            </form-field-validated-select>
+            </form-field-validated-select-multiple-check>
 
             <form-field-validated-input
               name="hippRequest.chartProductQualityImpactRequirementsComments"

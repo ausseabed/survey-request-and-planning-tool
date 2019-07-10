@@ -812,6 +812,9 @@ export default Vue.extend({
             disable: true,
             group: pl[0].group,
           })
+          pl.sort((a,b) => {
+            return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+          })
           for (const p of pl) {
             options.push({
               name: p.name,

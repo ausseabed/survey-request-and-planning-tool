@@ -321,23 +321,23 @@
             >
             </form-field-validated-select-multiple-check>
 
-            <form-field-validated-select
+            <form-field-validated-select-multiple-check
               class="col-12"
               multiple
               name="hippRequest.surveyQualityRequirements"
               attribute="Survey Quality Requirements"
               label="Survey Quality Requirements"
               :value="hippRequest.surveyQualityRequirements"
-              @input="update({path:'hippRequest.surveyQualityRequirements', value:$event})"
+              @input="updateHippRequest({path:'surveyQualityRequirements', value:$event})"
               :options="surveyQualityRequirements"
-              option-label="label"
-              option-value="value"
+              option-label="name"
+              option-value="id"
               emit-value map-options
               @blur="$v.hippRequest.surveyQualityRequirements.$touch"
               clearable
               :readonly="readonly"
               >
-            </form-field-validated-select>
+            </form-field-validated-select-multiple-check>
 
             <form-field-validated-input
               name="hippRequest.surveyQualityRequirementsComments"
@@ -575,6 +575,7 @@ export default Vue.extend({
       'update': hippMutTypes.UPDATE,
       'resetHippRequest': hippMutTypes.RESET_HIPP_REQUEST,
       'setRequestPurposes': hippMutTypes.SET_REQUEST_PURPOSES,
+      'updateHippRequest': hippMutTypes.UPDATE_HIPP_REQUEST,
     }),
     ...mapMutations('organisation', {
       'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
@@ -816,7 +817,7 @@ export default Vue.extend({
               name: p.name,
               id: p.id,
               value: p,
-              description: 'Description here, if we ever add it to the db',
+              description: undefined,
             })
           }
         }

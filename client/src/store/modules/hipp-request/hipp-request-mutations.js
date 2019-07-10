@@ -53,6 +53,10 @@ const mutations = {
   [types.SET_REQUEST_PURPOSES] (state, purposes) {
     Vue.set(state.hippRequest, 'purposes', purposes)
   },
+
+  [types.UPDATE_HIPP_REQUEST] (state, { path, value }) {
+    Vue.set(state.hippRequest, path, value)
+  },
 }
 
 export default {

@@ -18,39 +18,6 @@ export class addedInstrumentAndCaptureTypes1547081553575 implements MigrationInt
         await queryRunner.query(`ALTER TABLE "project_metadata_instrument_types_instrument_type" ADD CONSTRAINT "FK_148de403c76d40665fcdd354e8f" FOREIGN KEY ("instrumentTypeId") REFERENCES "instrument_type"("id") ON DELETE CASCADE`);
         await queryRunner.query(`ALTER TABLE "data_capture_type_project_metadatas_project_metadata" ADD CONSTRAINT "FK_560427ffdfd097fb2cae8fd6554" FOREIGN KEY ("dataCaptureTypeId") REFERENCES "data_capture_type"("id") ON DELETE CASCADE`);
         await queryRunner.query(`ALTER TABLE "data_capture_type_project_metadatas_project_metadata" ADD CONSTRAINT "FK_ce9a8ec4d75ede565733db4aef5" FOREIGN KEY ("projectMetadataId") REFERENCES "project_metadata"("id") ON DELETE CASCADE`);
-
-        // seed database with default instrument types
-        const stdInstrumentTypes= ['Multibeam', 'Single-beam', 'Bathy LiDAR',
-          'Airborne imagery', 'Satellite', 'Side-scan'];
-        for (const itName of stdInstrumentTypes) {
-          await queryRunner
-           .manager
-           .createQueryBuilder()
-           .insert()
-           .into("instrument_type")
-           .values({
-             name:itName,
-             userSubmitted: false
-           })
-           .execute();
-        }
-
-        // seed database with default data capture types
-        const stdDataCaptureTypes= ['Bathymetry',
-          'Water column backscatter (multibeam only)', 'Seabed Backscatter',
-          'SVP', 'Sub-bottom profile', 'Seabed sample'];
-        for (const dctName of stdDataCaptureTypes) {
-          await queryRunner
-           .manager
-           .createQueryBuilder()
-           .insert()
-           .into("data_capture_type")
-           .values({
-             name:dctName,
-             userSubmitted: false
-           })
-           .execute();
-        };
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

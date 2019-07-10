@@ -976,7 +976,8 @@ export default Vue.extend({
       this.$store.dispatch(
         'dataCaptureType/getDataCaptureTypes',
         {params: {
-          userSubmitted: false
+          userSubmitted: false,
+          plan: true,
         }}
       );
       this.$store.dispatch(

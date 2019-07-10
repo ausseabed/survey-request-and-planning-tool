@@ -19,7 +19,17 @@ export async function insertDataAndInstrumentTypes(
       if (instrument.name in instruments) {
         //already added
       } else {
-        let instrumentEntity = new InstrumentType();
+        let instrumentEntity = await queryRunner.manager
+        .getRepository(InstrumentType)
+        .findOne({
+          where: {
+            name: instrument.name
+          }
+        });
+        if (!instrumentEntity) {
+          instrumentEntity = new InstrumentType();
+        }
+
         instrumentEntity.name = instrument.name;
         instrumentEntity.userSubmitted = false;
 
@@ -36,8 +46,19 @@ export async function insertDataAndInstrumentTypes(
 
   // insert new data capture type and assign list of relevant instrument types
   for (const dataAndInstrumentType of dataAndInstrumentTypes) {
-    let dataCaptureTypeEntity = new DataCaptureType();
+    let dataCaptureTypeEntity = await queryRunner.manager
+    .getRepository(DataCaptureType)
+    .findOne({
+      where: {
+        name: dataAndInstrumentType.name
+      }
+    });
+    if (!dataCaptureTypeEntity) {
+      dataCaptureTypeEntity = new DataCaptureType();
+    }
     dataCaptureTypeEntity.name = dataAndInstrumentType.name;
+    dataCaptureTypeEntity.appliesToPlan = dataAndInstrumentType.appliesToPlan;
+    dataCaptureTypeEntity.appliesToRequest = dataAndInstrumentType.appliesToRequest;
     dataCaptureTypeEntity.userSubmitted = false;
 
     console.log(`adding dct ${dataAndInstrumentType.name}`)

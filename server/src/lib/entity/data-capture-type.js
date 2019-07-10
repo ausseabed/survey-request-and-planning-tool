@@ -16,6 +16,20 @@ export class DataCaptureType {
   @Column("bool")
   userSubmitted = true;
 
+  // can this data capture type be linked to plans
+  @Column({
+      type:"bool",
+      default: false,
+  })
+  appliesToPlan = true;
+
+  // can this data capture type be linked to requests
+  @Column({
+      type:"bool",
+      default: false,
+  })
+  appliesToRequest = true;
+
   // List of what instrument types can provide this data capture type.
   @ManyToMany(
     type => InstrumentType,

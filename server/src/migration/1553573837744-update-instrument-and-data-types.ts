@@ -53,8 +53,6 @@ export class updateInstrumentAndDataTypes1553573837744 implements MigrationInter
       .from(DataCaptureType)
       .execute();
 
-      await insertDataAndInstrumentTypes(queryRunner, dataAndInstrumentTypes);
-
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {

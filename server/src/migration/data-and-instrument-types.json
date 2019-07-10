@@ -1,6 +1,8 @@
 [
   {
     "name": "Bathymetry",
+    "appliesToPlan": true,
+    "appliesToRequest": true,
     "instruments": [
       {"name": "Multibeam"},
       {"name": "Single-beam"},
@@ -12,12 +14,16 @@
   },
   {
     "name": "Water column backscatter (multibeam only)",
+    "appliesToPlan": true,
+    "appliesToRequest": true,
     "instruments": [
       {"name": "Multibeam"}
     ]
   },
   {
     "name": "Seabed Backscatter",
+    "appliesToPlan": true,
+    "appliesToRequest": true,
     "instruments": [
       {"name": "Multibeam"},
       {"name": "Single-beam"}
@@ -25,6 +31,8 @@
   },
   {
     "name": "Sound Velocity Profile (SVP)",
+    "appliesToPlan": true,
+    "appliesToRequest": true,
     "instruments": [
       {"name": "Multibeam"},
       {"name": "Single-beam"}
@@ -32,12 +40,16 @@
   },
   {
     "name": "Sub-bottom profile",
+    "appliesToPlan": true,
+    "appliesToRequest": true,
     "instruments": [
       {"name": "Sub-bottom profiler"}
     ]
   },
   {
     "name": "Seabed sample",
+    "appliesToPlan": true,
+    "appliesToRequest": true,
     "instruments": [
       {"name": "Multibeam"},
       {"name": "Single-beam"}
@@ -45,10 +57,60 @@
   },
   {
     "name": "Imagery",
+    "appliesToPlan": true,
+    "appliesToRequest": false,
     "instruments": [
       {"name": "Airborne imagery"},
       {"name": "Bathy LiDAR"},
       {"name": "Satellite"}
     ]
+  },
+  {
+    "name": "Side Scan Sonar",
+    "appliesToPlan": false,
+    "appliesToRequest": true,
+    "instruments": []
+  },
+  {
+    "name": "CTD Measurements",
+    "appliesToPlan": false,
+    "appliesToRequest": true,
+    "instruments": []
+  },
+  {
+    "name": "Current / Tidal Stream Observations",
+    "appliesToPlan": false,
+    "appliesToRequest": true,
+    "instruments": []
+  },
+  {
+    "name": "Water Level (Tidal) Observations",
+    "appliesToPlan": false,
+    "appliesToRequest": true,
+    "instruments": []
+  },
+  {
+    "name": "Geodetic Observations",
+    "appliesToPlan": false,
+    "appliesToRequest": true,
+    "instruments": []
+  },
+  {
+    "name": "Video Transects / Drop Camera images of seabed / objects of interest",
+    "appliesToPlan": false,
+    "appliesToRequest": true,
+    "instruments": []
+  },
+  {
+    "name": "Views / Imagery of above water features",
+    "appliesToPlan": false,
+    "appliesToRequest": true,
+    "instruments": []
+  },
+  {
+    "name": "Magnetometer Survey",
+    "appliesToPlan": false,
+    "appliesToRequest": true,
+    "instruments": []
   }
 ]

@@ -15,6 +15,13 @@ router.get('/', isAuthenticated, async function (req, res) {
     {} :
     {userSubmitted: (req.query['user-submitted'] == 'true')}
 
+  if (!_.isNil(req.query['plan'])) {
+    whereOpts.appliesToPlan = req.query['plan'] == 'true'
+  }
+  if (!_.isNil(req.query['request'])) {
+    whereOpts.appliesToRequest = req.query['request'] == 'true'
+  }
+
   let orgs = await getConnection()
   .getRepository(DataCaptureType)
   .find({

@@ -363,7 +363,7 @@
 
         <q-card class="full-width">
           <q-card-section>
-            <div class="text-h6"> General Comments </div>
+            <div class="text-h6"> General </div>
           </q-card-section>
           <q-card-section class="column q-col-gutter-md items-stretch">
 
@@ -375,39 +375,6 @@
               :value="hippRequest.comments"
               @input="update({path:'hippRequest.comments', value:$event})"
               @blur="$v.hippRequest.comments.$touch"
-              type="textarea"
-              :readonly="readonly"
-              >
-            </form-field-validated-input>
-
-          </q-card-section>
-        </q-card>
-
-
-        <q-card class="full-width">
-          <q-card-section>
-            <div class="text-h6"> Risk </div>
-          </q-card-section>
-          <q-card-section class="column q-col-gutter-md items-stretch">
-
-            <risk-widget
-              :risk-matrix="riskMatrix"
-              :risk-data="hippRequest.riskData"
-              :readonly="readonly"
-              @updated-risks="risksUpdated($event)"
-              :can-view-priority="hasPermission('canViewRiskPriority')"
-              :single-risk="true"
-              >
-            </risk-widget>
-
-            <form-field-validated-input
-              name="hippRequest.riskIssues"
-              attribute="Risk Issues"
-              label="Risk Issues"
-              hint="Optional"
-              :value="hippRequest.riskIssues"
-              @input="update({path:'hippRequest.riskIssues', value:$event})"
-              @blur="$v.hippRequest.riskIssues.$touch"
               type="textarea"
               :readonly="readonly"
               >
@@ -441,6 +408,39 @@
                 </form-field-validated-date>
               </div>
             </div>
+
+          </q-card-section>
+        </q-card>
+
+
+        <q-card class="full-width">
+          <q-card-section>
+            <div class="text-h6"> Risk </div>
+          </q-card-section>
+          <q-card-section class="column q-col-gutter-md items-stretch">
+
+            <risk-widget
+              :risk-matrix="riskMatrix"
+              :risk-data="hippRequest.riskData"
+              :readonly="readonly"
+              @updated-risks="risksUpdated($event)"
+              :can-view-priority="hasPermission('canViewRiskPriority')"
+              :single-risk="true"
+              >
+            </risk-widget>
+
+            <form-field-validated-input
+              name="hippRequest.riskIssues"
+              attribute="Risk Issues"
+              label="Risk Issues"
+              hint="Optional"
+              :value="hippRequest.riskIssues"
+              @input="update({path:'hippRequest.riskIssues', value:$event})"
+              @blur="$v.hippRequest.riskIssues.$touch"
+              type="textarea"
+              :readonly="readonly"
+              >
+            </form-field-validated-input>
 
           </q-card-section>
         </q-card>

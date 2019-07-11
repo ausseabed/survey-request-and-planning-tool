@@ -251,35 +251,6 @@
               >
             </form-field-validated-input>
 
-            <div class="column col-12 q-pt-md">
-              <div class="date-range-field-label">Date range</div>
-              <div class="row q-col-gutter-md">
-                <form-field-validated-date
-                  class="col-xs-12 col-sm-6"
-                  name="hippRequest.requestDateStart"
-                  attribute="Start date"
-                  label="Start date (YYYY/MM/DD)"
-                  :date="hippRequest.requestDateStart"
-                  @updated-date="update({path:'hippRequest.requestDateStart', value:$event})"
-                  @blur="$v.hippRequest.requestDateStart.$touch"
-                  :readonly="readonly"
-                  >
-                </form-field-validated-date>
-
-                <form-field-validated-date
-                  class="col-xs-12 col-sm-6"
-                  name="hippRequest.requestDateEnd"
-                  attribute="End date"
-                  label="End date (YYYY/MM/DD)"
-                  :date="hippRequest.requestDateEnd"
-                  @updated-date="update({path:'hippRequest.requestDateEnd', value:$event})"
-                  @blur="$v.hippRequest.requestDateEnd.$touch"
-                  :readonly="readonly"
-                  >
-                </form-field-validated-date>
-              </div>
-            </div>
-
           </q-card-section>
         </q-card>
 
@@ -439,6 +410,35 @@
               :readonly="readonly"
               >
             </form-field-validated-input>
+
+            <div class="column col-12 q-pt-md">
+              <div class="date-range-field-label">Date range</div>
+              <div class="row q-col-gutter-md">
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  name="hippRequest.requestDateStart"
+                  attribute="Start date"
+                  label="Start date (YYYY/MM/DD)"
+                  :date="hippRequest.requestDateStart"
+                  @updated-date="update({path:'hippRequest.requestDateStart', value:$event})"
+                  @blur="$v.hippRequest.requestDateStart.$touch"
+                  :readonly="readonly"
+                  >
+                </form-field-validated-date>
+
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  name="hippRequest.requestDateEnd"
+                  attribute="End date"
+                  label="End date (YYYY/MM/DD)"
+                  :date="hippRequest.requestDateEnd"
+                  @updated-date="update({path:'hippRequest.requestDateEnd', value:$event})"
+                  @blur="$v.hippRequest.requestDateEnd.$touch"
+                  :readonly="readonly"
+                  >
+                </form-field-validated-date>
+              </div>
+            </div>
 
           </q-card-section>
         </q-card>

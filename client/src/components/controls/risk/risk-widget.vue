@@ -22,7 +22,7 @@
       </risk-widget-row>
     </template>
     <div
-      v-if="!readonly"
+      v-if="!readonly && !(singleRisk && riskData.length > 0 )"
       class="row full-width">
       <div class="col-4 row">
         <q-btn
@@ -52,6 +52,7 @@ export default Vue.extend({
     riskData: {},
     readonly: { default: false, type: Boolean},
     canViewPriority: { default: true, type: Boolean}, // hide the priority indicator
+    singleRisk: { default: false, type: Boolean},  // restrict widget to including only a single risk
   },
   components: {
     'risk-widget-row': RiskWidgetRow

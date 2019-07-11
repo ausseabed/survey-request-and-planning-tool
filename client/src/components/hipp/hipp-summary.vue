@@ -396,6 +396,7 @@
               :readonly="readonly"
               @updated-risks="risksUpdated($event)"
               :can-view-priority="hasPermission('canViewRiskPriority')"
+              :single-risk="true"
               >
             </risk-widget>
 

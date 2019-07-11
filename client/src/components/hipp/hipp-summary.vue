@@ -592,6 +592,7 @@ export default Vue.extend({
         path: "hippRequest.areaOfInterest",
         value: Object.freeze(geojson)
       });
+      this.updateFromGeojson(geojson);
     }
     this.map.onFileAddStart = () => {
       this.addingFile = true;
@@ -617,6 +618,7 @@ export default Vue.extend({
       'getChartProductQualityImpactRequirements',
       'getSurveyQualityRequirements',
       'deleteHippRequest',
+      'getGeojsonAttributeMap',
     ]),
     ...mapActions('organisation', [
       'getOrganisations',
@@ -742,6 +744,7 @@ export default Vue.extend({
           request: true,
         }
       });
+      this.getGeojsonAttributeMap();
     },
 
     selectAreaOfInterestFile () {
@@ -777,7 +780,62 @@ export default Vue.extend({
       } else {
         return true;
       }
-    }
+    },
+
+    updateFromGeojson(geojson) {
+      if (geojson.features.length == 0) {
+        console.log("no features")
+        return
+      }
+      // only process first feature. The HIPP request form only supports
+      // single features
+      const feature = geojson.features[0];
+      const props = feature.properties;
+      let propCount = 0;
+
+      // count how many properties we know what to do with that are in the
+      // geojson. May be the AHO DB name or the entity attribute name.
+      this.geojsonAttributeMap.forEach(mi => {
+        const entityAttrName = mi[0];
+        const jsonAttrName = mi[1];
+        if (_.has(props, jsonAttrName)) {
+          propCount += 1;
+        }
+        if (_.has(props, entityAttrName)) {
+          propCount += 1;
+        }
+      });
+
+      if (propCount == 0) {
+        // if there's no properties that we understand, then just return.
+        return
+      }
+
+      // ask the user if they want to apply changes
+      this.$q.dialog({
+        title: 'Apply properties from upload',
+        message: `The uploaded geometry contains properties that can be used to update the request form fields. Would you like to apply these properties?`,
+        ok: 'Apply',
+        cancel: 'Skip'
+      }).onOk(() => {
+        this.geojsonAttributeMap.forEach(mi => {
+          const entityAttrName = mi[0];
+          const jsonAttrName = mi[1];
+          let value = undefined;
+          if (_.has(props, jsonAttrName)) {
+            value = _.get(props, jsonAttrName)
+          } else if (_.has(props, entityAttrName)) {
+            value = _.get(props, entityAttrName)
+          }
+
+          this.updateHippRequest({
+            path:entityAttrName,
+            value:value,
+          })
+        });
+      })
+
+    },
   },
 
   computed: {
@@ -787,6 +845,7 @@ export default Vue.extend({
       'riskMatrix',
       'chartProductQualityImpactRequirements',
       'surveyQualityRequirements',
+      'geojsonAttributeMap',
     ]),
     ...mapGetters('organisation', [
       'organisations',

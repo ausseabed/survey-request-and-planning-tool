@@ -46,6 +46,10 @@ const mutations = {
     state.surveyQualityRequirements = reqs
   },
 
+  [types.SET_GEOJSON_ATTRIBUTE_MAP] (state, map) {
+    state.geojsonAttributeMap = map
+  },
+
   [types.SET_RISK_MATRIX] (state, riskMatrix) {
     state.riskMatrix = riskMatrix
   },

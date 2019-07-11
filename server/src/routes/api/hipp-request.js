@@ -45,6 +45,10 @@ router.get('/risk-matrix', async function (req, res) {
   return res.json(RISK_MATRIX);
 });
 
+router.get('/geojson-attribute-map', async function (req, res) {
+  return res.json(ENTITY_GEOJSON_MAP);
+});
+
 // Gets a list of HIPP Requests
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 

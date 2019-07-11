@@ -43,6 +43,7 @@ function initialState() {
     riskMatrix: {},
     chartProductQualityImpactRequirements: [],
     surveyQualityRequirements: [],
+    geojsonAttributeMap: [],
   }
 }
 

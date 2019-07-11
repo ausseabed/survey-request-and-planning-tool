@@ -29,3 +29,7 @@ export const chartProductQualityImpactRequirements = state => {
 export const surveyQualityRequirements = state => {
   return state.surveyQualityRequirements;
 }
+
+export const geojsonAttributeMap = state => {
+  return state.geojsonAttributeMap;
+}

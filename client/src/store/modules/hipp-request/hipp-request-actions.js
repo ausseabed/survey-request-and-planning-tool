@@ -95,6 +95,15 @@ export const getRiskMatrix = ({ commit, state }) => {
   })
 }
 
+export const getGeojsonAttributeMap = ({ commit, state }) => {
+  var url_endpoint = '/api/hipp-request/geojson-attribute-map';
+
+  return Vue.axios.get(url_endpoint)
+  .then((response) => {
+    commit(mutTypes.SET_GEOJSON_ATTRIBUTE_MAP, response.data);
+  })
+}
+
 export const getChartProductQualityImpactRequirements = ({ commit, state }) => {
   var url_endpoint = '/api/hipp-request/chart-product-quality-impact-requirements';
 

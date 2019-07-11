@@ -280,19 +280,6 @@
               </div>
             </div>
 
-            <form-field-validated-input
-              name="hippRequest.comments"
-              attribute="Comments"
-              label="Comments"
-              hint="Optional"
-              :value="hippRequest.comments"
-              @input="update({path:'hippRequest.comments', value:$event})"
-              @blur="$v.hippRequest.comments.$touch"
-              type="textarea"
-              :readonly="readonly"
-              >
-            </form-field-validated-input>
-
           </q-card-section>
         </q-card>
 
@@ -402,6 +389,29 @@
 
           </q-card-section>
         </q-card>
+
+        <q-card class="full-width">
+          <q-card-section>
+            <div class="text-h6"> General Comments </div>
+          </q-card-section>
+          <q-card-section class="column q-col-gutter-md items-stretch">
+
+            <form-field-validated-input
+              name="hippRequest.comments"
+              attribute="Comments"
+              label="Comments"
+              hint="Optional"
+              :value="hippRequest.comments"
+              @input="update({path:'hippRequest.comments', value:$event})"
+              @blur="$v.hippRequest.comments.$touch"
+              type="textarea"
+              :readonly="readonly"
+              >
+            </form-field-validated-input>
+
+          </q-card-section>
+        </q-card>
+
 
         <q-card class="full-width">
           <q-card-section>

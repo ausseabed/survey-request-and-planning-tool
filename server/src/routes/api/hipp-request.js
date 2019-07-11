@@ -1,6 +1,7 @@
 var express = require('express');
 var _ = require('lodash');
 const boom = require('boom');
+import { feature, featureCollection } from "@turf/helpers";
 
 import { getConnection } from 'typeorm';
 
@@ -10,6 +11,21 @@ import { HippRequest, SURVEY_QUALITY_REQUIREMENTS,
   CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
   from '../../lib/entity/hipp-request';
 import { updateRecordState } from '../state-management';
+
+// mapping of the entity attribute names to what they should be in the
+// exported geojson
+var ENTITY_GEOJSON_MAP = [
+  ['requestingAgencies[0].name', 'ORGANISATN'],
+  ['requestorName', 'NAME'],
+  ['requestorPosition', 'POSITION'],
+  ['pointOfContactPhone', 'PHONE'],
+  ['pointOfContactEmail', 'EMAIL'],
+  ['recordState.created', 'REQ_DATE'],
+  ['pointOfContactEmail', 'EMAIL'],
+  ['name', 'TITLE'],
+  ['businessJustification', 'COMMNT_TXT'],
+  ['comments', 'REQOR_COMM'],
+];
 
 
 var router = express.Router();
@@ -69,6 +85,68 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
 // gets a single HIPP Request
 router.get(
+  '/:id/geometry',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:HippRequest,
+      organisationAttributes: ['requestingAgencies'],
+      allowedPermissionAll: 'canViewAllHippRequests',
+      allowedPermissionOrg: 'canViewOrgHippRequests'})
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  let hippRequest = await getConnection()
+  .getRepository(HippRequest)
+  .findOne(
+    req.params.id,
+    {
+      relations: [
+        "requestingAgencies",
+      ]
+    }
+  );
+
+  if (!hippRequest || hippRequest.deleted) {
+    let err = boom.notFound(
+      `HippRequest ${req.params.id} does not exist`);
+    throw err;
+  }
+
+  // feature prop dict based on entity values to be returned in the geojson.
+  const properties = {}
+
+  // Translate the entity attribute names to the AHO db names using the mapping
+  // array.
+  for (const etj of ENTITY_GEOJSON_MAP) {
+    const entityAttribName = etj[0];
+    const gjAttribName = etj[1];
+    let attribValue = undefined;
+    if (_.has(hippRequest, entityAttribName)) {
+      attribValue = _.get(hippRequest, entityAttribName)
+    }
+    properties[gjAttribName] = attribValue
+  }
+
+  const aoiMultipolygon = hippRequest.areaOfInterest;
+  const aoiFeature = feature(aoiMultipolygon, properties);
+
+  const collection = featureCollection([
+    aoiFeature,
+  ]);
+
+  let areaName = _.isNil(hippRequest.name) ? 'request' : hippRequest.name
+  areaName = areaName.replace(/[^a-zA-Z0-9 ]*/g, "")   // remove special chars
+  areaName = areaName.replace(/ /g, "-")   // replace spaces with dash
+  const filename = `${areaName}-asb-rapt-download.json`;
+  res.set(
+    'Content-disposition', `attachment; filename=${filename}`);
+  return res.json(collection);
+}));
+
+
+// gets a single HIPP Request
+router.get(
   '/:id',
   [
     isAuthenticated,
@@ -89,6 +167,7 @@ router.get(
         "requestingAgencies",
         "purposes",
         "dataCaptureTypes",
+        "recordState"
       ]
     }
   );

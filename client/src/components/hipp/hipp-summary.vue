@@ -167,35 +167,63 @@
               <div class="column full-width">
                 <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
                 <div
-                  v-if="!readonly"
                   class="row full-width justify-between items-center q-pb-sm">
-                  <div v-if="drawingAreaOfInterest"
-                    class="q-body-1 text-faded col">
-                    Click endpoint to complete line
-                  </div>
-                  <div v-else-if="addingFile" class="q-body-1 text-faded col column">
-                    <div class="q-body-1 text-faded"> Processing file </div>
-                    <q-linear-progress indeterminate />
-                  </div>
-                  <div v-else
-                    class="q-body-1 text-faded col">
-                    Drag and drop shapefile (zip) or geojson onto map, or click the draw shape button in map to manually create request area.
-                  </div>
-                  <div class="map-buttons q-gutter-sm col">
+                  <template v-if="!readonly">
+                    <div v-if="drawingAreaOfInterest"
+                      class="q-body-1 text-faded col">
+                      Click endpoint to complete line
+                    </div>
+                    <div v-else-if="addingFile" class="q-body-1 text-faded col column">
+                      <div class="q-body-1 text-faded"> Processing file </div>
+                      <q-linear-progress indeterminate />
+                    </div>
+                    <div v-else
+                      class="q-body-1 text-faded col">
+                      Drag and drop shapefile (zip) or geojson onto map, or click the draw shape button in map to manually create request area.
+                    </div>
+                  </template>
+                  <template v-else>
+                    <div col></div>
+                  </template>
+
+                  <div class="map-buttons q-gutter-sm col-auto">
                     <div class="row justify-between q-gutter-sm">
                       <div class="col">
-                        <q-btn class="no-margin full-width" icon="cloud_upload" label="Upload"
-                          :disable="addingFile"
-                          @click="selectAreaOfInterestFile">
+                        <q-btn
+                          outline
+                          class="no-margin full-width"
+                          icon="cloud_download"
+                          type="a"
+                          :href="`/api/hipp-request/${hippRequest.id}/geometry`"
+                          :disable="!hippRequest.id || addingFile || !hippRequest.areaOfInterest || dirty"
+                        >
+                          <q-tooltip>
+                            {{!hippRequest.id || addingFile || !hippRequest.areaOfInterest || dirty ? "Must save request before download" : "Download Area of Interest"}}
+                          </q-tooltip>
                         </q-btn>
                       </div>
-                      <div class="col">
-                        <input type="file" id="dataPath" v-on:change="setAreaOfInterestFile" ref="fileInput" hidden />
-                        <q-btn class="no-margin full-width" icon="clear" label="Clear"
-                          :disable="!hippRequest.areaOfInterest"
-                          @click="update({path:'hippRequest.areaOfInterest', value:undefined })">
-                        </q-btn>
-                      </div>
+
+                      <template v-if="!readonly">
+                        <div class="col">
+                          <q-btn outline class="no-margin full-width" icon="cloud_upload"
+                            :disable="addingFile"
+                            @click="selectAreaOfInterestFile">
+                            <q-tooltip>
+                              Upload Area of Interest
+                            </q-tooltip>
+                          </q-btn>
+                        </div>
+                        <div class="col">
+                          <input type="file" id="dataPath" v-on:change="setAreaOfInterestFile" ref="fileInput" hidden />
+                          <q-btn outline class="no-margin full-width" icon="clear"
+                            :disable="!hippRequest.areaOfInterest"
+                            @click="update({path:'hippRequest.areaOfInterest', value:undefined })">
+                            <q-tooltip>
+                              Clear Area of Interest
+                            </q-tooltip>
+                          </q-btn>
+                        </div>
+                      </template>
                     </div>
                   </div>
                 </div>

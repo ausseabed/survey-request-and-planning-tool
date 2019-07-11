@@ -395,6 +395,7 @@
               :risk-data="hippRequest.riskData"
               :readonly="readonly"
               @updated-risks="risksUpdated($event)"
+              :can-view-priority="hasPermission('canViewRiskPriority')"
               >
             </risk-widget>
 

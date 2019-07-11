@@ -45,6 +45,7 @@
     </div>
     <div class="col-xs-2 col-sm-1 row">
       <div
+        v-if="canViewPriority"
         class="col row rounded-borders risk-priority justify-center"
         :style="{'background-color':priorityColor}">
         <div class="column self-center risk-priority">
@@ -80,6 +81,7 @@ export default Vue.extend({
     'riskMatrix',
     'riskDataRow',
     'readonly',
+    'canViewPriority',
   ],
   data() {
     return {

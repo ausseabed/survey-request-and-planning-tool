@@ -4,7 +4,7 @@
       <div class="col-5 risk-column-heading"></div>
       <div class="col-3 risk-column-heading">Level</div>
       <div class="col-3 risk-column-heading">Timeframe</div>
-      <div class="col-1 risk-column-heading">Priority</div>
+      <div v-if="canViewPriority" class="col-1 risk-column-heading">Priority</div>
     </div>
     <div v-if="(riskData && riskData.length == 0) || !(riskData instanceof Array)" class="row justify-center">
       <div>No risks entered</div>
@@ -16,6 +16,7 @@
         :risk-data-row="riskRow"
         :risk-matrix="riskMatrix"
         :readonly="readonly"
+        :can-view-priority="canViewPriority"
         @remove-risk="removeRisk($event)"
         @updated-risk="updatedRisk($event)">
       </risk-widget-row>
@@ -46,11 +47,12 @@ import RiskWidgetRow from './risk-widget-row'
 const UPDATED_RISKS = 'updated-risks';
 
 export default Vue.extend({
-  props: [
-    'riskMatrix',
-    'riskData',
-    'readonly',
-  ],
+  props: {
+    riskMatrix: {},
+    riskData: {},
+    readonly: { default: false, type: Boolean},
+    canViewPriority: { default: true, type: Boolean}, // hide the priority indicator
+  },
   components: {
     'risk-widget-row': RiskWidgetRow
   },

@@ -91,6 +91,9 @@ export class Role {
   @Column({type: "bool", nullable: false, default: false})
   canEditOrgHippRequests;
 
+  @Column({type: "bool", nullable: false, default: false})
+  canViewRiskPriority;
+
 
   // Attachment permissions. These apply to project and hipp requests
   @Column({type: "bool", nullable: false, default: false})

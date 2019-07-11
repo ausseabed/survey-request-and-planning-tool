@@ -78,17 +78,17 @@ export const CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS = [
 ];
 
 export const RISK_MATRIX = {
-  "Very High - High": {
+  "High Risk if not acquired": {
     "Immediate / urgent (1-2 years)": 1,
     "Short to mid-term (2-5 years)": 1,
     "Mid to long-term (5-10 years)": 2,
   },
-  "High - Moderate": {
+  "Medium Risk if not acquired": {
     "Immediate / urgent (1-2 years)": 1,
     "Short to mid-term (2-5 years)": 2,
     "Mid to long-term (5-10 years)": 3,
   },
-  "Moderate - Low": {
+  "Low Risk if not acquired": {
     "Immediate / urgent (1-2 years)": 2,
     "Short to mid-term (2-5 years)": 3,
     "Mid to long-term (5-10 years)": 3,

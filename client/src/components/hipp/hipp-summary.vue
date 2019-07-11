@@ -295,7 +295,7 @@
               name="hippRequest.purposes"
               attribute="Request purpose"
               :value="hippRequest.purposes"
-              @input="setRequestPurposes($event)"
+              @input="updateHippRequest({path:'purposes', value:$event})"
               :options="requestPurposeOptions"
               label="Purpose"
               clearable
@@ -636,7 +636,6 @@ export default Vue.extend({
       'setDirty': hippMutTypes.SET_DIRTY,
       'update': hippMutTypes.UPDATE,
       'resetHippRequest': hippMutTypes.RESET_HIPP_REQUEST,
-      'setRequestPurposes': hippMutTypes.SET_REQUEST_PURPOSES,
       'updateHippRequest': hippMutTypes.UPDATE_HIPP_REQUEST,
     }),
     ...mapMutations('organisation', {

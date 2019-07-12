@@ -207,6 +207,10 @@ router.post(
   var hippRequest = new HippRequest()
   _.merge(hippRequest, req.body)
 
+  // DO NOT update the record state here. Record state changes should only
+  // happen in the record state handlers
+  delete hippRequest.recordState
+
   if (!_.isNil(req.body.areaOfInterest)) {
     let geojson = geojsonToMultiPolygon(req.body.areaOfInterest)
     hippRequest.areaOfInterest = geojson

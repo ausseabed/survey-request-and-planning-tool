@@ -228,7 +228,11 @@ export const buildRecordMachine =
           // and requests as accepted.
           return true;
         }
-        if (context.user.role[cond.orgPermission]) {
+        if (
+          context.user.role[cond.orgPermission] &&
+          !_.isNil(context.user.organisation)
+          )
+        {
           // then user has the org based permission to pass this guard, but we
           // need to check their org matches the orgs linked to the entity
           const orgs = context.entityOrgs;

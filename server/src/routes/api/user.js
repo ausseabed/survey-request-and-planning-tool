@@ -19,7 +19,7 @@ router.get(
   let users = await getConnection()
   .getRepository(User)
   .find({
-    select: ['id', 'name', 'email'],
+    select: ['id', 'name', 'email', 'lastSeen'],
     relations: ['role', 'organisation'],
     order: {name: 'ASC'}
   });

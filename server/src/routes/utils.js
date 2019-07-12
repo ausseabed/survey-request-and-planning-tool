@@ -48,6 +48,11 @@ export const isAuthenticated = async (req, res, next) => {
       return
     }
 
+    existingUser.lastSeen = Date.now();
+    await getConnection()
+    .getRepository(User)
+    .save(existingUser)
+
     req.user = existingUser;
 
     if (req.headers.authorization && _.isNil(req.cookies.Authorization)) {

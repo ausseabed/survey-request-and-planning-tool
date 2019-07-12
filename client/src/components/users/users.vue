@@ -43,6 +43,7 @@
                 {{activeUser.name}}
               </div>
               <div class="text-subtitle2">{{activeUser.email}}</div>
+              <div class="text-grey">Active {{lastSeen}}</div>
             </q-card-section>
             <q-separator />
             <q-card-section>
@@ -128,6 +129,7 @@ import Vue from 'vue'
 const _ = require('lodash');
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { required } from 'vuelidate/lib/validators';
+const moment = require('moment')
 
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { permission } from './../mixins/permission'
@@ -159,6 +161,18 @@ export default Vue.extend({
     ...mapGetters('role', [
       'roles',
     ]),
+    lastSeen: function() {
+      if (_.isNil(this.activeUser)) {
+        return "n/a"
+      }
+      else if (_.isNil(this.activeUser.lastSeen)) {
+        return "never"
+      } else {
+        const ts = new Date();
+        ts.setTime(this.activeUser.lastSeen);
+        return moment(ts).fromNow();
+      }
+    }
   },
 
   methods: {

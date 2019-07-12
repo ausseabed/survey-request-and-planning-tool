@@ -158,6 +158,7 @@
             </form-field-validated-input>
 
             <form-field-validated
+              borderless
               label="Area of interest"
               stack-label
               bottom-slots

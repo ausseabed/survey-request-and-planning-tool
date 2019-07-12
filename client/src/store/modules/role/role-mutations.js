@@ -4,7 +4,7 @@ import * as types from './role-mutation-types'
 
 const mutations = {
 
-  [types.UPDATE_ROLE] (state, role) {
+  [types.ADD_ROLE] (state, role) {
     const existingIndex = state.roles.findIndex(existingRole => {
       return existingRole.id == role.id;
     });
@@ -17,7 +17,7 @@ const mutations = {
     // update the active user
     if (!_.isNil(state.activeRole) && role.id == state.activeRole.id)
     {
-      state.activeRole = user;
+      state.activeRole = role;
     }
   },
 
@@ -53,6 +53,10 @@ const mutations = {
 
   [types.SET_USER_ROLE] (state, role) {
     state.userRole = role;
+  },
+
+  [types.SET_PERMISSIONS] (state, permissions) {
+    state.permissions = permissions;
   },
 }
 

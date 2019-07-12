@@ -20,9 +20,33 @@
                     :key="role.id"
                     :to="`/admin/roles/${role.id}`"
                     >
-                      <q-item-label>
+                      <q-item-section>
                         {{role.name}}
-                      </q-item-label>
+                      </q-item-section>
+                      <q-item-section avatar>
+                        <div class="row q-gutter-xs">
+                          <q-avatar
+                            v-if="role.isDefault"
+                            color="primary"
+                            text-color="white"
+                            size="24px">
+                            D
+                            <q-tooltip>
+                              Default role
+                            </q-tooltip>
+                          </q-avatar>
+                          <q-avatar
+                            v-if="role.isAdmin"
+                            color="secondary"
+                            text-color="white"
+                            size="24px">
+                            A
+                            <q-tooltip>
+                              Administration role
+                            </q-tooltip>
+                          </q-avatar>
+                        </div>
+                      </q-item-section>
                   </q-item>
                 </q-list>
               </q-scroll-area>
@@ -30,7 +54,14 @@
             <div class="col-auto">
               <q-separator />
               <q-card-actions align="between">
-
+                <q-btn
+                  v-if="!readonly"
+                  flat
+                  icon="add"
+                  label="Add role"
+                  to="/admin/roles/new"
+                >
+                </q-btn>
               </q-card-actions>
             </div>
           </q-card>
@@ -46,6 +77,37 @@
                 <div v-if="activeRole.isDefault">This is the default role assigned to all new users.</div>
                 <div v-if="activeRole.isAdmin">This role allows access to the administration user interface.</div>
               </div>
+
+              <form-field-validated-input
+                name="activeRole.name"
+                attribute="Name"
+                label="Name"
+                :value="activeRole.name"
+                @input="updateActiveRoleValue({path:'name', value:$event})"
+                @blur="$v.activeRole.name.$touch"
+                type="text"
+                v-if="!readonly"
+               >
+              </form-field-validated-input>
+
+              <q-field
+                hint="Default role is automatically assigned to all new users"
+                bottom-slots
+                borderless
+                v-if="!readonly"
+                >
+                <q-checkbox
+                  :disable="activeRole.isDefault"
+                  label="Default role"
+                  :value="activeRole.isDefault"
+                  @input="updateActiveRoleValue({path:'isDefault', value: $event})"
+                >
+                  <q-tooltip v-if="activeRole.isDefault">
+                    To change default role first switch to the desired role and select this toggle.
+                  </q-tooltip>
+                </q-checkbox>
+              </q-field>
+
               <div class="text-subtitle2 q-pt-md">Permissions</div>
             </q-card-section>
             <q-separator style="height:1px !important"/>
@@ -63,8 +125,9 @@
                       >
                       <div class="q-gutter-sm full-width">
                         <q-checkbox
-                          :disabled="true"
+                          :disable="readonly"
                           :value="activeRole[permission.key]"
+                          @input="updateActiveRoleValue({path:permission.key, value:$event})"
                           :label="permission.label" />
                       </div>
                     </q-item>
@@ -75,11 +138,20 @@
             <div class="col-auto">
               <q-separator />
               <q-card-actions align="right">
-                <!-- <q-btn flat icon="save"
+                <q-btn
+                  v-if="!readonly"
+                  flat icon="save"
                   label="Save"
                   @click="submit()"
                 >
-                </q-btn> -->
+                </q-btn>
+                <q-btn
+                  v-if="!readonly"
+                  flat icon="delete"
+                  label="Delete"
+                  @click="deleteRole()"
+                >
+                </q-btn>
               </q-card-actions>
             </div>
 
@@ -105,12 +177,13 @@ import { required } from 'vuelidate/lib/validators';
 
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
+import { permission } from './../mixins/permission'
 import * as mTypes
   from '../../store/modules/role/role-mutation-types'
 
 
 export default Vue.extend({
-  mixins: [DirtyRouteGuard, errorHandler],
+  mixins: [DirtyRouteGuard, errorHandler, permission],
   beforeMount() {
     this.getFormData();
   },
@@ -124,14 +197,23 @@ export default Vue.extend({
     ...mapGetters('role', [
       'activeRole',
       'roles',
+      'permissions',
+      'dirty',
     ]),
+    readonly: function() {
+      if (this.hasPermission('canEditRole')) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     rolePermissions: function () {
-      if (_.isNil(this.activeRole)) {
+      if (_.isNil(this.permissions)) {
         return []
       }
       const ignoreAttrs = ['id', 'name', 'deleted', 'isDefault'];
       const rps = [];
-      for (let [key, value] of Object.entries(this.activeRole)) {
+      for (let key of this.permissions) {
         if (ignoreAttrs.includes(key)) {
           continue;
         }
@@ -153,6 +235,8 @@ export default Vue.extend({
   methods: {
     ...mapActions('role', [
       'getRoles',
+      'getPermissions',
+      'saveRole',
     ]),
     ...mapMutations('role', {
       'setActiveRole': mTypes.SET_ACTIVE_ROLE,
@@ -166,12 +250,37 @@ export default Vue.extend({
           this.updateActiveRole();
         }
       });
+      this.getPermissions();
+    },
+
+    getNewName() {
+      if (this.roles instanceof Array) {
+        return `Role (${this.roles.length + 1})`
+      } else {
+        return 'Role (1)'
+      }
     },
 
     updateActiveRole() {
       if (_.isNil(this.id)) {
         console.log("undefined role")
         this.setActiveRole(undefined);
+      } else if (this.id == 'new') {
+
+        let role = {
+          id: undefined,
+          name: this.getNewName(),
+          deleted: false,
+          isDefault: false,
+        };
+
+        for (let rp of this.rolePermissions) {
+          const permName = rp.key;
+          role[permName] = false;
+        }
+
+        this.setActiveRole(role);
+        this.setDirty(true);
       } else {
         let role = this.roles.find(existingRole => {
           return existingRole.id == this.id;
@@ -179,6 +288,10 @@ export default Vue.extend({
         console.log(`defined role ${role}`)
         this.setActiveRole(role);
       }
+    },
+
+    deleteRole() {
+      console.log("TODO delete")
     },
 
     submit() {
@@ -189,25 +302,31 @@ export default Vue.extend({
         return
       }
 
-      const isNew = _.isNil(this.activeUser.id)
+      const isNew = _.isNil(this.activeRole.id)
 
-      this.saveUser(this.activeUser).then(org => {
-        // this.getFormData();
+      this.saveRole(this.activeRole).then(role => {
         const successMsg = isNew ? 'Role created' : 'Role updated';
         this.notifySuccess(successMsg);
+
+        if (role.isDefault) {
+          this.getRoles();
+        }
 
         // need to check the route, as it may have already been set to something
         // else via "save and continue".
         const currentId = this.$route.params.id;
         if (isNew && currentId == 'new') {
           // then updated the route for the org
-          this.$router.replace({ path: `/admin/roles/${org.id}` });
+          this.$router.replace({ path: `/admin/roles/${role.id}` });
         }
       });
     }
   },
 
   validations: {
+    activeRole: {
+      name: { required },
+    }
   },
 
   watch: {

@@ -31,6 +31,23 @@ router.get(
   return res.json(role);
 }));
 
+// gets a list of permissions that apply to all roles
+router.get(
+  '/permissions',
+  isAuthenticated,
+  asyncMiddleware(async function (req, res) {
+
+  const role = new Role();
+  const permissionsList = [];
+
+  for (let [key, value] of Object.entries(role)) {
+    if (key.startsWith('can') || key.startsWith('is')) {
+      permissionsList.push(key);
+    }
+  }
+
+  return res.json(permissionsList);
+}));
 
 // Gets a list of roles
 router.get(
@@ -61,6 +78,14 @@ router.post(
 
   var role = new Role()
   _.merge(role, req.body);
+
+  if (role.isDefault) {
+    await getConnection()
+    .createQueryBuilder()
+    .update(Role)
+    .set({ isDefault: false })
+    .execute();
+  }
 
   role = await getConnection()
   .getRepository(Role)

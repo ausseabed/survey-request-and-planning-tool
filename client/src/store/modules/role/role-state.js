@@ -11,6 +11,7 @@ function initialState() {
     userRole: undefined, // role of the currenly logged in user
     dirty: false,
     roles:[],
+    permissions:[],
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
   }

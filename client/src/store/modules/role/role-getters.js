@@ -14,6 +14,10 @@ export const roles = state => {
   return state.roles;
 }
 
+export const permissions = state => {
+  return state.permissions;
+}
+
 export const requestError = state => {
   return state.requestError;
 }

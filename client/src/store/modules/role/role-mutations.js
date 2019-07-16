@@ -21,6 +21,12 @@ const mutations = {
     }
   },
 
+  [types.REMOVE_ROLE] (state, id) {
+    state.roles = state.roles.filter((r) => {
+      return r.id != id;
+    });
+  },
+
   [types.CLEAR_ROLE_LIST] (state, roles) {
     state.roles.splice(0, state.roles.length);
   },

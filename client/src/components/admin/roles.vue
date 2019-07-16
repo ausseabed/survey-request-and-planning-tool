@@ -145,13 +145,20 @@
                   @click="submit()"
                 >
                 </q-btn>
-                <q-btn
-                  v-if="!readonly"
-                  flat icon="delete"
-                  label="Delete"
-                  @click="deleteRole()"
-                >
-                </q-btn>
+                <div>
+                  <q-btn
+                    v-if="!readonly"
+                    :disable="activeRole.isDefault"
+                    flat icon="delete"
+                    label="Delete"
+                    @click="deleteRoleClick()"
+                  >
+                  </q-btn>
+                  <q-tooltip v-if="activeRole.isDefault">
+                    Cannot delete default role.
+                  </q-tooltip>
+                </div>
+
               </q-card-actions>
             </div>
 
@@ -237,6 +244,7 @@ export default Vue.extend({
       'getRoles',
       'getPermissions',
       'saveRole',
+      'deleteRole',
     ]),
     ...mapMutations('role', {
       'setActiveRole': mTypes.SET_ACTIVE_ROLE,
@@ -290,8 +298,33 @@ export default Vue.extend({
       }
     },
 
-    deleteRole() {
-      console.log("TODO delete")
+    deleteRoleClick() {
+      if (_.isNil(this.activeRole)) {
+        // shouldn't ever happen
+        console.log("Deleting undefined activeRole")
+        return
+      }
+      if (this.activeRole.id) {
+        // an existing id indicated this project has been saved, so check
+        // with user if they really want to delete project.
+        this.$q.dialog({
+          title: 'Delete Role',
+          message: `Role ${this.activeRole.name} will be deleted. Users with this role will have the default role automatically assigned.`,
+          ok: 'Delete',
+          cancel: 'Cancel'
+        }).onOk(() => {
+          this.deleteRole({ id: this.activeRole.id })
+          .then(pmd => {
+            this.notifySuccess('Deleted Role');
+            this.$router.replace({ path: `/admin/roles/` });
+          });
+        })
+      } else {
+        // no id, so hasn't been saved. I this case reset form and go back
+        // to main page.
+        this.setActiveRole(undefined);
+        this.$router.replace({ path: `/admin/roles/` })
+      }
     },
 
     submit() {

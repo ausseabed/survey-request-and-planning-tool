@@ -6,6 +6,7 @@ import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, permitPermission } from '../utils';
 import { Role } from '../../lib/entity/role';
+import { User } from '../../lib/entity/user';
 
 
 var router = express.Router();
@@ -105,19 +106,41 @@ router.delete(
   const roleRepo = getConnection().getRepository(Role);
 
   let role = await roleRepo.findOne(req.params.id);
-
   if (!role) {
     let err = boom.notFound(
       `Role ${req.params.id} does not exist, cannot delete`);
     throw err;
   }
+  if (role.isDefault) {
+    let err = boom.badRequest(
+      `Role ${req.params.id} is default, cannot delete`);
+    throw err;
+  }
 
-  role.deleted = true;
-  role = await roleRepo.save(role);
+  let defaultRole = await roleRepo.findOne({
+    where: {
+      isDefault: true
+    }
+  });
+  if (!role) {
+    let err = boom.notFound(
+      `Default role does not exist, cannot delete`);
+    throw err;
+  }
 
-  role = await getConnection()
-  .getRepository(Role)
-  .findOne(role.id)
+  // update all users with the role getting deleted so that they have the
+  // default role assigned.
+  await getConnection().transaction(async transactionalEntityManager => {
+    await getConnection()
+    .createQueryBuilder()
+    .update(User)
+    .set({ role: defaultRole})
+    .where(`"roleId" = :rid`, { rid: role.id })
+    .execute();
+
+    await roleRepo.delete(req.params.id);
+  });
+
   return res.json(role)
 }));
 

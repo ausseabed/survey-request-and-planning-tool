@@ -58,6 +58,26 @@ export const saveRole = ({ commit, state }, payload) => {
   });
 }
 
+export const deleteRole = ({ commit, state }, payload) => {
+  var url_endpoint = '/api/role/' + payload.id;
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  return new Promise((resolve, reject) => {
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+    Vue.axios.delete(url_endpoint)
+    .then((response) => {
+      commit(mutTypes.REMOVE_ROLE, payload.id);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+      resolve();
+    })
+    .catch((error) => {
+      commit(mutTypes.SET_REQUEST_ERROR, error);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+      reject(error);
+    });
+  });
+}
+
 export const getUserRole = ({ commit, state }) => {
   var url_endpoint = '/api/role/user-role';
 

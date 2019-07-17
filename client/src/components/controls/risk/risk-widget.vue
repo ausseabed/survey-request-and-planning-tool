@@ -100,10 +100,46 @@ export default Vue.extend({
       let path = `[${index}].${event.property}`
       this.$emit(UPDATED_RISKS, { path:path, value : event.value });
     },
+    fixMismatchedData() {
+      // because sometimes the structure of the risk matrix will differ to
+      // what is in the database. eg; when we change the risk matrix options
+      let bad = false;
+      for (const risk of this.riskData) {
+        if (_.has(this.riskMatrix,risk.level)) {
+          const tf = this.riskMatrix[risk.level]
+          if (_.has(tf.risk.timeframe)) {
+            // then move on to checking next thing
+          } else {
+            bad = true;
+            break;
+          }
+        } else {
+          bad = true;
+          break;
+        }
+      }
+
+      // if one bad risk is found, then remove all risks
+      if (bad) {
+        this.$emit(UPDATED_RISKS, { path:'', value : [] });
+      }
+    },
   },
   computed: {
-
-  }
+    hasData: function() {
+      return !_.isNil(this.riskMatrix) && !_.isNil(this.riskData) && this.riskData.length > 0
+    }
+  },
+  watch: {
+    'hasData': {
+      immediate: true,
+      handler (newHasData, oldHasData) {
+        if (newHasData) {
+          this.fixMismatchedData()
+        }
+      },
+    },
+  },
 });
 
 </script>

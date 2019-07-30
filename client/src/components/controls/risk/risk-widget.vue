@@ -107,7 +107,7 @@ export default Vue.extend({
       for (const risk of this.riskData) {
         if (_.has(this.riskMatrix,risk.level)) {
           const tf = this.riskMatrix[risk.level]
-          if (_.has(tf.risk.timeframe)) {
+          if (_.has(tf, risk.timeframe)) {
             // then move on to checking next thing
           } else {
             bad = true;

@@ -309,19 +309,24 @@
             <div class="overflow-hidden">
               <div class="row q-gutter-x-sm">
                 <div class="col-8">
-                  <q-select
-                    label="Positioning requirement"
-                    :error="$v.techSpec.positioningRequirement.$error"
-                    error-message="Positioning requirement is required"
-                    bottom-slots
+                  <form-field-validated-select-multiple-check
+                    class="col-12"
                     multiple
-                    :value="this.techSpec.positioningRequirement"
+                    name="techSpec.positioningRequirement"
+                    attribute="Positioning requirement"
+                    label="Positioning requirement"
+                    :value="techSpec.positioningRequirement"
                     @input="UPDATE({path:'techSpec.positioningRequirement', value: $event})"
                     :options="validPositioningRequirements"
+                    option-label="name"
+                    option-value="id"
                     @blur="$v.techSpec.positioningRequirement.$touch"
+                    clearable
                     :readonly="readOnly"
+                    :error="$v.techSpec.positioningRequirement.$error"
                     >
-                  </q-select>
+                  </form-field-validated-select-multiple-check>
+
                 </div>
 
                 <div class="col">

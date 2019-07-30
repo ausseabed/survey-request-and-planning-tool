@@ -24,7 +24,9 @@ passing the slot params into the slot of the select.
         </q-item-section>
 
         <q-item-section>
-          <q-item-label v-html="scope.opt.name" ></q-item-label>
+          <q-item-label v-if="scope.opt.name" v-html="scope.opt.name" ></q-item-label>
+          <q-item-label v-else v-html="scope.opt" ></q-item-label>
+
           <q-item-label v-if="scope.opt.description" caption>{{ scope.opt.description }}</q-item-label>
         </q-item-section>
       </q-item>

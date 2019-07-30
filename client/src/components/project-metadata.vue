@@ -436,21 +436,36 @@
               </div>
             </q-field>
 
-            <q-field
-              stack-label
-              label="Start date"
-              :error="$v.startDate.$error"
-              error-message="Start date is required"
-              bottom-slots
-              :readonly="readonly"
-              >
-              <template v-slot:control>
-                <q-date :landscape="$q.platform.is.desktop"
-                  :value="formattedStartDate"
-                  @input="setFormattedStartDate($event)"
-                  @blur="$v.startDate.$touch" />
-              </template>
-            </q-field>
+            <div class="column col-12 q-pt-md">
+              <div class="date-range-field-label">Date range</div>
+              <div class="row q-col-gutter-md">
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  name="projectMetadata.startDate"
+                  attribute="Start date"
+                  label="Start date (YYYY/MM/DD)"
+                  :date="projectMetadata.startDate"
+                  @updated-date="update('projectMetadata.startDate', $event)"
+                  @blur="$v.projectMetadata.startDate.$touch"
+                  :readonly="readonly"
+                  >
+                </form-field-validated-date>
+
+                <form-field-validated-date
+                  class="col-xs-12 col-sm-6"
+                  name="projectMetadata.endDate"
+                  attribute="End date"
+                  label="End date (YYYY/MM/DD)"
+                  :date="projectMetadata.endDate"
+                  @updated-date="update('projectMetadata.endDate', $event)"
+                  @blur="$v.projectMetadata.endDate.$touch"
+                  :readonly="readonly"
+                  hint="Optional"
+                  >
+                </form-field-validated-date>
+              </div>
+            </div>
+
           </q-card-section>
         </q-card>
 
@@ -1182,7 +1197,6 @@ export default Vue.extend({
         contactPerson: { required },
         email: { required, email },
         areaOfInterest: { },
-        startDate: { },
         selectedSurveyApplication: {  },
         surveyApplicationNameOther: {  },
         selectedSurveyApplicationGroup: {  },
@@ -1194,6 +1208,8 @@ export default Vue.extend({
         projectInstrumentTypes: { },
         projectDataCaptureTypes: { },
         projectMetadata: {
+          startDate: { },
+          endDate: { },
           moratoriumDate: { },
         },
         hippRequest: {}
@@ -1204,7 +1220,6 @@ export default Vue.extend({
         contactPerson: { required },
         email: { required, email },
         areaOfInterest: {required },
-        startDate: { required },
         selectedSurveyApplication: { required },
         surveyApplicationNameOther: { validSurveyApplicationNameOther },
         selectedSurveyApplicationGroup: { required },
@@ -1223,6 +1238,8 @@ export default Vue.extend({
           validDataCaptureType
         },
         projectMetadata: {
+          startDate: { required },
+          endDate: { },
           moratoriumDate: {validMoratorium},
         },
         hippRequest: {}

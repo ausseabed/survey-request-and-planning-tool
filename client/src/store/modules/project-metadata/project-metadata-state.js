@@ -14,6 +14,7 @@ function initialState() {
       email: null,
       areaOfInterest: null,
       startDate: undefined, // should always be in UTC milliseconds
+      endDate: undefined,
       description: null,
       vessel: null,
       instrumentTypes: [],

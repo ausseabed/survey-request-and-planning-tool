@@ -78,6 +78,13 @@ export class ProjectMetadata {
   })
   startDate;
 
+  @Column({
+      type:"timestamp with time zone",
+      transformer: new DateTransformer(),
+      nullable: true,
+  })
+  endDate;
+
   @ManyToMany(
     type => DataCaptureType,
     dataCaptureType => dataCaptureType.projectMetadatas)

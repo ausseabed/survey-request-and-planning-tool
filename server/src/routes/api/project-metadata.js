@@ -219,6 +219,7 @@ router.post(
   project.email = req.body.email;
   project.organisations = req.body.organisations;
   project.startDate = req.body.startDate;
+  project.endDate = req.body.endDate;
   project.instrumentTypes = req.body.instrumentTypes;
   project.dataCaptureTypes = req.body.dataCaptureTypes;
 

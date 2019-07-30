@@ -1,6 +1,8 @@
 <template>
 
-  <div class="row justify-center">
+  <div
+    class="row justify-center full-height scroll"
+  >
     <div v-if="loading">Loading...</div>
 
     <q-page padding class="docs-input row justify-center">

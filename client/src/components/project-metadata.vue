@@ -1,6 +1,9 @@
 <template>
-  <form-wrapper :validator="$v" :messages="validationMessagesOverride"
-    class="row justify-center">
+  <form-wrapper
+    :validator="$v"
+    :messages="validationMessagesOverride"
+    class="row justify-center full-height scroll"
+  >
 
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky

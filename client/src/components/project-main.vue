@@ -72,7 +72,7 @@
 
         </q-toolbar>
 
-        <div class="column col" style="overflow-y: auto;">
+        <div class="column col">
           <router-view></router-view>
         </div>
       </div>

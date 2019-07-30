@@ -1,68 +1,69 @@
 <template>
   <q-page :style-fn="heightTweak" >
-    <div class="column full-height">
-      <q-toolbar class="col-auto q-py-none bg-secondary text-white">
-        <q-toolbar-title class="column">
-          <div>
-            {{hippRequest.name}}
-          </div>
-          <div class="tabs-toolbar-sub-title">
-            HIPP Request
-          </div>
-        </q-toolbar-title>
+    <div class="overflow-hidden fit">
+      <div class="column col-4 full-height">
+        <q-toolbar class="col-auto q-py-none bg-secondary text-white">
+          <q-toolbar-title class="column">
+            <div>
+              {{hippRequest.name}}
+            </div>
+            <div class="tabs-toolbar-sub-title">
+              HIPP Request
+            </div>
+          </q-toolbar-title>
 
-        <q-tabs class="gt-xs" align="right">
-          <q-route-tab
-            default
-            icon="notes"
-            label="Request"
-            :to="`/hipp-request/${id}/summary`"
-            exact
-          />
-          <q-route-tab
-            icon="attach_file"
-            label="Attachments"
-            :to="`/hipp-request/${id}/attachments`"
-            exact
-            v-if="canViewAttachments"
-          />
-          <q-route-tab
-            icon="layers"
-            label="Plans"
-            :to="`/hipp-request/${id}/projects`"
-            exact
-          />
-        </q-tabs>
+          <q-tabs class="gt-xs" align="right">
+            <q-route-tab
+              default
+              icon="notes"
+              label="Request"
+              :to="`/hipp-request/${id}/summary`"
+              exact
+            />
+            <q-route-tab
+              icon="attach_file"
+              label="Attachments"
+              :to="`/hipp-request/${id}/attachments`"
+              exact
+              v-if="canViewAttachments"
+            />
+            <q-route-tab
+              icon="layers"
+              label="Plans"
+              :to="`/hipp-request/${id}/projects`"
+              exact
+            />
+          </q-tabs>
 
-        <q-tabs dense class="lt-sm" align="right">
-          <q-route-tab
-            default
-            class="mobile-tabs"
-            icon="notes"
-            :to="`/hipp-request/${id}/summary`"
-            exact
-          />
-          <q-route-tab
-            class="mobile-tabs"
-            icon="attach_file"
-            :to="`/hipp-request/${id}/attachments`"
-            exact
-            v-if="canViewAttachments"
-          />
-          <q-route-tab
-            class="mobile-tabs"
-            icon="layers"
-            :to="`/hipp-request/${id}/projects`"
-            exact
-          />
-        </q-tabs>
+          <q-tabs dense class="lt-sm" align="right">
+            <q-route-tab
+              default
+              class="mobile-tabs"
+              icon="notes"
+              :to="`/hipp-request/${id}/summary`"
+              exact
+            />
+            <q-route-tab
+              class="mobile-tabs"
+              icon="attach_file"
+              :to="`/hipp-request/${id}/attachments`"
+              exact
+              v-if="canViewAttachments"
+            />
+            <q-route-tab
+              class="mobile-tabs"
+              icon="layers"
+              :to="`/hipp-request/${id}/projects`"
+              exact
+            />
+          </q-tabs>
 
-      </q-toolbar>
-      <div class="col">
-        <div class="full-height scroll">
+        </q-toolbar>
+        <div class="column col">
           <router-view></router-view>
         </div>
       </div>
+
     </div>
   </q-page>
 

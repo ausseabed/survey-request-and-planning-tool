@@ -24,7 +24,7 @@
                 :value="props.row.progress / 100.0" />
             </q-td>
             <q-td key="created" :props="props" style="width: 110px;">
-              {{ getDateString(props.row.created) }}
+              {{ props.row.created | dateString }}
             </q-td>
             <q-td key="actions" :props="props" style="width: 80px; padding-right: 5px; padding-left: 5px;">
               <div class="row justify-center">
@@ -109,13 +109,6 @@ export default Vue.extend({
       }).onOk(() => {
         this.$store.dispatch('surveyFile/deleteFile', {id: props.id});
       });
-    },
-
-    getDateString(dateUtcMilliseconds) {
-      const ts = new Date();
-      ts.setTime(dateUtcMilliseconds);
-      let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
-      return formattedString;
     },
 
     uploadStarted () {

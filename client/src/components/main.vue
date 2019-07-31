@@ -41,7 +41,7 @@
                         </q-item-section>
 
                         <q-item-section side top>
-                          <q-item-label caption>{{getDateString(matchingProjMeta.startDate)}}</q-item-label>
+                          <q-item-label caption>{{matchingProjMeta.startDate | dateString }}</q-item-label>
                           <div>
                             <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
                           </div>
@@ -113,7 +113,7 @@
                       </q-item-section>
 
                       <q-item-section side top>
-                        <q-item-label caption>{{getDateString(hippRequest.requestDateStart)}}</q-item-label>
+                        <q-item-label caption>{{hippRequest.requestDateStart | dateString }}</q-item-label>
                         <!-- <div>
                           <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
                         </div> -->
@@ -259,17 +259,6 @@ export default Vue.extend({
       this.activeProjMetaId = undefined;
       this.map.highlightFeatureId(undefined);
     },
-
-    getDateString(aDate) {
-      if (_.isNil(aDate)) {
-        return 'n/a'
-      }
-      const ts = new Date();
-      ts.setTime(aDate);
-      let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
-      return formattedString;
-    },
-
     getIconDetails(projectMetadata) {
       const ps = projectMetadata.projectStatus.toLowerCase();
       if (ps == "planning") {

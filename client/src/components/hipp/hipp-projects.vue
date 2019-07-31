@@ -36,7 +36,7 @@
                       <div class="fit column justify-start q-pb-sm">
                         <q-item-label>{{pm.surveyName}}</q-item-label>
                         <q-item-label caption>{{pm.projectStatus}}</q-item-label>
-                        <q-item-label caption>{{getDateString(pm.startDate)}}</q-item-label>
+                        <q-item-label caption>{{pm.startDate | dateString}}</q-item-label>
                       </div>
                     </q-item-section>
 
@@ -124,15 +124,6 @@ export default Vue.extend({
       this.projectSetDirty(false);
       this.$router.push({ path: `/survey/new`, query: {reset:false} })
     },
-
-    getDateString(dateUtcMilliseconds) {
-      const ts = new Date();
-      ts.setTime(dateUtcMilliseconds);
-      let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
-      return formattedString;
-    },
-
-
 
   },
 

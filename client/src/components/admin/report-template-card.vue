@@ -40,7 +40,7 @@
         </div>
         <div>
           <div class="caption-text text-weight-light">Created:</div>
-          <div class="q-pl-md">{{getDateString(template.created)}}</div>
+          <div class="q-pl-md">{{template.created | dateString }}</div>
         </div>
       </div>
       <div class="column col-6">
@@ -70,12 +70,6 @@ export default Vue.extend({
     return {}
   },
   methods: {
-    getDateString(aDate) {
-      const ts = new Date();
-      ts.setTime(aDate);
-      let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
-      return formattedString;
-    },
     removeStacks(obj) {
       // strip out chunks of the JSON that make it hard to read
       this.removeKeys(obj, ['stack', 'id', 'file'])

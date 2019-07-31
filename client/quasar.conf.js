@@ -11,6 +11,7 @@ module.exports = function (ctx) {
       'vuelidate-error-extractor',
       'global-components',
       'moment',
+      'custom-filters',
     ],
 
     css: [

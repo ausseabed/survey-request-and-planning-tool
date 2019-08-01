@@ -185,7 +185,20 @@
             <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
 
             <div class="row">
-              <template v-if="!matchingProjMetas">
+              <template v-if="!readonly">
+                <div v-if="addingFile" class="q-body-1 text-faded col column">
+                  <div class="q-body-1 text-faded"> Processing file </div>
+                  <q-linear-progress indeterminate />
+                </div>
+                <div v-else
+                  class="q-body-1 text-faded col">
+                  Drag and drop shapefile (zip) or geojson onto map, or click the draw shape button in map to manually create request area.
+                </div>
+              </template>
+              <template v-else>
+                <div col></div>
+              </template>
+              <!-- <template v-if="!matchingProjMetas">
                 <p class="col-6 items-center q-body-2 text-center" style="padding:5px">Run check to identify intersecting surveys</p>
               </template>
               <template v-else-if="matchingProjMetas.length == 0">
@@ -210,9 +223,51 @@
                   </q-list>
 
                 </div>
-              </template>
+              </template> -->
 
-              <div class="col-6">
+
+              <div class="map-buttons q-gutter-sm col-auto">
+                <div class="row justify-between q-gutter-sm">
+                  <div class="col">
+                    <q-btn
+                      outline
+                      class="no-margin full-width"
+                      icon="cloud_download"
+                      type="a"
+                      :href="`/api/project-metadata/${projectMetadata.id}/geometry`"
+                      :disable="!projectMetadata.id || addingFile || !projectMetadata.areaOfInterest || dirty"
+                    >
+                      <q-tooltip>
+                        {{!projectMetadata.id || addingFile || !projectMetadata.areaOfInterest || dirty ? "Must save plan before download" : "Download Area of Interest"}}
+                      </q-tooltip>
+                    </q-btn>
+                  </div>
+
+                  <template v-if="!readonly">
+                    <div class="col">
+                      <q-btn outline class="no-margin full-width" icon="cloud_upload"
+                        :disable="addingFile"
+                        @click="selectAreaOfInterestFile">
+                        <q-tooltip>
+                          Upload Area of Interest
+                        </q-tooltip>
+                      </q-btn>
+                    </div>
+                    <div class="col">
+                      <input type="file" id="dataPath" v-on:change="setAreaOfInterestFile" ref="fileInput" hidden />
+                      <q-btn outline class="no-margin full-width" icon="clear"
+                        :disable="!projectMetadata.areaOfInterest"
+                        @click="update('projectMetadata.areaOfInterest', undefined)">
+                        <q-tooltip>
+                          Clear Area of Interest
+                        </q-tooltip>
+                      </q-btn>
+                    </div>
+                  </template>
+                </div>
+              </div>
+
+              <!-- <div class="col-6">
                 <div class="row justify-between q-col-gutter-sm no-margin">
                   <div class="col">
                     <q-btn class="no-margin full-width" icon="check" label="Check"
@@ -237,11 +292,93 @@
                     </q-btn>
                   </div>
                 </div>
-              </div>
+              </div> -->
 
             </div>
             <div v-if="$v.areaOfInterest.$error" style="color:red;">
               Area of Interest has not been provided.
+            </div>
+
+            <q-separator class="q-my-md" style="height:1px"/>
+
+            <div class="column">
+              <div class="row justify-between">
+                <div class="text-subtitle1">Intersecting plans</div>
+                <div class="row q-gutter-sm">
+                  <q-btn flat class="" icon="check" label="Run check"
+                    :disable="!areaOfInterest"
+                    @click="checkGeometry">
+                  </q-btn>
+                  <q-btn flat class="" icon="clear" label="Clear results"
+                    :disable="!matchingProjMetas || matchingProjMetas.length == 0"
+                    @click="clearIntersectionCheckResults">
+                  </q-btn>
+                </div>
+              </div>
+              <div
+                v-if="!intersectionCheckRun"
+                class="row justify-center items-center"
+                style="min-height:50px"
+              >
+                <div>Check has not been run.</div>
+              </div>
+              <div
+                v-else-if="matchingProjMetas.length == 0"
+                class="row justify-center items-center"
+                style="min-height:50px"
+              >
+                <div>No intersecting survey plans found.</div>
+              </div>
+              <div v-else>
+                <q-list highlight
+                  @mouseleave.native="mouseleaveMatchingProjMeta">
+                  <template
+                    v-for="matchingProjMeta in matchingProjMetas"
+                  >
+                    <q-item
+                      tag="a" class="interescting-project-links"
+                      :href="`/survey/${matchingProjMeta.id}/summary`"
+                      target="_blank"
+                      :key="matchingProjMeta.id"
+                      @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
+                    >
+                      <q-item-section top avatar>
+                        <q-avatar
+                          text-color="white"
+                          font-size="28px"
+                          rounded
+                          :icon="projectStatusIconDetails(matchingProjMeta.projectStatus).icon"
+                          :color="projectStatusIconDetails(matchingProjMeta.projectStatus).color"
+                        />
+                        <!-- <q-avatar :icon="recordStateDetails(matchingProjMeta.recordState).icon" /> -->
+                      </q-item-section>
+
+                      <q-item-section>
+                        <q-item-label>{{matchingProjMeta.surveyName | capitalize}}</q-item-label>
+                        <q-item-label caption>{{matchingProjMeta.projectStatus}}</q-item-label>
+                      </q-item-section>
+
+                      <q-item-section side top>
+                        <q-item-label caption>{{matchingProjMeta.startDate | dateString}}</q-item-label>
+                        <!-- <q-icon
+                          :name="projectStatusIconDetails(matchingProjMeta.projectStatus).icon"
+                          :color="projectStatusIconDetails(matchingProjMeta.projectStatus).color"
+                        /> -->
+                        <q-icon
+                          :name="recordStateDetails(matchingProjMeta.recordState).icon"
+                        >
+                          <q-tooltip>
+                            {{ recordStateDetails(matchingProjMeta.recordState).label }}
+                          </q-tooltip>
+                        </q-icon>
+                      </q-item-section>
+
+                    </q-item>
+                  </template>
+                </q-list>
+              </div>
+
+
             </div>
 
           </q-card-section>
@@ -555,7 +692,8 @@ import * as orgMutTypes
   from '../store/modules/organisation/organisation-mutation-types'
 import * as pmMutTypes
   from '../store/modules/project-metadata/project-metadata-mutation-types'
-import RecordState from './controls/record-state';
+import RecordState from './controls/record-state'
+import { projectStatusIconDetails, recordStateDetails } from './utils'
 
 const timespan = require('readable-timespan');
 timespan.set({
@@ -634,6 +772,12 @@ export default Vue.extend({
     this.map.onAdd = (geojson) => {
       this.setAoi(geojson);
     }
+    this.map.onFileAddStart = () => {
+      this.addingFile = true;
+    }
+    this.map.onFileAddDone = () => {
+      this.addingFile = false;
+    }
 
     this.fetchData();
 
@@ -669,6 +813,9 @@ export default Vue.extend({
     ...mapMutations('organisation', {
       'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
     }),
+
+    projectStatusIconDetails: projectStatusIconDetails,
+    recordStateDetails: recordStateDetails,
 
     instrumentSelected(instrumentType) {
       const found = this.projectInstrumentTypes.find((selectedIt) => {
@@ -961,6 +1108,7 @@ export default Vue.extend({
       this.$store.dispatch(
         'projectMetadata/checkAoi', { id: this.id })
       .then(matchingProjMetas => {
+        this.intersectionCheckRun = true;
         this.matchingProjMetas = matchingProjMetas;
         const areaOfInterests = matchingProjMetas.map(mpm => {
           let f = mpm.areaOfInterest;
@@ -974,10 +1122,16 @@ export default Vue.extend({
       });
     },
 
-    selectAoiFile () {
+    clearIntersectionCheckResults() {
+      this.intersectionCheckRun = false;
+      this.matchingProjMetas = undefined;
+      this.map.setGeojsonFeatureIntersecting([]);
+    },
+
+    selectAreaOfInterestFile () {
       this.$refs.fileInput.click();
     },
-    setAoiFile (event) {
+    setAreaOfInterestFile (event) {
       this.map.addFile(event.target.files[0]);
     },
 
@@ -1292,6 +1446,8 @@ export default Vue.extend({
 
   data() {
     return {
+      addingFile: false,
+      intersectionCheckRun: false,
       map: null,
       orgSearchTerms: '',
       matchingProjMetas:undefined,

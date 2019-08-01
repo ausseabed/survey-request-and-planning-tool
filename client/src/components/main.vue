@@ -34,19 +34,36 @@
                       @mouseover="mouseoverMatchingProjMeta(matchingProjMeta, true)"
                       class="column"
                       >
+
                       <div class="row">
+                        <q-item-section top avatar>
+                          <q-avatar
+                            text-color="white"
+                            size="34px"
+                            font-size="20px"
+                            rounded
+                            :icon="projectStatusIconDetails(matchingProjMeta.projectStatus).icon"
+                            :color="projectStatusIconDetails(matchingProjMeta.projectStatus).color"
+                          />
+                        </q-item-section>
+
                         <q-item-section>
                           <q-item-label>{{matchingProjMeta.surveyName}}</q-item-label>
                           <q-item-label caption>{{matchingProjMeta.projectStatus}}</q-item-label>
                         </q-item-section>
 
                         <q-item-section side top>
-                          <q-item-label caption>{{matchingProjMeta.startDate | dateString }}</q-item-label>
-                          <div>
-                            <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
-                          </div>
+                          <q-item-label caption>{{matchingProjMeta.startDate | dateString}}</q-item-label>
+                          <q-icon
+                            :name="recordStateDetails(matchingProjMeta.recordState).icon"
+                          >
+                            <q-tooltip>
+                              {{ recordStateDetails(matchingProjMeta.recordState).label }}
+                            </q-tooltip>
+                          </q-icon>
                         </q-item-section>
                       </div>
+
                       <q-item-section>
                         <transition-expand>
                           <div v-if="activeProjMetaId == matchingProjMeta.id">
@@ -71,7 +88,6 @@
                   </q-list>
 
                 </q-scroll-area>
-                <!-- <div class="fat-spacer bg-secondary"></div> -->
 
                 <div
                   v-if="hasPermission('canAddProject')"
@@ -109,14 +125,10 @@
                     <div class="row">
                       <q-item-section>
                         <q-item-label>{{hippRequest.name}}</q-item-label>
-                        <!-- <q-item-label caption>{{hippRequest.areaName}}</q-item-label> -->
                       </q-item-section>
 
                       <q-item-section side top>
                         <q-item-label caption>{{hippRequest.requestDateStart | dateString }}</q-item-label>
-                        <!-- <div>
-                          <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
-                        </div> -->
                       </q-item-section>
                     </div>
                     <q-item-section>
@@ -184,7 +196,7 @@ const _ = require('lodash');
 import TransitionExpand from './transition-expand.vue';
 import { errorHandler } from './mixins/error-handling';
 import { permission } from './mixins/permission';
-import { projectStatusIconDetails } from './utils'
+import { projectStatusIconDetails, recordStateDetails } from './utils'
 import OlMap from './olmap/olmap';
 
 import * as pmMutTypes
@@ -260,11 +272,8 @@ export default Vue.extend({
       this.activeProjMetaId = undefined;
       this.map.highlightFeatureId(undefined);
     },
-    getIconDetails(projectMetadata) {
-      const ps = projectMetadata.projectStatus.toLowerCase();
-      return projectStatusIconDetails(ps);
-    }
-
+    projectStatusIconDetails: projectStatusIconDetails,
+    recordStateDetails: recordStateDetails,
   },
 
   computed: {

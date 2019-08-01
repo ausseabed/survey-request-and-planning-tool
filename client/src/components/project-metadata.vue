@@ -267,33 +267,6 @@
                 </div>
               </div>
 
-              <!-- <div class="col-6">
-                <div class="row justify-between q-col-gutter-sm no-margin">
-                  <div class="col">
-                    <q-btn class="no-margin full-width" icon="check" label="Check"
-                      :disable="!areaOfInterest"
-                      @click="checkGeometry">
-                    </q-btn>
-                  </div>
-                  <div class="col">
-                    <q-btn
-                      v-if="!readonly"
-                      class="no-margin full-width" icon="cloud_upload" label="Upload"
-                      @click="selectAoiFile">
-                    </q-btn>
-                    <input type="file" id="dataPath" v-on:change="setAoiFile" ref="fileInput" hidden />
-                  </div>
-                  <div class="col">
-                    <q-btn
-                      v-if="!readonly"
-                      class="no-margin full-width" icon="clear" label="Clear"
-                      :disable="!areaOfInterest"
-                      @click="setAoi(undefined)">
-                    </q-btn>
-                  </div>
-                </div>
-              </div> -->
-
             </div>
 
             <div class="row q-col-gutter-md q-pt-md">

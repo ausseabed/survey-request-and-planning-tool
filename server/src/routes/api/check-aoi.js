@@ -28,6 +28,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   let projectsQuery = getConnection()
   .getRepository(ProjectMetadata)
   .createQueryBuilder("project_metadata")
+  .leftJoinAndSelect("project_metadata.recordState", "record_state")
   .where(
     `ST_Intersects(
       project_metadata.areaOfInterest,
@@ -39,6 +40,11 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     {deleted: false}
   )
   .orderBy("project_metadata.startDate")
+
+  if (!_.isNil(req.query['ignore-id'])) {
+    projectsQuery = projectsQuery.andWhere(`"project_metadata"."id" != :id`,
+      {id: req.query['ignore-id']})
+  }
 
   if (hasPermission(req.user.role, 'canViewAllProjects')) {
     // then no additional where clauses

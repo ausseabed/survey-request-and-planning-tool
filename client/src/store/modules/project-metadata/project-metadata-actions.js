@@ -5,9 +5,15 @@ import _ from 'lodash';
 import * as mutTypes from './project-metadata-mutation-types'
 
 export const checkAoi = ({ commit, state }, payload) => {
+
+  const cfg = {
+    params: {
+      'ignore-id': payload.id
+    }
+  }
   return new Promise((resolve, reject) => {
     Vue.axios
-    .post('/api/check-aoi', state.projectMetadata.areaOfInterest)
+    .post('/api/check-aoi', state.projectMetadata.areaOfInterest, cfg)
     .then((response) => {
       resolve(response.data);
     })

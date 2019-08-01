@@ -295,6 +295,21 @@
               </div> -->
 
             </div>
+
+            <div class="row q-col-gutter-md q-pt-md">
+
+              <form-field-validated-input
+                class="col-xs-12 col-sm-6"
+                disable
+                attribute="Calculated area"
+                hint="Area calculated from area of interest"
+                label="Calculated area"
+                :value="calculatedArea"
+                :readonly="readonly"
+                >
+              </form-field-validated-input>
+            </div>
+
             <div v-if="$v.areaOfInterest.$error" style="color:red;">
               Area of Interest has not been provided.
             </div>
@@ -1282,6 +1297,22 @@ export default Vue.extend({
         return true
       }
     },
+
+    calculatedArea: function() {
+      if (_.isNil(this.map)) {
+        return undefined
+      } else {
+        let calcArea = this.map.getArea()
+        let strArea = undefined
+        if (calcArea > 10000) {
+          strArea = `${Math.round(calcArea / 1000000 * 100) / 100} km²`
+        } else {
+          strArea = `${Math.round(calcArea * 100) / 100} m²`
+        }
+        return strArea
+      }
+    },
+
     validDataCaptureTypeIds: function() {
       if (_.isNil(this.instrumentTypes)) {
         return []

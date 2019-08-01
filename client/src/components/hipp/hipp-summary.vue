@@ -916,9 +916,9 @@ export default Vue.extend({
         let calcArea = this.map.getArea()
         let strArea = undefined
         if (calcArea > 10000) {
-          strArea = `${Math.round(calcArea / 1000000 * 100) / 100} km^2`
+          strArea = `${Math.round(calcArea / 1000000 * 100) / 100} km²`
         } else {
-          strArea = `${Math.round(calcArea * 100) / 100} m^2`
+          strArea = `${Math.round(calcArea * 100) / 100} m²`
         }
         return strArea
       }

@@ -57,8 +57,8 @@ jobs:
           name: Publish Docker Images to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push crcsi/qa4mbes-www:develop:latest
-            docker push crcsi/qa4mbes-api:develop:latest
+            docker push $IMAGE_NAME_WWW:develop
+            docker push $IMAGE_NAME_API:develop
 
 
 workflows:

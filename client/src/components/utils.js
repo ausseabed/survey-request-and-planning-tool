@@ -5,13 +5,13 @@ const _ = require('lodash');
 export function projectStatusIconDetails(projectStatus) {
   const ps = projectStatus.toLowerCase()
   if (ps == "planning") {
-    return {icon: "assignment", color:"tertiary"};
+    return {icon: "assignment", color:"amber-5"};
   } else if (ps == "scheduled") {
     return {icon: "event", color:"primary"};
   } else if (ps == "complete") {
     return {icon: "check_circle_outline", color:"positive"};
   } else if (ps == "abandoned") {
-    return {icon: "not_interested", color:"faded"};
+    return {icon: "not_interested", color:"grey-3"};
   } else {
     // shouldn't happen, but if it does a new status option has been
     // added

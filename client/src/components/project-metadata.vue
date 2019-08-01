@@ -198,33 +198,6 @@
               <template v-else>
                 <div col></div>
               </template>
-              <!-- <template v-if="!matchingProjMetas">
-                <p class="col-6 items-center q-body-2 text-center" style="padding:5px">Run check to identify intersecting surveys</p>
-              </template>
-              <template v-else-if="matchingProjMetas.length == 0">
-                <p class="col-6 items-center q-body-2 text-center" style="padding:5px">No intersecting surveys</p>
-              </template>
-              <template v-else>
-                <div class="column col-6 q-pt-sm">
-                  <q-list highlight dense bordered
-                    @mouseleave.native="mouseleaveMatchingProjMeta">
-                    <q-item-label header>Intersecting surveys</q-item-label>
-                    <q-separator />
-                    <q-item dense
-                      tag="a" class="interescting-project-links"
-                      :href="`/survey/${matchingProjMeta.id}/summary`"
-                      target="_blank"
-                      v-for="matchingProjMeta in matchingProjMetas"
-                      :key="matchingProjMeta.id"
-                      @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
-                      >
-                      <q-item-label>{{matchingProjMeta.surveyName}}</q-item-label>
-                    </q-item>
-                  </q-list>
-
-                </div>
-              </template> -->
-
 
               <div class="map-buttons q-gutter-sm col-auto">
                 <div class="row justify-between q-gutter-sm">

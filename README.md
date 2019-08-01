@@ -1,6 +1,9 @@
 # AusSeabed - Request and Plannning Tool
 Web based application to support the request and planning of bathymetric surveys.
 
+# Build
+[![CircleCI](https://circleci.com/gh/frontiersi/asb-request-and-planning-tool.svg?style=svg&circle-token=cef4f50d53e7216004c240420e035eea4a4a389e)](https://circleci.com/gh/frontiersi/asb-request-and-planning-tool)
+
 # Dependencies
 User authentication is provided by CRC Accounts, specifically the staging deployment available at [https://staging.accounts.crcsi.com.au](`https://staging.accounts.crcsi.com.au`). Development requires access to this system.
 

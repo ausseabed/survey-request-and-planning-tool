@@ -184,7 +184,7 @@
                     </div>
                     <div v-else
                       class="q-body-1 text-faded col">
-                      Drag and drop shapefile (zip) or geojson onto map, or click the draw shape button in map to manually create request area.
+                      Drag and drop shapefile or geojson onto map. Note: Shapefiles must be uploaded as a single zip file including all shapefile 'sidecar' files.
                     </div>
                   </template>
                   <template v-else>
@@ -590,7 +590,7 @@ export default Vue.extend({
     var olmap = OlMap(this.$refs.mapDiv, {
       basemap: "osm"
     })
-    await olmap.initMap();
+    await olmap.initMap(false);
     this.map = olmap;
     this.map.onAdd = (geojson) => {
       this.update({

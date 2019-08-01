@@ -1,5 +1,5 @@
-# QA4MBES
-Quality assurance for bathymetry data
+# AusSeabed - Request and Plannning Tool
+Web based application to support the request and planning of bathymetric surveys.
 
 # Dependencies
 User authentication is provided by CRC Accounts, specifically the staging deployment available at [https://staging.accounts.crcsi.com.au](`https://staging.accounts.crcsi.com.au`). Development requires access to this system.
@@ -31,8 +31,8 @@ The following configuration parameters are required. These are set as environmen
 ## Setup
 Clone the repository
 ```
-    git clone git@bitbucket.org:crc-si/qa4mbes.git
-    cd qa4mbes
+    git clone git@github.com:frontiersi/asb-request-and-planning-tool.git
+    cd asb-request-and-planning-tool
 ```
 
 Copy/edit configs. The following environment variables need to be set:  

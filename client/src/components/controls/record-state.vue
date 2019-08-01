@@ -36,6 +36,8 @@ const moment = require('moment')
 import * as recordStateMutTypes
   from '../../store/modules/record-state/record-state-mutation-types'
 
+import { recordStateDetails } from '../utils';
+
 const UPDATED_STATE = 'updated-state';
 
 export default Vue.extend({
@@ -84,33 +86,13 @@ export default Vue.extend({
       if (_.isNil(this.recordState)) {
         return "loading..."
       }
-      if (this.recordState.state == 'draft') {
-        return "Draft"
-      } else if (this.recordState.state == 'finalised') {
-        return "Finalised"
-      } else if (this.recordState.state == 'underReview') {
-        return "Under Review"
-      } else if (this.recordState.state == 'accepted') {
-        return "Accepted"
-      } else {
-        return this.recordState.state
-      }
+      return recordStateDetails(this.recordState.state).label;
     },
     stateDisplayIcon: function () {
       if (_.isNil(this.recordState)) {
         return 'hourglass_full'
       }
-      if (this.recordState.state == 'draft') {
-        return 'edit'
-      } else if (this.recordState.state == 'finalised') {
-        return 'done'
-      } else if (this.recordState.state == 'underReview') {
-        return 'restore_page'
-      } else if (this.recordState.state == 'accepted') {
-        return 'done_all'
-      } else {
-        return 'help'
-      }
+      return recordStateDetails(this.recordState.state).icon;
     },
     eventsList: function () {
       if (_.isNil(this.recordState)) {

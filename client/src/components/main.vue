@@ -184,6 +184,7 @@ const _ = require('lodash');
 import TransitionExpand from './transition-expand.vue';
 import { errorHandler } from './mixins/error-handling';
 import { permission } from './mixins/permission';
+import { projectStatusIconDetails } from './utils'
 import OlMap from './olmap/olmap';
 
 import * as pmMutTypes
@@ -261,19 +262,7 @@ export default Vue.extend({
     },
     getIconDetails(projectMetadata) {
       const ps = projectMetadata.projectStatus.toLowerCase();
-      if (ps == "planning") {
-        return {icon: "assignment", color:"tertiary"};
-      } else if (ps == "scheduled") {
-        return {icon: "event", color:"primary"};
-      } else if (ps == "complete") {
-        return {icon: "check_circle_outline", color:"positive"};
-      } else if (ps == "abandoned") {
-        return {icon: "not_interested", color:"faded"};
-      } else {
-        // shouldn't happen, but if it does a new status option has been
-        // added
-        return {icon: "bug_report", color:"negative"}
-      }
+      return projectStatusIconDetails(ps);
     }
 
   },

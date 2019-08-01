@@ -36,7 +36,7 @@
             </template>
             <template v-else-if="column.name == 'state'">
               <q-icon
-                :name="stateDisplayIcon(props.row[column.field])"
+                :name="recordStateDetails((props.row[column.field])).icon"
                 style="font-size: 1.75em;"
               >
                 <q-tooltip anchor="center right" self="center left" :offset="[10, 10]">
@@ -75,6 +75,8 @@ const _ = require('lodash');
 const moment = require('moment');
 
 import { errorHandler } from './../mixins/error-handling'
+
+import { recordStateDetails } from '../utils';
 
 // There's no vuex store here as the component only displays information. Vuex
 // would only make things more complicated.
@@ -134,19 +136,8 @@ export default Vue.extend({
       return res.data;
     },
 
-    stateDisplayIcon(recordState) {
-      if (recordState == 'draft') {
-        return 'edit'
-      } else if (recordState == 'finalised') {
-        return 'done'
-      } else if (recordState == 'underReview') {
-        return 'restore_page'
-      } else if (recordState == 'accepted') {
-        return 'done_all'
-      } else {
-        return 'help'
-      }
-    },
+    // because `recordStateDetails` is imported from utils module
+    recordStateDetails: recordStateDetails,
 
     typeDisplayIcon(recordType) {
       if (recordType == 'plan') {

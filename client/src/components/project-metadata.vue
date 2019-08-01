@@ -738,7 +738,7 @@ const otherSurveyPurpose = {
   name: 'Other',
   group: 'Other',
   userSubmitted: true,
-  id: undefined
+  id: null,
 }
 
 export default Vue.extend({
@@ -988,6 +988,8 @@ export default Vue.extend({
       // purpose must be the "Other" purpose too.
       if (this.selectedSurveyApplicationGroup == otherSurveyPurpose.group) {
         this.setSelectedSurveyApplication(otherSurveyPurpose);
+      } else {
+        this.setSelectedSurveyApplication(undefined);
       }
     },
 

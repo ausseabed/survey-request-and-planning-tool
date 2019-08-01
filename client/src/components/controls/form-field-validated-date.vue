@@ -39,6 +39,9 @@ export default Vue.extend({
   props: [
     'date',
   ],
+  mounted() {
+    this.tmpDateEntry = undefined;
+  },
   data() {
     return {
       tmpDateEntry: undefined,

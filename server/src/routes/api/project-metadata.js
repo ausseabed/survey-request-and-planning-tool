@@ -1,6 +1,7 @@
 var express = require('express');
 var _ = require('lodash');
 const boom = require('boom');
+import { feature, featureCollection } from "@turf/helpers";
 
 import { getConnection } from 'typeorm';
 
@@ -155,6 +156,56 @@ router.get(
   res.writeHead(200, {'Content-Type': 'image/png' });
   res.end(projectImage.imageData, 'binary');
 }))
+
+
+// download the geojson for the area of interest
+router.get(
+  '/:id/geometry',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType:ProjectMetadata,
+      organisationAttributes: ['organisations'],
+      allowedPermissionAll: 'canEditAllProjects',
+      allowedPermissionOrg: 'canEditOrgProjects',
+      allowedPermissionNoEntityId: 'canAddProject',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  let plan = await getConnection()
+  .getRepository(ProjectMetadata)
+  .findOne(
+    req.params.id,
+    {
+      relations: [
+        "organisations",
+      ]
+    }
+  );
+
+  if (!plan || plan.deleted) {
+    let err = boom.notFound(
+      `Plan ${req.params.id} does not exist`);
+    throw err;
+  }
+
+  const aoiMultipolygon = plan.areaOfInterest;
+  const aoiFeature = feature(aoiMultipolygon);
+
+  const collection = featureCollection([
+    aoiFeature,
+  ]);
+
+  let filename = _.isNil(plan.surveyName) ? 'plan' : plan.surveyName
+  filename = filename.replace(/[^a-zA-Z0-9 ]*/g, "")   // remove special chars
+  filename = filename.replace(/ /g, "-")   // replace spaces with dash
+  filename = `${filename}-asb-rapt-download.json`;
+  res.set(
+    'Content-disposition', `attachment; filename=${filename}`);
+  return res.json(collection);
+}));
+
 
 // gets a single project metadata
 router.get(

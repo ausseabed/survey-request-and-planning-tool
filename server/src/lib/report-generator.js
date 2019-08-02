@@ -11,6 +11,7 @@ var moment = require('moment')
 const { Parser } = require('json2csv')
 var sharp = require('sharp')
 
+import * as ReferenceSystems from './reference-system'
 
 expressions.filters.lower = function(input) {
   // This condition should be used to make sure that if your input is undefined, your output will be undefined as well and will not throw an error
@@ -495,6 +496,21 @@ export class ProjectMetadataReportGenerator extends ReportGenerator {
     return fn
   }
 
+  getReferenceSystemName(referenceSystems, crsId) {
+    if (_.isNil(crsId)) {
+      return undefined
+    }
+
+    // find based on a string comparision, because we're not sure what may
+    // be passed in.
+    const crsIdStr = crsId.toString()
+    const matchingCrs = referenceSystems.find((crs) => {
+      return crsIdStr == crs.value.toString()
+    })
+
+    return matchingCrs ? matchingCrs.label : crsId;
+  }
+
   getData () {
 
     const data = this.namesDict(this.entity, [
@@ -503,12 +519,35 @@ export class ProjectMetadataReportGenerator extends ReportGenerator {
     data['name'] = this.entityAttributeValue('surveyName');
     data['hasTechSpec'] = !_.isNil(this.entity.techSpec);
     if (data['hasTechSpec']) {
+      const techSpec = this.entity.techSpec;
       data['techSpec'] = this.namesDict(
-        this.entity.techSpec,
+        techSpec,
         ['surveyLines','tidalGaugeLocations']
       );
       data['techSpec']['hasSurveyLines'] = !_.isNil(this.entity.surveyLines);
       this.mergeImageKeys('surveyLines', data['techSpec']);
+
+      // replace reference system ids with their names
+      data['techSpec']['horizontalReferenceSystem'] =
+        this.getReferenceSystemName(
+          ReferenceSystems.HORIZONTAL_REFERENCE_SYSTEMS,
+          techSpec.horizontalReferenceSystem
+        )
+      data['techSpec']['verticalReferenceSystem'] =
+        this.getReferenceSystemName(
+          ReferenceSystems.VERTICAL_REFERENCE_SYSTEMS,
+          techSpec.verticalReferenceSystem
+        )
+      data['techSpec']['soundingDatum'] =
+        this.getReferenceSystemName(
+          ReferenceSystems.VERTICAL_REFERENCE_SYSTEMS,
+          techSpec.soundingDatum
+        )
+      data['techSpec']['spheroid'] =
+        this.getReferenceSystemName(
+          ReferenceSystems.VERTICAL_REFERENCE_SYSTEMS,
+          techSpec.spheroid
+        )
 
     } else {
       data['techSpec'] = undefined;

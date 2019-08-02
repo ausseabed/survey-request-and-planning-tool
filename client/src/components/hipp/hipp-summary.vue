@@ -219,7 +219,14 @@
                           </q-btn>
                         </div>
                         <div class="col">
-                          <input type="file" id="dataPath" v-on:change="setAreaOfInterestFile" ref="fileInput" hidden />
+                          <input
+                            type="file"
+                            accept=".zip,.json,.geojson"
+                            id="dataPath"
+                            v-on:change="setAreaOfInterestFile"
+                            ref="fileInput"
+                            hidden
+                          />
                           <q-btn outline class="no-margin full-width" icon="clear"
                             :disable="!hippRequest.areaOfInterest"
                             @click="update({path:'hippRequest.areaOfInterest', value:undefined })">

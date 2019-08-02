@@ -520,7 +520,7 @@
             <q-select
               label="Sounding datum"
               :error="$v.techSpec.soundingDatum.$error"
-              error-message="Souding datum is required"
+              error-message="Sounding datum is required"
               bottom-slots
               :value="techSpec.soundingDatum"
               @input="UPDATE({path:'techSpec.soundingDatum', value: $event})"

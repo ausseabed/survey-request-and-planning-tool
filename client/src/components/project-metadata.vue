@@ -746,6 +746,13 @@ export default Vue.extend({
     this.map.onFileAddDone = () => {
       this.addingFile = false;
     }
+    this.map.onFileAddBad = (msg) => {
+      this.$q.dialog({
+        title: 'Error adding file',
+        message: msg,
+        ok: 'Ok'
+      })
+    }
 
     this.fetchData();
 

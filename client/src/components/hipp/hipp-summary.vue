@@ -618,6 +618,13 @@ export default Vue.extend({
     this.map.drawEnd = () => {
       this.drawingAreaOfInterest = false;
     }
+    this.map.onFileAddBad = (msg) => {
+      this.$q.dialog({
+        title: 'Error adding file',
+        message: msg,
+        ok: 'Ok'
+      })
+    }
 
     this.fetchData();
   },

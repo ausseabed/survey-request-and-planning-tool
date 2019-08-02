@@ -324,7 +324,7 @@ var OlMap = function (target, options) {
           }.bind(this));
         }).bind(this);
         reader.readAsArrayBuffer(file);
-      } else {
+      } else if (ext == 'json' || ext == 'geojson') {
         const reader = new FileReader();
         reader.onload = (event) => {
           const jsonObj = JSON.parse(event.target.result);
@@ -343,6 +343,23 @@ var OlMap = function (target, options) {
           }
         };
         reader.readAsText(file);
+      } else {
+        // then we don't know what the file is, or how to support it so let the
+        // user know.
+        let msg = "Supported formats are geojson (.json, .geojson) and zipped shapefiles (.zip)"
+        if (ext == 'shp') {
+          msg = "To upload a shapefile please include the shapefile and associated 'sidecar' (.shx, .prj, .dbx, etc) files into a single zip file."
+        }
+
+        if (typeof this.onFileAddDone === 'function') {
+          this.onFileAddDone();
+        }
+
+        if (typeof this.onFileAddBad === 'function') {
+          this.onFileAddBad(msg);
+        } else {
+          console.error(msg);
+        }
       }
 
     },
@@ -405,6 +422,7 @@ var OlMap = function (target, options) {
     onExtentsChange: null,
     onFileAddStart: null,
     onFileAddDone: null,
+    onFileAddBad: null,
     set: function (value) {
       if (value) {
         this.addFeatures(this.source, (new ol.format.GeoJSON()).readFeatures(JSON.parse(value)));

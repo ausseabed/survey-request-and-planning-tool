@@ -1,6 +1,7 @@
 <template>
 
-  <div
+  <form-wrapper
+    :validator="$v"
     class="row justify-center full-height scroll"
   >
     <div v-if="loading">Loading...</div>
@@ -325,7 +326,6 @@
                     @blur="$v.techSpec.positioningRequirement.$touch"
                     clearable
                     :readonly="readOnly"
-                    :error="$v.techSpec.positioningRequirement.$error"
                     >
                   </form-field-validated-select-multiple-check>
 
@@ -774,7 +774,7 @@
     </q-page>
 
     <confirm-navigation id="confirmNavigation" ref="confirmNavigation"></confirm-navigation>
-  </div>
+  </form-wrapper>
 </template>
 <script>
 import Vue from 'vue'
@@ -889,7 +889,7 @@ export default Vue.extend({
       this.$v.$touch()
 
       if (this.$v.$error) {
-        this.$q.notify('Please review fields')
+        this.notifyError('Please review fields')
         return
       }
 

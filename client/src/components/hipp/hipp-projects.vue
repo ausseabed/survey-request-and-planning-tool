@@ -69,6 +69,11 @@
             v-if="this.hasPermission('canAddProject')"
             class="row justify-end">
             <q-btn
+              flat icon="link" label="Link existing plan"
+              @click="linkPlan()"
+              >
+            </q-btn>
+            <q-btn
               flat icon="add" label="Add plan"
               @click="addProject()"
               >
@@ -78,6 +83,8 @@
       </div>
 
     </div>
+
+    <plan-selection id="planSelection" ref="planSelection"></plan-selection>
   </div>
 </template>
 <script>
@@ -90,6 +97,7 @@ import { date } from 'quasar'
 import * as pmMutTypes
   from '../../store/modules/project-metadata/project-metadata-mutation-types'
 
+import PlanSelection from '../dialogs/plan-selection'
 
 import axios from 'axios';
 const path = require('path');
@@ -97,6 +105,7 @@ const path = require('path');
 
 export default Vue.extend({
   mixins: [errorHandler, permission],
+  components: { 'plan-selection': PlanSelection },
 
   mounted() {
 
@@ -123,6 +132,11 @@ export default Vue.extend({
       );
       this.projectSetDirty(false);
       this.$router.push({ path: `/survey/new`, query: {reset:false} })
+    },
+
+    async linkPlan() {
+      const dialogResult = await this.$refs.planSelection.pop();
+      console.log(dialogResult)
     },
 
   },

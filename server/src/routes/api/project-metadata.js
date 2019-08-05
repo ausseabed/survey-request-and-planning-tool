@@ -307,8 +307,6 @@ router.post(
   project.hasMoratorium = req.body.hasMoratorium;
   project.moratoriumDate = req.body.moratoriumDate;
 
-  project.hippRequest = req.body.hippRequest;
-
   if (!_.isNil(req.body.areaOfInterest)) {
     let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
     project.areaOfInterest = geojson;

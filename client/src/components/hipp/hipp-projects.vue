@@ -3,8 +3,17 @@
   <div class="row justify-center fit">
 
     <div style="width: 900px; max-width: 900px;" class="column no-wrap fit">
-      <div class="q-pa-md fit">
-        <q-card class="fit column">
+      <div class="column q-pa-md fit">
+        <record-state
+          v-if="this.hippRequest.id"
+          class="full-width q-pb-sm"
+          :entity-type="`hipp-request`"
+          :entity-id="hippRequest.id"
+          @updated-state="stateUpdated($event)"
+          >
+        </record-state>
+
+        <q-card class="col column">
           <q-card-section>
             <div class="text-h6"> Linked Plans </div>
           </q-card-section>
@@ -77,7 +86,7 @@
           </q-card-section>
           <q-separator style="height:1px;"/>
           <q-card-section
-            v-if="this.hasPermission('canAddProject')"
+            v-if="!readonly"
             class="row justify-end">
             <q-btn
               v-if="linking"
@@ -87,12 +96,12 @@
             </q-btn>
             <q-btn
               v-if="!linking"
-              flat icon="link" label="Link existing plan"
+              flat icon="link" label="Modify linked plans"
               @click="linkPlan()"
               >
             </q-btn>
             <q-btn
-              v-if="!linking"
+              v-if="!linking && this.hasPermission('canAddProject')"
               flat icon="add" label="Add plan"
               @click="addProject()"
               >
@@ -132,7 +141,7 @@ export default Vue.extend({
   },
 
   mounted() {
-
+    this.stateReadonly = true;
   },
 
   computed: {
@@ -148,7 +157,35 @@ export default Vue.extend({
     ]),
     loading() {
       return this.projectMetadataRequestStatus == RequestStatus.REQUESTED
-    }
+    },
+    readonly: function() {
+      if (
+        this.hasPermission('canAddHippRequest') &&
+        _.isNil(this.hippRequest.id)
+      ) {
+        // user has permission to add new request, and this is a new request
+        // this is a new request, so no need to worry about record state
+        return false
+      }
+
+      if (this.stateReadonly) {
+        // if the state says read only
+        return true
+      }
+      if (this.hasPermission('canEditAllHippRequests')) {
+        // can edit all projects
+        return false
+      }
+      else if (
+        this.hasPermission('canEditOrgHippRequests') &&
+        this.hasOrganisationLink('hippRequest.requestingAgencies')
+      ) {
+        // can only edit hipp requests that are linked to user
+        return false
+      } else {
+        return true
+      }
+    },
   },
 
   methods: {
@@ -241,6 +278,13 @@ export default Vue.extend({
       this.getProjectMetadataList()
     },
 
+    stateUpdated(state) {
+      if (_.isNil(state)) {
+        this.stateReadonly = true
+      } else {
+        this.stateReadonly = state.readonly
+      }
+    },
   },
 
   watch: {
@@ -265,6 +309,7 @@ export default Vue.extend({
     return {
       linking: false,
       linkedPlans: [],
+      stateReadonly: true,
     }
   }
 });

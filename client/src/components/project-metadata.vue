@@ -638,7 +638,7 @@ import * as orgMutTypes
   from '../store/modules/organisation/organisation-mutation-types'
 import * as pmMutTypes
   from '../store/modules/project-metadata/project-metadata-mutation-types'
-import RecordState from './controls/record-state'
+
 import { projectStatusIconDetails, recordStateDetails } from './utils'
 
 const timespan = require('readable-timespan');
@@ -702,7 +702,6 @@ const otherSurveyPurpose = {
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
   components: {
-    'record-state': RecordState,
   },
 
   beforeMount() {

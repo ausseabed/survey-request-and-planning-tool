@@ -561,7 +561,6 @@ import OlMap from './../olmap/olmap';
 import { required, email, minLength, minValue, maxValue }
   from 'vuelidate/lib/validators';
 
-import RecordState from '../controls/record-state';
 import RiskWidget from '../controls/risk/risk-widget';
 
 const timespan = require('readable-timespan');
@@ -587,7 +586,6 @@ export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
   components: {
     'risk-widget': RiskWidget,
-    'record-state': RecordState,
   },
   beforeMount() {
     this.getFormData();

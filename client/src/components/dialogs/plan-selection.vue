@@ -1,20 +1,25 @@
 <template>
   <q-dialog
     v-model="active"
-    persistent
   >
 
     <q-layout view="Lhh lpR fff" container class="bg-white">
       <q-header class="bg-primary">
         <q-toolbar>
-          <q-toolbar-title>Header</q-toolbar-title>
+          <div class="column q-pa-sm" >
+            <q-toolbar-title style="margin-bottom:-8px">Plans</q-toolbar-title>
+            <div>Select plans to link to current request</div>
+          </div>
+          <q-space />
           <q-btn flat v-close-popup round dense icon="close" />
         </q-toolbar>
       </q-header>
 
-      <q-footer class="bg-black text-white">
+      <q-footer>
         <q-toolbar inset>
-          <q-toolbar-title>Footer</q-toolbar-title>
+          <q-space />
+          <q-btn label="Link selected" @click="clickDone()" />
+          <q-btn label="Cancel" @click="clickCancel()" />
         </q-toolbar>
       </q-footer>
 
@@ -28,31 +33,19 @@
     </q-layout>
 
 
-    <!-- <q-card style="min-width: 400px">
-      <q-card-section>
-        <div class="text-h6">foo</div>
-        <div>
-          bar
-        </div>
-      </q-card-section>
-
-      <q-card-actions align="right" class="text-primary">
-        <q-btn label="Done" @click="clickDone()" />
-        <q-btn label="Cancel" @click="clickCancel()" />
-      </q-card-actions>
-
-    </q-card> -->
   </q-dialog>
 </template>
 
 <script>
+
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+const _ = require('lodash');
+import * as pmMutTypes
+  from '../../store/modules/project-metadata/project-metadata-mutation-types'
+
+
 export default {
   name: 'PlanSelection',
-  // computed: {
-  //   contentSize () {
-  //     return this.moreContent ? 150 : 5
-  //   }
-  // }
   data () {
     return {
       active: false,
@@ -62,7 +55,30 @@ export default {
       lorem: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Natus, ratione eum minus fuga, quasi dicta facilis corporis magnam, suscipit at quo nostrum!',
     }
   },
+
+  computed: {
+    ...mapGetters('projectMetadata',[
+      'projectMetadataList',
+      'projectMetadataListFilter',
+    ]),
+    ...mapGetters('hippRequest',[
+      'hippRequest',
+    ]),
+  },
+
   methods: {
+    ...mapActions('projectMetadata', [
+      'getProjectMetadataList',
+    ]),
+    ...mapMutations('projectMetadata', [
+      pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
+      pmMutTypes.RESET_PROJECT_METADATA,
+    ]),
+    ...mapMutations('projectMetadata', {
+      'projectMetadataUpdate': pmMutTypes.UPDATE,
+      'projectSetDirty': pmMutTypes.SET_DIRTY,
+    }),
+
     pop(){
         this.active = true;
         return new Promise((resolve, reject) => {

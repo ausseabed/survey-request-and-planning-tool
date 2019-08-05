@@ -2,8 +2,6 @@
 
   <div class="row justify-center fit">
 
-    <div v-if="loading">Loading...</div>
-
     <div style="width: 900px; max-width: 900px;" class="column no-wrap fit">
       <div class="q-pa-md fit">
         <q-card class="fit column">
@@ -12,8 +10,17 @@
           </q-card-section>
           <q-separator style="height:1px;"/>
           <q-card-section class="column col no-padding">
+            <div v-if="loading" class="row justify-center fit">
+              <div class="column justify-center text-light">
+                <q-circular-progress
+                  indeterminate
+                  size="80px"
+                  class="q-ma-md"
+                />
+              </div>
+            </div>
             <div
-              v-if="!projectMetadataList || projectMetadataList.length == 0"
+              v-else-if="!projectMetadataList || projectMetadataList.length == 0"
               class="row justify-center fit"
               >
               <div class="column justify-center text-light">
@@ -96,6 +103,7 @@ import { permission } from './../mixins/permission'
 import { date } from 'quasar'
 import * as pmMutTypes
   from '../../store/modules/project-metadata/project-metadata-mutation-types'
+import { RequestStatus } from '../../store/modules/request-status'
 
 import PlanSelection from '../dialogs/plan-selection'
 
@@ -107,8 +115,28 @@ export default Vue.extend({
   mixins: [errorHandler, permission],
   components: { 'plan-selection': PlanSelection },
 
+  beforeMount() {
+    this.SET_PROJECT_METADATA_LIST([])
+  },
+
   mounted() {
 
+  },
+
+  computed: {
+    ...mapGetters('projectMetadata',[
+      'projectMetadataList',
+      'projectMetadataListFilter',
+    ]),
+    ...mapGetters('projectMetadata',{
+      projectMetadataRequestStatus:'requestStatus'
+    }),
+    ...mapGetters('hippRequest',[
+      'hippRequest',
+    ]),
+    loading() {
+      return this.projectMetadataRequestStatus == RequestStatus.REQUESTED
+    }
   },
 
   methods: {
@@ -118,6 +146,7 @@ export default Vue.extend({
     ...mapMutations('projectMetadata', [
       pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
       pmMutTypes.RESET_PROJECT_METADATA,
+      pmMutTypes.SET_PROJECT_METADATA_LIST,
     ]),
     ...mapMutations('projectMetadata', {
       'projectMetadataUpdate': pmMutTypes.UPDATE,
@@ -141,16 +170,6 @@ export default Vue.extend({
 
   },
 
-  computed: {
-    ...mapGetters('projectMetadata',[
-      'projectMetadataList',
-      'projectMetadataListFilter',
-    ]),
-    ...mapGetters('hippRequest',[
-      'hippRequest',
-    ]),
-  },
-
   watch: {
     'hippRequest.id': {
       handler: function (newId, oldId) {
@@ -171,7 +190,7 @@ export default Vue.extend({
 
   data() {
     return {
-      loading: false,
+
     }
   }
 });

@@ -4,6 +4,8 @@ import * as getters from './project-metadata-getters'
 import mutations from './project-metadata-mutations'
 import * as types from './project-metadata-mutation-types'
 
+import { RequestStatus } from '../request-status'
+
 function initialState() {
   return {
     projectMetadata: {
@@ -39,6 +41,9 @@ function initialState() {
     projectMetadataList:[],
     projectStatuses:[],
     dirty:false,
+
+    requestStatus: RequestStatus.NOT_REQUESTED,
+    requestError: undefined,
   }
 }
 

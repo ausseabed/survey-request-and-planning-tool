@@ -101,6 +101,13 @@ const mutations = {
     return state.projectMetadataList = pmlist;
   },
 
+  [types.SET_REQUEST_ERROR] (state, error) {
+    state.requestError = error;
+  },
+
+  [types.SET_REQUEST_STATUS] (state, status) {
+    state.requestStatus = status;
+  },
 }
 
 export default {

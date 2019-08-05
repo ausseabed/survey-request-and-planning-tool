@@ -75,6 +75,8 @@ module.exports = function (ctx) {
         'QTabPanel',
         'QChip',
         'QSpinnerFacebook',
+        'QSpace',
+        'QCircularProgress',
       ],
 
       directives: [

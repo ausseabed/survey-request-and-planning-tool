@@ -3,6 +3,7 @@ import { EventBus } from './../../../event-bus';
 import _ from 'lodash';
 
 import * as mutTypes from './project-metadata-mutation-types'
+import { RequestStatus } from '../request-status'
 
 export const checkAoi = ({ commit, state }, payload) => {
 
@@ -73,6 +74,8 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
 }
 
 export const getProjectMetadataList = ({ commit, state }, payload) => {
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+
   var url_endpoint = '/api/project-metadata/';
   var getConfig = _.isNil(payload) ? {} : payload;
   if (!_.isNil(state.projectMetadataListFilter)) {
@@ -80,13 +83,17 @@ export const getProjectMetadataList = ({ commit, state }, payload) => {
     _.merge(getConfig, params);
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
     Vue.axios.get(url_endpoint, getConfig)
     .then((response) => {
       commit(mutTypes.SET_PROJECT_METADATA_LIST, response.data)
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
       resolve(response.data);
     })
     .catch((error) => {
+      commit(mutTypes.SET_REQUEST_ERROR, error);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
       reject(error);
     });
   });

@@ -105,3 +105,11 @@ export const projectMetadataList = state => {
 export const hippRequest = state => {
   return state.projectMetadata.hippRequest;
 }
+
+export const requestError = state => {
+  return state.requestError;
+}
+
+export const requestStatus = state => {
+  return state.requestStatus;
+}

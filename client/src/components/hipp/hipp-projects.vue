@@ -36,33 +36,37 @@
                   v-for="pm in projectMetadataList"
                   :key="pm.id"
                   class="column"
-                  :to="`/survey/${pm.id}/summary/`"
-                  >
-                  <div class="row" style="min-height:100px;">
-                    <q-item-section class="column col-sm-6 col-xs-12">
-                      <div class="fit column justify-start q-pb-sm">
+                  @click="clickPlan(pm)"
+                >
+                  <div class="row items-start justify-start" style="min-height:100px;">
+                    <q-item-section
+                      avatar
+                      v-if="linking"
+                    >
+                      <q-icon v-if="isLinked(pm)" name="check_box" ></q-icon>
+                      <q-icon v-else name="check_box_outline_blank" ></q-icon>
+                    </q-item-section>
+                    <q-item-section class="row col">
+                      <div class="column justify-start q-pb-sm">
                         <q-item-label>{{pm.surveyName}}</q-item-label>
                         <q-item-label caption>{{pm.projectStatus}}</q-item-label>
                         <q-item-label caption>{{pm.startDate | dateString}}</q-item-label>
                       </div>
                     </q-item-section>
 
-                    <!-- <q-item-section side top>
-
-                      <div>
-                        <q-icon :name="getIconDetails(matchingProjMeta).icon" :color="getIconDetails(matchingProjMeta).color" size="16pt" class="self-center"/>
-                      </div>
-                    </q-item-section> -->
                     <q-item-section class="col-sm-6 col-xs-12 thumbnail-background tn-img-parent rounded-borders justify-center">
-                      <img
-                        class="tn-img-parent q-pa-sm self-center"
+                      <q-img
+                        contain
+                        style="max-width:80%;max-height:200px;"
+                        class="self-center"
+                        spinner-color="white"
                         :src="`api/project-metadata/${pm.id}/thumbnail`">
-                      </img>
+                      </q-img>
                       <div class="top-left q-pa-sm rounded-borders" style="background-color:rgba(255, 255, 255, 0.5);">
                         <div class="text-light">Project AOI</div>
                       </div>
-
                     </q-item-section>
+
                   </div>
                 </q-item>
 
@@ -76,11 +80,19 @@
             v-if="this.hasPermission('canAddProject')"
             class="row justify-end">
             <q-btn
+              v-if="linking"
+              flat label="Done"
+              @click="done()"
+              >
+            </q-btn>
+            <q-btn
+              v-if="!linking"
               flat icon="link" label="Link existing plan"
               @click="linkPlan()"
               >
             </q-btn>
             <q-btn
+              v-if="!linking"
               flat icon="add" label="Add plan"
               @click="addProject()"
               >
@@ -140,6 +152,9 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapActions('hippRequest', [
+      'updatePlanLinks',
+    ]),
     ...mapActions('projectMetadata', [
       'getProjectMetadataList',
     ]),
@@ -163,9 +178,67 @@ export default Vue.extend({
       this.$router.push({ path: `/survey/new`, query: {reset:false} })
     },
 
-    async linkPlan() {
-      const dialogResult = await this.$refs.planSelection.pop();
-      console.log(dialogResult)
+    linkPlan() {
+      this.linking = true;
+      this.SET_PROJECT_METADATA_LIST([])
+      this.SET_PROJECT_METADATA_LIST_FILTER(undefined)
+
+      this.getProjectMetadataList()
+      .then((planList) => {
+        this.linkedPlans = []
+        planList.forEach((plan) => {
+          if (plan.hippRequest && plan.hippRequest.id == this.hippRequest.id) {
+            this.linkedPlans.push(plan);
+          }
+        })
+      })
+    },
+
+    async clickPlan(plan) {
+      if (this.linking) {
+        if (this.isLinked(plan)) {
+          const updateResp = await this.updatePlanLink(plan, false)
+          this.linkedPlans = this.linkedPlans.filter((p) => {
+            return p.id != plan.id
+          })
+          this.notifySuccess("Plan successfully unlinked")
+        } else {
+          const updateResp = await this.updatePlanLink(plan, true)
+          this.linkedPlans.push(plan);
+          const msg = updateResp.reLinkedCount != 0 ?
+            "Plan relinked" :
+            "Plan linked"
+          this.notifySuccess(msg)
+        }
+      } else {
+        const planUrl = `/survey/${plan.id}/summary/`
+        this.$router.push({ path: planUrl})
+      }
+    },
+
+    updatePlanLink(plan, linked) {
+      const payload = {
+        id: this.hippRequest.id,
+        linkedPlans: [{
+          id: plan.id,
+          linked: linked,
+        }],
+      }
+      return this.updatePlanLinks(payload)
+    },
+
+    isLinked(plan) {
+      const linkedPlan = this.linkedPlans.find((p) => {
+        return p.id == plan.id
+      });
+      return linkedPlan ? true : false
+    },
+
+    done() {
+      this.linking = false
+      let hrfilter = {'hipp-request': this.hippRequest.id}
+      this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
+      this.getProjectMetadataList()
     },
 
   },
@@ -190,7 +263,8 @@ export default Vue.extend({
 
   data() {
     return {
-
+      linking: false,
+      linkedPlans: [],
     }
   }
 });

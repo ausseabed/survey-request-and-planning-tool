@@ -77,6 +77,7 @@ module.exports = function (ctx) {
         'QSpinnerFacebook',
         'QSpace',
         'QCircularProgress',
+        'QImg',
       ],
 
       directives: [

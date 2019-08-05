@@ -10,6 +10,7 @@ import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
 import { HippRequest, SURVEY_QUALITY_REQUIREMENTS,
   CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
   from '../../lib/entity/hipp-request';
+import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { updateRecordState } from '../state-management';
 
 // mapping of the entity attribute names to what they should be in the
@@ -186,6 +187,90 @@ router.get(
   delete hippRequest.deleted;
 
   return res.json(hippRequest);
+}));
+
+
+// updates the list of linked plans
+router.post(
+  '/:id/linked-plans',
+  [
+    isAuthenticated,
+    permitOrgBasedPermission({
+      entityType: HippRequest,
+      organisationAttributes: ['requestingAgencies'],
+      allowedPermissionAll: 'canEditAllHippRequests',
+      allowedPermissionOrg: 'canEditOrgHippRequests',
+      allowedPermissionNoEntityId: 'canAddHippRequest',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  // Note: this doesn't change the HIPP Request itself, only the project
+  // metadatas linked to it.
+
+  const hrRepo = getConnection().getRepository(HippRequest);
+  const planRepo = getConnection().getRepository(ProjectMetadata);
+
+  let hr = await hrRepo.findOne(req.params.id);
+
+  if (!hr) {
+    let err = boom.notFound(
+      `HippRequest ${req.params.id} does not exist, cannot update`);
+    throw err;
+  }
+
+  const linkedPlans = req.body
+
+  // count changes in link status to provide meaningful feedback to users
+  let newLinkedCount = 0
+  let reLinkedCount = 0
+  let removeLinkedCount = 0
+  await getConnection().transaction(async transactionalEntityManager => {
+    for (const plan of linkedPlans) {
+      let entityPlan = await planRepo.findOne(
+        plan.id,
+        {
+          relations: [
+            "hippRequest",
+          ]
+        }
+      );
+
+      if (!entityPlan) {
+        let err = boom.notFound(`ProjectMetadata ${plan.id} does not exist, ` +
+          `cannot update link to request`);
+        throw err;
+      }
+
+      if (plan.linked) {
+        if (_.isNil(entityPlan.hippRequest)) {
+          newLinkedCount += 1
+        } else if (entityPlan.hippRequest.id != hr.id) {
+          reLinkedCount += 1
+        }
+
+        entityPlan.hippRequest = hr
+      } else {
+        if (!_.isNil(entityPlan.hippRequest)) {
+          removeLinkedCount += 1
+        }
+        entityPlan.hippRequest = null
+      }
+
+      await getConnection()
+      .getRepository(ProjectMetadata)
+      .save(entityPlan)
+
+    }
+
+  })
+
+  const responseSuccess = {
+    newLinkedCount: newLinkedCount,
+    reLinkedCount: reLinkedCount,
+    removeLinkedCount: removeLinkedCount,
+  };
+  return res.json(responseSuccess);
 }));
 
 

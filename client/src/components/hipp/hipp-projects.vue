@@ -9,6 +9,7 @@
           class="full-width q-pb-sm"
           :entity-type="`hipp-request`"
           :entity-id="hippRequest.id"
+          :validation-callback="recordStateValidationCallback"
           @updated-state="stateUpdated($event)"
           >
         </record-state>
@@ -283,6 +284,15 @@ export default Vue.extend({
         this.stateReadonly = true
       } else {
         this.stateReadonly = state.readonly
+      }
+    },
+
+    recordStateValidationCallback(recordStateEvent) {
+      if (this.linking) {
+        this.notifyError('Please complete link modification');
+        return false
+      } else {
+        return true
       }
     },
   },

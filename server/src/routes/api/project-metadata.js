@@ -307,6 +307,12 @@ router.post(
   project.hasMoratorium = req.body.hasMoratorium;
   project.moratoriumDate = req.body.moratoriumDate;
 
+  if (_.isNil(project.id)) {
+    // only set hipp request if it is a new project. Otherwise
+    // it must be linked via the hipp request plans form.
+    project.hippRequest = req.body.hippRequest;
+  }
+
   if (!_.isNil(req.body.areaOfInterest)) {
     let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
     project.areaOfInterest = geojson;

@@ -1018,12 +1018,16 @@ export default Vue.extend({
 
       const isNew = _.isNil(this.id) || (this.id.length == 0);
 
-      this.$store.dispatch('projectMetadata/save').then(pmd => {
+      this.$store.dispatch('projectMetadata/save')
+      .then(pmd => {
         this.setDirty(false);
         if (isNew) {
           this.$router.replace({ path: `/survey/${pmd.id}/summary` })
         }
         this.notifySuccess('Saved plan');
+      })
+      .catch(err => {
+        this.notifyError(`Failed to save plan (${err.message})`);
       });
     },
 

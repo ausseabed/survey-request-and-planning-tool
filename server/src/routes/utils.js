@@ -6,6 +6,7 @@ var auth = require('../lib/auth')();
 import { User } from '../lib/entity/user';
 
 import { multiPolygon, multiLineString, multiPoint } from "@turf/helpers";
+import truncate from "@turf/truncate";
 
 export const asyncMiddleware = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch((err) => {
@@ -260,6 +261,10 @@ export function geojsonToMultiPolygon(geojson) {
       }
     });
     let mp = multiPolygon(polys);
+    // use truncate to remove the z coordinate (if it exists)
+    mp = truncate(mp, {
+      coordinates: 2
+    })
     return mp.geometry;
   } else {
     let err = boom.notImplemented(

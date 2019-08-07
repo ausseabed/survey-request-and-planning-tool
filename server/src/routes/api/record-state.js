@@ -140,13 +140,13 @@ router.get(
     isAuthenticated,
     permitCustodianBasedPermission({
       entityType:HippRequest,
-      custodianAttributes: ['requestingAgencies'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllHippRequests',
       allowedPermissionCustodian: 'canViewCustodianHippRequests'}),
   ],
   asyncMiddleware(async function(req, res) {
 
-  await handleGetRequest(req, res, HippRequest, 'requestingAgencies', 'request')
+  await handleGetRequest(req, res, HippRequest, 'custodians', 'request')
 }));
 
 
@@ -192,7 +192,7 @@ router.post(
     entityType = HippRequest;
     recordType = 'request';
     machine = await buildRecordMachine(
-      entityType, entityId, req.user, 'requestingAgencies', recordType);
+      entityType, entityId, req.user, 'custodians', recordType);
   } else if (entityTypeStr == 'project-metadata') {
     entityType = ProjectMetadata;
     recordType = 'plan';

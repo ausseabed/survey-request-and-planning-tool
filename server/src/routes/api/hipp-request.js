@@ -16,7 +16,7 @@ import { updateRecordState } from '../state-management';
 // mapping of the entity attribute names to what they should be in the
 // exported geojson
 var ENTITY_GEOJSON_MAP = [
-  ['requestingAgencies[0].name', 'ORGANISATN'],
+  ['custodians[0].name', 'ORGANISATN'],
   ['requestorName', 'NAME'],
   ['requestorPosition', 'POSITION'],
   ['pointOfContactPhone', 'PHONE'],
@@ -69,7 +69,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     // need to filter list to include only hipp requests that include the
     // custodian this user is assigned.
     hippRequestQuery = hippRequestQuery
-    .innerJoin("hipp_request.requestingAgencies", "custodian")
+    .innerJoin("hipp_request.custodians", "custodian")
     .andWhere(
       `custodian.id = :custodianId`,
       {custodianId: req.user.custodian.id}
@@ -95,7 +95,7 @@ router.get(
     isAuthenticated,
     permitCustodianBasedPermission({
       entityType:HippRequest,
-      custodianAttributes: ['requestingAgencies'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllHippRequests',
       allowedPermissionCustodian: 'canViewCustodianHippRequests'})
   ],
@@ -107,7 +107,7 @@ router.get(
     req.params.id,
     {
       relations: [
-        "requestingAgencies",
+        "custodians",
       ]
     }
   );
@@ -157,7 +157,7 @@ router.get(
     isAuthenticated,
     permitCustodianBasedPermission({
       entityType:HippRequest,
-      custodianAttributes: ['requestingAgencies'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllHippRequests',
       allowedPermissionCustodian: 'canViewCustodianHippRequests'})
   ],
@@ -169,7 +169,7 @@ router.get(
     req.params.id,
     {
       relations: [
-        "requestingAgencies",
+        "custodians",
         "purposes",
         "dataCaptureTypes",
         "recordState"
@@ -197,7 +197,7 @@ router.post(
     isAuthenticated,
     permitCustodianBasedPermission({
       entityType: HippRequest,
-      custodianAttributes: ['requestingAgencies'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllHippRequests',
       allowedPermissionCustodian: 'canEditCustodianHippRequests',
       allowedPermissionNoEntityId: 'canAddHippRequest',
@@ -281,7 +281,7 @@ router.post(
     isAuthenticated,
     permitCustodianBasedPermission({
       entityType: HippRequest,
-      custodianAttributes: ['requestingAgencies'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllHippRequests',
       allowedPermissionCustodian: 'canEditCustodianHippRequests',
       allowedPermissionNoEntityId: 'canAddHippRequest',
@@ -320,7 +320,7 @@ router.post(
     hippRequest.id,
     {
       relations: [
-        "requestingAgencies",
+        "custodians",
         "purposes",
         "dataCaptureTypes",
       ]
@@ -336,7 +336,7 @@ router.delete(
     isAuthenticated,
     permitCustodianBasedPermission({
       entityType: HippRequest,
-      custodianAttributes: ['requestingAgencies'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllHippRequests',
       allowedPermissionCustodian: 'canEditCustodianHippRequests',
       allowedPermissionNoEntityId: 'canAddHippRequest',

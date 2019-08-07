@@ -35,8 +35,8 @@ export class Custodian {
 
   @ManyToMany(
     type => HippRequest,
-    hippRequest => hippRequest.requestingAgencies)
-  requestingAgenciesHipp;
+    hippRequest => hippRequest.custodians)
+  custodiansHipp;
 
   @OneToMany(type => User, user => user.custodian)
   users;

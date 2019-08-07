@@ -29,7 +29,7 @@ const attachmentmap = {
   'hipp-request': {
     entity: HippRequest,
     attachment: HippRequestAttachment,
-    custodianAttributes: ['requestingAgencies'],
+    custodianAttributes: ['custodians'],
   },
 }
 

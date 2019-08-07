@@ -33,10 +33,10 @@ const TEMPLATE_TYPE_MAP = {
     entityType: HippRequest,
     allowedPermissionAll: 'canViewAllHippRequests',
     allowedPermissionCustodian: 'canViewCustodianHippRequests',
-    custodianAttributes: ['requestingAgencies'],
+    custodianAttributes: ['custodians'],
     reportGenerator: HippRequestReportGenerator,
     relations: [
-      'requestingAgencies',
+      'custodians',
       'attachments',
       'attachments.attachment'
     ],

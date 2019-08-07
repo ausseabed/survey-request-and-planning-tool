@@ -124,7 +124,7 @@ export default Vue.extend({
         return true
       } else if (
         this.hasPermission('canViewCustodianAttachments') &&
-        this.hasCustodianLink('hippRequest.requestingAgencies')
+        this.hasCustodianLink('hippRequest.custodians')
       ) {
         return true
       } else {

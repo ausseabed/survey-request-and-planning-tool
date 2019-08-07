@@ -401,7 +401,7 @@ export class HippRequestReportGenerator extends ReportGenerator {
     const data = {
       id: this.entityAttributeValue('id'),
       name: this.entityAttributeValue('name'),
-      requestingAgencies: this.entityAttributeValue('requestingAgencies'),
+      custodians: this.entityAttributeValue('custodians'),
       requestorName: this.entityAttributeValue('requestorName'),
       pointOfContactEmail: this.entityAttributeValue('pointOfContactEmail'),
       pointOfContactPhone: this.entityAttributeValue('pointOfContactPhone'),
@@ -456,8 +456,8 @@ export class HippRequestReportGenerator extends ReportGenerator {
     let rawFields = [
       'id',
       'name',
-      'requestingAgencies.name',
-      'requestingAgencies.abn',
+      'custodians.name',
+      'custodians.abn',
       'requestorName',
       'pointOfContactEmail',
       'pointOfContactPhone',

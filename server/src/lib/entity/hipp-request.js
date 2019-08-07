@@ -110,9 +110,9 @@ export class HippRequest {
 
   @ManyToMany(
     type => Custodian,
-    custodian => custodian.requestingAgenciesHipp)
+    custodian => custodian.custodiansHipp)
   @JoinTable()
-  requestingAgencies;
+  custodians;
 
   @Column({
       type:"varchar",

@@ -179,7 +179,7 @@ export default Vue.extend({
       }
       else if (
         this.hasPermission('canEditCustodianHippRequests') &&
-        this.hasCustodianLink('hippRequest.requestingAgencies')
+        this.hasCustodianLink('hippRequest.custodians')
       ) {
         // can only edit hipp requests that are linked to user
         return false

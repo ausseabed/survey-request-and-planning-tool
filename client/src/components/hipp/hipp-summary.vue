@@ -78,16 +78,16 @@
           <q-card-section>
 
             <form-field-validated-select
-              name="hippRequest.requestingAgencies"
-              attribute="Requestor’s Custodian"
-              label="Requestor’s Custodian"
+              name="hippRequest.custodians"
+              attribute="Custodian"
+              label="Custodian"
               multiple use-chips
-              :value="hippRequest.requestingAgencies"
-              @input="update({path:'hippRequest.requestingAgencies', value:$event})"
+              :value="hippRequest.custodians"
+              @input="update({path:'hippRequest.custodians', value:$event})"
               :options="custodians"
               option-label="name"
               option-value="id"
-              @blur="$v.hippRequest.requestingAgencies.$touch"
+              @blur="$v.hippRequest.custodians.$touch"
               :readonly="readonly"
               >
             </form-field-validated-select>
@@ -895,7 +895,7 @@ export default Vue.extend({
       }
       else if (
         this.hasPermission('canEditCustodianHippRequests') &&
-        this.hasCustodianLink('hippRequest.requestingAgencies')
+        this.hasCustodianLink('hippRequest.custodians')
       ) {
         // can only edit hipp requests that are linked to user
         return false
@@ -979,7 +979,7 @@ export default Vue.extend({
       return {
         hippRequest: {
           name: { required },
-          requestingAgencies: { required, minLength:minLength(1) },
+          custodians: { required, minLength:minLength(1) },
           requestorName: { required },
           requestorPosition: { },
           pointOfContactEmail: { required, email },
@@ -1007,7 +1007,7 @@ export default Vue.extend({
       return {
         hippRequest: {
           name: { required },
-          requestingAgencies: { required, minLength:minLength(1) },
+          custodians: { required, minLength:minLength(1) },
           requestorName: { required },
           requestorPosition: { },
           pointOfContactEmail: { required, email },

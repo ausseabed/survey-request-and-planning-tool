@@ -152,7 +152,7 @@ export default Vue.extend({
       if (this.attachesTo === 'survey') {
         custodianLink = 'projectMetadata.custodians'
       } else if (this.attachesTo === 'hipp-request') {
-        custodianLink = 'hippRequest.requestingAgencies'
+        custodianLink = 'hippRequest.custodians'
       }
       return custodianLink
     },

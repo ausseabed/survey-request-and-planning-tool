@@ -1,19 +1,19 @@
-import * as actions from './organisation-actions'
-import * as getters from './organisation-getters'
-import * as types from './organisation-mutation-types'
-import mutations from './organisation-mutations'
+import * as actions from './custodian-actions'
+import * as getters from './custodian-getters'
+import * as types from './custodian-mutation-types'
+import mutations from './custodian-mutations'
 
 import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
-    activeOrganisation:undefined,
-    userOrganisation: undefined,
+    activeCustodian:undefined,
+    userCustodian: undefined,
     dirty: false,
-    organisations:[],
+    custodians:[],
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
-    deletedOrganisations: null, // should deleted orgs be requested
+    deletedCustodians: null, // should deleted custodians be requested
   }
 }
 

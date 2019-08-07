@@ -41,7 +41,7 @@ export const isAuthenticated = async (req, res, next) => {
     .findOne(
       userId,
       {
-        relations: ['role', 'organisation']
+        relations: ['role', 'custodian']
       }
     );
     if (_.isNil(existingUser)) {
@@ -104,18 +104,18 @@ export function permitPermission(allowedPermission) {
 // {
 //   entityType: HippRequest,
 //   entityTypeFn: getetypes,
-//   organisationAttributes: ['orgs'],
-//   organisationAttributesFn: getorgattrs,
+//   custodianAttributes: ['custodians'],
+//   custodianAttributesFn: getcustodianattrs,
 //   allowedPermissionAll: 'cangetallprojs',
 //   allowedPermissionAllFn: getcangetallprojs,
-//   allowedPermissionOrg: 'cangetorgprojs',
-//   allowedPermissionOrgFn: getcangetorgprojs,
+//   allowedPermissionCustodian: 'cangetcustodianprojs',
+//   allowedPermissionCustodianFn: getcangetcustodianprojs,
 //   allowedPermissionNoEntityId: 'canaddproj',
 // }
 
 
 // middleware for doing role-based permissions
-export function permitOrgBasedPermission(params) {
+export function permitCustodianBasedPermission(params) {
   const allowedPermissionNoEntityId = params.allowedPermissionNoEntityId
 
   // eg; if trying to add a new entity (instead of editing existing)
@@ -126,22 +126,22 @@ export function permitOrgBasedPermission(params) {
     return hasPermission(role, allowedPermissionNoEntityId)
   };
 
-  const isAllowed = (user, orglist, allowedPermissionAll, allowedPermissionOrg) => {
+  const isAllowed = (user, custodianlist, allowedPermissionAll, allowedPermissionCustodian) => {
     const role = user.role;
     if (hasPermission(role, allowedPermissionAll)) {
       // user has the permission that lets them view all of this role
       return true
     } else if (
-      !_.isNil(user.organisation) &&
-      hasPermission(role, allowedPermissionOrg))
+      !_.isNil(user.custodian) &&
+      hasPermission(role, allowedPermissionCustodian))
     {
       // user has the permission that only lets them view this entity if the
-      // entity is linked to their organisation
-      const matchingOrg = orglist.find((innOrg) => {
-        return innOrg.id === user.organisation.id;
+      // entity is linked to their custodian
+      const matchingCustodian = custodianlist.find((innCustodian) => {
+        return innCustodian.id === user.custodian.id;
       })
-      // if a matchin org is found, then the user can view this entity
-      return !_.isNil(matchingOrg)
+      // if a matchin custodian is found, then the user can view this entity
+      return !_.isNil(matchingCustodian)
     } else {
       return false
     }
@@ -149,7 +149,7 @@ export function permitOrgBasedPermission(params) {
 
 
   return async (request, response, next) => {
-    const allOrgs = []
+    const allCustodians = []
 
     let eid = request.params.id ? request.params.id : request.body.id
     if (_.isNil(eid)) {
@@ -159,7 +159,7 @@ export function permitOrgBasedPermission(params) {
         response.status(403).json({message: "Forbidden"});
       }
     } else {
-      // In some cases we know up front what the entity type and org attrs
+      // In some cases we know up front what the entity type and custodian attrs
       // are. In other cases we will only know when the request comes in
       // (eg; attachments which may link to projects or hipp requests); for
       // this reason we allow a function to be passed in.
@@ -171,14 +171,14 @@ export function permitOrgBasedPermission(params) {
       } else  {
         throw new Error("Must provide either entityType or entityTypeFn");
       }
-      let organisationAttributes = undefined;
-      if (!_.isNil(params.organisationAttributes)) {
-        organisationAttributes = params.organisationAttributes;
-      } else if (!_.isNil(params.organisationAttributesFn)) {
-        organisationAttributes = params.organisationAttributesFn(request);
+      let custodianAttributes = undefined;
+      if (!_.isNil(params.custodianAttributes)) {
+        custodianAttributes = params.custodianAttributes;
+      } else if (!_.isNil(params.custodianAttributesFn)) {
+        custodianAttributes = params.custodianAttributesFn(request);
       } else {
-        throw new Error("Must provide either organisationAttributes or " +
-          "organisationAttributesFn");
+        throw new Error("Must provide either custodianAttributes or " +
+          "custodianAttributesFn");
       }
 
       let allowedPermissionAll = params.allowedPermissionAll
@@ -189,39 +189,39 @@ export function permitOrgBasedPermission(params) {
         throw new Error("Must provide either allowedPermissionAll or " +
           "allowedPermissionAllFn");
       }
-      let allowedPermissionOrg = params.allowedPermissionOrg
-      if (_.isNil(allowedPermissionOrg) && !_.isNil(params.allowedPermissionOrgFn)) {
-        allowedPermissionOrg = params.allowedPermissionOrgFn(request)
+      let allowedPermissionCustodian = params.allowedPermissionCustodian
+      if (_.isNil(allowedPermissionCustodian) && !_.isNil(params.allowedPermissionCustodianFn)) {
+        allowedPermissionCustodian = params.allowedPermissionCustodianFn(request)
       }
-      if (_.isNil(allowedPermissionOrg)) {
-        throw new Error("Must provide either allowedPermissionOrg or " +
-          "allowedPermissionOrgFn");
+      if (_.isNil(allowedPermissionCustodian)) {
+        throw new Error("Must provide either allowedPermissionCustodian or " +
+          "allowedPermissionCustodianFn");
       }
 
       // get the entity, but only the id attribute and the attributes that link
-      // to one or more organisations
+      // to one or more custodians
       let entity = await getConnection()
       .getRepository(entityType)
       .findOne(
         eid,
         {
           select: ['id'],
-          relations: organisationAttributes
+          relations: custodianAttributes
         }
       );
 
-      // aggregate the various list of organisations associated with this
+      // aggregate the various list of custodians associated with this
       // entity into the one array
-      for (let orgsAttrName of organisationAttributes) {
-        let orgs = entity[orgsAttrName]
-        if (!_.isNil(orgs)) {
-          allOrgs.push(...orgs)
+      for (let custodiansAttrName of custodianAttributes) {
+        let custodians = entity[custodiansAttrName]
+        if (!_.isNil(custodians)) {
+          allCustodians.push(...custodians)
         }
       }
 
       if (
         request.user &&
-        isAllowed(request.user, allOrgs, allowedPermissionAll, allowedPermissionOrg))
+        isAllowed(request.user, allCustodians, allowedPermissionAll, allowedPermissionCustodian))
       {
         next(); // role is allowed, so continue on the next middleware
       } else {

@@ -349,7 +349,7 @@ export default Vue.extend({
         // else via "save and continue".
         const currentId = this.$route.params.id;
         if (isNew && currentId == 'new') {
-          // then updated the route for the org
+          // then updated the route for the custodian
           this.$router.replace({ path: `/admin/roles/${role.id}` });
         }
       });

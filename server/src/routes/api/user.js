@@ -20,7 +20,7 @@ router.get(
   .getRepository(User)
   .find({
     select: ['id', 'name', 'email', 'lastSeen'],
-    relations: ['role', 'organisation'],
+    relations: ['role', 'custodian'],
     order: {name: 'ASC'}
   });
   return res.json(users);
@@ -53,7 +53,7 @@ router.post(
   // We can't let this update the auth tokens, and email needs to match in
   // CRCSI accounts so don't modify it either
   user.role = req.body.role;
-  user.organisation = req.body.organisation;
+  user.custodian = req.body.custodian;
   user.name = req.body.name;
 
   user = await getConnection()
@@ -65,7 +65,7 @@ router.post(
   .getRepository(User)
   .findOne(user.id, {
     select: ['id', 'name', 'email'],
-    relations: ['role', 'organisation'],
+    relations: ['role', 'custodian'],
   })
 
   return res.json(user)

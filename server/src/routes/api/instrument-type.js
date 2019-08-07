@@ -15,13 +15,13 @@ router.get('/', isAuthenticated, async function (req, res) {
     {} :
     {userSubmitted: (req.query['user-submitted'] == 'true')}
 
-  let orgs = await getConnection()
+  let custodians = await getConnection()
   .getRepository(InstrumentType)
   .find({
     where:whereOpts,
     relations: ["dataCaptureTypes"]
   });
-  return res.json(orgs);
+  return res.json(custodians);
 });
 
 module.exports = router;

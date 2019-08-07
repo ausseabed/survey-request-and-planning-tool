@@ -2,7 +2,7 @@ import {Entity, PrimaryColumn, Column, ManyToOne, OneToMany} from "typeorm";
 
 import { DateTransformer } from './utils';
 
-import { Organisation } from './organisation'
+import { Custodian } from './custodian'
 import { RecordState } from './record-state'
 import { Role } from './role'
 
@@ -44,8 +44,8 @@ export class User {
   @ManyToOne(type => Role, role => role.users)
   role;
 
-  @ManyToOne(type => Organisation, org => org.users)
-  organisation;
+  @ManyToOne(type => Custodian, custodian => custodian.users, {nullable: true})
+  custodian;
 
   @OneToMany(type => RecordState, recordState => recordState.user)
   recordStates;

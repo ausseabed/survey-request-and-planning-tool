@@ -1,14 +1,14 @@
 import Vue from 'vue'
 
-import * as mutTypes from './organisation-mutation-types'
+import * as mutTypes from './custodian-mutation-types'
 import { RequestStatus } from '../request-status'
 
-export const saveOrganisation = ({ commit, state }, payload) => {
+export const saveCustodian = ({ commit, state }, payload) => {
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   return new Promise((resolve, reject) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
-    Vue.axios.post('/api/organisation', payload)
+    Vue.axios.post('/api/custodian', payload)
     .then((response) => {
       commit(mutTypes.ADD_ORGANISATION, response.data);
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
@@ -23,12 +23,12 @@ export const saveOrganisation = ({ commit, state }, payload) => {
   });
 }
 
-export const getOrganisations = ({ commit, state }) => {
-  var url_endpoint = '/api/organisation/';
+export const getCustodians = ({ commit, state }) => {
+  var url_endpoint = '/api/custodian/';
 
   const params = {};
-  if (!_.isNil(state.deletedOrganisations)) {
-    params.deleted = state.deletedOrganisations;
+  if (!_.isNil(state.deletedCustodians)) {
+    params.deleted = state.deletedCustodians;
   }
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
@@ -48,8 +48,8 @@ export const getOrganisations = ({ commit, state }) => {
   });
 }
 
-export const deleteOrganisation = ({ commit, state }, payload) => {
-  var url_endpoint = '/api/organisation/' + payload.id;
+export const deleteCustodian = ({ commit, state }, payload) => {
+  var url_endpoint = '/api/custodian/' + payload.id;
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   return new Promise((resolve, reject) => {
@@ -68,20 +68,20 @@ export const deleteOrganisation = ({ commit, state }, payload) => {
   });
 }
 
-export const restoreOrganisation = ({ commit, state }, organisationId) => {
-  // uses the same post request handler as save, but only passes the orgid
+export const restoreCustodian = ({ commit, state }, custodianId) => {
+  // uses the same post request handler as save, but only passes the custodianid
   // and deleted flag
   const payload = {
-    id: organisationId,
+    id: custodianId,
     deleted: false,
   }
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   return new Promise((resolve, reject) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
-    Vue.axios.post('/api/organisation', payload)
+    Vue.axios.post('/api/custodian', payload)
     .then((response) => {
-      // add organisation in this case will update the org already in the list
+      // add custodian in this case will update the custodian already in the list
       commit(mutTypes.ADD_ORGANISATION, response.data);
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
       resolve(response.data);
@@ -94,8 +94,8 @@ export const restoreOrganisation = ({ commit, state }, organisationId) => {
   });
 }
 
-export const getUserOrganisation = ({ commit, state }) => {
-  var url_endpoint = '/api/organisation/user-organisation';
+export const getUserCustodian = ({ commit, state }) => {
+  var url_endpoint = '/api/custodian/user-custodian';
 
   const params = {};
 

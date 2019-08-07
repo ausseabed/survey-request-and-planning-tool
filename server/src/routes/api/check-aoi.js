@@ -48,14 +48,14 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   if (hasPermission(req.user.role, 'canViewAllProjects')) {
     // then no additional where clauses
-  } else if (hasPermission(req.user.role, 'canViewOrgProjects')) {
+  } else if (hasPermission(req.user.role, 'canViewCustodianProjects')) {
     // need to filter list to include only projects that include the
-    // org this user is assigned.
+    // custodian this user is assigned.
     projectsQuery = projectsQuery
-    .innerJoin("project_metadata.organisations", "organisation")
+    .innerJoin("project_metadata.custodians", "custodian")
     .andWhere(
-      `organisation.id = :orgId`,
-      {orgId: req.user.organisation.id}
+      `custodian.id = :custodianId`,
+      {custodianId: req.user.custodian.id}
     )
   } else {
     return res.json([]);

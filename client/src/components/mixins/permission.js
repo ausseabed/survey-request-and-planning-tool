@@ -5,8 +5,8 @@ export const permission = {
     ...mapGetters('role',[
       'userRole',
     ]),
-    ...mapGetters('organisation',[
-      'userOrganisation',
+    ...mapGetters('custodian',[
+      'userCustodian',
     ]),
   },
   methods: {
@@ -32,23 +32,23 @@ export const permission = {
         return res
       }
     },
-    hasOrganisationLink(organisationAttribute) {
-      // checks if the logged in user's assigned organisation is included in the
-      // list or organisations returned by the `organisationAttribute` param
-      if (_.isNil(this.userOrganisation)) {
+    hasCustodianLink(custodianAttribute) {
+      // checks if the logged in user's assigned custodian is included in the
+      // list or custodians returned by the `custodianAttribute` param
+      if (_.isNil(this.userCustodian)) {
         return false
       }
-      const orgsList = _.at(this, organisationAttribute)
+      const custodiansList = _.at(this, custodianAttribute)
       // the above `_.at` returns an array of arrays
-      if (orgsList.length == 0) {
+      if (custodiansList.length == 0) {
         return false
       }
-      const orgs = orgsList[0]
+      const custodians = custodiansList[0]
 
-      const org = orgs.find((o) => {
-        return o.id === this.userOrganisation.id;
+      const custodian = custodians.find((o) => {
+        return o.id === this.userCustodian.id;
       })
-      return !_.isNil(org)
+      return !_.isNil(custodian)
     }
   }
 }

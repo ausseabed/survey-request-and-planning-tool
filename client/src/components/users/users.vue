@@ -66,13 +66,13 @@
                   </form-field-validated-input>
 
                   <form-field-validated-select
-                    name="activeUser.organisation"
-                    label="Organisation"
-                    attribute="Organisation"
-                    :value="activeUser.organisation"
-                    @input="updateActiveUserValue({path:'organisation', value:$event})"
-                    :options="organisations"
-                    @blur="$v.activeUser.organisation.$touch"
+                    name="activeUser.custodian"
+                    label="Custodian"
+                    attribute="Custodian"
+                    :value="activeUser.custodian"
+                    @input="updateActiveUserValue({path:'custodian', value:$event})"
+                    :options="custodians"
+                    @blur="$v.activeUser.custodian.$touch"
                     option-value="id"
                     option-label="name"
                     :readonly="!hasPermission('canEditUser')"
@@ -155,8 +155,8 @@ export default Vue.extend({
       'dirty',
       'users',
     ]),
-    ...mapGetters('organisation', [
-      'organisations',
+    ...mapGetters('custodian', [
+      'custodians',
     ]),
     ...mapGetters('role', [
       'roles',
@@ -180,8 +180,8 @@ export default Vue.extend({
       'getUsers',
       'saveUser',
     ]),
-    ...mapActions('organisation', [
-      'getOrganisations',
+    ...mapActions('custodian', [
+      'getCustodians',
     ]),
     ...mapActions('role', [
       'getRoles',
@@ -194,7 +194,7 @@ export default Vue.extend({
 
     getFormData() {
       this.getRoles();
-      this.getOrganisations();
+      this.getCustodians();
       this.getUsers().then(() => {
         this.updateActiveUser();
       });
@@ -222,7 +222,7 @@ export default Vue.extend({
 
       const isNew = _.isNil(this.activeUser.id)
 
-      this.saveUser(this.activeUser).then(org => {
+      this.saveUser(this.activeUser).then(custodian => {
         // this.getFormData();
         const successMsg = isNew ? 'User created' : 'User updated';
         this.notifySuccess(successMsg);
@@ -231,8 +231,8 @@ export default Vue.extend({
         // else via "save and continue".
         const currentId = this.$route.params.id;
         if (isNew && currentId == 'new') {
-          // then updated the route for the org
-          this.$router.replace({ path: `/admin/users/${org.id}` });
+          // then updated the route for the custodian
+          this.$router.replace({ path: `/admin/users/${custodian.id}` });
         }
       });
     }
@@ -242,7 +242,7 @@ export default Vue.extend({
     activeUser: {
       name: { required },
       role: { required },
-      organisation: { },
+      custodian: { },
     }
   },
 

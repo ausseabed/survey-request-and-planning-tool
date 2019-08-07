@@ -5,7 +5,7 @@ import { DateTransformer } from './utils';
 
 import { DataCaptureType } from './data-capture-type';
 import { HippRequestAttachment } from './hipp-request-attachment';
-import { Organisation } from './organisation';
+import { Custodian } from './custodian';
 import { ProjectMetadata } from './project-metadata';
 import { RecordState } from './record-state';
 import { RequestPurpose } from './request-purpose';
@@ -109,8 +109,8 @@ export class HippRequest {
   name;
 
   @ManyToMany(
-    type => Organisation,
-    organisation => organisation.requestingAgenciesHipp)
+    type => Custodian,
+    custodian => custodian.requestingAgenciesHipp)
   @JoinTable()
   requestingAgencies;
 

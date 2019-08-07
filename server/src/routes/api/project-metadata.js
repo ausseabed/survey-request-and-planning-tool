@@ -6,7 +6,7 @@ import { feature, featureCollection } from "@turf/helpers";
 import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
-  hasPermission, permitOrgBasedPermission }
+  hasPermission, permitCustodianBasedPermission }
   from '../utils';
 import { ProjectMetadata, PROJECT_STATUSES }
   from '../../lib/entity/project-metadata';
@@ -54,14 +54,14 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   if (hasPermission(req.user.role, 'canViewAllProjects')) {
     // then no additional where clauses
-  } else if (hasPermission(req.user.role, 'canViewOrgProjects')) {
+  } else if (hasPermission(req.user.role, 'canViewCustodianProjects')) {
     // need to filter list to include only projects that include the
-    // org this user is assigned.
+    // custodian this user is assigned.
     projectsQuery = projectsQuery
-    .innerJoin("project_metadata.organisations", "organisation")
+    .innerJoin("project_metadata.custodians", "custodian")
     .andWhere(
-      `organisation.id = :orgId`,
-      {orgId: req.user.organisation.id}
+      `custodian.id = :custodianId`,
+      {custodianId: req.user.custodian.id}
     )
   } else {
     return res.json([]);
@@ -80,11 +80,11 @@ router.get(
   '/:id/thumbnail',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllProjects',
-      allowedPermissionOrg: 'canViewOrgProjects'})
+      allowedPermissionCustodian: 'canViewCustodianProjects'})
   ],
   asyncMiddleware(async function (req, res) {
 
@@ -165,11 +165,11 @@ router.get(
   '/:id/geometry',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllProjects',
-      allowedPermissionOrg: 'canEditOrgProjects',
+      allowedPermissionCustodian: 'canEditCustodianProjects',
       allowedPermissionNoEntityId: 'canAddProject',
     })
   ],
@@ -181,7 +181,7 @@ router.get(
     req.params.id,
     {
       relations: [
-        "organisations",
+        "custodians",
       ]
     }
   );
@@ -214,11 +214,11 @@ router.get(
   '/:id',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllProjects',
-      allowedPermissionOrg: 'canViewOrgProjects'})
+      allowedPermissionCustodian: 'canViewCustodianProjects'})
   ],
   asyncMiddleware(async function (req, res) {
   let project = await getConnection()
@@ -227,7 +227,7 @@ router.get(
     req.params.id,
     {
       relations: [
-        "organisations",
+        "custodians",
         "instrumentTypes",
         "dataCaptureTypes",
         "surveyApplication",
@@ -254,11 +254,11 @@ router.post(
   '/',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllProjects',
-      allowedPermissionOrg: 'canEditOrgProjects',
+      allowedPermissionCustodian: 'canEditCustodianProjects',
       allowedPermissionNoEntityId: 'canAddProject',
     })
   ],
@@ -271,7 +271,7 @@ router.post(
   project.surveyName = req.body.surveyName
   project.contactPerson = req.body.contactPerson;
   project.email = req.body.email;
-  project.organisations = req.body.organisations;
+  project.custodians = req.body.custodians;
   project.startDate = req.body.startDate;
   project.endDate = req.body.endDate;
   project.instrumentTypes = req.body.instrumentTypes;
@@ -333,11 +333,11 @@ router.delete(
   '/:id',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllProjects',
-      allowedPermissionOrg: 'canEditOrgProjects',
+      allowedPermissionCustodian: 'canEditCustodianProjects',
     })
   ],
   asyncMiddleware(async function (req, res) {

@@ -4,7 +4,7 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, permitOrgBasedPermission }
+import { asyncMiddleware, isAuthenticated, permitCustodianBasedPermission }
   from '../utils';
 import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { DeliverableDefinition } from '../../lib/entity/deliverable-definition';
@@ -18,7 +18,7 @@ router.get(
   isAuthenticated,
   asyncMiddleware(async function (req, res) {
 
-  let orgs = await getConnection()
+  let custodians = await getConnection()
   .getRepository(DeliverableDefinition)
   .find({
     relations: [
@@ -29,7 +29,7 @@ router.get(
     },
   });
 
-  return res.json(orgs);
+  return res.json(custodians);
 
 }));
 
@@ -38,11 +38,11 @@ router.get(
   '/:id/list',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType: ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllProjects',
-      allowedPermissionOrg: 'canViewOrgProjects',
+      allowedPermissionCustodian: 'canViewCustodianProjects',
     })
   ],
   asyncMiddleware(async function (req, res) {
@@ -65,11 +65,11 @@ router.post(
   '/:id/list',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType: ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllProjects',
-      allowedPermissionOrg: 'canEditOrgProjects',
+      allowedPermissionCustodian: 'canEditCustodianProjects',
     })
   ],
   asyncMiddleware(async function (req, res) {
@@ -92,11 +92,11 @@ router.delete(
   '/:id/:did/',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType: ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllProjects',
-      allowedPermissionOrg: 'canEditOrgProjects',
+      allowedPermissionCustodian: 'canEditCustodianProjects',
     })
   ],
   asyncMiddleware(async function (req, res) {

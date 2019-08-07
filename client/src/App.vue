@@ -22,12 +22,12 @@
     },
     mounted() {
       if (this.$route.path == '/login' || this.$route.path == '/auth/callback') {
-        // part of the login process, don't request role & org as these will
+        // part of the login process, don't request role & custodian as these will
         // fail and that causes issues in Safari
       } else {
         try {
           this.getUserRole();
-          this.getUserOrganisation();
+          this.getUserCustodian();
         } catch (error) {
           console.log(error)
         }
@@ -40,8 +40,8 @@
       ...mapActions('role', [
         'getUserRole',
       ]),
-      ...mapActions('organisation', [
-        'getUserOrganisation',
+      ...mapActions('custodian', [
+        'getUserCustodian',
       ]),
       resetScroll(el, done) {
         document.documentElement.scrollTop = 0

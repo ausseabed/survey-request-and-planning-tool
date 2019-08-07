@@ -958,8 +958,8 @@ export default Vue.extend({
         // can edit all projects
         return false
       } else if (
-        this.hasPermission('canEditOrgProjects') &&
-        this.hasOrganisationLink('projectMetadata.organisations')
+        this.hasPermission('canEditCustodianProjects') &&
+        this.hasCustodianLink('projectMetadata.custodians')
       ) {
         // can only edit projects that are linked to user
         return false
@@ -1061,7 +1061,7 @@ export default Vue.extend({
 
   data() {
     return {
-      orgSearchTerms: '',
+      custodianSearchTerms: '',
       loading: false,
       mapSurveyLines:undefined,
       mapTidalGauge:undefined,

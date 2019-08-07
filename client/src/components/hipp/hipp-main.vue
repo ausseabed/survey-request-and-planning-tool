@@ -123,8 +123,8 @@ export default Vue.extend({
       if (this.hasPermission('canViewAllAttachments')) {
         return true
       } else if (
-        this.hasPermission('canViewOrgAttachments') &&
-        this.hasOrganisationLink('hippRequest.requestingAgencies')
+        this.hasPermission('canViewCustodianAttachments') &&
+        this.hasCustodianLink('hippRequest.requestingAgencies')
       ) {
         return true
       } else {

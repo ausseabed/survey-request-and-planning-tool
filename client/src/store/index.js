@@ -5,7 +5,7 @@ import projectMetadata
   from './modules/project-metadata/project-metadata-state'
 import dataCaptureType from './modules/data-capture-type/data-capture-type-state'
 import instrumentType from './modules/instrument-type/instrument-type-state'
-import organisation from './modules/organisation/organisation-state'
+import custodian from './modules/custodian/custodian-state'
 import surveyApplication
   from './modules/survey-application/survey-application-state'
 import techSpec from './modules/tech-spec/tech-spec-state'
@@ -28,7 +28,7 @@ export default new Vuex.Store({
     projectMetadata,
     dataCaptureType,
     instrumentType,
-    organisation,
+    custodian,
     surveyApplication,
     techSpec,
     surveyFile,

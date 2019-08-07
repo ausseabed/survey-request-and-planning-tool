@@ -6,7 +6,7 @@ import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
 import { InstrumentType } from './instrument-type';
 import { ProjectMetadata } from './project-metadata';
-import { Organisation } from './organisation';
+import { Custodian } from './custodian';
 
 
 // valid values for the `surveyType` attribute

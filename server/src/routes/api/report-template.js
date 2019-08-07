@@ -13,7 +13,7 @@ import stream from 'stream'
 import { getConnection } from 'typeorm'
 
 import { asyncMiddleware, isAuthenticated, permitPermission,
-  permitOrgBasedPermission } from '../utils'
+  permitCustodianBasedPermission } from '../utils'
 import { HippRequest } from '../../lib/entity/hipp-request'
 import { ProjectMetadata } from '../../lib/entity/project-metadata'
 import { ReportGenerator, HippRequestReportGenerator,
@@ -27,13 +27,13 @@ const router = express.Router()
 
 // one entry for each REPORT_TEMPLATE_TYPES in the entity/report-template.js
 // relationships is used to build query to get entity and related info
-// organisation attributes are used for the authorisation middleware check
+// custodian attributes are used for the authorisation middleware check
 const TEMPLATE_TYPE_MAP = {
   'HIPP Request': {
     entityType: HippRequest,
     allowedPermissionAll: 'canViewAllHippRequests',
-    allowedPermissionOrg: 'canViewOrgHippRequests',
-    organisationAttributes: ['requestingAgencies'],
+    allowedPermissionCustodian: 'canViewCustodianHippRequests',
+    custodianAttributes: ['requestingAgencies'],
     reportGenerator: HippRequestReportGenerator,
     relations: [
       'requestingAgencies',
@@ -44,11 +44,11 @@ const TEMPLATE_TYPE_MAP = {
   'Plan': {
     entityType: ProjectMetadata,
     allowedPermissionAll: 'canViewAllProjects',
-    allowedPermissionOrg: 'canViewOrgProjects',
-    organisationAttributes: ['organisations'],
+    allowedPermissionCustodian: 'canViewCustodianProjects',
+    custodianAttributes: ['custodians'],
     reportGenerator: ProjectMetadataReportGenerator,
     relations: [
-      'organisations',
+      'custodians',
       'dataCaptureTypes',
       'instrumentTypes',
       'surveyApplication',
@@ -76,23 +76,23 @@ function writeData(res, reportData, reportGen, reportTemplate) {
 
 
 function reportGenPermit() {
-  return permitOrgBasedPermission({
+  return permitCustodianBasedPermission({
     entityTypeFn:(request) => {
       return TEMPLATE_TYPE_MAP[request.params.templateType].entityType
     },
-    organisationAttributesFn:(request) => {
-      return TEMPLATE_TYPE_MAP[request.params.templateType].organisationAttributes
+    custodianAttributesFn:(request) => {
+      return TEMPLATE_TYPE_MAP[request.params.templateType].custodianAttributes
     },
     allowedPermissionAllFn:(request) => {
       return TEMPLATE_TYPE_MAP[request.params.templateType].allowedPermissionAll
     },
-    allowedPermissionOrgFn:(request) => {
-      return TEMPLATE_TYPE_MAP[request.params.templateType].allowedPermissionOrg
+    allowedPermissionCustodianFn:(request) => {
+      return TEMPLATE_TYPE_MAP[request.params.templateType].allowedPermissionCustodian
     },
   })
 }
 
-// Gets a list of organisations
+// Gets a list of custodians
 router.get(
   '/generate/:templateType/:id',
   [isAuthenticated, reportGenPermit()],

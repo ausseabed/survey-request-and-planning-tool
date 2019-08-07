@@ -61,8 +61,8 @@
   import { permission } from './mixins/permission'
   import * as mutRoleTypes
     from '../store/modules/role/role-mutation-types'
-  import * as mutOrgTypes
-    from '../store/modules/organisation/organisation-mutation-types'
+  import * as mutCustodianTypes
+    from '../store/modules/custodian/custodian-mutation-types'
 
   export default Vue.extend({
     mixins: [permission],
@@ -75,14 +75,14 @@
       ...mapActions('role', [
         'getUserRole',
       ]),
-      ...mapActions('organisation', [
-        'getUserOrganisation',
+      ...mapActions('custodian', [
+        'getUserCustodian',
       ]),
       ...mapMutations('role', {
         'setUserRole': mutRoleTypes.SET_USER_ROLE,
       }),
-      ...mapMutations('organisation', {
-        'setUserOrganisation': mutOrgTypes.SET_USER_ORGANISATION,
+      ...mapMutations('custodian', {
+        'setUserCustodian': mutCustodianTypes.SET_USER_ORGANISATION,
       }),
       show_settings() {
         console.log("Show settings here");
@@ -94,7 +94,7 @@
         this.$q.cookies.remove('Authorization');
         this.$auth.logout();
         this.setUserRole(undefined);
-        this.setUserOrganisation(undefined);
+        this.setUserCustodian(undefined);
         this.isAuthenticated = this.$auth.isAuthenticated();
         this.$router.push('/login');
       },
@@ -110,7 +110,7 @@
           if (this.isAuthenticated) {
             try {
               this.getUserRole();
-              this.getUserOrganisation();
+              this.getUserCustodian();
             } catch (error) {
               console.log(error)
             }

@@ -4,7 +4,7 @@ import HippProjects from 'components/hipp/hipp-projects.vue'
 import HippSummary from 'components/hipp/hipp-summary.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
-import Organisations from 'components/organisations/organisations.vue'
+import Custodians from 'components/custodians/custodians.vue'
 import ProjectMain from 'components/project-main.vue'
 import ProjectMetadata from 'components/project-metadata.vue'
 import RecordStateLog from 'components/admin/record-state-log.vue'
@@ -23,7 +23,7 @@ const routes = [
       children: [
         {
             path: '',
-            component: Organisations
+            component: Custodians
         },
         {
           path: 'users',
@@ -34,12 +34,12 @@ const routes = [
           component: Users,
         },
         {
-          path: 'organisations',
-          component: Organisations,
+          path: 'custodians',
+          component: Custodians,
         },
         {
-          path: 'organisations/:id',
-          component: Organisations,
+          path: 'custodians/:id',
+          component: Custodians,
         },
         {
           path: 'roles',

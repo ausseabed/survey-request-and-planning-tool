@@ -7,7 +7,7 @@ import { TechSpec } from './tech-spec';
 import { User } from './user'
 
 @Entity()
-export class Organisation {
+export class Custodian {
 
   @PrimaryGeneratedColumn('uuid')
   id = undefined;
@@ -30,7 +30,7 @@ export class Organisation {
 
   @ManyToMany(
     type => ProjectMetadata,
-    projectMetadata => projectMetadata.organisations)
+    projectMetadata => projectMetadata.custodians)
   projectMetadatas;
 
   @ManyToMany(
@@ -38,6 +38,6 @@ export class Organisation {
     hippRequest => hippRequest.requestingAgencies)
   requestingAgenciesHipp;
 
-  @OneToMany(type => User, user => user.organisation)
+  @OneToMany(type => User, user => user.custodian)
   users;
 }

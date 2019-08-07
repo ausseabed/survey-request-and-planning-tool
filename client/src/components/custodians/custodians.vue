@@ -6,22 +6,22 @@
         <div class="col-sm-12 col-md-6">
           <q-card class="fit column">
             <q-card-section>
-              <div class="text-h6">Organisations</div>
+              <div class="text-h6">Custodians</div>
             </q-card-section>
             <q-separator style="height:1px"/>
             <q-card-section class="full-height col" style="padding:0px">
-              <div v-if="organisations.length == 0">
-                No organisations.
+              <div v-if="custodians.length == 0">
+                No custodians.
               </div>
               <q-scroll-area v-else class="fit">
                 <q-list highlight no-border>
                   <q-item
-                    v-for="org in organisations"
-                    :key="org.id"
-                    :to="`/admin/organisations/${org.id}`"
+                    v-for="custodian in custodians"
+                    :key="custodian.id"
+                    :to="`/admin/custodians/${custodian.id}`"
                     >
-                      <q-item-label v-bind:class="{ organisationnamedeleted: org.deleted }">
-                        {{org.name}}
+                      <q-item-label v-bind:class="{ custodiannamedeleted: custodian.deleted }">
+                        {{custodian.name}}
                       </q-item-label>
                   </q-item>
                 </q-list>
@@ -32,18 +32,18 @@
               <q-card-actions align="between">
                 <q-checkbox
                   class="q-pl-sm"
-                  :value="deletedOrganisations"
-                  @input="setDeletedOrganisationsChange($event)"
+                  :value="deletedCustodians"
+                  @input="setDeletedCustodiansChange($event)"
                   toggle-indeterminate
                 >
                   <div class="q-pl-sm"><small>Show deleted</small></div>
                 </q-checkbox>
                 <q-btn
-                  v-if="hasPermission('canEditOrganisation')"
+                  v-if="hasPermission('canEditCustodian')"
                   flat
                   icon="add"
                   label="Add new"
-                  to="/admin/organisations/new"
+                  to="/admin/custodians/new"
                 >
                 </q-btn>
 
@@ -53,11 +53,11 @@
         </div>
 
         <div class="col-sm-12 col-md-6">
-          <q-card v-if="activeOrganisation">
+          <q-card v-if="activeCustodian">
             <q-card-section class="row">
               <div class="text-h6">
-                <strong v-if="activeOrganisation.deleted">Deleted - </strong>
-                <span v-bind:class="{ organisationnamedeleted: activeOrganisation.deleted }"> {{activeOrganisation.name}} </span>
+                <strong v-if="activeCustodian.deleted">Deleted - </strong>
+                <span v-bind:class="{ custodiannamedeleted: activeCustodian.deleted }"> {{activeCustodian.name}} </span>
               </div>
             </q-card-section>
             <q-separator />
@@ -69,36 +69,36 @@
               >
                 <div class="column q-gutter-sm">
                   <form-field-validated-input
-                    name="activeOrganisation.name"
+                    name="activeCustodian.name"
                     attribute="Name"
                     label="Name"
-                    :value="activeOrganisation.name"
-                    @input="updateActiveOrganisationValue({path:'name', value:$event})"
-                    @blur="$v.activeOrganisation.name.$touch"
+                    :value="activeCustodian.name"
+                    @input="updateActiveCustodianValue({path:'name', value:$event})"
+                    @blur="$v.activeCustodian.name.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="!hasPermission('canEditCustodian')"
                    >
                   </form-field-validated-input>
 
                   <form-field-validated-input
-                    name="activeOrganisation.abn"
+                    name="activeCustodian.abn"
                     attribute="ABN"
                     label="ABN"
                     helper="Optional"
-                    :value="activeOrganisation.abn"
-                    @input="updateActiveOrganisationValue({path:'abn', value:$event})"
-                    @blur="$v.activeOrganisation.abn.$touch"
+                    :value="activeCustodian.abn"
+                    @input="updateActiveCustodianValue({path:'abn', value:$event})"
+                    @blur="$v.activeCustodian.abn.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="!hasPermission('canEditCustodian')"
                     >
                   </form-field-validated-input>
                 </div>
 
               </form-wrapper>
             </q-card-section>
-            <!-- @input="updateActiveOrganisation({path:'name', value:$event})" -->
+            <!-- @input="updateActiveCustodian({path:'name', value:$event})" -->
             <div
-              v-if="hasPermission('canEditOrganisation')"
+              v-if="hasPermission('canEditCustodian')"
               class="col-auto"
               >
               <q-separator />
@@ -108,23 +108,23 @@
                   @click="submit()"
                 >
                 </q-btn>
-                <q-btn v-if="activeOrganisation.deleted" flat icon="restore_from_trash"
+                <q-btn v-if="activeCustodian.deleted" flat icon="restore_from_trash"
                   label="Restore"
-                  @click="restoreOrgClick()"
+                  @click="restoreCustodianClick()"
                 >
                 </q-btn>
                 <q-btn v-else flat icon="delete"
                   label="Delete"
-                  @click="deleteOrgClick()"
+                  @click="deleteCustodianClick()"
                 >
                 </q-btn>
               </q-card-actions>
             </div>
 
           </q-card>
-          <div v-else class="no-active-organisation column justify-center">
+          <div v-else class="no-active-custodian column justify-center">
             <div class="self-center">
-              No organisation selected.
+              No custodian selected.
             </div>
           </div>
 
@@ -145,29 +145,29 @@ import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { permission } from './../mixins/permission'
 import { errorHandler } from './../mixins/error-handling'
 import * as mTypes
-  from '../../store/modules/organisation/organisation-mutation-types'
+  from '../../store/modules/custodian/custodian-mutation-types'
 
 // custom validators
-const duplicateOrganisationName = function (value, vm) {
-  if ( _.isNil(this.organisations) || _.isNil(value)) {
+const duplicateCustodianName = function (value, vm) {
+  if ( _.isNil(this.custodians) || _.isNil(value)) {
     return true;
   }
-  let index = this.organisations.findIndex(org => {
-    return (org.name.toLowerCase() == value.toLowerCase()) && (vm.id != org.id);
+  let index = this.custodians.findIndex(custodian => {
+    return (custodian.name.toLowerCase() == value.toLowerCase()) && (vm.id != custodian.id);
   })
   return index == -1;
 };
 
-const duplicateOrganisationAbn = function (value, vm) {
-  if ( _.isNil(this.organisations)) {
+const duplicateCustodianAbn = function (value, vm) {
+  if ( _.isNil(this.custodians)) {
     return true;
   }
-  let index = this.organisations.findIndex(org => {
-    if (_.isNil(org.abn) || _.isNil(value) ||
-      org.abn.length == 0 || value.length == 0) {
+  let index = this.custodians.findIndex(custodian => {
+    if (_.isNil(custodian.abn) || _.isNil(value) ||
+      custodian.abn.length == 0 || value.length == 0) {
       return false;
     }
-    return (org.abn.toLowerCase() == value.toLowerCase()) && (vm.id != org.id);
+    return (custodian.abn.toLowerCase() == value.toLowerCase()) && (vm.id != custodian.id);
   })
   return index == -1;
 };
@@ -175,7 +175,7 @@ const duplicateOrganisationAbn = function (value, vm) {
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
   beforeMount() {
-    this.setDeletedOrganisations(null);
+    this.setDeletedCustodians(null);
     this.getFormData();
   },
   mounted() {
@@ -185,48 +185,48 @@ export default Vue.extend({
   components: {
   },
   computed: {
-    ...mapGetters('organisation', [
-      'activeOrganisation',
-      'deletedOrganisations',
+    ...mapGetters('custodian', [
+      'activeCustodian',
+      'deletedCustodians',
       'dirty',
-      'organisations',
+      'custodians',
     ]),
   },
 
   methods: {
-    ...mapActions('organisation', [
-      'getOrganisations',
-      'saveOrganisation',
-      'deleteOrganisation',
-      'restoreOrganisation',
+    ...mapActions('custodian', [
+      'getCustodians',
+      'saveCustodian',
+      'deleteCustodian',
+      'restoreCustodian',
     ]),
-    ...mapMutations('organisation', {
-      'setActiveOrganisation': mTypes.SET_ACTIVE_ORGANISATION,
-      'setDeletedOrganisations': mTypes.SET_DELETED_ORGANISATIONS,
+    ...mapMutations('custodian', {
+      'setActiveCustodian': mTypes.SET_ACTIVE_ORGANISATION,
+      'setDeletedCustodians': mTypes.SET_DELETED_ORGANISATIONS,
       'setDirty': mTypes.SET_DIRTY,
-      'updateActiveOrganisationValue': mTypes.UPDATE_ACTIVE_ORGANISATION_VALUE,
+      'updateActiveCustodianValue': mTypes.UPDATE_ACTIVE_ORGANISATION_VALUE,
     }),
 
-    setDeletedOrganisationsChange(deletedOrganisations) {
-      // deletedOrganisations can be true, false, or null
-      this.setDeletedOrganisations(deletedOrganisations);
+    setDeletedCustodiansChange(deletedCustodians) {
+      // deletedCustodians can be true, false, or null
+      this.setDeletedCustodians(deletedCustodians);
       this.getFormData();
     },
 
     getFormData() {
-      this.getOrganisations().then(() => {
-        this.updateActiveOrganisation();
+      this.getCustodians().then(() => {
+        this.updateActiveCustodian();
       });
     },
 
-    getNewOrganisationName(base) {
+    getNewCustodianName(base) {
       let count = 0;
       let validNumber = 0;
-      // should never be more than 100 orgs that start with "New organisation"
+      // should never be more than 100 custodians that start with "New custodian"
       while (count < 100) {
         let checkFor = count == 0 ? base : `${base} (${count})`;
-        let existingIndex = this.organisations.findIndex(existingOrg => {
-          return existingOrg.name == checkFor;
+        let existingIndex = this.custodians.findIndex(existingCustodian => {
+          return existingCustodian.name == checkFor;
         });
         if (existingIndex == -1) {
           return checkFor;
@@ -237,58 +237,58 @@ export default Vue.extend({
       return `${base} (something is wrong)`;
     },
 
-    updateActiveOrganisation() {
+    updateActiveCustodian() {
       if (_.isNil(this.id)) {
-        this.setActiveOrganisation(undefined);
+        this.setActiveCustodian(undefined);
       } else if (this.id == 'new') {
-        let org = {
+        let custodian = {
           id: undefined,
-          name: this.getNewOrganisationName("New organisation"),
+          name: this.getNewCustodianName("New custodian"),
           deleted: false,
         };
-        this.setActiveOrganisation(org);
+        this.setActiveCustodian(custodian);
         this.setDirty(true);
       } else {
-        let org = this.organisations.find(existingOrg => {
-          return existingOrg.id == this.id;
+        let custodian = this.custodians.find(existingCustodian => {
+          return existingCustodian.id == this.id;
         });
-        this.setActiveOrganisation(org);
+        this.setActiveCustodian(custodian);
       }
 
     },
 
-    restoreOrgClick() {
-      this.restoreOrganisation(this.activeOrganisation.id)
-      .then(org => {
-        this.updateActiveOrganisationValue('deleted', false);
+    restoreCustodianClick() {
+      this.restoreCustodian(this.activeCustodian.id)
+      .then(custodian => {
+        this.updateActiveCustodianValue('deleted', false);
         this.setDirty(false);
-        this.notifySuccess('Organisation restored');
-        if (!_.isNil(this.deletedOrganisations)) {
+        this.notifySuccess('Custodian restored');
+        if (!_.isNil(this.deletedCustodians)) {
           // don't need to get form data if we are looking at complete
-          // list or orgs including deleted, and non-deleted
+          // list or custodians including deleted, and non-deleted
           this.getFormData();
         }
       });
     },
 
-    deleteOrgClick() {
-      if (!_.isNil(this.activeOrganisation.id)) {
-        // an existing id indicated this org has been saved
+    deleteCustodianClick() {
+      if (!_.isNil(this.activeCustodian.id)) {
+        // an existing id indicated this custodian has been saved
 
         this.$q.dialog({
-          title: 'Delete organisation',
+          title: 'Delete custodian',
           message:
-            `Organisation ${this.activeOrganisation.name} will be deleted`,
+            `Custodian ${this.activeCustodian.name} will be deleted`,
           ok: 'Delete',
           cancel: 'Cancel'
         }).onOk(() => {
-          this.deleteOrganisation({ id: this.id })
+          this.deleteCustodian({ id: this.id })
           .then(pmd => {
-            //delete org handler sets active org to undefined, so no need here
-            this.notifySuccess('Organisation deleted');
-            if (!_.isNil(this.deletedOrganisations)) {
+            //delete custodian handler sets active custodian to undefined, so no need here
+            this.notifySuccess('Custodian deleted');
+            if (!_.isNil(this.deletedCustodians)) {
               // don't need to get form data if we are looking at complete
-              // list or orgs including deleted, and non-deleted
+              // list or custodians including deleted, and non-deleted
               this.getFormData();
             }
           });
@@ -299,14 +299,14 @@ export default Vue.extend({
         })
 
       } else {
-        // no id, so hasn't been saved. Simply replace active org with nothing
-        this.setActiveOrganisation(undefined);
-        this.$router.replace({ path: `/admin/organisations/` });
+        // no id, so hasn't been saved. Simply replace active custodian with nothing
+        this.setActiveCustodian(undefined);
+        this.$router.replace({ path: `/admin/custodians/` });
       }
     },
 
     submit() {
-      // save the organisation
+      // save the custodian
       this.$v.$touch()
 
       if (this.$v.$error) {
@@ -314,28 +314,28 @@ export default Vue.extend({
         return
       }
 
-      const isNew = _.isNil(this.activeOrganisation.id)
+      const isNew = _.isNil(this.activeCustodian.id)
 
-      this.saveOrganisation(this.activeOrganisation).then(org => {
+      this.saveCustodian(this.activeCustodian).then(custodian => {
         // this.getFormData();
-        const successMsg = isNew ? 'Organisation created' : 'Organisation updated';
+        const successMsg = isNew ? 'Custodian created' : 'Custodian updated';
         this.notifySuccess(successMsg);
 
         // need to check the route, as it may have already been set to something
         // else via "save and continue".
         const currentId = this.$route.params.id;
         if (isNew && currentId == 'new') {
-          // then updated the route for the org
-          this.$router.replace({ path: `/admin/organisations/${org.id}` });
+          // then updated the route for the custodian
+          this.$router.replace({ path: `/admin/custodians/${custodian.id}` });
         }
       });
     }
   },
 
   validations: {
-    activeOrganisation: {
-      name: { required, duplicateOrganisationName },
-      abn: { duplicateOrganisationAbn },
+    activeCustodian: {
+      name: { required, duplicateCustodianName },
+      abn: { duplicateCustodianAbn },
     }
   },
 
@@ -346,8 +346,8 @@ export default Vue.extend({
       this.id = id;
     },
     'id': function (newId, oldId) {
-      console.log(`org id = ${newId}`);
-      this.updateActiveOrganisation();
+      console.log(`custodian id = ${newId}`);
+      this.updateActiveCustodian();
     }
   },
 
@@ -355,8 +355,8 @@ export default Vue.extend({
     return {
       id: undefined,
       validationMessagesOverride: {
-        'duplicateOrganisationName': "Organisation name already exists",
-        'duplicateOrganisationAbn': "ABN assigned to other organisation"
+        'duplicateCustodianName': "Custodian name already exists",
+        'duplicateCustodianAbn': "ABN assigned to other custodian"
       }
     }
   }
@@ -364,15 +364,15 @@ export default Vue.extend({
 </script>
 
 <style>
-.no-active-organisation {
+.no-active-custodian {
   width: 100%;
   height: 200px;
 }
 
-.organisation-name-plain {
+.custodian-name-plain {
 
 }
-.organisationnamedeleted {
+.custodiannamedeleted {
   text-decoration: line-through;
   color: grey;
 }

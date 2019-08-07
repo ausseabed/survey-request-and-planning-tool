@@ -11,7 +11,7 @@ function initialState() {
     projectMetadata: {
       id: undefined,
       surveyName: null,
-      organisations: [],
+      custodians: [],
       contactPerson: null,
       email: null,
       areaOfInterest: null,

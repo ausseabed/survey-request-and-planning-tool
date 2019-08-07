@@ -25,13 +25,13 @@
             <q-item-label caption>Manage user accounts</q-item-label>
           </q-item-section>
         </q-item>
-        <q-item to="/admin/organisations">
+        <q-item to="/admin/custodians">
           <q-item-section avatar>
             <q-icon name="account_balance" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>Organisations</q-item-label>
-            <q-item-label caption>Manage organisations</q-item-label>
+            <q-item-label>Custodians</q-item-label>
+            <q-item-label caption>Manage custodians</q-item-label>
           </q-item-section>
         </q-item>
         <q-item to="/admin/roles">

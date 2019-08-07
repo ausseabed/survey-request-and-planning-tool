@@ -5,7 +5,7 @@ import { interpret } from 'xstate';
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, isUuid, permitOrgBasedPermission,
+import { asyncMiddleware, isAuthenticated, isUuid, permitCustodianBasedPermission,
   permitPermission }
   from '../utils';
 
@@ -80,17 +80,17 @@ router.get(
 }));
 
 
-// the 'permitOrgBasedPermission' middleware checks only work if a request
+// the 'permitCustodianBasedPermission' middleware checks only work if a request
 // is targetting a hipp request OR project. hence we separate out the response
 // logic into this function so the handlers (below) can include the parameters
 // specific to a hipp request (eg) in the handler definition.
 async function handleGetRequest(
-  req, res, entityType, orgAttribute, recordType) {
+  req, res, entityType, custodianAttribute, recordType) {
 
   const entityId = req.params.id;
 
   const machine = await buildRecordMachine(
-    entityType, entityId, req.user, orgAttribute, recordType);
+    entityType, entityId, req.user, custodianAttribute, recordType);
 
   const service = interpret(machine);
   service.start();
@@ -138,11 +138,11 @@ router.get(
   '/hipp-request/:id',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:HippRequest,
-      organisationAttributes: ['requestingAgencies'],
+      custodianAttributes: ['requestingAgencies'],
       allowedPermissionAll: 'canViewAllHippRequests',
-      allowedPermissionOrg: 'canViewOrgHippRequests'}),
+      allowedPermissionCustodian: 'canViewCustodianHippRequests'}),
   ],
   asyncMiddleware(async function(req, res) {
 
@@ -154,19 +154,19 @@ router.get(
   '/project-metadata/:id',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllProjects',
-      allowedPermissionOrg: 'canViewOrgProjects'}),
+      allowedPermissionCustodian: 'canViewCustodianProjects'}),
   ],
   asyncMiddleware(async function(req, res) {
 
-  await handleGetRequest(req, res, ProjectMetadata, 'organisations', 'plan')
+  await handleGetRequest(req, res, ProjectMetadata, 'custodians', 'plan')
 }));
 
 
-// we don't include the `permitOrgBasedPermission` because these checks are
+// we don't include the `permitCustodianBasedPermission` because these checks are
 // handled by the guard checks in the state machine.
 router.post(
   '/:entityTypeStr/:id',
@@ -197,7 +197,7 @@ router.post(
     entityType = ProjectMetadata;
     recordType = 'plan';
     machine = await buildRecordMachine(
-      entityType, entityId, req.user, 'organisations', recordType);
+      entityType, entityId, req.user, 'custodians', recordType);
   } else {
     let err = boom.badRequest(
       `entityTypeStr (/:entityTypeStr/:id) must be 'hipp-request' ` +
@@ -242,7 +242,7 @@ router.post(
     .getRepository(entityType)
     .save(recordEntity)
 
-    // don't forget to include what the next possible events are, otherwise
+    // don't fcustodianet to include what the next possible events are, otherwise
     // the UI won't know what to do
     const nextEvents = state.nextEvents.filter((evt) => {
       return service.nextState(evt).changed;

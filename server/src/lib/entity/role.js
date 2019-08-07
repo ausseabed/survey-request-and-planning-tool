@@ -56,7 +56,7 @@ export class Role {
   canEditTemplate;
 
   @Column({type: "bool", nullable: false, default: false})
-  canEditOrganisation;
+  canEditCustodian;
 
   @Column({type: "bool", nullable: false, default: false})
   canEditUser;
@@ -70,13 +70,13 @@ export class Role {
   canViewAllProjects;
 
   @Column({type: "bool", nullable: false, default: false})
-  canViewOrgProjects;
+  canViewCustodianProjects;
 
   @Column({type: "bool", nullable: false, default: false})
   canEditAllProjects;
 
   @Column({type: "bool", nullable: false, default: false})
-  canEditOrgProjects;
+  canEditCustodianProjects;
 
 
   // HIPP Request permissions
@@ -87,13 +87,13 @@ export class Role {
   canViewAllHippRequests;
 
   @Column({type: "bool", nullable: false, default: false})
-  canViewOrgHippRequests;
+  canViewCustodianHippRequests;
 
   @Column({type: "bool", nullable: false, default: false})
   canEditAllHippRequests;
 
   @Column({type: "bool", nullable: false, default: false})
-  canEditOrgHippRequests;
+  canEditCustodianHippRequests;
 
   @Column({type: "bool", nullable: false, default: false})
   canViewRiskPriority;
@@ -104,19 +104,19 @@ export class Role {
   canViewAllAttachments;
 
   @Column({type: "bool", nullable: false, default: false})
-  canViewOrgAttachments;
+  canViewCustodianAttachments;
 
   @Column({type: "bool", nullable: false, default: false})
   canUploadAllAttachments;
 
   @Column({type: "bool", nullable: false, default: false})
-  canUploadOrgAttachments;
+  canUploadCustodianAttachments;
 
   @Column({type: "bool", nullable: false, default: false})
   canDeleteAllAttachments;
 
   @Column({type: "bool", nullable: false, default: false})
-  canDeleteOrgAttachments;
+  canDeleteCustodianAttachments;
 
 
   // Record state permissions. These apply to project and hipp requests
@@ -133,14 +133,14 @@ export class Role {
   canRemoveAllRecordState;
 
   @Column({type: "bool", nullable: false, default: false})
-  canFinaliseOrgRecordState;
+  canFinaliseCustodianRecordState;
 
   @Column({type: "bool", nullable: false, default: false})
-  canReviseOrgRecordState;
+  canReviseCustodianRecordState;
 
   @Column({type: "bool", nullable: false, default: false})
-  canAcceptOrgRecordState;
+  canAcceptCustodianRecordState;
 
   @Column({type: "bool", nullable: false, default: false})
-  canRemoveOrgRecordState;
+  canRemoveCustodianRecordState;
 }

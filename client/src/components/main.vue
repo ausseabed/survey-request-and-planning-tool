@@ -10,17 +10,17 @@
             class="bg-secondary text-white"
           >
             <q-tab
-              v-if="hasPermission(['canViewAllProjects', 'canViewOrgProjects'])"
+              v-if="hasPermission(['canViewAllProjects', 'canViewCustodianProjects'])"
               name="projects" label="Plans" icon="layers"/>
             <q-tab
-              v-if="hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])"
+              v-if="hasPermission(['canViewAllHippRequests', 'canViewCustodianHippRequests'])"
               name="requests" label="Requests" icon="device_hub"/>
           </q-tabs>
           <div class="fat-spacer bg-secondary"></div>
 
           <q-tab-panels v-model="tab" animated class="col">
             <q-tab-panel
-              v-if="hasPermission(['canViewAllProjects', 'canViewOrgProjects'])"
+              v-if="hasPermission(['canViewAllProjects', 'canViewCustodianProjects'])"
               name="projects" class="column col-auto no-padding">
 
               <!-- <q-card-section class="column col" style="padding:0px"> -->
@@ -108,7 +108,7 @@
             </q-tab-panel>
 
             <q-tab-panel
-              v-if="hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])"
+              v-if="hasPermission(['canViewAllHippRequests', 'canViewCustodianHippRequests'])"
               name="requests" class="column col-auto no-padding">
 
               <q-scroll-area class="col">
@@ -295,9 +295,9 @@ export default Vue.extend({
     'userRole': {
       immediate: true,
       handler(newRole, oldRole) {
-        if (this.hasPermission(['canViewAllProjects', 'canViewOrgProjects'])) {
+        if (this.hasPermission(['canViewAllProjects', 'canViewCustodianProjects'])) {
           this.tab = 'projects';
-        } else if (this.hasPermission(['canViewAllHippRequests', 'canViewOrgHippRequests'])) {
+        } else if (this.hasPermission(['canViewAllHippRequests', 'canViewCustodianHippRequests'])) {
           this.tab = 'requests';
         }
       },

@@ -79,12 +79,12 @@
 
             <form-field-validated-select
               name="hippRequest.requestingAgencies"
-              attribute="Requestor’s Organisation"
-              label="Requestor’s Organisation"
+              attribute="Requestor’s Custodian"
+              label="Requestor’s Custodian"
               multiple use-chips
               :value="hippRequest.requestingAgencies"
               @input="update({path:'hippRequest.requestingAgencies', value:$event})"
-              :options="organisations"
+              :options="custodians"
               option-label="name"
               option-value="id"
               @blur="$v.hippRequest.requestingAgencies.$touch"
@@ -555,8 +555,8 @@ import { errorHandler } from './../mixins/error-handling'
 import { permission } from './../mixins/permission'
 import * as hippMutTypes
   from '../../store/modules/hipp-request/hipp-request-mutation-types'
-import * as orgMutTypes
-  from '../../store/modules/organisation/organisation-mutation-types'
+import * as custodianMutTypes
+  from '../../store/modules/custodian/custodian-mutation-types'
 import OlMap from './../olmap/olmap';
 import { required, email, minLength, minValue, maxValue }
   from 'vuelidate/lib/validators';
@@ -637,8 +637,8 @@ export default Vue.extend({
       'deleteHippRequest',
       'getGeojsonAttributeMap',
     ]),
-    ...mapActions('organisation', [
-      'getOrganisations',
+    ...mapActions('custodian', [
+      'getCustodians',
     ]),
     ...mapActions('reportTemplate', [
       'generateReport',
@@ -655,8 +655,8 @@ export default Vue.extend({
       'resetHippRequest': hippMutTypes.RESET_HIPP_REQUEST,
       'updateHippRequest': hippMutTypes.UPDATE_HIPP_REQUEST,
     }),
-    ...mapMutations('organisation', {
-      'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
+    ...mapMutations('custodian', {
+      'setDeletedCustodians': custodianMutTypes.SET_DELETED_ORGANISATIONS,
     }),
 
     fetchData () {
@@ -744,10 +744,10 @@ export default Vue.extend({
 
     getFormData() {
       this.stateReadonly = true;
-      // only get non-deleted organisations
-      this.setDeletedOrganisations(false);
-      // gets the list of all orgs, not just those associated to this project
-      this.getOrganisations();
+      // only get non-deleted custodians
+      this.setDeletedCustodians(false);
+      // gets the list of all custodians, not just those associated to this project
+      this.getCustodians();
 
       // get misc lists for populating drop downs
       this.getRiskMatrix();
@@ -863,8 +863,8 @@ export default Vue.extend({
       'surveyQualityRequirements',
       'geojsonAttributeMap',
     ]),
-    ...mapGetters('organisation', [
-      'organisations',
+    ...mapGetters('custodian', [
+      'custodians',
     ]),
     ...mapGetters('reportTemplate', [
       'reportDownloading',
@@ -894,8 +894,8 @@ export default Vue.extend({
         return false
       }
       else if (
-        this.hasPermission('canEditOrgHippRequests') &&
-        this.hasOrganisationLink('hippRequest.requestingAgencies')
+        this.hasPermission('canEditCustodianHippRequests') &&
+        this.hasCustodianLink('hippRequest.requestingAgencies')
       ) {
         // can only edit hipp requests that are linked to user
         return false

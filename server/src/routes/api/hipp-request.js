@@ -6,7 +6,7 @@ import { feature, featureCollection } from "@turf/helpers";
 import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
-  permitOrgBasedPermission } from '../utils';
+  permitCustodianBasedPermission } from '../utils';
 import { HippRequest, SURVEY_QUALITY_REQUIREMENTS,
   CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
   from '../../lib/entity/hipp-request';
@@ -65,14 +65,14 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   if (hasPermission(req.user.role, 'canViewAllHippRequests')) {
     // then no additional where clauses
-  } else if (hasPermission(req.user.role, 'canViewOrgHippRequests')) {
+  } else if (hasPermission(req.user.role, 'canViewCustodianHippRequests')) {
     // need to filter list to include only hipp requests that include the
-    // org this user is assigned.
+    // custodian this user is assigned.
     hippRequestQuery = hippRequestQuery
-    .innerJoin("hipp_request.requestingAgencies", "organisation")
+    .innerJoin("hipp_request.requestingAgencies", "custodian")
     .andWhere(
-      `organisation.id = :orgId`,
-      {orgId: req.user.organisation.id}
+      `custodian.id = :custodianId`,
+      {custodianId: req.user.custodian.id}
     )
   } else {
     return res.json([]);
@@ -93,11 +93,11 @@ router.get(
   '/:id/geometry',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:HippRequest,
-      organisationAttributes: ['requestingAgencies'],
+      custodianAttributes: ['requestingAgencies'],
       allowedPermissionAll: 'canViewAllHippRequests',
-      allowedPermissionOrg: 'canViewOrgHippRequests'})
+      allowedPermissionCustodian: 'canViewCustodianHippRequests'})
   ],
   asyncMiddleware(async function (req, res) {
 
@@ -155,11 +155,11 @@ router.get(
   '/:id',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:HippRequest,
-      organisationAttributes: ['requestingAgencies'],
+      custodianAttributes: ['requestingAgencies'],
       allowedPermissionAll: 'canViewAllHippRequests',
-      allowedPermissionOrg: 'canViewOrgHippRequests'})
+      allowedPermissionCustodian: 'canViewCustodianHippRequests'})
   ],
   asyncMiddleware(async function (req, res) {
 
@@ -195,11 +195,11 @@ router.post(
   '/:id/linked-plans',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType: HippRequest,
-      organisationAttributes: ['requestingAgencies'],
+      custodianAttributes: ['requestingAgencies'],
       allowedPermissionAll: 'canEditAllHippRequests',
-      allowedPermissionOrg: 'canEditOrgHippRequests',
+      allowedPermissionCustodian: 'canEditCustodianHippRequests',
       allowedPermissionNoEntityId: 'canAddHippRequest',
     })
   ],
@@ -274,16 +274,16 @@ router.post(
 }));
 
 
-// creates a new organisation
+// creates a new custodian
 router.post(
   '/',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType: HippRequest,
-      organisationAttributes: ['requestingAgencies'],
+      custodianAttributes: ['requestingAgencies'],
       allowedPermissionAll: 'canEditAllHippRequests',
-      allowedPermissionOrg: 'canEditOrgHippRequests',
+      allowedPermissionCustodian: 'canEditCustodianHippRequests',
       allowedPermissionNoEntityId: 'canAddHippRequest',
     })
   ],
@@ -313,7 +313,7 @@ router.post(
   .getRepository(HippRequest)
   .save(hippRequest)
 
-  // because the saved version of org doesn't include all attribs
+  // because the saved version of custodian doesn't include all attribs
   hippRequest = await getConnection()
   .getRepository(HippRequest)
   .findOne(
@@ -334,11 +334,11 @@ router.delete(
   '/:id',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType: HippRequest,
-      organisationAttributes: ['requestingAgencies'],
+      custodianAttributes: ['requestingAgencies'],
       allowedPermissionAll: 'canEditAllHippRequests',
-      allowedPermissionOrg: 'canEditOrgHippRequests',
+      allowedPermissionCustodian: 'canEditCustodianHippRequests',
       allowedPermissionNoEntityId: 'canAddHippRequest',
     })
   ],

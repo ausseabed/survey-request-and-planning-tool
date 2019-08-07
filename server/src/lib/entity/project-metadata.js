@@ -5,7 +5,7 @@ import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
 import { HippRequest } from './hipp-request';
 import { InstrumentType } from './instrument-type';
-import { Organisation } from './organisation';
+import { Custodian } from './custodian';
 import { RecordState } from './record-state';
 import { SurveyApplication } from './survey-application';
 import { SurveyDeliverable } from './survey-deliverable';
@@ -57,10 +57,10 @@ export class ProjectMetadata {
   quality = undefined;
 
   @ManyToMany(
-    type => Organisation,
-    organisation => organisation.projectMetadatas)
+    type => Custodian,
+    custodian => custodian.projectMetadatas)
   @JoinTable()
-  organisations;
+  custodians;
 
   @Column("geometry", {
     spatialFeatureType: "MultiPolygon",

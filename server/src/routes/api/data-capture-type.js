@@ -22,12 +22,12 @@ router.get('/', isAuthenticated, async function (req, res) {
     whereOpts.appliesToRequest = req.query['request'] == 'true'
   }
 
-  let orgs = await getConnection()
+  let custodians = await getConnection()
   .getRepository(DataCaptureType)
   .find({
     where:whereOpts
   });
-  return res.json(orgs);
+  return res.json(custodians);
 });
 
 module.exports = router;

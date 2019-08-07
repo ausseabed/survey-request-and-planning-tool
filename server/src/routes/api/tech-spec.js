@@ -5,7 +5,7 @@ const boom = require('boom');
 import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
-  geojsonToMultiLineString, geojsonToMultiPoint, permitOrgBasedPermission }
+  geojsonToMultiLineString, geojsonToMultiPoint, permitCustodianBasedPermission }
   from '../utils';
 import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { TechSpec, SURVEY_TYPES, SURVEY_CLASSIFICATIONS,
@@ -53,11 +53,11 @@ router.get(
   '/:id',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllProjects',
-      allowedPermissionOrg: 'canViewOrgProjects'})
+      allowedPermissionCustodian: 'canViewCustodianProjects'})
   ],
   asyncMiddleware(async function (req, res) {
   let techSpec = await getConnection()
@@ -83,11 +83,11 @@ router.post(
   '/',
   [
     isAuthenticated,
-    permitOrgBasedPermission({
+    permitCustodianBasedPermission({
       entityType:ProjectMetadata,
-      organisationAttributes: ['organisations'],
+      custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllProjects',
-      allowedPermissionOrg: 'canEditOrgProjects',
+      allowedPermissionCustodian: 'canEditCustodianProjects',
     })
   ],
   asyncMiddleware(async function (req, res) {

@@ -3,10 +3,11 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
 
 import { DateTransformer } from './utils';
 
+import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { HippRequestAttachment } from './hipp-request-attachment';
-import { Custodian } from './custodian';
 import { ProjectMetadata } from './project-metadata';
+import { Organisation } from './organisation';
 import { RecordState } from './record-state';
 import { RequestPurpose } from './request-purpose';
 
@@ -113,6 +114,12 @@ export class HippRequest {
     custodian => custodian.custodiansHipp)
   @JoinTable()
   custodians;
+
+  @ManyToMany(
+    type => Organisation,
+    organisation => organisation.hippRequests)
+  @JoinTable()
+  organisations;
 
   @Column({
       type:"varchar",

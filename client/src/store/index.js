@@ -12,6 +12,7 @@ import techSpec from './modules/tech-spec/tech-spec-state'
 import surveyFile from './modules/survey-file/survey-file-state'
 import deliverable from './modules/deliverable/deliverable-state'
 import hippRequest from './modules/hipp-request/hipp-request-state'
+import organisation from './modules/organisation/organisation-state'
 import reportTemplate from './modules/report-template/report-template-state'
 import user from './modules/user/user-state'
 import role from './modules/role/role-state'
@@ -39,6 +40,7 @@ export default new Vuex.Store({
     role,
     recordState,
     requestPurpose,
+    organisation,
   },
   strict: debug
 })

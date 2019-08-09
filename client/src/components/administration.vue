@@ -34,6 +34,15 @@
             <q-item-label caption>Manage custodians</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item to="/admin/organisations">
+          <q-item-section avatar>
+            <q-icon name="location_city" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Organisations</q-item-label>
+            <q-item-label caption>Manage organisations</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item to="/admin/roles">
           <q-item-section avatar>
             <q-icon name="list" />

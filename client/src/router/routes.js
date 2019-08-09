@@ -1,10 +1,11 @@
 import Administration from 'components/administration.vue'
+import Custodians from 'components/custodians/custodians.vue'
 import HippMain from 'components/hipp/hipp-main.vue'
 import HippProjects from 'components/hipp/hipp-projects.vue'
 import HippSummary from 'components/hipp/hipp-summary.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
-import Custodians from 'components/custodians/custodians.vue'
+import Organisations from 'components/organisations/organisations.vue'
 import ProjectMain from 'components/project-main.vue'
 import ProjectMetadata from 'components/project-metadata.vue'
 import RecordStateLog from 'components/admin/record-state-log.vue'
@@ -40,6 +41,14 @@ const routes = [
         {
           path: 'custodians/:id',
           component: Custodians,
+        },
+        {
+          path: 'organisations',
+          component: Organisations,
+        },
+        {
+          path: 'organisations/:id',
+          component: Organisations,
         },
         {
           path: 'roles',

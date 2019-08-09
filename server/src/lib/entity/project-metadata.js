@@ -1,11 +1,12 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
   JoinTable, OneToMany, JoinColumn, OneToOne} from "typeorm";
 
+import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
 import { HippRequest } from './hipp-request';
 import { InstrumentType } from './instrument-type';
-import { Custodian } from './custodian';
+import { Organisation } from './organisation';
 import { RecordState } from './record-state';
 import { SurveyApplication } from './survey-application';
 import { SurveyDeliverable } from './survey-deliverable';
@@ -55,6 +56,12 @@ export class ProjectMetadata {
       nullable: true,
   })
   quality = undefined;
+
+  @ManyToMany(
+    type => Organisation,
+    organisation => organisation.projectMetadatas)
+  @JoinTable()
+  organisations;
 
   @ManyToMany(
     type => Custodian,

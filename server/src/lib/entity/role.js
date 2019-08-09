@@ -59,6 +59,9 @@ export class Role {
   canEditCustodian;
 
   @Column({type: "bool", nullable: false, default: false})
+  canEditOrganisation;
+
+  @Column({type: "bool", nullable: false, default: false})
   canEditUser;
 
 

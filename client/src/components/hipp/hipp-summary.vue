@@ -656,7 +656,7 @@ export default Vue.extend({
       'updateHippRequest': hippMutTypes.UPDATE_HIPP_REQUEST,
     }),
     ...mapMutations('custodian', {
-      'setDeletedCustodians': custodianMutTypes.SET_DELETED_ORGANISATIONS,
+      'setDeletedCustodians': custodianMutTypes.SET_DELETED_CUSTODIANS,
     }),
 
     fetchData () {

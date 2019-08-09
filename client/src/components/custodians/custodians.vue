@@ -174,10 +174,10 @@ export default Vue.extend({
       'restoreCustodian',
     ]),
     ...mapMutations('custodian', {
-      'setActiveCustodian': mTypes.SET_ACTIVE_ORGANISATION,
-      'setDeletedCustodians': mTypes.SET_DELETED_ORGANISATIONS,
+      'setActiveCustodian': mTypes.SET_ACTIVE_CUSTODIAN,
+      'setDeletedCustodians': mTypes.SET_DELETED_CUSTODIANS,
       'setDirty': mTypes.SET_DIRTY,
-      'updateActiveCustodianValue': mTypes.UPDATE_ACTIVE_ORGANISATION_VALUE,
+      'updateActiveCustodianValue': mTypes.UPDATE_ACTIVE_CUSTODIAN_VALUE,
     }),
 
     setDeletedCustodiansChange(deletedCustodians) {

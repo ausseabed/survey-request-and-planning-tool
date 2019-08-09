@@ -742,7 +742,7 @@ export default Vue.extend({
     ]),
     ...mapMutations('projectMetadata', {
       'setDirty': pmMutTypes.SET_DIRTY,
-      'setProjectCustodians': pmMutTypes.SET_ORGANISATIONS,
+      'setProjectCustodians': pmMutTypes.SET_CUSTODIANS,
       'updateProjectMetadata': pmMutTypes.UPDATE,
     }),
     ...mapMutations('projectMetadata', [
@@ -757,10 +757,10 @@ export default Vue.extend({
       pmMutTypes.SET_SURVEY_APPLICATION_NAME_OTHER,
       pmMutTypes.SET_SURVEY_APPLICATION_GROUP_NAME_OTHER,
       pmMutTypes.SET_SURVEY_APPLICATION,
-      pmMutTypes.REMOVE_ORGANISATION,
+      pmMutTypes.REMOVE_CUSTODIAN,
     ]),
     ...mapMutations('custodian', {
-      'setDeletedCustodians': custodianMutTypes.SET_DELETED_ORGANISATIONS,
+      'setDeletedCustodians': custodianMutTypes.SET_DELETED_CUSTODIANS,
     }),
 
     projectStatusIconDetails: projectStatusIconDetails,
@@ -1130,7 +1130,7 @@ export default Vue.extend({
       })
     },
     removeCustodian(custodian) {
-      this.REMOVE_ORGANISATION(custodian)
+      this.REMOVE_CUSTODIAN(custodian)
       this.$v.projectCustodians.$touch();
     },
 

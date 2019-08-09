@@ -3,7 +3,7 @@ import Vue from 'vue';
 import * as types from './custodian-mutation-types';
 
 const mutations = {
-  [types.ADD_ORGANISATION] (state, custodian) {
+  [types.ADD_CUSTODIAN] (state, custodian) {
     const existingIndex = state.custodians.findIndex(existingCustodian => {
       return existingCustodian.id == custodian.id;
     });
@@ -21,16 +21,16 @@ const mutations = {
     }
   },
 
-  [types.CLEAR_ORGANISATION_LIST] (state, custodians) {
+  [types.CLEAR_CUSTODIAN_LIST] (state, custodians) {
     state.custodians.splice(0, state.custodians.length);
   },
 
-  [types.SET_ACTIVE_ORGANISATION] (state, custodian) {
+  [types.SET_ACTIVE_CUSTODIAN] (state, custodian) {
     state.activeCustodian = _.cloneDeep(custodian);
     state.dirty = false;
   },
 
-  [types.SET_DELETED_ORGANISATIONS] (state, deletedCustodians) {
+  [types.SET_DELETED_CUSTODIANS] (state, deletedCustodians) {
     state.deletedCustodians = deletedCustodians;
   },
 
@@ -38,7 +38,7 @@ const mutations = {
     state.dirty = dirty;
   },
 
-  [types.SET_ORGANISATIONS] (state, custodians) {
+  [types.SET_CUSTODIANS] (state, custodians) {
     state.custodians = custodians;
   },
 
@@ -50,12 +50,12 @@ const mutations = {
     state.requestStatus = status;
   },
 
-  [types.UPDATE_ACTIVE_ORGANISATION_VALUE] (state, { path, value }) {
+  [types.UPDATE_ACTIVE_CUSTODIAN_VALUE] (state, { path, value }) {
     state.dirty = true;
     _.set(state.activeCustodian, path, _.cloneDeep(value))
   },
 
-  [types.SET_USER_ORGANISATION] (state, custodian) {
+  [types.SET_USER_CUSTODIAN] (state, custodian) {
     state.userCustodian = custodian;
   },
 }

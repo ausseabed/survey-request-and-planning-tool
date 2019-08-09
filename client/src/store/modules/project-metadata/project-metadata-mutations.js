@@ -26,22 +26,22 @@ const mutations = {
     state.dirty = true;
   },
 
-  [types.ADD_ORGANISATION] (state, custodian) {
+  [types.ADD_CUSTODIAN] (state, custodian) {
     state.projectMetadata.custodians.push(custodian);
     state.dirty = true;
   },
 
-  [types.SET_ORGANISATIONS] (state, custodians) {
+  [types.SET_CUSTODIANS] (state, custodians) {
     state.projectMetadata.custodians = custodians;
     state.dirty = true;
   },
 
-  [types.REMOVE_ORGANISATION] (state, custodians) {
+  [types.REMOVE_CUSTODIAN] (state, custodians) {
     state.projectMetadata.custodians = custodians;
     state.dirty = true;
   },
 
-  [types.REMOVE_ORGANISATION] (state, custodian) {
+  [types.REMOVE_CUSTODIAN] (state, custodian) {
     let index = state.projectMetadata.custodians.findIndex(function (o) {
       return o.id == custodian.id;
     });

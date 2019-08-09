@@ -79,19 +79,6 @@
                     :readonly="!hasPermission('canEditCustodian')"
                    >
                   </form-field-validated-input>
-
-                  <form-field-validated-input
-                    name="activeCustodian.abn"
-                    attribute="ABN"
-                    label="ABN"
-                    helper="Optional"
-                    :value="activeCustodian.abn"
-                    @input="updateActiveCustodianValue({path:'abn', value:$event})"
-                    @blur="$v.activeCustodian.abn.$touch"
-                    type="text"
-                    :readonly="!hasPermission('canEditCustodian')"
-                    >
-                  </form-field-validated-input>
                 </div>
 
               </form-wrapper>
@@ -154,20 +141,6 @@ const duplicateCustodianName = function (value, vm) {
   }
   let index = this.custodians.findIndex(custodian => {
     return (custodian.name.toLowerCase() == value.toLowerCase()) && (vm.id != custodian.id);
-  })
-  return index == -1;
-};
-
-const duplicateCustodianAbn = function (value, vm) {
-  if ( _.isNil(this.custodians)) {
-    return true;
-  }
-  let index = this.custodians.findIndex(custodian => {
-    if (_.isNil(custodian.abn) || _.isNil(value) ||
-      custodian.abn.length == 0 || value.length == 0) {
-      return false;
-    }
-    return (custodian.abn.toLowerCase() == value.toLowerCase()) && (vm.id != custodian.id);
   })
   return index == -1;
 };
@@ -335,7 +308,6 @@ export default Vue.extend({
   validations: {
     activeCustodian: {
       name: { required, duplicateCustodianName },
-      abn: { duplicateCustodianAbn },
     }
   },
 
@@ -356,7 +328,6 @@ export default Vue.extend({
       id: undefined,
       validationMessagesOverride: {
         'duplicateCustodianName': "Custodian name already exists",
-        'duplicateCustodianAbn': "ABN assigned to other custodian"
       }
     }
   }

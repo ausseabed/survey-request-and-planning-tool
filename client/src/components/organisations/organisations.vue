@@ -13,25 +13,35 @@
               <div v-if="organisations.length == 0">
                 No organisations.
               </div>
-              <q-scroll-area v-else class="fit">
+
+              <q-scroll-area v-else class="fit" ref="scrollTargetRef">
                 <q-list highlight no-border>
-                  <q-item
-                    v-for="organisation in organisations"
-                    :key="organisation.id"
-                    :to="`/admin/organisations/${organisation.id}`"
+                  <q-infinite-scroll @load="onLoad" :offset="250" :scroll-target="$refs.scrollTargetRef">
+                    <q-item
+                      v-for="organisation in organisations"
+                      :key="organisation.id"
+                      :to="`/admin/organisations/${organisation.id}`"
                     >
-                      <q-item-label>
-                        {{organisation.name}}
-                      </q-item-label>
-                  </q-item>
+                      <q-item-label>{{organisation.name}}</q-item-label>
+                    </q-item>
+                    <template v-slot:loading>
+                      <div class="row justify-center q-my-md">
+                        <q-circular-progress
+                          indeterminate
+                          size="20px"
+                        />
+                      </div>
+                    </template>
+                  </q-infinite-scroll>
                 </q-list>
               </q-scroll-area>
+
             </q-card-section>
             <div class="col-auto">
               <q-separator />
               <q-card-actions align="between">
                 <q-btn
-                  v-if="!readonly"
+                  v-if="hasPermission('canEditOrganisation')"
                   flat
                   icon="add"
                   label="Add new"
@@ -49,6 +59,10 @@
             <q-card-section class="row">
               <div class="text-h6">
                 <span> {{activeOrganisation.name}} </span>
+              </div>
+              <div class="column">
+                <div v-if="activeOrganisation && activeOrganisation.requestCount == 0 && activeOrganisation.planCount == 0">This organisation is not referenced by any survey requests or plans and can be edited.</div>
+                <div v-else>This organisation is referenced by {{activeOrganisation.requestCount}} survey requests and {{activeOrganisation.planCount}} plans and cannot be edited.</div>
               </div>
             </q-card-section>
             <q-separator />
@@ -209,9 +223,18 @@ export default Vue.extend({
       'activeOrganisation',
       'dirty',
       'organisations',
+      'count',
     ]),
     readonly() {
-      return !this.hasPermission('canEditOrganisation')
+      if (
+        !_.isNil(this.activeOrganisation) &&
+        (this.activeOrganisation.requestCount != 0 ||
+        this.activeOrganisation.planCount != 0)) {
+        return true
+      } else if (!this.hasPermission('canEditOrganisation')) {
+        return true
+      }
+      return false
     },
   },
 
@@ -219,6 +242,7 @@ export default Vue.extend({
     ...mapActions('organisation', [
       'getOrganisations',
       'saveOrganisation',
+      'getActiveOrganisation',
     ]),
     ...mapMutations('organisation', {
       'setActiveOrganisation': mTypes.SET_ACTIVE_ORGANISATION,
@@ -228,7 +252,18 @@ export default Vue.extend({
 
     getFormData() {
       this.getOrganisations().then(() => {
-        this.updateActiveOrganisation();
+      });
+      this.updateActiveOrganisation();
+    },
+
+    onLoad(index, done) {
+      this.getOrganisations().then(() => {
+        // console.log('got orgs ' + index + ' '+ this.organisations.length + ' ' + this.count)
+        const loadedAll = _.isNil(this.count) ?
+          false :
+          this.organisations.length >= this.count
+
+        done(loadedAll)
       });
     },
 
@@ -265,10 +300,7 @@ export default Vue.extend({
         this.setActiveOrganisation(organisation);
         this.setDirty(true);
       } else {
-        let organisation = this.organisations.find(existingOrganisation => {
-          return existingOrganisation.id == this.id;
-        });
-        this.setActiveOrganisation(organisation);
+        this.getActiveOrganisation(this.id);
       }
 
     },
@@ -297,7 +329,21 @@ export default Vue.extend({
           this.$router.replace({ path: `/admin/organisations/${organisation.id}` });
         }
       });
-    }
+    },
+
+    // async saveLots() {
+    //   for (let i = 0; i < 120; i++) {
+    //     let organisation = {
+    //       id: undefined,
+    //       name: this.getNewOrganisationName("Test organisation"),
+    //       description: undefined,
+    //       abn: undefined,
+    //       source: undefined,
+    //       sourceId: undefined,
+    //     };
+    //     await this.saveOrganisation(organisation)
+    //   }
+    // }
   },
 
   validations: {
@@ -317,7 +363,6 @@ export default Vue.extend({
       this.id = id;
     },
     'id': function (newId, oldId) {
-      console.log(`organisation id = ${newId}`);
       this.updateActiveOrganisation();
     }
   },

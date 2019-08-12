@@ -38,6 +38,18 @@ const mutations = {
     state.organisations = organisations;
   },
 
+  [types.SET_PAGE] (state, page) {
+    // what page of data was last requested
+    state.page = page;
+  },
+
+  [types.SET_PAGE_DATA] (state, orgPageData) {
+    // the org page data contains a count of the total number of orgs, and
+    // the list of the orgs returned for this page
+    state.count = orgPageData.count
+    state.organisations.push(...orgPageData.data)
+  },
+
   [types.SET_REQUEST_ERROR] (state, error) {
     state.requestError = error;
   },

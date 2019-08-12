@@ -10,6 +10,11 @@ function initialState() {
     activeOrganisation:undefined,
     dirty: false,
     organisations:[],
+    // total number of orgs irrespective of pagination, don't request more than
+    // this
+    count: undefined,
+    pageSize: 20,
+    page: 1,
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
   }

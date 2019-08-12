@@ -111,7 +111,7 @@
             </div>
 
           </q-card>
-          <div v-else class="no-active-user column justify-center">
+          <div v-else class="no-active-user column justify-center fit">
             <div class="self-center">
               No user selected.
             </div>

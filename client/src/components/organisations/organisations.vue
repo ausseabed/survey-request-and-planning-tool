@@ -143,7 +143,7 @@
             </div>
 
           </q-card>
-          <div v-else class="no-active-organisation column justify-center">
+          <div v-else class="no-active-organisation column justify-center fit">
             <div class="self-center">
               No organisation selected.
             </div>

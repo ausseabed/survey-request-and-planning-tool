@@ -109,7 +109,7 @@
             </div>
 
           </q-card>
-          <div v-else class="no-active-custodian column justify-center">
+          <div v-else class="no-active-custodian column justify-center fit">
             <div class="self-center">
               No custodian selected.
             </div>

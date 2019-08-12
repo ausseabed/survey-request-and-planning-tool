@@ -31,7 +31,7 @@
               <q-separator />
               <q-card-actions align="between">
                 <q-btn
-                  v-if="hasPermission('canEditOrganisation')"
+                  v-if="!readonly"
                   flat
                   icon="add"
                   label="Add new"
@@ -67,7 +67,7 @@
                     @input="updateActiveOrganisationValue({path:'name', value:$event})"
                     @blur="$v.activeOrganisation.name.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="readonly"
                    >
                   </form-field-validated-input>
 
@@ -80,7 +80,7 @@
                     @input="updateActiveOrganisationValue({path:'abn', value:$event})"
                     @blur="$v.activeOrganisation.abn.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="readonly"
                     >
                   </form-field-validated-input>
 
@@ -93,7 +93,7 @@
                     @input="updateActiveOrganisationValue({path:'description', value:$event})"
                     @blur="$v.activeOrganisation.description.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="readonly"
                     >
                   </form-field-validated-input>
 
@@ -106,7 +106,7 @@
                     @input="updateActiveOrganisationValue({path:'source', value:$event})"
                     @blur="$v.activeOrganisation.source.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="readonly"
                     >
                   </form-field-validated-input>
 
@@ -119,7 +119,7 @@
                     @input="updateActiveOrganisationValue({path:'sourceId', value:$event})"
                     @blur="$v.activeOrganisation.sourceId.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="readonly"
                     >
                   </form-field-validated-input>
                 </div>
@@ -128,7 +128,7 @@
             </q-card-section>
             <!-- @input="updateActiveOrganisation({path:'name', value:$event})" -->
             <div
-              v-if="hasPermission('canEditOrganisation')"
+              v-if="!readonly"
               class="col-auto"
               >
               <q-separator />
@@ -210,6 +210,9 @@ export default Vue.extend({
       'dirty',
       'organisations',
     ]),
+    readonly() {
+      return !this.hasPermission('canEditOrganisation')
+    },
   },
 
   methods: {

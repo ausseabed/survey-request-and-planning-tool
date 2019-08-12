@@ -49,7 +49,9 @@ export const getOrganisations = ({ commit, state }) => {
   const params = {};
   params.limit = state.pageSize;
   params.start = (state.page - 1) * state.pageSize;
-
+  if (!_.isNil(state.filter)) {
+    params.filter = state.filter;
+  }
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   return new Promise((resolve, reject) => {

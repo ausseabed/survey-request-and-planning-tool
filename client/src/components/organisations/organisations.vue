@@ -5,8 +5,25 @@
       <div class="row q-col-gutter-sm fit items-stretch">
         <div class="col-sm-12 col-md-6">
           <q-card class="fit column">
-            <q-card-section>
+            <q-card-section class="column ">
               <div class="text-h6">Organisations</div>
+
+              <q-input
+                outlined
+                dense
+                debounce="300"
+                v-model="filter"
+                placeholder="Search"
+                class="q-pt-sm"
+              >
+                <template v-slot:append>
+                  <q-icon v-if="filter !== ''" name="close" @click="filter = ''" class="cursor-pointer" />
+                  <q-icon name="search" />
+                </template>
+
+                <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, -4]">Search by name or ABN</q-tooltip>
+              </q-input>
+
             </q-card-section>
             <q-separator style="height:1px"/>
             <q-card-section class="full-height col" style="padding:0px">
@@ -248,6 +265,7 @@ export default Vue.extend({
       'setActiveOrganisation': mTypes.SET_ACTIVE_ORGANISATION,
       'setDirty': mTypes.SET_DIRTY,
       'updateActiveOrganisationValue': mTypes.UPDATE_ACTIVE_ORGANISATION_VALUE,
+      'setFilter': mTypes.SET_FILTER,
     }),
 
     getFormData() {
@@ -364,12 +382,17 @@ export default Vue.extend({
     },
     'id': function (newId, oldId) {
       this.updateActiveOrganisation();
+    },
+    'filter': function (newFilter, oldFilter) {
+      this.setFilter(newFilter)
+      this.getOrganisations()
     }
   },
 
   data() {
     return {
       id: undefined,
+      filter: undefined,
       validationMessagesOverride: {
         'duplicateOrganisationName': "Organisation name already exists",
         'duplicateOrganisationAbn': "ABN assigned to other organisation"

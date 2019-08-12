@@ -43,6 +43,13 @@ const mutations = {
     state.page = page;
   },
 
+  [types.SET_FILTER] (state, filter) {
+    state.filter = filter;
+    state.page = 1;
+    state.organisations.splice(0, state.organisations.length);
+    state.count = undefined;
+  },
+
   [types.SET_PAGE_DATA] (state, orgPageData) {
     // the org page data contains a count of the total number of orgs, and
     // the list of the orgs returned for this page

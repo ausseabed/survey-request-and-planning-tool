@@ -15,6 +15,8 @@ function initialState() {
     count: undefined,
     pageSize: 20,
     page: 1,
+    // filter string used for search
+    filter: undefined,
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
   }

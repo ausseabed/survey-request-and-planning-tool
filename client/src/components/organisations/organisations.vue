@@ -75,10 +75,49 @@
                     name="activeOrganisation.abn"
                     attribute="ABN"
                     label="ABN"
-                    helper="Optional"
+                    hint="Optional"
                     :value="activeOrganisation.abn"
                     @input="updateActiveOrganisationValue({path:'abn', value:$event})"
                     @blur="$v.activeOrganisation.abn.$touch"
+                    type="text"
+                    :readonly="!hasPermission('canEditOrganisation')"
+                    >
+                  </form-field-validated-input>
+
+                  <form-field-validated-input
+                    name="activeOrganisation.description"
+                    attribute="Description"
+                    label="Description"
+                    hint="Optional"
+                    :value="activeOrganisation.description"
+                    @input="updateActiveOrganisationValue({path:'description', value:$event})"
+                    @blur="$v.activeOrganisation.description.$touch"
+                    type="text"
+                    :readonly="!hasPermission('canEditOrganisation')"
+                    >
+                  </form-field-validated-input>
+
+                  <form-field-validated-input
+                    name="activeOrganisation.source"
+                    attribute="Source"
+                    label="Source"
+                    hint="Optional - Link or reference to source of organisation data"
+                    :value="activeOrganisation.source"
+                    @input="updateActiveOrganisationValue({path:'source', value:$event})"
+                    @blur="$v.activeOrganisation.source.$touch"
+                    type="text"
+                    :readonly="!hasPermission('canEditOrganisation')"
+                    >
+                  </form-field-validated-input>
+
+                  <form-field-validated-input
+                    name="activeOrganisation.sourceId"
+                    attribute="Source ID"
+                    label="Source ID"
+                    hint="Optional - Identification number or code used to identify organisation in source data"
+                    :value="activeOrganisation.sourceId"
+                    @input="updateActiveOrganisationValue({path:'sourceId', value:$event})"
+                    @blur="$v.activeOrganisation.sourceId.$touch"
                     type="text"
                     :readonly="!hasPermission('canEditOrganisation')"
                     >
@@ -185,7 +224,6 @@ export default Vue.extend({
     }),
 
     getFormData() {
-      debugger
       this.getOrganisations().then(() => {
         this.updateActiveOrganisation();
       });
@@ -216,6 +254,10 @@ export default Vue.extend({
         let organisation = {
           id: undefined,
           name: this.getNewOrganisationName("New organisation"),
+          description: undefined,
+          abn: undefined,
+          source: undefined,
+          sourceId: undefined,
         };
         this.setActiveOrganisation(organisation);
         this.setDirty(true);
@@ -259,6 +301,9 @@ export default Vue.extend({
     activeOrganisation: {
       name: { required, duplicateOrganisationName },
       abn: { duplicateOrganisationAbn },
+      description: {},
+      source: {},
+      sourceId: {},
     }
   },
 

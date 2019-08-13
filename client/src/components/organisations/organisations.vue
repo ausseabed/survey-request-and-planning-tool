@@ -320,6 +320,8 @@ export default Vue.extend({
           abn: undefined,
           source: undefined,
           sourceId: undefined,
+          requestCount: 0,
+          planCount: 0,
         };
         this.setActiveOrganisation(organisation);
         this.setDirty(true);

@@ -48,7 +48,7 @@ export const getOrganisations = ({ commit, state }) => {
 
   const params = {};
   params.limit = state.pageSize;
-  params.start = (state.page - 1) * state.pageSize;
+  params.start = state.organisations.length;
   if (!_.isNil(state.filter)) {
     params.filter = state.filter;
   }
@@ -59,7 +59,6 @@ export const getOrganisations = ({ commit, state }) => {
     Vue.axios.get(url_endpoint, {params: params})
     .then((response) => {
       commit(mutTypes.SET_PAGE_DATA, response.data);
-      commit(mutTypes.SET_PAGE, state.page + 1);
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
       resolve(response.data);
     })

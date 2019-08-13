@@ -372,6 +372,7 @@ export default Vue.extend({
           .then(pmd => {
             //delete org handler sets active org to undefined, so no need here
             this.notifySuccess('Organisation deleted');
+            this.$router.replace({ path: `/admin/organisations/` });
           }).catch(() => {
             this.notifyError('Failed to delete organisation');
           });

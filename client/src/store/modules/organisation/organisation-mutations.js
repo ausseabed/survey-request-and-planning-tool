@@ -22,9 +22,14 @@ const mutations = {
   },
 
   [types.REMOVE_ORGANISATION] (state, id) {
+    const oldLength = state.organisations.length
     state.organisations = state.organisations.filter(org => {
       return org.id != id
     })
+    // need to recalculate the length
+    const newLength = state.organisations.length
+    const deltaLength = oldLength - newLength
+    //state.count = state.count - deltaLength
   },
 
   [types.CLEAR_ORGANISATION_LIST] (state, organisations) {
@@ -44,14 +49,8 @@ const mutations = {
     state.organisations = organisations;
   },
 
-  [types.SET_PAGE] (state, page) {
-    // what page of data was last requested
-    state.page = page;
-  },
-
   [types.SET_FILTER] (state, filter) {
     state.filter = filter;
-    state.page = 1;
     state.organisations.splice(0, state.organisations.length);
     state.count = undefined;
   },

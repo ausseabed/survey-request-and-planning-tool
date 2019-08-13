@@ -170,6 +170,7 @@ router.get(
     {
       relations: [
         "custodians",
+        "organisations",
         "purposes",
         "dataCaptureTypes",
         "recordState"
@@ -321,6 +322,7 @@ router.post(
     {
       relations: [
         "custodians",
+        "organisations",
         "purposes",
         "dataCaptureTypes",
       ]

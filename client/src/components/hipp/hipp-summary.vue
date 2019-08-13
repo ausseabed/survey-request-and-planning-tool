@@ -92,6 +92,25 @@
               >
             </form-field-validated-select>
 
+            <form-field-validated-select
+              name="hippRequest.organisations"
+              label="Organisations"
+              multiple
+              use-chips
+              use-input
+              input-debounce="200"
+              autocomplete="new-password"
+              @filter="filterOrganisationFunction"
+              :value="hippRequest.organisations"
+              @input="update({path:'hippRequest.organisations', value:$event})"
+              :options="organisationsList"
+              option-label="name"
+              option-value="id"
+              @blur="$v.hippRequest.organisations.$touch"
+              :readonly="readonly"
+              >
+            </form-field-validated-select>
+
             <form-field-validated-input
               name="hippRequest.requestorName"
               attribute="Requestor’s Name"
@@ -557,6 +576,8 @@ import * as hippMutTypes
   from '../../store/modules/hipp-request/hipp-request-mutation-types'
 import * as custodianMutTypes
   from '../../store/modules/custodian/custodian-mutation-types'
+import * as organisationMutTypes
+  from '../../store/modules/organisation/organisation-mutation-types'
 import OlMap from './../olmap/olmap';
 import { required, email, minLength, minValue, maxValue }
   from 'vuelidate/lib/validators';
@@ -649,6 +670,9 @@ export default Vue.extend({
     ...mapActions('dataCaptureType', [
       'getDataCaptureTypes',
     ]),
+    ...mapActions('organisation', [
+      'getOrganisations',
+    ]),
     ...mapMutations('hippRequest', {
       'setDirty': hippMutTypes.SET_DIRTY,
       'update': hippMutTypes.UPDATE,
@@ -657,6 +681,9 @@ export default Vue.extend({
     }),
     ...mapMutations('custodian', {
       'setDeletedCustodians': custodianMutTypes.SET_DELETED_CUSTODIANS,
+    }),
+    ...mapMutations('organisation', {
+      'setOrganisationFilter': organisationMutTypes.SET_FILTER,
     }),
 
     fetchData () {
@@ -761,6 +788,7 @@ export default Vue.extend({
         }
       });
       this.getGeojsonAttributeMap();
+      this.getOrganisations();
     },
 
     selectAreaOfInterestFile () {
@@ -852,6 +880,13 @@ export default Vue.extend({
       })
 
     },
+
+    filterOrganisationFunction(val, update, abort) {
+      this.setOrganisationFilter(val)
+      this.getOrganisations().then((orgs) => {
+        update()
+      })
+    },
   },
 
   computed: {
@@ -875,6 +910,9 @@ export default Vue.extend({
     ...mapGetters('dataCaptureType', [
       'dataCaptureTypes',
     ]),
+    ...mapGetters('organisation', {
+      organisationsList: 'organisations',
+    }),
     readonly: function() {
       if (
         this.hasPermission('canAddHippRequest') &&
@@ -980,6 +1018,7 @@ export default Vue.extend({
         hippRequest: {
           name: { required },
           custodians: { required, minLength:minLength(1) },
+          organisations: { },
           requestorName: { required },
           requestorPosition: { },
           pointOfContactEmail: { required, email },
@@ -1008,6 +1047,10 @@ export default Vue.extend({
         hippRequest: {
           name: { required },
           custodians: { required, minLength:minLength(1) },
+          organisations: {
+            required,
+            minLength:minLength(1)
+          },
           requestorName: { required },
           requestorPosition: { },
           pointOfContactEmail: { required, email },

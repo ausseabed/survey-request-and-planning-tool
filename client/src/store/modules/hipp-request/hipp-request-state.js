@@ -11,6 +11,7 @@ function initialState() {
       id: undefined,
       name: undefined,
       custodians: [],
+      organisations: [],
       requestorName: undefined,
       requestorPosition: undefined,
       pointOfContactEmail: undefined,

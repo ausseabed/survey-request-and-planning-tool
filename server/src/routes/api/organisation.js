@@ -11,34 +11,42 @@ import { Organisation } from '../../lib/entity/organisation';
 var router = express.Router();
 
 
+async function getOrganisation(id) {
+
+    let qb = getConnection()
+    .getRepository(Organisation)
+    .createQueryBuilder('organisation')
+    .addSelect(
+      '(SELECT COUNT(*) FROM hipp_request_organisations_organisation WHERE "hipp_request_organisations_organisation"."organisationId" = organisation.id) AS request_count'
+    )
+    .addSelect(
+      '(SELECT COUNT(*) FROM project_metadata_organisations_organisation WHERE "project_metadata_organisations_organisation"."organisationId" = organisation.id) AS plan_count'
+    )
+    .orderBy('organisation.name', 'ASC')
+    .where('organisation.id = :id', {id: id})
+    const org = await qb.getOne();
+
+    if (_.isNil(org)) {
+      let err = boom.notFound(
+        `Organisation ${req.params.id} does not exist`);
+      throw err;
+    }
+
+    const orgRaw = await qb.getRawOne();
+    org.requestCount = orgRaw.request_count
+    org.planCount = orgRaw.plan_count
+
+    return org
+}
+
+
 // Gets a single organisation by id
 router.get(
   '/:id',
   [isAuthenticated],
   asyncMiddleware(async function (req, res) {
 
-  let qb =getConnection()
-  .getRepository(Organisation)
-  .createQueryBuilder('organisation')
-  .addSelect(
-    '(SELECT COUNT(*) FROM hipp_request_organisations_organisation WHERE "hipp_request_organisations_organisation"."organisationId" = organisation.id) AS request_count'
-  )
-  .addSelect(
-    '(SELECT COUNT(*) FROM project_metadata_organisations_organisation WHERE "project_metadata_organisations_organisation"."organisationId" = organisation.id) AS plan_count'
-  )
-  .orderBy('organisation.name', 'ASC')
-  .where('organisation.id = :id', {id: req.params.id})
-  const org = await qb.getOne();
-
-  if (_.isNil(org)) {
-    let err = boom.notFound(
-      `Organisation ${req.params.id} does not exist`);
-    throw err;
-  }
-
-  const orgRaw = await qb.getRawOne();
-  org.requestCount = orgRaw.request_count
-  org.planCount = orgRaw.plan_count
+  const org = await getOrganisation(req.params.id)
 
   return res.json(org);
 }));
@@ -109,10 +117,9 @@ router.post(
   .getRepository(Organisation)
   .save(organisation)
 
-  // because the saved version of organisation doesn't include all attribs
-  organisation = await getConnection()
-  .getRepository(Organisation)
-  .findOne(organisation.id)
+  // getOrganisation includes a few other fields for an org that are not part
+  // or its entity definition
+  organisation = await getOrganisation(organisation.id)
   return res.json(organisation)
 }));
 

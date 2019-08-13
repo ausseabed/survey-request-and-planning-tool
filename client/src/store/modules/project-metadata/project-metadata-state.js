@@ -12,6 +12,7 @@ function initialState() {
       id: undefined,
       surveyName: null,
       custodians: [],
+      organisations: [],
       contactPerson: null,
       email: null,
       areaOfInterest: null,

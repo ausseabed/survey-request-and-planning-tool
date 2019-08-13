@@ -228,6 +228,7 @@ router.get(
     {
       relations: [
         "custodians",
+        "organisations",
         "instrumentTypes",
         "dataCaptureTypes",
         "surveyApplication",
@@ -272,6 +273,7 @@ router.post(
   project.contactPerson = req.body.contactPerson;
   project.email = req.body.email;
   project.custodians = req.body.custodians;
+  project.organisations = req.body.organisations;
   project.startDate = req.body.startDate;
   project.endDate = req.body.endDate;
   project.instrumentTypes = req.body.instrumentTypes;

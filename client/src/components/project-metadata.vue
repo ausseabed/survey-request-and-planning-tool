@@ -127,6 +127,24 @@
               >
             </form-field-validated-select>
 
+            <form-field-validated-select
+              name="projectMetadata.organisations"
+              label="Organisations"
+              multiple
+              use-chips
+              use-input
+              input-debounce="200"
+              @filter="filterOrganisationFunction"
+              :value="projectMetadata.organisations"
+              @input="setProjectOrganisations($event)"
+              :options="organisationsList"
+              option-label="name"
+              option-value="id"
+              @blur="$v.projectMetadata.organisations.$touch"
+              :readonly="readonly"
+              >
+            </form-field-validated-select>
+
             <q-input
               icon="fas fa-user"
               label="Contact person"
@@ -636,6 +654,8 @@ import { permission } from './mixins/permission'
 import { errorHandler } from './mixins/error-handling'
 import * as custodianMutTypes
   from '../store/modules/custodian/custodian-mutation-types'
+import * as organisationMutTypes
+  from '../store/modules/organisation/organisation-mutation-types'
 import * as pmMutTypes
   from '../store/modules/project-metadata/project-metadata-mutation-types'
 
@@ -740,9 +760,13 @@ export default Vue.extend({
     ...mapActions('reportTemplate', [
       'generateReport',
     ]),
+    ...mapActions('organisation', [
+      'getOrganisations',
+    ]),
     ...mapMutations('projectMetadata', {
       'setDirty': pmMutTypes.SET_DIRTY,
       'setProjectCustodians': pmMutTypes.SET_CUSTODIANS,
+      'setProjectOrganisations': pmMutTypes.SET_ORGANISATIONS,
       'updateProjectMetadata': pmMutTypes.UPDATE,
     }),
     ...mapMutations('projectMetadata', [
@@ -761,6 +785,9 @@ export default Vue.extend({
     ]),
     ...mapMutations('custodian', {
       'setDeletedCustodians': custodianMutTypes.SET_DELETED_CUSTODIANS,
+    }),
+    ...mapMutations('organisation', {
+      'setOrganisationFilter': organisationMutTypes.SET_FILTER,
     }),
 
     projectStatusIconDetails: projectStatusIconDetails,
@@ -1119,6 +1146,8 @@ export default Vue.extend({
         this.$store.commit('surveyApplication/setSurveyApplicationGroups',
           surveyAppGroups);
       });
+
+      this.getOrganisations();
     },
 
     parseCustodians() {
@@ -1165,7 +1194,15 @@ export default Vue.extend({
       } else {
         return true;
       }
-    }
+    },
+
+    filterOrganisationFunction(val, update, abort) {
+      this.setOrganisationFilter(val)
+      this.getOrganisations().then((orgs) => {
+        update()
+      })
+    },
+
   },
 
   computed: {
@@ -1205,6 +1242,10 @@ export default Vue.extend({
     ...mapGetters('reportTemplate', [
       'reportDownloading',
     ]),
+    ...mapGetters('organisation', {
+      organisationsList: 'organisations',
+      organisationsCount: 'count',
+    }),
     readonly: function() {
       if (
         this.hasPermission('canAddProject') &&
@@ -1334,6 +1375,7 @@ export default Vue.extend({
           startDate: { },
           endDate: { },
           moratoriumDate: { },
+          organisations: { },
         },
       }
     } else if (this.validationIntent == 'final') {
@@ -1363,6 +1405,10 @@ export default Vue.extend({
           startDate: { required },
           endDate: { },
           moratoriumDate: {validMoratorium},
+          organisations: {
+            required,
+            minLength:minLength(1)
+          },
         },
       }
     }

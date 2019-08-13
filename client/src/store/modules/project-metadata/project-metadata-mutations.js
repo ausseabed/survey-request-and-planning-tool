@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 import * as types from './project-metadata-mutation-types'
 
 const mutations = {
@@ -33,6 +35,11 @@ const mutations = {
 
   [types.SET_CUSTODIANS] (state, custodians) {
     state.projectMetadata.custodians = custodians;
+    state.dirty = true;
+  },
+
+  [types.SET_ORGANISATIONS] (state, organisations) {
+    Vue.set(state.projectMetadata, 'organisations', organisations);
     state.dirty = true;
   },
 

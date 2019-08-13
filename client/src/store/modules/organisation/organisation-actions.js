@@ -70,3 +70,27 @@ export const getOrganisations = ({ commit, state }) => {
     });
   });
 }
+
+export const deleteOrganisation = ({ commit, state }, payload) => {
+  const id = payload.id;
+  var url_endpoint = `/api/organisation/${id}`;
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  return new Promise((resolve, reject) => {
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+    Vue.axios.delete(url_endpoint)
+    .then((response) => {
+      commit(mutTypes.REMOVE_ORGANISATION, id);
+      if (!_.isNil(state.activeOrganisation) && state.activeOrganisation.id == id) {
+        commit(mutTypes.SET_ACTIVE_ORGANISATION, undefined);
+      }
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+      resolve(response.data);
+    })
+    .catch((error) => {
+      commit(mutTypes.SET_REQUEST_ERROR, error);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+      reject(error);
+    });
+  });
+}

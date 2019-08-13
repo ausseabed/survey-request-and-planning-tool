@@ -21,6 +21,12 @@ const mutations = {
     }
   },
 
+  [types.REMOVE_ORGANISATION] (state, id) {
+    state.organisations = state.organisations.filter(org => {
+      return org.id != id
+    })
+  },
+
   [types.CLEAR_ORGANISATION_LIST] (state, organisations) {
     state.organisations.splice(0, state.organisations.length);
   },

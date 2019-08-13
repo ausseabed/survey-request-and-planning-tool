@@ -28,7 +28,7 @@ async function getOrganisation(id) {
 
     if (_.isNil(org)) {
       let err = boom.notFound(
-        `Organisation ${req.params.id} does not exist`);
+        `Organisation ${id} does not exist`);
       throw err;
     }
 
@@ -110,6 +110,15 @@ router.post(
   [isAuthenticated, permitPermission('canEditOrganisation')],
   asyncMiddleware(async function (req, res) {
 
+  if (!_.isNil(req.body.id)) {
+    const testOrg = await getOrganisation(req.body.id)
+    if (testOrg.planCount != 0 || testOrg.requestCount != 0) {
+      let err = boom.badRequest(
+        `Organisation ${req.body.id} has linked request or plan, cannot modify`);
+      throw err;
+    }
+  }
+
   var organisation = new Organisation()
   _.merge(organisation, req.body);
 
@@ -130,7 +139,7 @@ router.delete(
 
   const organisationRepo = getConnection().getRepository(Organisation);
 
-  let organisation = await organisationRepo.findOne(req.params.id);
+  const organisation = await getOrganisation(req.params.id)
 
   if (!organisation) {
     let err = boom.notFound(
@@ -138,10 +147,23 @@ router.delete(
     throw err;
   }
 
-  let err = boom.notFound(
-    `Not implemented`);
-  throw err;
+  // check if org is linked to plan or request, and fail request if it is
+  // removing the following will work, deleted orgs are then removed from
+  // the projects they have been assigned too.
+  if (organisation.planCount != 0 || organisation.requestCount != 0) {
+    let err = boom.badRequest(
+      `Organisation ${req.params.id} has linked request or plan, cannot delete`);
+    throw err;
+  }
 
+  await getConnection().getRepository(Organisation)
+  .createQueryBuilder()
+  .delete()
+  .from(Organisation)
+  .where(`id = :id`, {id: req.params.id})
+  .execute();
+
+  return res.json(organisation)
 
 }));
 

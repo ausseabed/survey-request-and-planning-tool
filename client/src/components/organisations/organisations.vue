@@ -157,7 +157,7 @@
 
               </form-wrapper>
             </q-card-section>
-            <!-- @input="updateActiveOrganisation({path:'name', value:$event})" -->
+
             <div
               v-if="!readonly"
               class="col-auto"
@@ -167,6 +167,11 @@
                 <q-btn flat icon="save"
                   label="Save"
                   @click="submit()"
+                >
+                </q-btn>
+                <q-btn flat icon="delete"
+                  label="Delete"
+                  @click="deleteOrganisationClick()"
                 >
                 </q-btn>
 
@@ -260,6 +265,7 @@ export default Vue.extend({
       'getOrganisations',
       'saveOrganisation',
       'getActiveOrganisation',
+      'deleteOrganisation',
     ]),
     ...mapMutations('organisation', {
       'setActiveOrganisation': mTypes.SET_ACTIVE_ORGANISATION,
@@ -346,7 +352,40 @@ export default Vue.extend({
           // then updated the route for the organisation
           this.$router.replace({ path: `/admin/organisations/${organisation.id}` });
         }
+      }).catch((err) => {
+        this.notifyError(`Failed to save organisation`);
       });
+    },
+
+    deleteOrganisationClick() {
+      if (!_.isNil(this.activeOrganisation.id)) {
+        // an existing id indicated this org has been saved
+
+        this.$q.dialog({
+          title: 'Delete organisation',
+          message:
+            `Organisation ${this.activeOrganisation.name} will be deleted`,
+          ok: 'Delete',
+          cancel: 'Cancel'
+        }).onOk(() => {
+          this.deleteOrganisation({ id: this.id })
+          .then(pmd => {
+            //delete org handler sets active org to undefined, so no need here
+            this.notifySuccess('Organisation deleted');
+          }).catch(() => {
+            this.notifyError('Failed to delete organisation');
+          });
+        }).onCancel(() => {
+          //do nothing
+        }).onDismiss(() => {
+          //do nothing
+        })
+
+      } else {
+        // no id, so hasn't been saved. Simply replace active custodian with nothing
+        this.setActiveOrganisation(undefined);
+        this.$router.replace({ path: `/admin/organisations/` });
+      }
     },
 
     // async saveLots() {

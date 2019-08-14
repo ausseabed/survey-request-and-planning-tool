@@ -56,14 +56,31 @@
             </q-card-section>
             <div class="col-auto">
               <q-separator />
-              <q-card-actions align="between">
+              <q-card-actions
+                v-if="hasPermission('canEditOrganisation')"
+                align="right"
+              >
                 <q-btn
-                  v-if="hasPermission('canEditOrganisation')"
                   flat
                   icon="add"
                   label="Add new"
                   to="/admin/organisations/new"
                 >
+                </q-btn>
+
+                <input
+                  type="file"
+                  accept=".csv"
+                  id="dataPath"
+                  v-on:change="setOrganisationCsv"
+                  ref="fileInput"
+                  hidden
+                />
+                <q-btn flat label="Upload CSV" icon="cloud_upload"
+                  @click="selectOrganisationCsv">
+                  <q-tooltip>
+                    Upload Area of Interest
+                  </q-tooltip>
                 </q-btn>
 
               </q-card-actions>
@@ -389,6 +406,36 @@ export default Vue.extend({
         this.setActiveOrganisation(undefined);
         this.$router.replace({ path: `/admin/organisations/` });
       }
+    },
+
+    selectOrganisationCsv() {
+      this.$refs.fileInput.click();
+    },
+    setOrganisationCsv(event) {
+      const file = event.target.files[0];
+
+      let formData = new FormData();
+      formData.append('file', file);
+
+      const url_endpoint = `/api/organisation/upload`
+
+      Vue.axios.put(
+        url_endpoint,
+        formData,
+        {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          }
+        }
+      ).then(function(){
+        // todo : tidy up
+        console.log('SUCCESS!!');
+      })
+      .catch(function(){
+        // todo : tidy up
+        console.log('FAILURE!!');
+      });
+
     },
 
     // async saveLots() {

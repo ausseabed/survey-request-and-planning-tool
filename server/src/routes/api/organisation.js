@@ -1,4 +1,7 @@
 var express = require('express');
+const formidable = require('formidable');
+const fs = require('fs');
+var parse = require('csv-parse');
 var _ = require('lodash');
 const boom = require('boom');
 
@@ -166,5 +169,127 @@ router.delete(
   return res.json(organisation)
 
 }));
+
+// creates a mapping of entity attribute names to what column indexes the
+// values can be found in
+function getHeaderColumnMap(header) {
+  const map = {}
+  for (let i = 0; i < header.length; i++) {
+    const headerName = header[i].toLowerCase();
+    if (headerName == 'name' || headerName == 'title') {
+      map.name = i
+    } else if (headerName == 'description' || headerName == 'desc') {
+      map.description = i
+    } else if (headerName == 'id') {
+      map.sourceId = i
+    } else if (headerName == 'abn') {
+      map.abn = i
+    }
+  }
+  return map
+}
+
+async function checkIfOrganisationExists(name) {
+  return await getConnection()
+    .getRepository(Organisation)
+    .createQueryBuilder('organisation')
+    .where('organisation.name = :name', { name: name})
+    .getCount() > 0;
+}
+
+async function processOrgDataRow(dataRow, colMap, resObj) {
+  const name = dataRow[colMap.name]
+  if (_.isNil(name) || name.length == 0) {
+    throw new Error('No name');
+  }
+
+  const orgExists = await checkIfOrganisationExists(name)
+  if (orgExists) {
+    resObj.duplicateOrganisations += 1
+  } else {
+    let newOrg = new Organisation();
+    newOrg.name = name
+    for (const [entityAttribName, csvColIndex] of Object.entries(colMap)) {
+      const dataRowVal = dataRow[csvColIndex]
+      _.set(newOrg, entityAttribName, dataRowVal)
+    }
+
+    await getConnection()
+    .getRepository(Organisation)
+    .save(newOrg)
+
+    resObj.newOrganisations += 1
+  }
+
+}
+
+async function processOrganisationCsv(file) {
+  return new Promise(async (resolve, reject) => {
+    try {
+
+      const filename = file.name;
+
+      const resObj = {
+        success: false,
+        error: undefined,
+        badLineNumbers: [],
+        newOrganisations: 0,
+        duplicateOrganisations: 0
+      };
+
+      var parser = parse(
+        {delimiter: ','},
+        async (err, data) => {
+          const colmap = getHeaderColumnMap(data[0]);
+
+          for (let i = 1; i < data.length; i++) {
+            const dataRow = data[i]
+            try {
+              await processOrgDataRow(dataRow, colmap, resObj);
+            } catch (e) {
+              resObj.badLineNumbers.push(i)
+              resObj.error = e.toString()
+            }
+
+          }
+          console.log(resObj);
+          resolve(resObj)
+      });
+      await fs.createReadStream(file.path).pipe(parser);
+
+    } catch(error) {
+      return reject(error);
+    }
+  })
+}
+
+
+// handler supports bulk upload of organisations provided in a CSV file
+// at a minimum the csv must have a column with header of "name" or "title"
+router.put(
+  '/upload',
+  [isAuthenticated, permitPermission('canEditOrganisation')],
+  asyncMiddleware(async function (req, res) {
+
+  new formidable.IncomingForm().parse(req)
+  .on('field', (name, field) => {
+    console.log('Field', name, field)
+  })
+  .on('file', async (name, file) => {
+    const processingResults = await processOrganisationCsv(file);
+    return res.json(processingResults);
+  })
+  .on('aborted', () => {
+    console.error('Request aborted by the user')
+  })
+  .on('error', (err) => {
+    console.error('Error', err)
+    throw err
+  })
+  .on('end', () => {
+
+  })
+}));
+
 
 module.exports = router;

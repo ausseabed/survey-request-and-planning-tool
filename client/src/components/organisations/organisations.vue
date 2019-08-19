@@ -31,7 +31,7 @@
                 No organisations.
               </div>
 
-              <q-scroll-area v-else class="fit" ref="scrollTargetRef">
+              <q-scroll-area v-else class="fit" ref="scrollTargetRef" style="min-height:60px">
                 <q-list highlight no-border>
                   <q-infinite-scroll @load="onLoad" :offset="250" :scroll-target="$refs.scrollTargetRef">
                     <q-item
@@ -297,6 +297,7 @@ export default Vue.extend({
     }),
 
     getFormData() {
+      this.setFilter('');
       this.clearOrganisationList();
       this.getOrganisations();
       this.updateActiveOrganisation();

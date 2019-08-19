@@ -10,7 +10,8 @@ function initialState() {
     hippRequest: {
       id: undefined,
       name: undefined,
-      requestingAgencies: [],
+      custodians: [],
+      organisations: [],
       requestorName: undefined,
       requestorPosition: undefined,
       pointOfContactEmail: undefined,

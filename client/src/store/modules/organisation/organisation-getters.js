@@ -2,14 +2,6 @@ export const activeOrganisation = state => {
   return state.activeOrganisation;
 }
 
-export const userOrganisation = state => {
-  return state.userOrganisation;
-}
-
-export const deletedOrganisations = state => {
-  return state.deletedOrganisations;
-}
-
 export const dirty = state => {
   return state.dirty;
 }
@@ -24,4 +16,8 @@ export const requestError = state => {
 
 export const requestStatus = state => {
   return state.requestStatus;
+}
+
+export const count = state => {
+  return state.count;
 }

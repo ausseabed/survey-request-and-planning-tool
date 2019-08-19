@@ -78,16 +78,35 @@
           <q-card-section>
 
             <form-field-validated-select
-              name="hippRequest.requestingAgencies"
-              attribute="Requestor’s Organisation"
-              label="Requestor’s Organisation"
+              name="hippRequest.custodians"
+              attribute="Custodian"
+              label="Custodian"
               multiple use-chips
-              :value="hippRequest.requestingAgencies"
-              @input="update({path:'hippRequest.requestingAgencies', value:$event})"
-              :options="organisations"
+              :value="hippRequest.custodians"
+              @input="update({path:'hippRequest.custodians', value:$event})"
+              :options="custodians"
               option-label="name"
               option-value="id"
-              @blur="$v.hippRequest.requestingAgencies.$touch"
+              @blur="$v.hippRequest.custodians.$touch"
+              :readonly="readonly"
+              >
+            </form-field-validated-select>
+
+            <form-field-validated-select
+              name="hippRequest.organisations"
+              label="Organisations"
+              multiple
+              use-chips
+              use-input
+              input-debounce="200"
+              autocomplete="new-password"
+              @filter="filterOrganisationFunction"
+              :value="hippRequest.organisations"
+              @input="update({path:'hippRequest.organisations', value:$event})"
+              :options="organisationsList"
+              option-label="name"
+              option-value="id"
+              @blur="$v.hippRequest.organisations.$touch"
               :readonly="readonly"
               >
             </form-field-validated-select>
@@ -555,7 +574,9 @@ import { errorHandler } from './../mixins/error-handling'
 import { permission } from './../mixins/permission'
 import * as hippMutTypes
   from '../../store/modules/hipp-request/hipp-request-mutation-types'
-import * as orgMutTypes
+import * as custodianMutTypes
+  from '../../store/modules/custodian/custodian-mutation-types'
+import * as organisationMutTypes
   from '../../store/modules/organisation/organisation-mutation-types'
 import OlMap from './../olmap/olmap';
 import { required, email, minLength, minValue, maxValue }
@@ -637,8 +658,8 @@ export default Vue.extend({
       'deleteHippRequest',
       'getGeojsonAttributeMap',
     ]),
-    ...mapActions('organisation', [
-      'getOrganisations',
+    ...mapActions('custodian', [
+      'getCustodians',
     ]),
     ...mapActions('reportTemplate', [
       'generateReport',
@@ -649,14 +670,20 @@ export default Vue.extend({
     ...mapActions('dataCaptureType', [
       'getDataCaptureTypes',
     ]),
+    ...mapActions('organisation', [
+      'getOrganisations',
+    ]),
     ...mapMutations('hippRequest', {
       'setDirty': hippMutTypes.SET_DIRTY,
       'update': hippMutTypes.UPDATE,
       'resetHippRequest': hippMutTypes.RESET_HIPP_REQUEST,
       'updateHippRequest': hippMutTypes.UPDATE_HIPP_REQUEST,
     }),
+    ...mapMutations('custodian', {
+      'setDeletedCustodians': custodianMutTypes.SET_DELETED_CUSTODIANS,
+    }),
     ...mapMutations('organisation', {
-      'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
+      'setOrganisationFilter': organisationMutTypes.SET_FILTER,
     }),
 
     fetchData () {
@@ -744,10 +771,10 @@ export default Vue.extend({
 
     getFormData() {
       this.stateReadonly = true;
-      // only get non-deleted organisations
-      this.setDeletedOrganisations(false);
-      // gets the list of all orgs, not just those associated to this project
-      this.getOrganisations();
+      // only get non-deleted custodians
+      this.setDeletedCustodians(false);
+      // gets the list of all custodians, not just those associated to this project
+      this.getCustodians();
 
       // get misc lists for populating drop downs
       this.getRiskMatrix();
@@ -761,6 +788,7 @@ export default Vue.extend({
         }
       });
       this.getGeojsonAttributeMap();
+      this.getOrganisations();
     },
 
     selectAreaOfInterestFile () {
@@ -852,6 +880,13 @@ export default Vue.extend({
       })
 
     },
+
+    filterOrganisationFunction(val, update, abort) {
+      this.setOrganisationFilter(val)
+      this.getOrganisations().then((orgs) => {
+        update()
+      })
+    },
   },
 
   computed: {
@@ -863,8 +898,8 @@ export default Vue.extend({
       'surveyQualityRequirements',
       'geojsonAttributeMap',
     ]),
-    ...mapGetters('organisation', [
-      'organisations',
+    ...mapGetters('custodian', [
+      'custodians',
     ]),
     ...mapGetters('reportTemplate', [
       'reportDownloading',
@@ -875,6 +910,9 @@ export default Vue.extend({
     ...mapGetters('dataCaptureType', [
       'dataCaptureTypes',
     ]),
+    ...mapGetters('organisation', {
+      organisationsList: 'organisations',
+    }),
     readonly: function() {
       if (
         this.hasPermission('canAddHippRequest') &&
@@ -894,8 +932,8 @@ export default Vue.extend({
         return false
       }
       else if (
-        this.hasPermission('canEditOrgHippRequests') &&
-        this.hasOrganisationLink('hippRequest.requestingAgencies')
+        this.hasPermission('canEditCustodianHippRequests') &&
+        this.hasCustodianLink('hippRequest.custodians')
       ) {
         // can only edit hipp requests that are linked to user
         return false
@@ -979,7 +1017,8 @@ export default Vue.extend({
       return {
         hippRequest: {
           name: { required },
-          requestingAgencies: { required, minLength:minLength(1) },
+          custodians: { required, minLength:minLength(1) },
+          organisations: { },
           requestorName: { required },
           requestorPosition: { },
           pointOfContactEmail: { required, email },
@@ -1007,7 +1046,11 @@ export default Vue.extend({
       return {
         hippRequest: {
           name: { required },
-          requestingAgencies: { required, minLength:minLength(1) },
+          custodians: { required, minLength:minLength(1) },
+          organisations: {
+            required,
+            minLength:minLength(1)
+          },
           requestorName: { required },
           requestorPosition: { },
           pointOfContactEmail: { required, email },

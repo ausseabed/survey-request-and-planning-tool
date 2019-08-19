@@ -4,8 +4,8 @@ import * as types from './organisation-mutation-types';
 
 const mutations = {
   [types.ADD_ORGANISATION] (state, organisation) {
-    const existingIndex = state.organisations.findIndex(existingOrg => {
-      return existingOrg.id == organisation.id;
+    const existingIndex = state.organisations.findIndex(existingOrganisation => {
+      return existingOrganisation.id == organisation.id;
     });
     if (existingIndex == -1) {
       state.organisations.push(organisation);
@@ -13,7 +13,7 @@ const mutations = {
       Vue.set(state.organisations, existingIndex, organisation);
     }
 
-    // update the active org too is this is the org we are adding
+    // update the active organisation too is this is the organisation we are adding
     if (!_.isNil(state.activeOrganisation) &&
       organisation.id == state.activeOrganisation.id)
     {
@@ -21,7 +21,19 @@ const mutations = {
     }
   },
 
+  [types.REMOVE_ORGANISATION] (state, id) {
+    const oldLength = state.organisations.length
+    state.organisations = state.organisations.filter(org => {
+      return org.id != id
+    })
+    // need to recalculate the length
+    const newLength = state.organisations.length
+    const deltaLength = oldLength - newLength
+    //state.count = state.count - deltaLength
+  },
+
   [types.CLEAR_ORGANISATION_LIST] (state, organisations) {
+    state.count = undefined;
     state.organisations.splice(0, state.organisations.length);
   },
 
@@ -30,16 +42,25 @@ const mutations = {
     state.dirty = false;
   },
 
-  [types.SET_DELETED_ORGANISATIONS] (state, deletedOrganisations) {
-    state.deletedOrganisations = deletedOrganisations;
-  },
-
   [types.SET_DIRTY] (state, dirty) {
     state.dirty = dirty;
   },
 
   [types.SET_ORGANISATIONS] (state, organisations) {
     state.organisations = organisations;
+  },
+
+  [types.SET_FILTER] (state, filter) {
+    state.filter = filter;
+    state.organisations.splice(0, state.organisations.length);
+    state.count = undefined;
+  },
+
+  [types.SET_PAGE_DATA] (state, orgPageData) {
+    // the org page data contains a count of the total number of orgs, and
+    // the list of the orgs returned for this page
+    state.count = orgPageData.count
+    state.organisations.push(...orgPageData.data)
   },
 
   [types.SET_REQUEST_ERROR] (state, error) {
@@ -55,9 +76,6 @@ const mutations = {
     _.set(state.activeOrganisation, path, _.cloneDeep(value))
   },
 
-  [types.SET_USER_ORGANISATION] (state, org) {
-    state.userOrganisation = org;
-  },
 }
 
 export default {

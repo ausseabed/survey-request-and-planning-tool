@@ -239,7 +239,7 @@ var OlMap = function (target, options) {
       // THIS ONLY WORKS IN DEV
       // in a prod build the babel transpliation seems to mess with variable
       // and method naming resulting in a bunch of 'XXXXX is undefined'
-      // possible solution: https://webpack.js.org/loaders/worker-loader/
+      // possible solution: https://webpack.js.custodian/loaders/worker-loader/
       if (typeof this.onFileAddStart === 'function') {
         this.onFileAddStart();
       }

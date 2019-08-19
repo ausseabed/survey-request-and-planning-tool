@@ -27,6 +27,7 @@
     "boom": "^7.3.0",
     "cookie-parser": "^1.4.0",
     "cors": "^2.8.4",
+    "csv-parse": "^4.4.5",
     "debug": "^2.2.0",
     "docxtemplater": "^3.10.1",
     "docxtemplater-image-module-free": "^1.1.1",

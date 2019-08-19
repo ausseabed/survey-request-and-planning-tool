@@ -20,7 +20,7 @@ const planStates = {
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canFinaliseAllRecordState',
-          orgPermission: 'canFinaliseOrgRecordState',
+          custodianPermission: 'canFinaliseCustodianRecordState',
         },
       },
     },
@@ -34,7 +34,7 @@ const planStates = {
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canReviseAllRecordState',
-          orgPermission: 'canReviseOrgRecordState',
+          custodianPermission: 'canReviseCustodianRecordState',
         },
       },
     },
@@ -49,7 +49,7 @@ const planStates = {
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canFinaliseAllRecordState',
-          orgPermission: 'canFinaliseOrgRecordState',
+          custodianPermission: 'canFinaliseCustodianRecordState',
         },
         actions: ['incrementVersion'],
       }
@@ -71,7 +71,7 @@ const requestStates = {
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canFinaliseAllRecordState',
-          orgPermission: 'canFinaliseOrgRecordState',
+          custodianPermission: 'canFinaliseCustodianRecordState',
         },
       },
     },
@@ -85,7 +85,7 @@ const requestStates = {
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canReviseAllRecordState',
-          orgPermission: 'canReviseOrgRecordState',
+          custodianPermission: 'canReviseCustodianRecordState',
         },
       },
       ACCEPT: {
@@ -93,7 +93,7 @@ const requestStates = {
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canAcceptAllRecordState',
-          orgPermission: 'canAcceptOrgRecordState',
+          custodianPermission: 'canAcceptCustodianRecordState',
         },
       }
     },
@@ -108,7 +108,7 @@ const requestStates = {
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canFinaliseAllRecordState',
-          orgPermission: 'canFinaliseOrgRecordState',
+          custodianPermission: 'canFinaliseCustodianRecordState',
         },
         actions: ['incrementVersion'],
       }
@@ -123,7 +123,7 @@ const requestStates = {
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canRemoveAllRecordState',
-          orgPermission: 'canRemoveOrgRecordState',
+          custodianPermission: 'canRemoveCustodianRecordState',
         },
       }
     },
@@ -136,7 +136,7 @@ const requestStates = {
 // creates a state machine for the given record type and entity id
 // user is required to support permission based guards in the state machine.
 export const buildRecordMachine =
-  async (entityType, entityId, user, entityOrgListAttribute, recordType) => {
+  async (entityType, entityId, user, entityCustodianListAttribute, recordType) => {
 
   // the states, and migrations between them differ based on entity
   // so get the right states for the given entity type
@@ -158,7 +158,7 @@ export const buildRecordMachine =
       select: ['id'],
       relations: [
         'recordState',
-        entityOrgListAttribute
+        entityCustodianListAttribute
       ],
     }
   );
@@ -175,7 +175,7 @@ export const buildRecordMachine =
     recordState = record.recordState;
   }
 
-  const entityOrgs = record[entityOrgListAttribute];
+  const entityCustodians = record[entityCustodianListAttribute];
 
   const id = entityType.name + 'Record'
   const machine = Machine({
@@ -184,7 +184,7 @@ export const buildRecordMachine =
       user: user, // current user, used to log changes
       entityType: entityType,
       entityId: entityId,
-      entityOrgs: entityOrgs,
+      entityCustodians: entityCustodians,
       recordType: recordType,
       recordStateVersion: recordState.version,
       // can the record be modified. Allows state machine to determine if the
@@ -229,17 +229,17 @@ export const buildRecordMachine =
           return true;
         }
         if (
-          context.user.role[cond.orgPermission] &&
-          !_.isNil(context.user.organisation)
+          context.user.role[cond.custodianPermission] &&
+          !_.isNil(context.user.custodian)
           )
         {
-          // then user has the org based permission to pass this guard, but we
-          // need to check their org matches the orgs linked to the entity
-          const orgs = context.entityOrgs;
-          const matchingOrg = orgs.find((org) => {
-            return org.id === context.user.organisation.id;
+          // then user has the custodian based permission to pass this guard, but we
+          // need to check their custodian matches the custodians linked to the entity
+          const custodians = context.entityCustodians;
+          const matchingCustodian = custodians.find((custodian) => {
+            return custodian.id === context.user.custodian.id;
           })
-          if (!_.isNil(matchingOrg)) {
+          if (!_.isNil(matchingCustodian)) {
             return true;
           }
         }

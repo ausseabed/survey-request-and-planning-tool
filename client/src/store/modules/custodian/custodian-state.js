@@ -1,23 +1,19 @@
-import * as actions from './organisation-actions'
-import * as getters from './organisation-getters'
-import * as types from './organisation-mutation-types'
-import mutations from './organisation-mutations'
+import * as actions from './custodian-actions'
+import * as getters from './custodian-getters'
+import * as types from './custodian-mutation-types'
+import mutations from './custodian-mutations'
 
 import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
-    activeOrganisation:undefined,
+    activeCustodian:undefined,
+    userCustodian: undefined,
     dirty: false,
-    organisations:[],
-    // total number of orgs irrespective of pagination, don't request more than
-    // this
-    count: undefined,
-    pageSize: 20,
-    // filter string used for search
-    filter: undefined,
+    custodians:[],
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
+    deletedCustodians: null, // should deleted custodians be requested
   }
 }
 

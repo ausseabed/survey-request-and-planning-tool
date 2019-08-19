@@ -119,7 +119,7 @@ import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { permission } from './../mixins/permission'
 import { errorHandler } from './../mixins/error-handling'
 import * as mTypes
-  from '../../store/modules/organisation/organisation-mutation-types'
+  from '../../store/modules/custodian/custodian-mutation-types'
 import ReportTemplateCard from './report-template-card'
 
 export default Vue.extend({

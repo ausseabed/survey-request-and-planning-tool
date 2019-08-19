@@ -135,8 +135,8 @@ export default Vue.extend({
       if (this.hasPermission('canViewAllAttachments')) {
         return true
       } else if (
-        this.hasPermission('canViewOrgAttachments') &&
-        this.hasOrganisationLink('projectMetadata.organisations')
+        this.hasPermission('canViewCustodianAttachments') &&
+        this.hasCustodianLink('projectMetadata.custodians')
       ) {
         return true
       } else {

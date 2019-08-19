@@ -5,13 +5,14 @@ import projectMetadata
   from './modules/project-metadata/project-metadata-state'
 import dataCaptureType from './modules/data-capture-type/data-capture-type-state'
 import instrumentType from './modules/instrument-type/instrument-type-state'
-import organisation from './modules/organisation/organisation-state'
+import custodian from './modules/custodian/custodian-state'
 import surveyApplication
   from './modules/survey-application/survey-application-state'
 import techSpec from './modules/tech-spec/tech-spec-state'
 import surveyFile from './modules/survey-file/survey-file-state'
 import deliverable from './modules/deliverable/deliverable-state'
 import hippRequest from './modules/hipp-request/hipp-request-state'
+import organisation from './modules/organisation/organisation-state'
 import reportTemplate from './modules/report-template/report-template-state'
 import user from './modules/user/user-state'
 import role from './modules/role/role-state'
@@ -28,7 +29,7 @@ export default new Vuex.Store({
     projectMetadata,
     dataCaptureType,
     instrumentType,
-    organisation,
+    custodian,
     surveyApplication,
     techSpec,
     surveyFile,
@@ -39,6 +40,7 @@ export default new Vuex.Store({
     role,
     recordState,
     requestPurpose,
+    organisation,
   },
   strict: debug
 })

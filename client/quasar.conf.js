@@ -78,6 +78,7 @@ module.exports = function (ctx) {
         'QSpace',
         'QCircularProgress',
         'QImg',
+        'QInfiniteScroll',
       ],
 
       directives: [

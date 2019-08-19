@@ -5,46 +5,86 @@
       <div class="row q-col-gutter-sm fit items-stretch">
         <div class="col-sm-12 col-md-6">
           <q-card class="fit column">
-            <q-card-section>
+            <q-card-section class="column ">
               <div class="text-h6">Organisations</div>
+
+              <q-input
+                outlined
+                dense
+                debounce="300"
+                v-model="filter"
+                placeholder="Search"
+                class="q-pt-sm"
+              >
+                <template v-slot:append>
+                  <q-icon v-if="filter !== ''" name="close" @click="filter = ''" class="cursor-pointer" />
+                  <q-icon name="search" />
+                </template>
+
+                <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, -4]">Search by name or ABN</q-tooltip>
+              </q-input>
+
             </q-card-section>
             <q-separator style="height:1px"/>
             <q-card-section class="full-height col" style="padding:0px">
               <div v-if="organisations.length == 0">
                 No organisations.
               </div>
-              <q-scroll-area v-else class="fit">
+
+              <q-scroll-area v-else class="fit" ref="scrollTargetRef" style="min-height:60px">
                 <q-list highlight no-border>
-                  <q-item
-                    v-for="org in organisations"
-                    :key="org.id"
-                    :to="`/admin/organisations/${org.id}`"
+                  <q-infinite-scroll @load="onLoad" :offset="250" :scroll-target="$refs.scrollTargetRef">
+                    <q-item
+                      v-for="organisation in organisations"
+                      :key="organisation.id"
+                      :to="`/admin/organisations/${organisation.id}`"
                     >
-                      <q-item-label v-bind:class="{ organisationnamedeleted: org.deleted }">
-                        {{org.name}}
-                      </q-item-label>
-                  </q-item>
+                      <q-item-label>{{organisation.name}}</q-item-label>
+                    </q-item>
+                    <template v-slot:loading>
+                      <div class="row justify-center q-my-md">
+                        <q-circular-progress
+                          indeterminate
+                          size="20px"
+                        />
+                      </div>
+                    </template>
+                  </q-infinite-scroll>
                 </q-list>
               </q-scroll-area>
+
             </q-card-section>
             <div class="col-auto">
               <q-separator />
-              <q-card-actions align="between">
-                <q-checkbox
-                  class="q-pl-sm"
-                  :value="deletedOrganisations"
-                  @input="setDeletedOrganisationsChange($event)"
-                  toggle-indeterminate
-                >
-                  <div class="q-pl-sm"><small>Show deleted</small></div>
-                </q-checkbox>
+              <q-card-actions
+                v-if="hasPermission('canEditOrganisation')"
+                align="right"
+              >
                 <q-btn
-                  v-if="hasPermission('canEditOrganisation')"
                   flat
                   icon="add"
                   label="Add new"
                   to="/admin/organisations/new"
                 >
+                </q-btn>
+
+                <input
+                  type="file"
+                  accept=".csv"
+                  id="dataPath"
+                  v-on:change="setOrganisationCsv"
+                  ref="fileInput"
+                  hidden
+                />
+                <q-btn flat label="Upload CSV" icon="cloud_upload"
+                  :loading="uploadingCsvList"
+                  @click="selectOrganisationCsv">
+                  <q-tooltip>
+                    Upload CSV Organisation list
+                  </q-tooltip>
+                  <template v-slot:loading>
+                    <q-spinner-facebook />
+                  </template>
                 </q-btn>
 
               </q-card-actions>
@@ -56,8 +96,11 @@
           <q-card v-if="activeOrganisation">
             <q-card-section class="row">
               <div class="text-h6">
-                <strong v-if="activeOrganisation.deleted">Deleted - </strong>
-                <span v-bind:class="{ organisationnamedeleted: activeOrganisation.deleted }"> {{activeOrganisation.name}} </span>
+                <span> {{activeOrganisation.name}} </span>
+              </div>
+              <div class="column">
+                <div v-if="activeOrganisation && activeOrganisation.requestCount == 0 && activeOrganisation.planCount == 0">This organisation is not referenced by any survey requests or plans and can be edited.</div>
+                <div v-else>This organisation is referenced by {{activeOrganisation.requestCount}} survey requests and {{activeOrganisation.planCount}} plans and cannot be edited.</div>
               </div>
             </q-card-section>
             <q-separator />
@@ -76,7 +119,7 @@
                     @input="updateActiveOrganisationValue({path:'name', value:$event})"
                     @blur="$v.activeOrganisation.name.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="readonly"
                    >
                   </form-field-validated-input>
 
@@ -84,21 +127,60 @@
                     name="activeOrganisation.abn"
                     attribute="ABN"
                     label="ABN"
-                    helper="Optional"
+                    hint="Optional"
                     :value="activeOrganisation.abn"
                     @input="updateActiveOrganisationValue({path:'abn', value:$event})"
                     @blur="$v.activeOrganisation.abn.$touch"
                     type="text"
-                    :readonly="!hasPermission('canEditOrganisation')"
+                    :readonly="readonly"
+                    >
+                  </form-field-validated-input>
+
+                  <form-field-validated-input
+                    name="activeOrganisation.description"
+                    attribute="Description"
+                    label="Description"
+                    hint="Optional"
+                    :value="activeOrganisation.description"
+                    @input="updateActiveOrganisationValue({path:'description', value:$event})"
+                    @blur="$v.activeOrganisation.description.$touch"
+                    type="textarea"
+                    :readonly="readonly"
+                    >
+                  </form-field-validated-input>
+
+                  <form-field-validated-input
+                    name="activeOrganisation.source"
+                    attribute="Source"
+                    label="Source"
+                    hint="Optional - Link or reference to source of organisation data"
+                    :value="activeOrganisation.source"
+                    @input="updateActiveOrganisationValue({path:'source', value:$event})"
+                    @blur="$v.activeOrganisation.source.$touch"
+                    type="text"
+                    :readonly="readonly"
+                    >
+                  </form-field-validated-input>
+
+                  <form-field-validated-input
+                    name="activeOrganisation.sourceId"
+                    attribute="Source ID"
+                    label="Source ID"
+                    hint="Optional - Identification number or code used to identify organisation in source data"
+                    :value="activeOrganisation.sourceId"
+                    @input="updateActiveOrganisationValue({path:'sourceId', value:$event})"
+                    @blur="$v.activeOrganisation.sourceId.$touch"
+                    type="text"
+                    :readonly="readonly"
                     >
                   </form-field-validated-input>
                 </div>
 
               </form-wrapper>
             </q-card-section>
-            <!-- @input="updateActiveOrganisation({path:'name', value:$event})" -->
+
             <div
-              v-if="hasPermission('canEditOrganisation')"
+              v-if="!readonly"
               class="col-auto"
               >
               <q-separator />
@@ -108,21 +190,17 @@
                   @click="submit()"
                 >
                 </q-btn>
-                <q-btn v-if="activeOrganisation.deleted" flat icon="restore_from_trash"
-                  label="Restore"
-                  @click="restoreOrgClick()"
-                >
-                </q-btn>
-                <q-btn v-else flat icon="delete"
+                <q-btn flat icon="delete"
                   label="Delete"
-                  @click="deleteOrgClick()"
+                  @click="deleteOrganisationClick()"
                 >
                 </q-btn>
+
               </q-card-actions>
             </div>
 
           </q-card>
-          <div v-else class="no-active-organisation column justify-center">
+          <div v-else class="no-active-organisation column justify-center fit">
             <div class="self-center">
               No organisation selected.
             </div>
@@ -152,8 +230,8 @@ const duplicateOrganisationName = function (value, vm) {
   if ( _.isNil(this.organisations) || _.isNil(value)) {
     return true;
   }
-  let index = this.organisations.findIndex(org => {
-    return (org.name.toLowerCase() == value.toLowerCase()) && (vm.id != org.id);
+  let index = this.organisations.findIndex(organisation => {
+    return (organisation.name.toLowerCase() == value.toLowerCase()) && (vm.id != organisation.id);
   })
   return index == -1;
 };
@@ -162,12 +240,12 @@ const duplicateOrganisationAbn = function (value, vm) {
   if ( _.isNil(this.organisations)) {
     return true;
   }
-  let index = this.organisations.findIndex(org => {
-    if (_.isNil(org.abn) || _.isNil(value) ||
-      org.abn.length == 0 || value.length == 0) {
+  let index = this.organisations.findIndex(organisation => {
+    if (_.isNil(organisation.abn) || _.isNil(value) ||
+      organisation.abn.length == 0 || value.length == 0) {
       return false;
     }
-    return (org.abn.toLowerCase() == value.toLowerCase()) && (vm.id != org.id);
+    return (organisation.abn.toLowerCase() == value.toLowerCase()) && (vm.id != organisation.id);
   })
   return index == -1;
 };
@@ -175,7 +253,6 @@ const duplicateOrganisationAbn = function (value, vm) {
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
   beforeMount() {
-    this.setDeletedOrganisations(null);
     this.getFormData();
   },
   mounted() {
@@ -187,46 +264,64 @@ export default Vue.extend({
   computed: {
     ...mapGetters('organisation', [
       'activeOrganisation',
-      'deletedOrganisations',
       'dirty',
       'organisations',
+      'count',
     ]),
+    readonly() {
+      if (
+        !_.isNil(this.activeOrganisation) &&
+        (this.activeOrganisation.requestCount != 0 ||
+        this.activeOrganisation.planCount != 0)) {
+        return true
+      } else if (!this.hasPermission('canEditOrganisation')) {
+        return true
+      }
+      return false
+    },
   },
 
   methods: {
     ...mapActions('organisation', [
       'getOrganisations',
       'saveOrganisation',
+      'getActiveOrganisation',
       'deleteOrganisation',
-      'restoreOrganisation',
     ]),
     ...mapMutations('organisation', {
       'setActiveOrganisation': mTypes.SET_ACTIVE_ORGANISATION,
-      'setDeletedOrganisations': mTypes.SET_DELETED_ORGANISATIONS,
       'setDirty': mTypes.SET_DIRTY,
       'updateActiveOrganisationValue': mTypes.UPDATE_ACTIVE_ORGANISATION_VALUE,
+      'setFilter': mTypes.SET_FILTER,
+      'clearOrganisationList': mTypes.CLEAR_ORGANISATION_LIST,
     }),
 
-    setDeletedOrganisationsChange(deletedOrganisations) {
-      // deletedOrganisations can be true, false, or null
-      this.setDeletedOrganisations(deletedOrganisations);
-      this.getFormData();
+    getFormData() {
+      this.setFilter('');
+      this.clearOrganisationList();
+      this.getOrganisations();
+      this.updateActiveOrganisation();
     },
 
-    getFormData() {
+    onLoad(index, done) {
       this.getOrganisations().then(() => {
-        this.updateActiveOrganisation();
+        // console.log('got orgs ' + index + ' '+ this.organisations.length + ' ' + this.count)
+        const loadedAll = _.isNil(this.count) ?
+          false :
+          this.organisations.length >= this.count
+
+        done(loadedAll)
       });
     },
 
     getNewOrganisationName(base) {
       let count = 0;
       let validNumber = 0;
-      // should never be more than 100 orgs that start with "New organisation"
+      // should never be more than 100 organisations that start with "New organisation"
       while (count < 100) {
         let checkFor = count == 0 ? base : `${base} (${count})`;
-        let existingIndex = this.organisations.findIndex(existingOrg => {
-          return existingOrg.name == checkFor;
+        let existingIndex = this.organisations.findIndex(existingOrganisation => {
+          return existingOrganisation.name == checkFor;
         });
         if (existingIndex == -1) {
           return checkFor;
@@ -241,37 +336,53 @@ export default Vue.extend({
       if (_.isNil(this.id)) {
         this.setActiveOrganisation(undefined);
       } else if (this.id == 'new') {
-        let org = {
+        let organisation = {
           id: undefined,
           name: this.getNewOrganisationName("New organisation"),
-          deleted: false,
+          description: undefined,
+          abn: undefined,
+          source: undefined,
+          sourceId: undefined,
+          requestCount: 0,
+          planCount: 0,
         };
-        this.setActiveOrganisation(org);
+        this.setActiveOrganisation(organisation);
         this.setDirty(true);
       } else {
-        let org = this.organisations.find(existingOrg => {
-          return existingOrg.id == this.id;
-        });
-        this.setActiveOrganisation(org);
+        this.getActiveOrganisation(this.id);
       }
 
     },
 
-    restoreOrgClick() {
-      this.restoreOrganisation(this.activeOrganisation.id)
-      .then(org => {
-        this.updateActiveOrganisationValue('deleted', false);
-        this.setDirty(false);
-        this.notifySuccess('Organisation restored');
-        if (!_.isNil(this.deletedOrganisations)) {
-          // don't need to get form data if we are looking at complete
-          // list or orgs including deleted, and non-deleted
-          this.getFormData();
+    submit() {
+      // save the organisation
+      this.$v.$touch()
+
+      if (this.$v.$error) {
+        this.notifyError('Please review fields')
+        return
+      }
+
+      const isNew = _.isNil(this.activeOrganisation.id)
+
+      this.saveOrganisation(this.activeOrganisation).then(organisation => {
+        // this.getFormData();
+        const successMsg = isNew ? 'Organisation created' : 'Organisation updated';
+        this.notifySuccess(successMsg);
+
+        // need to check the route, as it may have already been set to something
+        // else via "save and continue".
+        const currentId = this.$route.params.id;
+        if (isNew && currentId == 'new') {
+          // then updated the route for the organisation
+          this.$router.replace({ path: `/admin/organisations/${organisation.id}` });
         }
+      }).catch((err) => {
+        this.notifyError(`Failed to save organisation`);
       });
     },
 
-    deleteOrgClick() {
+    deleteOrganisationClick() {
       if (!_.isNil(this.activeOrganisation.id)) {
         // an existing id indicated this org has been saved
 
@@ -286,11 +397,9 @@ export default Vue.extend({
           .then(pmd => {
             //delete org handler sets active org to undefined, so no need here
             this.notifySuccess('Organisation deleted');
-            if (!_.isNil(this.deletedOrganisations)) {
-              // don't need to get form data if we are looking at complete
-              // list or orgs including deleted, and non-deleted
-              this.getFormData();
-            }
+            this.$router.replace({ path: `/admin/organisations/` });
+          }).catch(() => {
+            this.notifyError('Failed to delete organisation');
           });
         }).onCancel(() => {
           //do nothing
@@ -299,43 +408,84 @@ export default Vue.extend({
         })
 
       } else {
-        // no id, so hasn't been saved. Simply replace active org with nothing
+        // no id, so hasn't been saved. Simply replace active custodian with nothing
         this.setActiveOrganisation(undefined);
         this.$router.replace({ path: `/admin/organisations/` });
       }
     },
 
-    submit() {
-      // save the organisation
-      this.$v.$touch()
+    selectOrganisationCsv() {
+      this.$refs.fileInput.click();
+    },
+    setOrganisationCsv(event) {
+      const file = event.target.files[0];
 
-      if (this.$v.$error) {
-        this.notifyError('Please review fields')
-        return
-      }
+      let formData = new FormData();
+      formData.append('file', file);
 
-      const isNew = _.isNil(this.activeOrganisation.id)
+      const url_endpoint = `/api/organisation/upload`
 
-      this.saveOrganisation(this.activeOrganisation).then(org => {
-        // this.getFormData();
-        const successMsg = isNew ? 'Organisation created' : 'Organisation updated';
-        this.notifySuccess(successMsg);
-
-        // need to check the route, as it may have already been set to something
-        // else via "save and continue".
-        const currentId = this.$route.params.id;
-        if (isNew && currentId == 'new') {
-          // then updated the route for the org
-          this.$router.replace({ path: `/admin/organisations/${org.id}` });
+      this.uploadingCsvList = true;
+      Vue.axios.put(
+        url_endpoint,
+        formData,
+        {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          }
         }
+      ).then(res => {
+        this.clearOrganisationList();
+        this.getOrganisations();
+
+        this.uploadingCsvList = false;
+        const summary = res.data;
+
+        if (summary.success) {
+          const blnMessage = summary.badLineNumbers.length == 0 ?
+            'All lines successfully read' :
+            `${summary.badLineNumbers.length} bad lines detected` +
+              `(${summary.badLineNumbers.splice(0,20).join(', ')})`
+
+          this.$q.dialog({
+            title: 'Organisation import summary',
+            message:
+              `<div>${summary.newOrganisations} new organisations added<div>` +
+              `<div>${summary.duplicateOrganisations} organisation names already existed (skipped)<div>` +
+              `<div>${blnMessage}<div>`,
+            html: true,
+          })
+        } else {
+          this.$q.dialog({
+            title: 'Organisation import failed',
+            message:
+              `<div> ${summary.error} <div>`,
+            html: true,
+          })
+        }
+      })
+      .catch(err => {
+        this.uploadingCsvList = false;
+        this.notifyError("Failed to process organisation list")
       });
-    }
+
+    },
+
+    refreshList() {
+
+      this.getOrganisations().then(() => {
+      });
+    },
+
   },
 
   validations: {
     activeOrganisation: {
       name: { required, duplicateOrganisationName },
       abn: { duplicateOrganisationAbn },
+      description: {},
+      source: {},
+      sourceId: {},
     }
   },
 
@@ -346,14 +496,19 @@ export default Vue.extend({
       this.id = id;
     },
     'id': function (newId, oldId) {
-      console.log(`org id = ${newId}`);
       this.updateActiveOrganisation();
+    },
+    'filter': function (newFilter, oldFilter) {
+      this.setFilter(newFilter)
+      this.getOrganisations()
     }
   },
 
   data() {
     return {
       id: undefined,
+      filter: '',
+      uploadingCsvList: false,
       validationMessagesOverride: {
         'duplicateOrganisationName': "Organisation name already exists",
         'duplicateOrganisationAbn': "ABN assigned to other organisation"
@@ -364,16 +519,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.no-active-organisation {
-  width: 100%;
-  height: 200px;
-}
 
-.organisation-name-plain {
 
-}
-.organisationnamedeleted {
-  text-decoration: line-through;
-  color: grey;
-}
 </style>

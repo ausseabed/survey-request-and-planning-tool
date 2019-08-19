@@ -30,8 +30,8 @@ export const areaOfInterest = state => {
   return state.projectMetadata.areaOfInterest;
 }
 
-export const organisations = state => {
-  return state.projectMetadata.organisations;
+export const custodians = state => {
+  return state.projectMetadata.custodians;
 }
 
 export const startDate = state => {

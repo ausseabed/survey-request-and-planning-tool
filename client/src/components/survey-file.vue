@@ -147,21 +147,21 @@ export default Vue.extend({
       'files',
       'attachesToId',
     ]),
-    orgLink: function() {
-      let orgLink = undefined
+    custodianLink: function() {
+      let custodianLink = undefined
       if (this.attachesTo === 'survey') {
-        orgLink = 'projectMetadata.organisations'
+        custodianLink = 'projectMetadata.custodians'
       } else if (this.attachesTo === 'hipp-request') {
-        orgLink = 'hippRequest.requestingAgencies'
+        custodianLink = 'hippRequest.custodians'
       }
-      return orgLink
+      return custodianLink
     },
     canDelete: function() {
       if (this.hasPermission('canDeleteAllAttachments')) {
         return true
       } else if (
-        this.hasPermission('canDeleteOrgAttachments') &&
-        this.hasOrganisationLink(this.orgLink)
+        this.hasPermission('canDeleteCustodianAttachments') &&
+        this.hasCustodianLink(this.custodianLink)
       ) {
         return true
       } else {
@@ -172,8 +172,8 @@ export default Vue.extend({
       if (this.hasPermission('canUploadAllAttachments')) {
         return true
       } else if (
-        this.hasPermission('canUploadOrgAttachments') &&
-        this.hasOrganisationLink(this.orgLink)
+        this.hasPermission('canUploadCustodianAttachments') &&
+        this.hasCustodianLink(this.custodianLink)
       ) {
         return true
       } else {

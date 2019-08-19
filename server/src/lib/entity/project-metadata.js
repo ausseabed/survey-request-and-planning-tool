@@ -1,6 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
   JoinTable, OneToMany, JoinColumn, OneToOne} from "typeorm";
 
+import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
 import { HippRequest } from './hipp-request';
@@ -61,6 +62,12 @@ export class ProjectMetadata {
     organisation => organisation.projectMetadatas)
   @JoinTable()
   organisations;
+
+  @ManyToMany(
+    type => Custodian,
+    custodian => custodian.projectMetadatas)
+  @JoinTable()
+  custodians;
 
   @Column("geometry", {
     spatialFeatureType: "MultiPolygon",

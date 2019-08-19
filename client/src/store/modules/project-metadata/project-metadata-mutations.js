@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 import * as types from './project-metadata-mutation-types'
 
 const mutations = {
@@ -26,26 +28,31 @@ const mutations = {
     state.dirty = true;
   },
 
-  [types.ADD_ORGANISATION] (state, organisation) {
-    state.projectMetadata.organisations.push(organisation);
+  [types.ADD_CUSTODIAN] (state, custodian) {
+    state.projectMetadata.custodians.push(custodian);
+    state.dirty = true;
+  },
+
+  [types.SET_CUSTODIANS] (state, custodians) {
+    state.projectMetadata.custodians = custodians;
     state.dirty = true;
   },
 
   [types.SET_ORGANISATIONS] (state, organisations) {
-    state.projectMetadata.organisations = organisations;
+    Vue.set(state.projectMetadata, 'organisations', organisations);
     state.dirty = true;
   },
 
-  [types.REMOVE_ORGANISATION] (state, organisations) {
-    state.projectMetadata.organisations = organisations;
+  [types.REMOVE_CUSTODIAN] (state, custodians) {
+    state.projectMetadata.custodians = custodians;
     state.dirty = true;
   },
 
-  [types.REMOVE_ORGANISATION] (state, organisation) {
-    let index = state.projectMetadata.organisations.findIndex(function (o) {
-      return o.id == organisation.id;
+  [types.REMOVE_CUSTODIAN] (state, custodian) {
+    let index = state.projectMetadata.custodians.findIndex(function (o) {
+      return o.id == custodian.id;
     });
-    state.projectMetadata.organisations.splice(index, 1);
+    state.projectMetadata.custodians.splice(index, 1);
     state.dirty = true;
   },
 
@@ -63,13 +70,13 @@ const mutations = {
     state.projectStatuses = statuses;
   },
 
-  [types.SET_SURVEYORS] (state, organisations) {
-    state.projectMetadata.surveyors = organisations;
+  [types.SET_SURVEYORS] (state, custodians) {
+    state.projectMetadata.surveyors = custodians;
     state.dirty = true;
   },
 
-  [types.SET_TENDERER] (state, organisation) {
-    state.projectMetadata.tenderer = organisation;
+  [types.SET_TENDERER] (state, custodian) {
+    state.projectMetadata.tenderer = custodian;
     state.dirty = true;
   },
 

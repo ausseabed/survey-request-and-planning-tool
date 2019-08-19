@@ -7,7 +7,7 @@ const boom = require('boom');
 
 import { getConnection } from 'typeorm';
 
-import { asyncMiddleware, isAuthenticated, isUuid, permitOrgBasedPermission }
+import { asyncMiddleware, isAuthenticated, isUuid, permitCustodianBasedPermission }
   from '../utils';
 import { Attachment } from '../../lib/entity/attachment';
 import { HippRequest } from '../../lib/entity/hipp-request';
@@ -19,34 +19,34 @@ import { SurveyAttachment } from '../../lib/entity/survey-attachment';
  // How do the attachments link to each entity. 'survey' is a projectMetadata
  // entry. A projectMetadata entries attachments are linked via the
  // SurveyAttachment table.
- // organisation attributes are used for the authorisation middleware check
+ // custodian attributes are used for the authorisation middleware check
 const attachmentmap = {
   'survey': {
     entity: ProjectMetadata,
     attachment: SurveyAttachment,
-    organisationAttributes: ['organisations'],
+    custodianAttributes: ['custodians'],
   },
   'hipp-request': {
     entity: HippRequest,
     attachment: HippRequestAttachment,
-    organisationAttributes: ['requestingAgencies'],
+    custodianAttributes: ['custodians'],
   },
 }
 
-function attachmentPermit(allowedPermissionAll, allowedPermissionOrg) {
+function attachmentPermit(allowedPermissionAll, allowedPermissionCustodian) {
   const entityTypeFn = (request) => {
     let attachDetails = attachmentmap[request.params.entityType]
     return attachDetails.entity
   }
-  const orgAttrsFn = (request) => {
+  const custodianAttrsFn = (request) => {
     let attachDetails = attachmentmap[request.params.entityType]
-    return attachDetails.organisationAttributes
+    return attachDetails.custodianAttributes
   }
-  return permitOrgBasedPermission({
+  return permitCustodianBasedPermission({
     entityTypeFn:entityTypeFn,
-    organisationAttributesFn:orgAttrsFn,
+    custodianAttributesFn:custodianAttrsFn,
     allowedPermissionAll,
-    allowedPermissionOrg})
+    allowedPermissionCustodian})
 }
 
 
@@ -56,7 +56,7 @@ router.delete(
   '/:entityType/:id/delete/:fileId',
   [
     isAuthenticated,
-    attachmentPermit('canDeleteAllAttachments', 'canDeleteOrgAttachments')
+    attachmentPermit('canDeleteAllAttachments', 'canDeleteCustodianAttachments')
   ],
   asyncMiddleware(async function(req, res){
 
@@ -98,7 +98,7 @@ router.get(
   '/:entityType/:id/download/:name',
   [
     isAuthenticated,
-    attachmentPermit('canViewAllAttachments', 'canViewOrgAttachments')
+    attachmentPermit('canViewAllAttachments', 'canViewCustodianAttachments')
   ],
   asyncMiddleware(async function(req, res){
 
@@ -181,7 +181,7 @@ router.get(
   '/:entityType/:id',
   [
     isAuthenticated,
-    attachmentPermit('canViewAllAttachments', 'canViewOrgAttachments')
+    attachmentPermit('canViewAllAttachments', 'canViewCustodianAttachments')
   ],
   asyncMiddleware(async function(req, res){
   // gets a  list of survey files for the given project id
@@ -236,7 +236,7 @@ router.put(
   '/:entityType/:id/upload',
   [
     isAuthenticated,
-    attachmentPermit('canUploadAllAttachments', 'canUploadOrgAttachments')
+    attachmentPermit('canUploadAllAttachments', 'canUploadCustodianAttachments')
   ],
   asyncMiddleware(async function (req, res) {
 

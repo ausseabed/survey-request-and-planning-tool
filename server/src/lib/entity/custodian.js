@@ -4,10 +4,10 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
 import { HippRequest } from './hipp-request';
 import { ProjectMetadata } from './project-metadata';
 import { TechSpec } from './tech-spec';
-
+import { User } from './user'
 
 @Entity()
-export class Organisation {
+export class Custodian {
 
   @PrimaryGeneratedColumn('uuid')
   id = undefined;
@@ -19,36 +19,25 @@ export class Organisation {
       type:"varchar",
       nullable: true,
   })
-  description = undefined;
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
   abn = undefined;
 
-  // url (or some other indication) of where this entry was obtained
   @Column({
-      type:"varchar",
-      nullable: true,
+      type:"bool",
+      nullable: false,
+      default: false,
   })
-  source = undefined;
-
-  // unqiue identifier as used by source
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  sourceId = undefined;
+  deleted = false;
 
   @ManyToMany(
     type => ProjectMetadata,
-    projectMetadata => projectMetadata.organisations)
+    projectMetadata => projectMetadata.custodians)
   projectMetadatas;
 
   @ManyToMany(
     type => HippRequest,
-    hippRequest => hippRequest.organisations)
-  hippRequests;
+    hippRequest => hippRequest.custodians)
+  custodiansHipp;
 
+  @OneToMany(type => User, user => user.custodian)
+  users;
 }

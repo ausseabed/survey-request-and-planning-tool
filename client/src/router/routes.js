@@ -1,4 +1,5 @@
 import Administration from 'components/administration.vue'
+import Custodians from 'components/custodians/custodians.vue'
 import HippMain from 'components/hipp/hipp-main.vue'
 import HippProjects from 'components/hipp/hipp-projects.vue'
 import HippSummary from 'components/hipp/hipp-summary.vue'
@@ -23,7 +24,7 @@ const routes = [
       children: [
         {
             path: '',
-            component: Organisations
+            component: Custodians
         },
         {
           path: 'users',
@@ -32,6 +33,14 @@ const routes = [
         {
           path: 'users/:id',
           component: Users,
+        },
+        {
+          path: 'custodians',
+          component: Custodians,
+        },
+        {
+          path: 'custodians/:id',
+          component: Custodians,
         },
         {
           path: 'organisations',

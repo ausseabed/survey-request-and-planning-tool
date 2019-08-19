@@ -113,16 +113,34 @@
             </q-field>
 
             <form-field-validated-select
-              name="projectOrganisations"
-              label="Organisations"
+              name="projectCustodians"
+              label="Custodians"
               class="col-10"
               multiple use-chips
-              :value="projectOrganisations"
-              @input="setProjectOrganisations($event)"
-              :options="organisationOptions"
+              :value="projectCustodians"
+              @input="setProjectCustodians($event)"
+              :options="custodianOptions"
               option-label="name"
               option-value="id"
-              @blur="$v.projectOrganisations.$touch"
+              @blur="$v.projectCustodians.$touch"
+              :readonly="readonly"
+              >
+            </form-field-validated-select>
+
+            <form-field-validated-select
+              name="projectMetadata.organisations"
+              label="Organisations"
+              multiple
+              use-chips
+              use-input
+              input-debounce="200"
+              @filter="filterOrganisationFunction"
+              :value="projectMetadata.organisations"
+              @input="setProjectOrganisations($event)"
+              :options="organisationsList"
+              option-label="name"
+              option-value="id"
+              @blur="$v.projectMetadata.organisations.$touch"
               :readonly="readonly"
               >
             </form-field-validated-select>
@@ -634,7 +652,9 @@ const _ = require('lodash');
 import { DirtyRouteGuard } from './mixins/dirty-route-guard'
 import { permission } from './mixins/permission'
 import { errorHandler } from './mixins/error-handling'
-import * as orgMutTypes
+import * as custodianMutTypes
+  from '../store/modules/custodian/custodian-mutation-types'
+import * as organisationMutTypes
   from '../store/modules/organisation/organisation-mutation-types'
 import * as pmMutTypes
   from '../store/modules/project-metadata/project-metadata-mutation-types'
@@ -740,8 +760,12 @@ export default Vue.extend({
     ...mapActions('reportTemplate', [
       'generateReport',
     ]),
+    ...mapActions('organisation', [
+      'getOrganisations',
+    ]),
     ...mapMutations('projectMetadata', {
       'setDirty': pmMutTypes.SET_DIRTY,
+      'setProjectCustodians': pmMutTypes.SET_CUSTODIANS,
       'setProjectOrganisations': pmMutTypes.SET_ORGANISATIONS,
       'updateProjectMetadata': pmMutTypes.UPDATE,
     }),
@@ -757,10 +781,13 @@ export default Vue.extend({
       pmMutTypes.SET_SURVEY_APPLICATION_NAME_OTHER,
       pmMutTypes.SET_SURVEY_APPLICATION_GROUP_NAME_OTHER,
       pmMutTypes.SET_SURVEY_APPLICATION,
-      pmMutTypes.REMOVE_ORGANISATION,
+      pmMutTypes.REMOVE_CUSTODIAN,
     ]),
+    ...mapMutations('custodian', {
+      'setDeletedCustodians': custodianMutTypes.SET_DELETED_CUSTODIANS,
+    }),
     ...mapMutations('organisation', {
-      'setDeletedOrganisations': orgMutTypes.SET_DELETED_ORGANISATIONS,
+      'setOrganisationFilter': organisationMutTypes.SET_FILTER,
     }),
 
     projectStatusIconDetails: projectStatusIconDetails,
@@ -959,12 +986,12 @@ export default Vue.extend({
           surveyApplication);
     },
 
-    setSelectedTenderer(organisation) {
-      this.SET_TENDERER(organisation);
+    setSelectedTenderer(custodian) {
+      this.SET_TENDERER(custodian);
     },
 
-    setSelectedSurveyors(organisations) {
-      this.SET_SURVEYORS(organisations);
+    setSelectedSurveyors(custodians) {
+      this.SET_SURVEYORS(custodians);
     },
 
     setAoi(geojson) {
@@ -1092,10 +1119,10 @@ export default Vue.extend({
 
     getFormData() {
       this.stateReadonly = true;
-      // only get non-deleted organisations
-      this.setDeletedOrganisations(null);
-      // gets the list of all orgs, not just those associated to this project
-      this.$store.dispatch('organisation/getOrganisations');
+      // only get non-deleted custodians
+      this.setDeletedCustodians(null);
+      // gets the list of all custodians, not just those associated to this project
+      this.$store.dispatch('custodian/getCustodians');
       this.$store.dispatch('projectMetadata/getProjectStatuses');
       // get data capture types, but only those not created by users (eg; the
       // default system defined ones.
@@ -1119,19 +1146,21 @@ export default Vue.extend({
         this.$store.commit('surveyApplication/setSurveyApplicationGroups',
           surveyAppGroups);
       });
+
+      this.getOrganisations();
     },
 
-    parseOrganisations() {
-      return this.organisations.map(org => {
+    parseCustodians() {
+      return this.custodians.map(custodian => {
         return {
-          label: org.name,
-          value: org.name
+          label: custodian.name,
+          value: custodian.name
         }
       })
     },
-    removeOrganisation(org) {
-      this.REMOVE_ORGANISATION(org)
-      this.$v.projectOrganisations.$touch();
+    removeCustodian(custodian) {
+      this.REMOVE_CUSTODIAN(custodian)
+      this.$v.projectCustodians.$touch();
     },
 
     mouseleaveMatchingProjMeta() {
@@ -1165,7 +1194,15 @@ export default Vue.extend({
       } else {
         return true;
       }
-    }
+    },
+
+    filterOrganisationFunction(val, update, abort) {
+      this.setOrganisationFilter(val)
+      this.getOrganisations().then((orgs) => {
+        update()
+      })
+    },
+
   },
 
   computed: {
@@ -1182,11 +1219,11 @@ export default Vue.extend({
       vessel: 'projectMetadata/vessel',
       startDate: 'projectMetadata/startDate',
       areaOfInterest: 'projectMetadata/areaOfInterest',
-      projectOrganisations: 'projectMetadata/organisations',
+      projectCustodians: 'projectMetadata/custodians',
       projectInstrumentTypes: 'projectMetadata/instrumentTypes',
       projectDataCaptureTypes: 'projectMetadata/dataCaptureTypes',
       projectSurveyApplication: 'projectMetadata/surveyApplication',
-      organisations: 'organisation/organisations',
+      custodians: 'custodian/custodians',
       instrumentTypes: 'instrumentType/instrumentTypes',
       dataCaptureTypes: 'dataCaptureType/dataCaptureTypes',
       surveyApplicationGroups: 'surveyApplication/surveyApplicationGroups',
@@ -1205,6 +1242,10 @@ export default Vue.extend({
     ...mapGetters('reportTemplate', [
       'reportDownloading',
     ]),
+    ...mapGetters('organisation', {
+      organisationsList: 'organisations',
+      organisationsCount: 'count',
+    }),
     readonly: function() {
       if (
         this.hasPermission('canAddProject') &&
@@ -1223,8 +1264,8 @@ export default Vue.extend({
         // can edit all projects
         return false
       } else  if (
-        this.hasPermission('canEditOrgProjects') &&
-        this.hasOrganisationLink('projectOrganisations')
+        this.hasPermission('canEditCustodianProjects') &&
+        this.hasCustodianLink('projectCustodians')
       ) {
         // can only edit projects that are linked to user
         return false
@@ -1296,11 +1337,11 @@ export default Vue.extend({
       });
       return opts;
     },
-    organisationOptions: function () {
-      const orgs = this.organisations.filter(org => {
-        return !org.deleted;
+    custodianOptions: function () {
+      const custodians = this.custodians.filter(custodian => {
+        return !custodian.deleted;
       });
-      return orgs;
+      return custodians;
     },
     formattedMoratoriumDate: function() {
       if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.projectMetadata.moratoriumDate)) {
@@ -1324,7 +1365,7 @@ export default Vue.extend({
         surveyApplicationNameOther: {  },
         selectedSurveyApplicationGroup: {  },
         surveyApplicationGroupNameOther: {  },
-        projectOrganisations: {
+        projectCustodians: {
           required,
           minLength:minLength(1)
         },
@@ -1334,6 +1375,7 @@ export default Vue.extend({
           startDate: { },
           endDate: { },
           moratoriumDate: { },
+          organisations: { },
         },
       }
     } else if (this.validationIntent == 'final') {
@@ -1346,7 +1388,7 @@ export default Vue.extend({
         surveyApplicationNameOther: { validSurveyApplicationNameOther },
         selectedSurveyApplicationGroup: { required },
         surveyApplicationGroupNameOther: { validSurveyApplicationGroupNameOther },
-        projectOrganisations: {
+        projectCustodians: {
           required,
           minLength:minLength(1)
         },
@@ -1363,6 +1405,10 @@ export default Vue.extend({
           startDate: { required },
           endDate: { },
           moratoriumDate: {validMoratorium},
+          organisations: {
+            required,
+            minLength:minLength(1)
+          },
         },
       }
     }
@@ -1413,7 +1459,7 @@ export default Vue.extend({
       addingFile: false,
       intersectionCheckRun: false,
       map: null,
-      orgSearchTerms: '',
+      custodianSearchTerms: '',
       matchingProjMetas:undefined,
       stateReadonly: true,
       tmpMoratoriumDateEntry: undefined,

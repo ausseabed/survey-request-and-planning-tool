@@ -77,10 +77,14 @@
                   hidden
                 />
                 <q-btn flat label="Upload CSV" icon="cloud_upload"
+                  :loading="uploadingCsvList"
                   @click="selectOrganisationCsv">
                   <q-tooltip>
-                    Upload Area of Interest
+                    Upload CSV Organisation list
                   </q-tooltip>
+                  <template v-slot:loading>
+                    <q-spinner-facebook />
+                  </template>
                 </q-btn>
 
               </q-card-actions>
@@ -419,6 +423,7 @@ export default Vue.extend({
 
       const url_endpoint = `/api/organisation/upload`
 
+      this.uploadingCsvList = true;
       Vue.axios.put(
         url_endpoint,
         formData,
@@ -427,11 +432,13 @@ export default Vue.extend({
               'Content-Type': 'multipart/form-data'
           }
         }
-      ).then(function(){
+      ).then(res => {
+        this.uploadingCsvList = false;
         // todo : tidy up
         console.log('SUCCESS!!');
       })
-      .catch(function(){
+      .catch(err => {
+        this.uploadingCsvList = false;
         // todo : tidy up
         console.log('FAILURE!!');
       });
@@ -482,6 +489,7 @@ export default Vue.extend({
     return {
       id: undefined,
       filter: undefined,
+      uploadingCsvList: false,
       validationMessagesOverride: {
         'duplicateOrganisationName': "Organisation name already exists",
         'duplicateOrganisationAbn': "ABN assigned to other organisation"

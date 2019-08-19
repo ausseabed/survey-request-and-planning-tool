@@ -197,7 +197,7 @@ async function checkIfOrganisationExists(name) {
     .getCount() > 0;
 }
 
-async function processOrgDataRow(dataRow, colMap, resObj) {
+async function processOrgDataRow(dataRow, colMap, resObj, sourceRef) {
   const name = dataRow[colMap.name]
   if (_.isNil(name) || name.length == 0) {
     throw new Error('No name');
@@ -209,6 +209,7 @@ async function processOrgDataRow(dataRow, colMap, resObj) {
   } else {
     let newOrg = new Organisation();
     newOrg.name = name
+    newOrg.source = sourceRef
     for (const [entityAttribName, csvColIndex] of Object.entries(colMap)) {
       const dataRowVal = dataRow[csvColIndex]
       _.set(newOrg, entityAttribName, dataRowVal)
@@ -245,7 +246,7 @@ async function processOrganisationCsv(file) {
           for (let i = 1; i < data.length; i++) {
             const dataRow = data[i]
             try {
-              await processOrgDataRow(dataRow, colmap, resObj);
+              await processOrgDataRow(dataRow, colmap, resObj, filename);
             } catch (e) {
               resObj.badLineNumbers.push(i)
               resObj.error = e.toString()

@@ -197,12 +197,19 @@ function getHeaderColumnMap(header) {
   return map
 }
 
-async function checkIfOrganisationExists(name) {
-  return await getConnection()
+// checks if org with name OR ABN is already in the database
+async function checkIfOrganisationExists(name, abn) {
+  let orgExistsQuery = getConnection()
     .getRepository(Organisation)
     .createQueryBuilder('organisation')
     .where('organisation.name = :name', { name: name})
-    .getCount() > 0;
+
+  if (!_.isNil(abn)) {
+    orgExistsQuery = orgExistsQuery
+    .orWhere('organisation.abn = :abn', { abn: abn})
+  }
+
+  return await orgExistsQuery.getCount() > 0;
 }
 
 async function processOrgDataRow(dataRow, colMap, resObj, sourceRef) {
@@ -211,7 +218,12 @@ async function processOrgDataRow(dataRow, colMap, resObj, sourceRef) {
     throw new Error('No name');
   }
 
-  const orgExists = await checkIfOrganisationExists(name)
+  let abn = undefined;
+  if (!_.isNil(colMap.abn)) {
+    abn = dataRow[colMap.abn]
+  }
+
+  const orgExists = await checkIfOrganisationExists(name, abn)
   if (orgExists) {
     resObj.duplicateOrganisations += 1
   } else {

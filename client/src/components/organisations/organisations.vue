@@ -144,7 +144,7 @@
                     :value="activeOrganisation.description"
                     @input="updateActiveOrganisationValue({path:'description', value:$event})"
                     @blur="$v.activeOrganisation.description.$touch"
-                    type="text"
+                    type="textarea"
                     :readonly="readonly"
                     >
                   </form-field-validated-input>
@@ -293,11 +293,12 @@ export default Vue.extend({
       'setDirty': mTypes.SET_DIRTY,
       'updateActiveOrganisationValue': mTypes.UPDATE_ACTIVE_ORGANISATION_VALUE,
       'setFilter': mTypes.SET_FILTER,
+      'clearOrganisationList': mTypes.CLEAR_ORGANISATION_LIST,
     }),
 
     getFormData() {
-      this.getOrganisations().then(() => {
-      });
+      this.clearOrganisationList();
+      this.getOrganisations();
       this.updateActiveOrganisation();
     },
 
@@ -433,31 +434,48 @@ export default Vue.extend({
           }
         }
       ).then(res => {
+        this.clearOrganisationList();
+        this.getOrganisations();
+
         this.uploadingCsvList = false;
-        // todo : tidy up
-        console.log('SUCCESS!!');
+        const summary = res.data;
+
+        if (summary.success) {
+          const blnMessage = summary.badLineNumbers.length == 0 ?
+            'All lines successfully read' :
+            `${summary.badLineNumbers.length} bad lines detected` +
+              `(${summary.badLineNumbers.splice(0,20).join(', ')})`
+
+          this.$q.dialog({
+            title: 'Organisation import summary',
+            message:
+              `<div>${summary.newOrganisations} new organisations added<div>` +
+              `<div>${summary.duplicateOrganisations} organisation names already existed (skipped)<div>` +
+              `<div>${blnMessage}<div>`,
+            html: true,
+          })
+        } else {
+          this.$q.dialog({
+            title: 'Organisation import failed',
+            message:
+              `<div> ${summary.error} <div>`,
+            html: true,
+          })
+        }
       })
       .catch(err => {
         this.uploadingCsvList = false;
-        // todo : tidy up
-        console.log('FAILURE!!');
+        this.notifyError("Failed to process organisation list")
       });
 
     },
 
-    // async saveLots() {
-    //   for (let i = 0; i < 120; i++) {
-    //     let organisation = {
-    //       id: undefined,
-    //       name: this.getNewOrganisationName("Test organisation"),
-    //       description: undefined,
-    //       abn: undefined,
-    //       source: undefined,
-    //       sourceId: undefined,
-    //     };
-    //     await this.saveOrganisation(organisation)
-    //   }
-    // }
+    refreshList() {
+
+      this.getOrganisations().then(() => {
+      });
+    },
+
   },
 
   validations: {

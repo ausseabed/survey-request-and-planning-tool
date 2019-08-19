@@ -33,6 +33,7 @@ const mutations = {
   },
 
   [types.CLEAR_ORGANISATION_LIST] (state, organisations) {
+    state.count = undefined;
     state.organisations.splice(0, state.organisations.length);
   },
 

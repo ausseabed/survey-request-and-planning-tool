@@ -176,9 +176,17 @@ function getHeaderColumnMap(header) {
   const map = {}
   for (let i = 0; i < header.length; i++) {
     const headerName = header[i].toLowerCase();
-    if (headerName == 'name' || headerName == 'title') {
+    if (
+      headerName == 'name' ||
+      headerName == 'title' ||
+      headerName == 'entity')
+    {
       map.name = i
-    } else if (headerName == 'description' || headerName == 'desc') {
+    } else if (
+      headerName == 'description' ||
+      headerName == 'desc' ||
+      headerName == 'description of function')
+    {
       map.description = i
     } else if (headerName == 'id') {
       map.sourceId = i
@@ -241,6 +249,11 @@ async function processOrganisationCsv(file) {
       var parser = parse(
         {delimiter: ','},
         async (err, data) => {
+          if (err) {
+            resObj.error = err.toString()
+            resObj.success = false;
+            resolve(resObj)
+          }
           const colmap = getHeaderColumnMap(data[0]);
 
           for (let i = 1; i < data.length; i++) {
@@ -253,6 +266,7 @@ async function processOrganisationCsv(file) {
             }
 
           }
+          resObj.success = true;
           console.log(resObj);
           resolve(resObj)
       });

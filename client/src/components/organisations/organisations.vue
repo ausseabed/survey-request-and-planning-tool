@@ -488,7 +488,7 @@ export default Vue.extend({
   data() {
     return {
       id: undefined,
-      filter: undefined,
+      filter: '',
       uploadingCsvList: false,
       validationMessagesOverride: {
         'duplicateOrganisationName': "Organisation name already exists",

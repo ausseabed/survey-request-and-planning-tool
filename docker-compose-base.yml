@@ -22,3 +22,5 @@ services:
   db-postgres:
     image: mdillon/postgis:9.6
     env_file: ./server.conf
+    volumes:
+      - ./backup:/backup

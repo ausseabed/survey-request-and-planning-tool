@@ -1,7 +1,7 @@
-# AusSeabed - Request and Plannning Tool
+# AusSeabed - Request and Planning Tool
 Web based application to support the request and planning of bathymetric surveys.
 
-# Build
+# Build status
 [![CircleCI](https://circleci.com/gh/frontiersi/asb-request-and-planning-tool.svg?style=svg&circle-token=cef4f50d53e7216004c240420e035eea4a4a389e)](https://circleci.com/gh/frontiersi/asb-request-and-planning-tool)
 
 # Dependencies
@@ -9,17 +9,20 @@ User authentication is provided by CRC Accounts, specifically the staging deploy
 
 The development environment makes use of docker / docker-compose.
 
-# Development
-The way this is set up, there are X docker containers:
+# Docker container architecture
+There are 3 docker containers:
 
-- server
+- api
+    - Backend server
     - QA4 backend web services API
     - NodeJS based
-- client
+- www
     - Web based user interface
     - VueJS, using the [Quasar framework](https://quasar-framework.org/).
-- db
-    - TODO: Right now 2 (postgres and dynamo), but this needs to be sorted
+- db-postgres
+    - PostgreSQL database with PostGIS extension
+
+# Development
 
 ## Configuration
 The following configuration parameters are required. These are set as environment variables in the client and server config files.
@@ -81,17 +84,12 @@ Web UI application can be found at:
 NodeJS express can be found at:  
     [http://localhost:3000](http://localhost:3000)
 
-DynamoDB shell for interrogating /modifying the DynamoDB database:  
-    [http://localhost:5433](http://localhost:5433)
-
 
 ## Development notes
 
 Both the NodeJS server and VueJS client are run in development mode which
-supports hot reloads. In some cases saved code changes may cause the application
-to crash that will require a restart of the docker container.
-
-
+supports hot reloads. Running database migration scripts may cause the NodeJS
+server to crash requiring a restart of the docker container.
 
 
 ## Development commands
@@ -107,24 +105,23 @@ There are a variety of maintenance commands available, all accessed via make:
 ## Testing production
 Production Docker Compose commands are as follows:
 
-`make build-prod` - builds production ready containers
-`make run-prod` - runs an environment that is similar to a production deployment.
+`make build-prod` - builds production ready containers  
+`make run-prod` - runs an environment that is similar to a production   deployment.
 
-Note that to access the system as a prod URL, you go to [qa4mbes.vcap.me](qa4mbes.vcap.me).
 
 ## Database
 
 General process for modifying the database schema is as follows;    
 
 1. Modify/add entity ( found in `server/src/lib/entity`)
-1. Run migration generation command (shown below). This will produce a new
+2. Run migration generation command (shown below). This will produce a new
 typescript file in `server/src/migration`.
-1. Confirm migration script is ok (often require modification for default
+3. Confirm migration script is ok (often require modification for default
 values, etc)
-1. Run new migration `make migration-run`
+4. Run new migration `make migration-run`
 
 
-The following command will create a database migration script (replace MIGRATION_NAME> param);   
+The following command will automatically generate a database migration script including schema changes made to the entities (replace MIGRATION_NAME> param);   
 
 ```
     docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml \
@@ -132,25 +129,31 @@ The following command will create a database migration script (replace MIGRATION
         ENVIRONMENT=production typeorm migration:generate -n <MIGRATION_NAME>"
 ```
 
+A blank new migration can be created by replacing `generate` with `create` in the above command line.
+
+
 ### Backup and restore
 
-The following commands will create a backup file in the `../backup` dir.
+The following commands will create a backup file in the `./backup` dir. The docker-compose command will require the db password.
 
 ```
     TODAY=$(date '+%F')
     docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml \
-        run --rm db-postgres-admin pg_dump --format custom --blobs --file \
-        "/backup/qa4mbes-backup-${TODAY}.psql"
+        run -e PGDATABASE=postgres -e PGHOST=db-postgres -e PGUSER=postgres \
+        --rm db-postgres pg_dump  --format custom --blobs \
+        --file "/backup/qa4mbes-backup-${TODAY}.psql"
 ```
 
-To restore (requires `<BACKUP FILE NAME>` is in `../backup` );
+To restore (requires `<BACKUP FILE NAME>` is in `./backup` );
 
 *note:* to drop the existing database all current connections must be closed;
 recommend stopping all docker containers (`make stop`).
 
 ```
-    docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml run --rm db-postgres-admin bash -c "
-        dropdb postgres ;
-        createdb postgres &&
-        pg_restore -d postgres '/backup/<BACKUP FILE NAME>'"
+    docker-compose -f docker-compose-base.yml -f docker-compose-dev.yml \
+        run -e PGDATABASE=postgres -e PGHOST=db-postgres -e PGUSER=postgres \
+        --rm db-postgres bash -c "
+            dropdb postgres ;
+            createdb postgres &&
+            pg_restore -d postgres '/backup/<BACKUP FILE NAME>'"
 ```

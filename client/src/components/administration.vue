@@ -77,7 +77,10 @@
     </q-drawer>
 
     <q-page-container>
-      <q-page padding style="height: calc(100vh - 54px); min-height: calc(100vh - 54px);">
+      <q-page
+        style="height: calc(100vh - 54px); min-height: calc(100vh - 54px);"
+        class="q-pt-sm q-pl-sm"
+      >
         <router-view />
       </q-page>
     </q-page-container>

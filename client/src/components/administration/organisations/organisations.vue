@@ -219,11 +219,11 @@ const _ = require('lodash');
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { required } from 'vuelidate/lib/validators';
 
-import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
-import { permission } from './../mixins/permission'
-import { errorHandler } from './../mixins/error-handling'
+import { DirtyRouteGuard } from './../../mixins/dirty-route-guard'
+import { permission } from './../../mixins/permission'
+import { errorHandler } from './../../mixins/error-handling'
 import * as mTypes
-  from '../../store/modules/organisation/organisation-mutation-types'
+  from '../../../store/modules/organisation/organisation-mutation-types'
 
 // custom validators
 const duplicateOrganisationName = function (value, vm) {

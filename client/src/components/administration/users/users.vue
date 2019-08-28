@@ -131,11 +131,11 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { required } from 'vuelidate/lib/validators';
 const moment = require('moment')
 
-import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
-import { permission } from './../mixins/permission'
-import { errorHandler } from './../mixins/error-handling'
+import { DirtyRouteGuard } from './../../mixins/dirty-route-guard'
+import { permission } from './../../mixins/permission'
+import { errorHandler } from './../../mixins/error-handling'
 import * as mTypes
-  from '../../store/modules/user/user-mutation-types'
+  from '../../../store/modules/user/user-mutation-types'
 
 
 export default Vue.extend({

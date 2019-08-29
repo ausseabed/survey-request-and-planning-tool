@@ -52,9 +52,9 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       {hrid: req.query['hipp-request']})
   }
 
-  if (hasPermission(req.user.role, 'canViewAllProjects')) {
+  if (hasPermission(req.user.role, 'canViewAllSurveyPlans')) {
     // then no additional where clauses
-  } else if (hasPermission(req.user.role, 'canViewCustodianProjects')) {
+  } else if (hasPermission(req.user.role, 'canViewCustodianSurveyPlans')) {
     // need to filter list to include only projects that include the
     // custodian this user is assigned.
     projectsQuery = projectsQuery
@@ -83,8 +83,8 @@ router.get(
     permitCustodianBasedPermission({
       entityType:ProjectMetadata,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canViewAllProjects',
-      allowedPermissionCustodian: 'canViewCustodianProjects'})
+      allowedPermissionAll: 'canViewAllSurveyPlans',
+      allowedPermissionCustodian: 'canViewCustodianSurveyPlans'})
   ],
   asyncMiddleware(async function (req, res) {
 
@@ -170,7 +170,7 @@ router.get(
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllProjects',
       allowedPermissionCustodian: 'canEditCustodianProjects',
-      allowedPermissionNoEntityId: 'canAddProject',
+      allowedPermissionNoEntityId: 'canAddSurveyPlan',
     })
   ],
   asyncMiddleware(async function (req, res) {
@@ -217,8 +217,8 @@ router.get(
     permitCustodianBasedPermission({
       entityType:ProjectMetadata,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canViewAllProjects',
-      allowedPermissionCustodian: 'canViewCustodianProjects'})
+      allowedPermissionAll: 'canViewAllSurveyPlans',
+      allowedPermissionCustodian: 'canViewCustodianSurveyPlans'})
   ],
   asyncMiddleware(async function (req, res) {
   let project = await getConnection()
@@ -260,7 +260,7 @@ router.post(
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllProjects',
       allowedPermissionCustodian: 'canEditCustodianProjects',
-      allowedPermissionNoEntityId: 'canAddProject',
+      allowedPermissionNoEntityId: 'canAddSurveyPlan',
     })
   ],
   asyncMiddleware(async function (req, res) {

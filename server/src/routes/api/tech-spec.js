@@ -56,7 +56,7 @@ router.get(
     permitCustodianBasedPermission({
       entityType:ProjectMetadata,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canViewAllProjects',
+      allowedPermissionAll: 'canViewAllSurveyPlans',
       allowedPermissionCustodian: 'canViewCustodianProjects'})
   ],
   asyncMiddleware(async function (req, res) {

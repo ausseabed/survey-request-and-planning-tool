@@ -43,8 +43,8 @@ const TEMPLATE_TYPE_MAP = {
   },
   'Plan': {
     entityType: ProjectMetadata,
-    allowedPermissionAll: 'canViewAllProjects',
-    allowedPermissionCustodian: 'canViewCustodianProjects',
+    allowedPermissionAll: 'canViewAllSurveyPlans',
+    allowedPermissionCustodian: 'canViewCustodianSurveyPlans',
     custodianAttributes: ['custodians'],
     reportGenerator: ProjectMetadataReportGenerator,
     relations: [

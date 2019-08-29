@@ -46,7 +46,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       {id: req.query['ignore-id']})
   }
 
-  if (hasPermission(req.user.role, 'canViewAllProjects')) {
+  if (hasPermission(req.user.role, 'canViewAllSurveyPlans')) {
     // then no additional where clauses
   } else if (hasPermission(req.user.role, 'canViewCustodianProjects')) {
     // need to filter list to include only projects that include the

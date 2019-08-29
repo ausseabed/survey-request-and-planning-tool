@@ -65,21 +65,21 @@ export class Role {
   canEditUser;
 
 
-  // Project permissions
+  // SurveyPlan permissions
   @Column({type: "bool", nullable: false, default: false})
-  canAddProject;
+  canAddSurveyPlan;
 
   @Column({type: "bool", nullable: false, default: false})
-  canViewAllProjects;
+  canViewAllSurveyPlans;
 
   @Column({type: "bool", nullable: false, default: false})
-  canViewCustodianProjects;
+  canViewCustodianSurveyPlans;
 
   @Column({type: "bool", nullable: false, default: false})
-  canEditAllProjects;
+  canEditAllSurveyPlans;
 
   @Column({type: "bool", nullable: false, default: false})
-  canEditCustodianProjects;
+  canEditCustodianSurveyPlans;
 
 
   // HIPP Request permissions

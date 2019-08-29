@@ -113,7 +113,6 @@
 
     </div>
 
-    <plan-selection id="planSelection" ref="planSelection"></plan-selection>
   </div>
 </template>
 <script>
@@ -127,15 +126,12 @@ import * as pmMutTypes
   from '../../store/modules/survey-plan/survey-plan-mutation-types'
 import { RequestStatus } from '../../store/modules/request-status'
 
-import PlanSelection from '../dialogs/plan-selection'
-
 import axios from 'axios';
 const path = require('path');
 
 
 export default Vue.extend({
   mixins: [errorHandler, permission],
-  components: { 'plan-selection': PlanSelection },
 
   beforeMount() {
     this.SET_PROJECT_METADATA_LIST([])

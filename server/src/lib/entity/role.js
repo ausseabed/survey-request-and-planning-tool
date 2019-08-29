@@ -84,19 +84,19 @@ export class Role {
 
   // HIPP Request permissions
   @Column({type: "bool", nullable: false, default: false})
-  canAddHippRequest;
+  canAddSurveyRequest;
 
   @Column({type: "bool", nullable: false, default: false})
-  canViewAllHippRequests;
+  canViewAllSurveyRequests;
 
   @Column({type: "bool", nullable: false, default: false})
-  canViewCustodianHippRequests;
+  canViewCustodianSurveyRequests;
 
   @Column({type: "bool", nullable: false, default: false})
-  canEditAllHippRequests;
+  canEditAllSurveyRequests;
 
   @Column({type: "bool", nullable: false, default: false})
-  canEditCustodianHippRequests;
+  canEditCustodianSurveyRequests;
 
   @Column({type: "bool", nullable: false, default: false})
   canViewRiskPriority;

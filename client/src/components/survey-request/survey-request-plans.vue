@@ -7,7 +7,7 @@
         <record-state
           v-if="this.surveyRequest.id"
           class="full-width q-pb-sm"
-          :entity-type="`hipp-request`"
+          :entity-type="`survey-request`"
           :entity-id="surveyRequest.id"
           :validation-callback="recordStateValidationCallback"
           @updated-state="stateUpdated($event)"

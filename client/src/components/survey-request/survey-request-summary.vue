@@ -63,7 +63,7 @@
         <record-state
           v-if="this.surveyRequest.id"
           class="full-width"
-          :entity-type="`hipp-request`"
+          :entity-type="`survey-request`"
           :entity-id="surveyRequest.id"
           :validation-callback="recordStateValidationCallback"
           :disable="dirty"

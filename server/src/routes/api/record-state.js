@@ -135,7 +135,7 @@ async function handleGetRequest(
 
 
 router.get(
-  '/hipp-request/:id',
+  '/survey-request/:id',
   [
     isAuthenticated,
     permitCustodianBasedPermission({
@@ -188,7 +188,7 @@ router.post(
   let recordType = undefined;
   let entityType = undefined;
 
-  if (entityTypeStr == 'hipp-request') {
+  if (entityTypeStr == 'survey-request') {
     entityType = HippRequest;
     recordType = 'request';
     machine = await buildRecordMachine(
@@ -200,7 +200,7 @@ router.post(
       entityType, entityId, req.user, 'custodians', recordType);
   } else {
     let err = boom.badRequest(
-      `entityTypeStr (/:entityTypeStr/:id) must be 'hipp-request' ` +
+      `entityTypeStr (/:entityTypeStr/:id) must be 'survey-request' ` +
       `or 'survey-plan'`);
     throw err;
   }

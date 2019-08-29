@@ -55,7 +55,7 @@ const TEMPLATE_TYPE_MAP = {
       'attachments',
       'attachments.attachment',
       'deliverables',
-      'hippRequest',
+      'surveyRequest',
       'recordState',
       'techSpec',
     ],

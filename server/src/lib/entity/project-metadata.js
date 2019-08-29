@@ -166,11 +166,11 @@ export class ProjectMetadata {
 
   @ManyToOne(
     type => HippRequest,
-    hippRequest => hippRequest.projects,
+    hippRequest => hippRequest.surveyPlans,
     { nullable: true }
   )
-  @JoinColumn({ name: "hippRequestId" })
-  hippRequest;
+  @JoinColumn({ name: "surveyRequestId" })
+  surveyRequest;
 
   @OneToOne(type => TechSpec)
   @JoinColumn({ name: "id" })

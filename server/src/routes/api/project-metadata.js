@@ -34,7 +34,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   .select(["project_metadata.id", "project_metadata.surveyName",
     "project_metadata.startDate", "project_metadata.status"])
   .leftJoinAndSelect("project_metadata.recordState", "record_state")
-  .leftJoin("project_metadata.hippRequest", "hipp_request")
+  .leftJoin("project_metadata.surveyRequest", "hipp_request")
   .addSelect("hipp_request.id")
 
   if (includeGeometry) {
@@ -48,7 +48,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   )
   .orderBy("project_metadata.surveyName")
   if (!_.isNil(req.query['hipp-request'])) {
-    projectsQuery = projectsQuery.andWhere(`"project_metadata"."hippRequestId" = :hrid`,
+    projectsQuery = projectsQuery.andWhere(`"project_metadata"."surveyRequestId" = :hrid`,
       {hrid: req.query['hipp-request']})
   }
 
@@ -232,7 +232,7 @@ router.get(
         "instrumentTypes",
         "dataCaptureTypes",
         "surveyApplication",
-        "hippRequest",
+        "surveyRequest",
       ]
     }
   );
@@ -311,8 +311,8 @@ router.post(
 
   if (_.isNil(project.id)) {
     // only set hipp request if it is a new project. Otherwise
-    // it must be linked via the hipp request plans form.
-    project.hippRequest = req.body.hippRequest;
+    // it must be linked via the survey request plans form.
+    project.surveyRequest = req.body.surveyRequest;
   }
 
   if (!_.isNil(req.body.areaOfInterest)) {

@@ -263,7 +263,7 @@ export class HippRequest {
 
   @OneToMany(
     type => ProjectMetadata,
-    projectMetadata => projectMetadata.hippRequest)
+    projectMetadata => projectMetadata.surveyRequest)
   projects;
 
   @OneToOne(type => RecordState, { cascade: true })

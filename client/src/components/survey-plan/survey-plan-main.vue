@@ -100,7 +100,7 @@ export default Vue.extend({
 
   methods: {
     ...mapActions('surveyPlan', [
-      'getProjectMetadata',
+      'getSurveyPlan',
     ]),
 
     heightTweak (offset) {
@@ -111,7 +111,7 @@ export default Vue.extend({
     },
     fetchData () {
       this.id = this.$route.params.id;
-      this.getProjectMetadata({ id: this.id })
+      this.getSurveyPlan({ id: this.id })
     },
 
   },

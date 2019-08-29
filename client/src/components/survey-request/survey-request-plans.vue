@@ -194,7 +194,7 @@ export default Vue.extend({
       'updatePlanLinks',
     ]),
     ...mapActions('surveyPlan', [
-      'getProjectMetadataList',
+      'getSurveyPlanList',
     ]),
     ...mapMutations('surveyPlan', [
       pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
@@ -221,7 +221,7 @@ export default Vue.extend({
       this.SET_PROJECT_METADATA_LIST([])
       this.SET_PROJECT_METADATA_LIST_FILTER(undefined)
 
-      this.getProjectMetadataList()
+      this.getSurveyPlanList()
       .then((planList) => {
         this.linkedPlans = []
         planList.forEach((plan) => {
@@ -276,7 +276,7 @@ export default Vue.extend({
       this.linking = false
       let hrfilter = {'hipp-request': this.surveyRequest.id}
       this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
-      this.getProjectMetadataList()
+      this.getSurveyPlanList()
     },
 
     stateUpdated(state) {
@@ -308,7 +308,7 @@ export default Vue.extend({
     'projectMetadataListFilter': {
       handler: function (newFilter, oldFilter) {
         if (!_.isNil(this.surveyRequest.id)) {
-          this.getProjectMetadataList()
+          this.getSurveyPlanList()
         }
       },
       immediate: true,

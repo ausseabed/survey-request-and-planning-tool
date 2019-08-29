@@ -848,7 +848,7 @@ export default Vue.extend({
     fetchData () {
       const id = this.$route.params.id;
       this.$store.dispatch(
-        'surveyPlan/getProjectMetadata', { id: id })
+        'surveyPlan/getSurveyPlan', { id: id })
       this.$store.dispatch('techSpec/getTechSpec', { id: id }).then(no => {
         if (this.requestStatus == RequestStatus.SUCCESS) {
           // then all good, tech spec existed and it is loaded

@@ -183,7 +183,7 @@ export default Vue.extend({
     fetchData () {
       const id = this.$route.params.id;
       this.$store.dispatch(
-        'surveyPlan/getProjectMetadata', { id: id });
+        'surveyPlan/getSurveyPlan', { id: id });
       this.$store.dispatch(
         'deliverable/getDeliverableList', { id: id })
     },

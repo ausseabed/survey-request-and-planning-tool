@@ -238,7 +238,7 @@ export default Vue.extend({
     fetchProjects (extents) {
       this.SET_PROJECT_METADATA_LIST_FILTER(undefined);
       this.$store.dispatch(
-        'surveyPlan/getProjectMetadataList',
+        'surveyPlan/getSurveyPlanList',
         {params:{includeGeometry:true}})
       .then(matchingProjMetas => {
         this.matchingProjMetas = matchingProjMetas;

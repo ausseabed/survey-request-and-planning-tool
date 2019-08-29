@@ -767,7 +767,7 @@ export default Vue.extend({
       'setDirty': pmMutTypes.SET_DIRTY,
       'setProjectCustodians': pmMutTypes.SET_CUSTODIANS,
       'setProjectOrganisations': pmMutTypes.SET_ORGANISATIONS,
-      'updateProjectMetadata': pmMutTypes.UPDATE,
+      'updateSurveyPlan': pmMutTypes.UPDATE,
     }),
     ...mapMutations('surveyPlan', [
       pmMutTypes.RESET_PROJECT_METADATA,
@@ -884,7 +884,7 @@ export default Vue.extend({
       this.map.clear();
       if (this.$route.params.id) {
         this.$store.dispatch(
-          'surveyPlan/getProjectMetadata', { id: this.$route.params.id })
+          'surveyPlan/getSurveyPlan', { id: this.$route.params.id })
         .then(projectMetadata => {
           if (!_.isNil(projectMetadata.surveyApplication)) {
             this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
@@ -938,7 +938,7 @@ export default Vue.extend({
     },
 
     update(key, event) {
-      this.updateProjectMetadata({
+      this.updateSurveyPlan({
         path: key,
         value: event
       })
@@ -1070,7 +1070,7 @@ export default Vue.extend({
         }).onOk(() => {
 
           this.$store.dispatch(
-            'surveyPlan/deleteProjectMetadata',
+            'surveyPlan/deleteSurveyPlan',
             { id: this.id }
           ).then(pmd => {
             this.notifySuccess('Deleted plan');

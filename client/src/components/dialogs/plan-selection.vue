@@ -68,7 +68,7 @@ export default {
 
   methods: {
     ...mapActions('surveyPlan', [
-      'getProjectMetadataList',
+      'getSurveyPlanList',
     ]),
     ...mapMutations('surveyPlan', [
       pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,

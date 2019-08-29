@@ -40,7 +40,7 @@ export const save = ({ commit, state }) => {
   });
 }
 
-export const deleteProjectMetadata = ({ commit, state }, payload) => {
+export const deleteSurveyPlan = ({ commit, state }, payload) => {
   var url_endpoint = '/api/project-metadata/' + payload.id;
   return new Promise((resolve, reject) => {
     Vue.axios.delete(url_endpoint)
@@ -54,7 +54,7 @@ export const deleteProjectMetadata = ({ commit, state }, payload) => {
   });
 }
 
-export const getProjectMetadata = ({ commit, state }, payload) => {
+export const getSurveyPlan = ({ commit, state }, payload) => {
   var url_endpoint = '/api/project-metadata/' + payload.id;
   if (payload.version) { url_endpoint += "?version=" + payload.version }
 
@@ -73,7 +73,7 @@ export const getProjectMetadata = ({ commit, state }, payload) => {
 
 }
 
-export const getProjectMetadataList = ({ commit, state }, payload) => {
+export const getSurveyPlanList = ({ commit, state }, payload) => {
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
 
   var url_endpoint = '/api/project-metadata/';

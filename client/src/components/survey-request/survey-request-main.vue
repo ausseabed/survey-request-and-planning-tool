@@ -87,7 +87,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions('hippRequest', [
+    ...mapActions('surveyRequest', [
       'getHippRequest',
     ]),
 
@@ -116,7 +116,7 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters('hippRequest',[
+    ...mapGetters('surveyRequest',[
       'hippRequest',
     ]),
     canViewAttachments: function() {

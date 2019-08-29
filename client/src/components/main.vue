@@ -226,7 +226,7 @@ export default Vue.extend({
       pmMutTypes.SET_AOI,
       pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
     ]),
-    ...mapActions('hippRequest', [
+    ...mapActions('surveyRequest', [
       'getHippRequests',
     ]),
     heightTweak (offset) {
@@ -277,7 +277,7 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters('hippRequest', [
+    ...mapGetters('surveyRequest', [
       'hippRequests',
     ]),
   },

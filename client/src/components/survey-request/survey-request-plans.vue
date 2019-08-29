@@ -153,7 +153,7 @@ export default Vue.extend({
     ...mapGetters('surveyPlan',{
       projectMetadataRequestStatus:'requestStatus'
     }),
-    ...mapGetters('hippRequest',[
+    ...mapGetters('surveyRequest',[
       'hippRequest',
     ]),
     loading() {
@@ -190,7 +190,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions('hippRequest', [
+    ...mapActions('surveyRequest', [
       'updatePlanLinks',
     ]),
     ...mapActions('surveyPlan', [

@@ -1,7 +1,7 @@
 const _ = require('lodash');
 import Vue from 'vue'
 
-import * as types from './hipp-request-mutation-types'
+import * as types from './survey-request-mutation-types'
 
 const mutations = {
   [types.UPDATE] (state, { path, value }) {

@@ -61,7 +61,7 @@ export default {
       'projectMetadataList',
       'projectMetadataListFilter',
     ]),
-    ...mapGetters('hippRequest',[
+    ...mapGetters('surveyRequest',[
       'hippRequest',
     ]),
   },

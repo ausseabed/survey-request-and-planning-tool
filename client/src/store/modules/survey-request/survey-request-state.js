@@ -1,7 +1,7 @@
-import * as actions from './hipp-request-actions'
-import * as getters from './hipp-request-getters'
-import mutations from './hipp-request-mutations'
-import * as types from './hipp-request-mutation-types'
+import * as actions from './survey-request-actions'
+import * as getters from './survey-request-getters'
+import mutations from './survey-request-mutations'
+import * as types from './survey-request-mutation-types'
 
 import { RequestStatus } from '../request-status'
 

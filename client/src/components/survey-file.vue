@@ -140,7 +140,7 @@ export default Vue.extend({
     ...mapGetters('surveyPlan',[
       'projectMetadata',
     ]),
-    ...mapGetters('hippRequest',[
+    ...mapGetters('surveyRequest',[
       'hippRequest',
     ]),
     ...mapGetters('surveyFile',[

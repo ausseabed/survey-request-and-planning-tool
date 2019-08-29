@@ -573,7 +573,7 @@ import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { errorHandler } from './../mixins/error-handling'
 import { permission } from './../mixins/permission'
 import * as hippMutTypes
-  from '../../store/modules/hipp-request/hipp-request-mutation-types'
+  from '../../store/modules/survey-request/survey-request-mutation-types'
 import * as custodianMutTypes
   from '../../store/modules/custodian/custodian-mutation-types'
 import * as organisationMutTypes
@@ -649,7 +649,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions('hippRequest', [
+    ...mapActions('surveyRequest', [
       'getHippRequest',
       'saveHippRequest',
       'getRiskMatrix',
@@ -673,7 +673,7 @@ export default Vue.extend({
     ...mapActions('organisation', [
       'getOrganisations',
     ]),
-    ...mapMutations('hippRequest', {
+    ...mapMutations('surveyRequest', {
       'setDirty': hippMutTypes.SET_DIRTY,
       'update': hippMutTypes.UPDATE,
       'resetHippRequest': hippMutTypes.RESET_HIPP_REQUEST,
@@ -890,7 +890,7 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters('hippRequest', [
+    ...mapGetters('surveyRequest', [
       'hippRequest',
       'dirty',
       'riskMatrix',

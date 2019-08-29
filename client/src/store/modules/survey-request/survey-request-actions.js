@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import * as mutTypes from './hipp-request-mutation-types'
+import * as mutTypes from './survey-request-mutation-types'
 import { RequestStatus } from '../request-status'
 
 export const getHippRequest = async ({ commit, state }, payload) => {

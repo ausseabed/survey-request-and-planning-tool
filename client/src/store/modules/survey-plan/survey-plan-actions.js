@@ -25,7 +25,7 @@ export const checkAoi = ({ commit, state }, payload) => {
 }
 
 export const save = ({ commit, state }) => {
-  console.log('saving project metadata');
+  console.log('saving survey plan metadata');
   console.log(state);
 
   return new Promise((resolve, reject) => {
@@ -100,7 +100,7 @@ export const getSurveyPlanList = ({ commit, state }, payload) => {
 
 }
 
-export const getProjectStatuses = ({ commit, state }) => {
+export const getSurveyPlanStatuses = ({ commit, state }) => {
   var url_endpoint = '/api/project-metadata/valid-statuses';
 
   return Vue.axios.get(url_endpoint)

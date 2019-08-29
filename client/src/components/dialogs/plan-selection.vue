@@ -76,7 +76,7 @@ export default {
     ]),
     ...mapMutations('surveyPlan', {
       'surveyPlanUpdate': pmMutTypes.UPDATE,
-      'projectSetDirty': pmMutTypes.SET_DIRTY,
+      'surveyPlanSetDirty': pmMutTypes.SET_DIRTY,
     }),
 
     pop(){

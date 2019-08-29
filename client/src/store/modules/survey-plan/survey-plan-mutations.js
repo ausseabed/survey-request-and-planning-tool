@@ -67,7 +67,7 @@ const mutations = {
   },
 
   [types.SET_PROJECT_STATUSES] (state, statuses) {
-    state.projectStatuses = statuses;
+    state.surveyPlanStatuses = statuses;
   },
 
   [types.SET_SURVEYORS] (state, custodians) {

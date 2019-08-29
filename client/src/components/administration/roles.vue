@@ -305,8 +305,8 @@ export default Vue.extend({
         return
       }
       if (this.activeRole.id) {
-        // an existing id indicated this project has been saved, so check
-        // with user if they really want to delete project.
+        // an existing id indicated this survey plan has been saved, so check
+        // with user if they really want to delete the survey plan.
         this.$q.dialog({
           title: 'Delete Role',
           message: `Role ${this.activeRole.name} will be deleted. Users with this role will have the default role automatically assigned.`,

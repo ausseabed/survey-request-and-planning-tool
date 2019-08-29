@@ -17,25 +17,25 @@
               default
               icon="notes"
               label="Summary"
-              :to="`/survey/${id}/summary`"
+              :to="`/survey-plan/${id}/summary`"
               exact
             />
             <q-route-tab
               icon="assignment"
               label="Specifications"
-              :to="`/survey/${id}/specifications`"
+              :to="`/survey-plan/${id}/specifications`"
               exact
             />
             <q-route-tab
               icon="ballot"
               label="Deliverables"
-              :to="`/survey/${id}/deliverables`"
+              :to="`/survey-plan/${id}/deliverables`"
               exact
             />
             <q-route-tab
               icon="attach_file"
               label="Attachments"
-              :to="`/survey/${id}/attachments`"
+              :to="`/survey-plan/${id}/attachments`"
               exact
               v-if="canViewAttachments"
             />
@@ -46,25 +46,25 @@
               default
               class="mobile-tabs"
               icon="notes"
-              :to="`/survey/${id}/summary`"
+              :to="`/survey-plan/${id}/summary`"
               exact
             />
             <q-route-tab
               class="mobile-tabs"
               icon="assignment"
-              :to="`/survey/${id}/specifications`"
+              :to="`/survey-plan/${id}/specifications`"
               exact
             />
             <q-route-tab
               class="mobile-tabs"
               icon="ballot"
-              :to="`/survey/${id}/deliverables`"
+              :to="`/survey-plan/${id}/deliverables`"
               exact
             />
             <q-route-tab
               class="mobile-tabs"
               icon="attach_file"
-              :to="`/survey/${id}/attachments`"
+              :to="`/survey-plan/${id}/attachments`"
               exact
               v-if="canViewAttachments"
             />

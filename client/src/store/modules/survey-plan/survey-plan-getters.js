@@ -50,12 +50,12 @@ export const surveyApplication = state => {
   return state.surveyPlan.surveyApplication;
 }
 
-export const projectStatus = state => {
-  return state.surveyPlan.projectStatus;
+export const status = state => {
+  return state.surveyPlan.status;
 }
 
-export const projectStatuses = state => {
-  return state.projectStatuses;
+export const surveyPlanStatuses = state => {
+  return state.surveyPlanStatuses;
 }
 
 export const surveyPlan = state => {

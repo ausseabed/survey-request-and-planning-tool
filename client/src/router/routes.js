@@ -72,11 +72,11 @@ const routes = [
     { path: '/login', component: Login },
 
     {
-      path: '/survey/new',
+      path: '/survey-plan/new',
       component: SurveyPlanSummary,
     },
     {
-      path: '/survey/:id',
+      path: '/survey-plan/:id',
       component: SurveyPlanMain,
       children: [
         {
@@ -100,11 +100,11 @@ const routes = [
     },
 
     {
-      path: '/hipp-request/new',
+      path: '/survey-request/new',
       component: SurveyRequestSummary,
     },
     {
-      path: '/hipp-request/:id',
+      path: '/survey-request/:id',
       component: SurveyRequestMain,
       children: [
         {
@@ -117,7 +117,7 @@ const routes = [
           props: {attachesTo:"hipp-request"}
         },
         {
-          path: 'projects',
+          path: 'survey-plans',
           component: SurveyRequestPlans,
         },
       ]

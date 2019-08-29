@@ -218,7 +218,7 @@
                           class="no-margin full-width"
                           icon="cloud_download"
                           type="a"
-                          :href="`/api/hipp-request/${surveyRequest.id}/geometry`"
+                          :href="`/api/survey-request/${surveyRequest.id}/geometry`"
                           :disable="!surveyRequest.id || addingFile || !surveyRequest.areaOfInterest || dirty"
                         >
                           <q-tooltip>
@@ -739,7 +739,7 @@ export default Vue.extend({
 
       this.saveSurveyRequest().then((hr) => {
         if (isNew) {
-          this.$router.replace({ path: `/hipp-request/${hr.id}/summary` })
+          this.$router.replace({ path: `/survey-request/${hr.id}/summary` })
         }
         this.notifySuccess('Saved HIPP Request')
       })
@@ -747,8 +747,8 @@ export default Vue.extend({
 
     deleteSurveyRequestClick() {
       if (this.surveyRequest.id) {
-        // an existing id indicated this project has been saved, so check
-        // with user if they really want to delete project.
+        // an existing id indicated this survey plan has been saved, so check
+        // with user if they really want to delete the survey plan.
         this.$q.dialog({
           title: 'Delete HIPP Request',
           message: `HIPP Request ${this.surveyRequest.name} will be deleted`,
@@ -773,7 +773,7 @@ export default Vue.extend({
       this.stateReadonly = true;
       // only get non-deleted custodians
       this.setDeletedCustodians(false);
-      // gets the list of all custodians, not just those associated to this project
+      // gets the list of all custodians, not just those associated to this survey plan
       this.getCustodians();
 
       // get misc lists for populating drop downs
@@ -928,7 +928,7 @@ export default Vue.extend({
         return true
       }
       if (this.hasPermission('canEditAllSurveyRequests')) {
-        // can edit all projects
+        // can edit all survey plans
         return false
       }
       else if (

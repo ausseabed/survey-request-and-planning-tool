@@ -21,7 +21,7 @@ function initialState() {
       vessel: null,
       instrumentTypes: [],
       dataCaptureTypes: [],
-      projectStatus: 'Planning',
+      status: 'Planning',
       quality: null,
       comment: null,
       surveyApplication: null,
@@ -39,7 +39,7 @@ function initialState() {
     surveyApplicationIdOther:undefined,
     surveyPlanListFilter:{},
     surveyPlanList:[],
-    projectStatuses:[],
+    surveyPlanStatuses:[],
     dirty:false,
 
     requestStatus: RequestStatus.NOT_REQUESTED,

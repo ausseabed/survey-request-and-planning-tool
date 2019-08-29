@@ -52,7 +52,7 @@
             v-if="!readonly"
             round
             color="primary"
-            @click="deleteProject"
+            @click="deleteSurveyPlan"
             icon="delete"
           >
             <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete plan</q-tooltip>
@@ -64,7 +64,7 @@
         <record-state
           v-if="surveyPlan.id"
           class="full-width"
-          :entity-type="`project-metadata`"
+          :entity-type="`survey-plan`"
           :entity-id="surveyPlan.id"
           :validation-callback="recordStateValidationCallback"
           :disable="dirty"
@@ -103,26 +103,26 @@
               <template v-slot:control>
                 <q-option-group
                   type="radio" inline
-                  :value="projectStatus"
+                  :value="surveyPlanStatus"
                   color="secondary"
-                  @input="update('surveyPlan.projectStatus', $event)"
-                  :options="projectStatusOptions"
+                  @input="update('surveyPlan.status', $event)"
+                  :options="surveyPlanStatusOptions"
                   :disable="readonly"
                 />
               </template>
             </q-field>
 
             <form-field-validated-select
-              name="projectCustodians"
+              name="surveyPlanCustodians"
               label="Custodians"
               class="col-10"
               multiple use-chips
-              :value="projectCustodians"
-              @input="setProjectCustodians($event)"
+              :value="surveyPlanCustodians"
+              @input="setSurveyPlanCustodians($event)"
               :options="custodianOptions"
               option-label="name"
               option-value="id"
-              @blur="$v.projectCustodians.$touch"
+              @blur="$v.surveyPlanCustodians.$touch"
               :readonly="readonly"
               >
             </form-field-validated-select>
@@ -136,7 +136,7 @@
               input-debounce="200"
               @filter="filterOrganisationFunction"
               :value="surveyPlan.organisations"
-              @input="setProjectOrganisations($event)"
+              @input="setSurveyPlanOrganisations($event)"
               :options="organisationsList"
               option-label="name"
               option-value="id"
@@ -301,7 +301,7 @@
                   >
                     <q-item
                       tag="a" class="interescting-project-links"
-                      :href="`/survey/${matchingProjMeta.id}/summary`"
+                      :href="`/survey-plan/${matchingProjMeta.id}/summary`"
                       target="_blank"
                       :key="matchingProjMeta.id"
                       @mouseover.native="mouseoverMatchingProjMeta(matchingProjMeta)"
@@ -311,23 +311,19 @@
                           text-color="white"
                           font-size="28px"
                           rounded
-                          :icon="projectStatusIconDetails(matchingProjMeta.projectStatus).icon"
-                          :color="projectStatusIconDetails(matchingProjMeta.projectStatus).color"
+                          :icon="surveyPlanStatusIconDetails(matchingProjMeta.status).icon"
+                          :color="surveyPlanStatusIconDetails(matchingProjMeta.status).color"
                         />
                         <!-- <q-avatar :icon="recordStateDetails(matchingProjMeta.recordState).icon" /> -->
                       </q-item-section>
 
                       <q-item-section>
                         <q-item-label>{{matchingProjMeta.surveyName | capitalize}}</q-item-label>
-                        <q-item-label caption>{{matchingProjMeta.projectStatus}}</q-item-label>
+                        <q-item-label caption>{{matchingProjMeta.status}}</q-item-label>
                       </q-item-section>
 
                       <q-item-section side top>
                         <q-item-label caption>{{matchingProjMeta.startDate | dateString}}</q-item-label>
-                        <!-- <q-icon
-                          :name="projectStatusIconDetails(matchingProjMeta.projectStatus).icon"
-                          :color="projectStatusIconDetails(matchingProjMeta.projectStatus).color"
-                        /> -->
                         <q-icon
                           :name="recordStateDetails(matchingProjMeta.recordState).icon"
                         >
@@ -484,7 +480,7 @@
 
             <q-field
               class="column q-py-md"
-              :error="$v.projectInstrumentTypes.$error || $v.projectDataCaptureTypes.$error"
+              :error="$v.surveyPlanInstrumentTypes.$error || $v.surveyPlanDataCaptureTypes.$error"
               :error-message="getInstrumentAndDataCaptureTypeError()"
               bottom-slots
               :readonly="readonly"
@@ -659,7 +655,7 @@ import * as organisationMutTypes
 import * as pmMutTypes
   from '../../store/modules/survey-plan/survey-plan-mutation-types'
 
-import { projectStatusIconDetails, recordStateDetails } from './../utils'
+import { surveyPlanStatusIconDetails, recordStateDetails } from './../utils'
 
 const timespan = require('readable-timespan');
 timespan.set({
@@ -765,8 +761,8 @@ export default Vue.extend({
     ]),
     ...mapMutations('surveyPlan', {
       'setDirty': pmMutTypes.SET_DIRTY,
-      'setProjectCustodians': pmMutTypes.SET_CUSTODIANS,
-      'setProjectOrganisations': pmMutTypes.SET_ORGANISATIONS,
+      'setSurveyPlanCustodians': pmMutTypes.SET_CUSTODIANS,
+      'setSurveyPlanOrganisations': pmMutTypes.SET_ORGANISATIONS,
       'updateSurveyPlan': pmMutTypes.UPDATE,
     }),
     ...mapMutations('surveyPlan', [
@@ -790,11 +786,11 @@ export default Vue.extend({
       'setOrganisationFilter': organisationMutTypes.SET_FILTER,
     }),
 
-    projectStatusIconDetails: projectStatusIconDetails,
+    surveyPlanStatusIconDetails: surveyPlanStatusIconDetails,
     recordStateDetails: recordStateDetails,
 
     instrumentSelected(instrumentType) {
-      const found = this.projectInstrumentTypes.find((selectedIt) => {
+      const found = this.surveyPlanInstrumentTypes.find((selectedIt) => {
         return selectedIt.id == instrumentType.id;
       })
 
@@ -804,18 +800,18 @@ export default Vue.extend({
       const isSelected = this.instrumentSelected(instrumentType);
       if (isSelected) {
         // then remove it from the list
-        const newProjectInstrumentTypes = this.projectInstrumentTypes.filter((pit) => {
+        const newSurveyPlanInstrumentTypes = this.surveyPlanInstrumentTypes.filter((pit) => {
           return !(pit.id === instrumentType.id);
         });
-        this.setInstrumentTypes(newProjectInstrumentTypes);
+        this.setInstrumentTypes(newSurveyPlanInstrumentTypes);
       } else {
         // then add it to the list. Made slightly more complicated by
         // having to do so via mutation
-        let newProjectInstrumentTypes = _.clone(this.projectInstrumentTypes)
-        newProjectInstrumentTypes.push(instrumentType);
-        this.setInstrumentTypes(newProjectInstrumentTypes);
+        let newSurveyPlanInstrumentTypes = _.clone(this.surveyPlanInstrumentTypes)
+        newSurveyPlanInstrumentTypes.push(instrumentType);
+        this.setInstrumentTypes(newSurveyPlanInstrumentTypes);
       }
-      this.$v.projectInstrumentTypes.$touch()
+      this.$v.surveyPlanInstrumentTypes.$touch()
     },
 
     instrumentDescription(instrumentType) {
@@ -827,7 +823,7 @@ export default Vue.extend({
     },
 
     dataCaptureTypeSelected(dct) {
-      const found = this.projectDataCaptureTypes.find((selectedDct) => {
+      const found = this.surveyPlanDataCaptureTypes.find((selectedDct) => {
         return selectedDct.id == dct.id;
       })
       return !_.isNil(found)
@@ -836,40 +832,40 @@ export default Vue.extend({
       const isSelected = this.dataCaptureTypeSelected(dct);
       if (isSelected) {
         // then remove it from the list
-        const newDcts = this.projectDataCaptureTypes.filter((pit) => {
+        const newDcts = this.surveyPlanDataCaptureTypes.filter((pit) => {
           return !(pit.id === dct.id);
         });
         this.setDataCaptureTypes(newDcts);
       } else {
         // then add it to the list. Made slightly more complicated by
         // having to do so via mutation
-        let newDcts = _.clone(this.projectDataCaptureTypes);
+        let newDcts = _.clone(this.surveyPlanDataCaptureTypes);
         newDcts.push(dct);
         this.setDataCaptureTypes(newDcts);
       }
-      this.$v.projectDataCaptureTypes.$touch()
+      this.$v.surveyPlanDataCaptureTypes.$touch()
     },
     getInstrumentAndDataCaptureTypeError() {
       // both the intrument type and data capture type lists have a number
       // of validators, however they are both included in the same field and
       // therefore only have on error message display. This method merges
       // the errors present in both lists for display to the user.
-      if (this.$v.projectInstrumentTypes.$error) {
+      if (this.$v.surveyPlanInstrumentTypes.$error) {
         if (
-          !this.$v.projectInstrumentTypes.required ||
-          !this.$v.projectInstrumentTypes.minLength
+          !this.$v.surveyPlanInstrumentTypes.required ||
+          !this.$v.surveyPlanInstrumentTypes.minLength
           ) {
           return "At least one instrument type is required"
         } else {
           return "Invalid instrument type selection"
         }
-      } else if (this.$v.projectDataCaptureTypes.$error) {
+      } else if (this.$v.surveyPlanDataCaptureTypes.$error) {
         if (
-          !this.$v.projectDataCaptureTypes.required ||
-          !this.$v.projectDataCaptureTypes.minLength
+          !this.$v.surveyPlanDataCaptureTypes.required ||
+          !this.$v.surveyPlanDataCaptureTypes.minLength
           ) {
           return "At least one data capture type is required"
-        } else if (!this.$v.projectDataCaptureTypes.validDataCaptureType) {
+        } else if (!this.$v.surveyPlanDataCaptureTypes.validDataCaptureType) {
           return "Data type(s) cannot be captured by selected instruments."
         } else {
           return "Invalid instrument type selection"
@@ -922,7 +918,7 @@ export default Vue.extend({
       } else {
         if (_.isNil(this.$route.query.reset) || this.$route.query.reset) {
           // don't reset the metadata if the `reset` query param is set to
-          // true. It's likely the project metadata has been pre-populated with
+          // true. It's likely the survey plan metadata has been pre-populated with
           // some information we care about (such as from a hipp request)
           this.RESET_PROJECT_METADATA();
         }
@@ -1003,7 +999,7 @@ export default Vue.extend({
 
     setInstrumentTypes(instrumentTypes) {
       this.SET_INSTRUMENT_TYPES(instrumentTypes)
-      this.$v.projectDataCaptureTypes.$touch()
+      this.$v.surveyPlanDataCaptureTypes.$touch()
     },
 
     setDataCaptureTypes(dataCaptureTypes) {
@@ -1049,7 +1045,7 @@ export default Vue.extend({
       .then(pmd => {
         this.setDirty(false);
         if (isNew) {
-          this.$router.replace({ path: `/survey/${pmd.id}/summary` })
+          this.$router.replace({ path: `/survey-plan/${pmd.id}/summary` })
         }
         this.notifySuccess('Saved plan');
       })
@@ -1058,10 +1054,10 @@ export default Vue.extend({
       });
     },
 
-    deleteProject() {
+    deleteSurveyPlan() {
       if (this.id) {
-        // an existing id indicated this project has been saved, so check
-        // with user if they really want to delete project.
+        // an existing id indicated this survey plan has been saved, so check
+        // with user if they really want to delete survey plan.
         this.$q.dialog({
           title: 'Delete plan',
           message: `Plan ${this.surveyName} will be deleted`,
@@ -1121,9 +1117,9 @@ export default Vue.extend({
       this.stateReadonly = true;
       // only get non-deleted custodians
       this.setDeletedCustodians(null);
-      // gets the list of all custodians, not just those associated to this project
+      // gets the list of all custodians, not just those associated to this survey plan
       this.$store.dispatch('custodian/getCustodians');
-      this.$store.dispatch('surveyPlan/getProjectStatuses');
+      this.$store.dispatch('surveyPlan/getSurveyPlanStatuses');
       // get data capture types, but only those not created by users (eg; the
       // default system defined ones.
       this.$store.dispatch(
@@ -1160,7 +1156,7 @@ export default Vue.extend({
     },
     removeCustodian(custodian) {
       this.REMOVE_CUSTODIAN(custodian)
-      this.$v.projectCustodians.$touch();
+      this.$v.surveyPlanCustodians.$touch();
     },
 
     mouseleaveMatchingProjMeta() {
@@ -1210,8 +1206,8 @@ export default Vue.extend({
       surveyPlan: 'surveyPlan/surveyPlan',
       id: 'surveyPlan/id',
       surveyName: 'surveyPlan/surveyName',
-      projectStatus: 'surveyPlan/projectStatus',
-      projectStatuses: 'surveyPlan/projectStatuses',
+      surveyPlanStatus: 'surveyPlan/status',
+      surveyPlanStatuses: 'surveyPlan/surveyPlanStatuses',
       contactPerson: 'surveyPlan/contactPerson',
       email: 'surveyPlan/email',
       comment: 'surveyPlan/comment',
@@ -1219,10 +1215,10 @@ export default Vue.extend({
       vessel: 'surveyPlan/vessel',
       startDate: 'surveyPlan/startDate',
       areaOfInterest: 'surveyPlan/areaOfInterest',
-      projectCustodians: 'surveyPlan/custodians',
-      projectInstrumentTypes: 'surveyPlan/instrumentTypes',
-      projectDataCaptureTypes: 'surveyPlan/dataCaptureTypes',
-      projectSurveyApplication: 'surveyPlan/surveyApplication',
+      surveyPlanCustodians: 'surveyPlan/custodians',
+      surveyPlanInstrumentTypes: 'surveyPlan/instrumentTypes',
+      surveyPlanDataCaptureTypes: 'surveyPlan/dataCaptureTypes',
+      surveyPlanSurveyApplication: 'surveyPlan/surveyApplication',
       custodians: 'custodian/custodians',
       instrumentTypes: 'instrumentType/instrumentTypes',
       dataCaptureTypes: 'dataCaptureType/dataCaptureTypes',
@@ -1248,10 +1244,10 @@ export default Vue.extend({
     }),
     readonly: function() {
       if (
-        this.hasPermission('canAddProject') &&
+        this.hasPermission('canAddSurveyPlan') &&
         _.isNil(this.id)
       ) {
-        // user has permission to add new project, and this is a new project
+        // user has permission to add new survey plans, and this is a new survey plans
         return false
       }
 
@@ -1260,14 +1256,14 @@ export default Vue.extend({
         return true
       }
 
-      if (this.hasPermission('canEditAllProjects')) {
-        // can edit all projects
+      if (this.hasPermission('canEditAllSurveyPlans')) {
+        // can edit all survey plans
         return false
       } else  if (
-        this.hasPermission('canEditCustodianProjects') &&
-        this.hasCustodianLink('projectCustodians')
+        this.hasPermission('canEditCustodianSurveyPlans') &&
+        this.hasCustodianLink('surveyPlanCustodians')
       ) {
-        // can only edit projects that are linked to user
+        // can only edit survey plans that are linked to user
         return false
       } else {
         return true
@@ -1294,7 +1290,7 @@ export default Vue.extend({
         return []
       }
       let ids = new Set();
-      for (const selectedInstType of this.projectInstrumentTypes) {
+      for (const selectedInstType of this.surveyPlanInstrumentTypes) {
         // find the instrument type from the instrument type store, because
         // here it has the list of associated data capture types
         const instType = this.instrumentTypes.find((it) => {
@@ -1313,15 +1309,15 @@ export default Vue.extend({
       let formattedString = date.formatDate(d, 'YYYY/MM/DD')
       return formattedString
     },
-    projectStatusOptions: function () {
-      const opts = this.projectStatuses.map(pit => {
+    surveyPlanStatusOptions: function () {
+      const opts = this.surveyPlanStatuses.map(pit => {
         return {label: pit, value: pit};
       });
       return opts;
     },
     dataCaptureTypeOptions: function () {
       let selectedIds = new Set();
-      for (const selectedDct of this.projectDataCaptureTypes) {
+      for (const selectedDct of this.surveyPlanDataCaptureTypes) {
         selectedIds.add(selectedDct.id);
       }
       // generate a display name to inform users why they can't select
@@ -1365,12 +1361,12 @@ export default Vue.extend({
         surveyApplicationNameOther: {  },
         selectedSurveyApplicationGroup: {  },
         surveyApplicationGroupNameOther: {  },
-        projectCustodians: {
+        surveyPlanCustodians: {
           required,
           minLength:minLength(1)
         },
-        projectInstrumentTypes: { },
-        projectDataCaptureTypes: { },
+        surveyPlanInstrumentTypes: { },
+        surveyPlanDataCaptureTypes: { },
         surveyPlan: {
           startDate: { },
           endDate: { },
@@ -1388,15 +1384,15 @@ export default Vue.extend({
         surveyApplicationNameOther: { validSurveyApplicationNameOther },
         selectedSurveyApplicationGroup: { required },
         surveyApplicationGroupNameOther: { validSurveyApplicationGroupNameOther },
-        projectCustodians: {
+        surveyPlanCustodians: {
           required,
           minLength:minLength(1)
         },
-        projectInstrumentTypes: {
+        surveyPlanInstrumentTypes: {
           required,
           minLength:minLength(1)
         },
-        projectDataCaptureTypes: {
+        surveyPlanDataCaptureTypes: {
           required,
           minLength:minLength(1),
           validDataCaptureType

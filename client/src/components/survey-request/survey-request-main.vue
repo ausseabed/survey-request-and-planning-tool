@@ -17,20 +17,20 @@
               default
               icon="notes"
               label="Request"
-              :to="`/hipp-request/${id}/summary`"
+              :to="`/survey-request/${id}/summary`"
               exact
             />
             <q-route-tab
               icon="attach_file"
               label="Attachments"
-              :to="`/hipp-request/${id}/attachments`"
+              :to="`/survey-request/${id}/attachments`"
               exact
               v-if="canViewAttachments"
             />
             <q-route-tab
               icon="layers"
               label="Plans"
-              :to="`/hipp-request/${id}/projects`"
+              :to="`/survey-request/${id}/survey-plans`"
               exact
             />
           </q-tabs>
@@ -40,20 +40,20 @@
               default
               class="mobile-tabs"
               icon="notes"
-              :to="`/hipp-request/${id}/summary`"
+              :to="`/survey-request/${id}/summary`"
               exact
             />
             <q-route-tab
               class="mobile-tabs"
               icon="attach_file"
-              :to="`/hipp-request/${id}/attachments`"
+              :to="`/survey-request/${id}/attachments`"
               exact
               v-if="canViewAttachments"
             />
             <q-route-tab
               class="mobile-tabs"
               icon="layers"
-              :to="`/hipp-request/${id}/projects`"
+              :to="`/survey-request/${id}/survey-plans`"
               exact
             />
           </q-tabs>

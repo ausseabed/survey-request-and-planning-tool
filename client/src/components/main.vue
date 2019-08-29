@@ -10,18 +10,18 @@
             class="bg-secondary text-white"
           >
             <q-tab
-              v-if="hasPermission(['canViewAllProjects', 'canViewCustodianProjects'])"
-              name="projects" label="Plans" icon="layers"/>
+              v-if="hasPermission(['canViewAllSurveyPlans', 'canViewCustodianSurveyPlans'])"
+              name="survey-plans" label="Plans" icon="layers"/>
             <q-tab
               v-if="hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])"
-              name="requests" label="Requests" icon="device_hub"/>
+              name="survey-requests" label="Requests" icon="device_hub"/>
           </q-tabs>
           <div class="fat-spacer bg-secondary"></div>
 
           <q-tab-panels v-model="tab" animated class="col">
             <q-tab-panel
-              v-if="hasPermission(['canViewAllProjects', 'canViewCustodianProjects'])"
-              name="projects" class="column col-auto no-padding">
+              v-if="hasPermission(['canViewAllSurveyPlans', 'canViewCustodianSurveyPlans'])"
+              name="survey-plans" class="column col-auto no-padding">
 
               <!-- <q-card-section class="column col" style="padding:0px"> -->
                 <q-scroll-area class="col">
@@ -42,14 +42,14 @@
                             size="34px"
                             font-size="20px"
                             rounded
-                            :icon="projectStatusIconDetails(matchingProjMeta.projectStatus).icon"
-                            :color="projectStatusIconDetails(matchingProjMeta.projectStatus).color"
+                            :icon="surveyPlanStatusIconDetails(matchingProjMeta.status).icon"
+                            :color="surveyPlanStatusIconDetails(matchingProjMeta.status).color"
                           />
                         </q-item-section>
 
                         <q-item-section>
                           <q-item-label>{{matchingProjMeta.surveyName}}</q-item-label>
-                          <q-item-label caption>{{matchingProjMeta.projectStatus}}</q-item-label>
+                          <q-item-label caption>{{matchingProjMeta.status}}</q-item-label>
                         </q-item-section>
 
                         <q-item-section side top>
@@ -68,16 +68,16 @@
                         <transition-expand>
                           <div v-if="activeProjMetaId == matchingProjMeta.id">
                             <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
-                              :to="`/survey/${matchingProjMeta.id}/summary`">
+                              :to="`/survey-plan/${matchingProjMeta.id}/summary`">
                             </q-btn>
                             <q-btn outline size="sm" color="primary" label="Specs" class="q-mt-xs q-ml-xs"
-                              :to="`/survey/${matchingProjMeta.id}/specifications`">
+                              :to="`/survey-plan/${matchingProjMeta.id}/specifications`">
                             </q-btn>
                             <q-btn outline size="sm" color="primary" label="Deliverables" class="q-mt-xs q-ml-xs"
-                              :to="`/survey/${matchingProjMeta.id}/deliverables`">
+                              :to="`/survey-plan/${matchingProjMeta.id}/deliverables`">
                             </q-btn>
                             <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
-                              :to="`/survey/${matchingProjMeta.id}/attachments`">
+                              :to="`/survey-plan/${matchingProjMeta.id}/attachments`">
                             </q-btn>
                           </div>
                         </transition-expand>
@@ -90,14 +90,14 @@
                 </q-scroll-area>
 
                 <div
-                  v-if="hasPermission('canAddProject')"
+                  v-if="hasPermission('canAddSurveyPlan')"
                   class="full-width column"
                   >
                   <q-separator style="height:1px;"/>
                   <div class="row justify-end q-py-sm q-mx-md">
                     <q-btn flat label="add plan"
                       icon="add"
-                      :to="'/survey/new'">
+                      :to="'/survey-plan/new'">
                       <q-tooltip>
                         Create new survey plan
                       </q-tooltip>
@@ -109,7 +109,7 @@
 
             <q-tab-panel
               v-if="hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])"
-              name="requests" class="column col-auto no-padding">
+              name="survey-requests" class="column col-auto no-padding">
 
               <q-scroll-area class="col">
                 <q-list no-border padding
@@ -135,13 +135,13 @@
                       <transition-expand>
                         <div v-if="activeProjMetaId == surveyRequest.id">
                           <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
-                            :to="`/hipp-request/${surveyRequest.id}/summary`">
+                            :to="`/survey-request/${surveyRequest.id}/summary`">
                           </q-btn>
                           <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
-                            :to="`/hipp-request/${surveyRequest.id}/attachments`">
+                            :to="`/survey-request/${surveyRequest.id}/attachments`">
                           </q-btn>
                           <q-btn outline size="sm" color="primary" label="Plans" class="q-mt-xs q-ml-xs"
-                            :to="`/hipp-request/${surveyRequest.id}/projects`">
+                            :to="`/survey-request/${surveyRequest.id}/survey-plans`">
                           </q-btn>
                         </div>
                       </transition-expand>
@@ -161,7 +161,7 @@
                 <div class="row justify-end q-py-sm q-mx-md">
                   <q-btn flat label="add request"
                     align="right" icon="add"
-                    :to="'/hipp-request/new'">
+                    :to="'/survey-request/new'">
                     <q-tooltip>
                       Create new HIPP request
                     </q-tooltip>
@@ -196,7 +196,7 @@ const _ = require('lodash');
 import TransitionExpand from './transition-expand.vue';
 import { errorHandler } from './mixins/error-handling';
 import { permission } from './mixins/permission';
-import { projectStatusIconDetails, recordStateDetails } from './utils'
+import { surveyPlanStatusIconDetails, recordStateDetails } from './utils'
 import OlMap from './olmap/olmap';
 
 import * as pmMutTypes
@@ -217,7 +217,7 @@ export default Vue.extend({
     this.map.onExtentsChange = (extents) => {
       this.debounceExtents(extents);
     };
-    this.fetchProjects(this.map.getExtents());
+    this.fetchSurveyPlans(this.map.getExtents());
     this.getSurveyRequests();
   },
 
@@ -235,7 +235,7 @@ export default Vue.extend({
         height: offset ? `calc(100vh - ${offset}px)` : '100vh'
       }
     },
-    fetchProjects (extents) {
+    fetchSurveyPlans (extents) {
       this.SET_PROJECT_METADATA_LIST_FILTER(undefined);
       this.$store.dispatch(
         'surveyPlan/getSurveyPlanList',
@@ -243,10 +243,10 @@ export default Vue.extend({
       .then(matchingProjMetas => {
         this.matchingProjMetas = matchingProjMetas;
 
-        const mapableProjects = matchingProjMetas.filter(proj => {
+        const mapableSurveyPlans = matchingProjMetas.filter(proj => {
           return !_.isNil(proj.areaOfInterest);
         })
-        const areaOfInterests = mapableProjects.map(mpm => {
+        const areaOfInterests = mapableSurveyPlans.map(mpm => {
           let f = mpm.areaOfInterest;
           f.id = mpm.id;
           return f;
@@ -256,7 +256,7 @@ export default Vue.extend({
     },
 
     debounceExtents: _.debounce(function(extents) {
-      this.fetchProjects(extents);
+      this.fetchSurveyPlans(extents);
     }, 500),
 
     mouseoverMatchingProjMeta(matchingProjMeta, updateMap) {
@@ -272,7 +272,7 @@ export default Vue.extend({
       this.activeProjMetaId = undefined;
       this.map.highlightFeatureId(undefined);
     },
-    projectStatusIconDetails: projectStatusIconDetails,
+    surveyPlanStatusIconDetails: surveyPlanStatusIconDetails,
     recordStateDetails: recordStateDetails,
   },
 
@@ -295,10 +295,10 @@ export default Vue.extend({
     'userRole': {
       immediate: true,
       handler(newRole, oldRole) {
-        if (this.hasPermission(['canViewAllProjects', 'canViewCustodianProjects'])) {
-          this.tab = 'projects';
+        if (this.hasPermission(['canViewAllSurveyPlans', 'canViewCustodianSurveyPlans'])) {
+          this.tab = 'survey-plans';
         } else if (this.hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])) {
-          this.tab = 'requests';
+          this.tab = 'survey-requests';
         }
       },
     },

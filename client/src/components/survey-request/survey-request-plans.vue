@@ -59,7 +59,7 @@
                     <q-item-section class="row col">
                       <div class="column justify-start q-pb-sm">
                         <q-item-label>{{pm.surveyName}}</q-item-label>
-                        <q-item-label caption>{{pm.projectStatus}}</q-item-label>
+                        <q-item-label caption>{{pm.surveyPlanStatus}}</q-item-label>
                         <q-item-label caption>{{pm.startDate | dateString}}</q-item-label>
                       </div>
                     </q-item-section>
@@ -73,7 +73,7 @@
                         :src="`api/project-metadata/${pm.id}/thumbnail`">
                       </q-img>
                       <div class="top-left q-pa-sm rounded-borders" style="background-color:rgba(255, 255, 255, 0.5);">
-                        <div class="text-light">Project AOI</div>
+                        <div class="text-light">Survey Plan AOI</div>
                       </div>
                     </q-item-section>
 
@@ -102,9 +102,9 @@
               >
             </q-btn>
             <q-btn
-              v-if="!linking && this.hasPermission('canAddProject')"
+              v-if="!linking && this.hasPermission('canAddSurveyPlan')"
               flat icon="add" label="Add plan"
-              @click="addProject()"
+              @click="addSurveyPlan()"
               >
             </q-btn>
           </q-card-section>
@@ -174,7 +174,7 @@ export default Vue.extend({
         return true
       }
       if (this.hasPermission('canEditAllSurveyRequests')) {
-        // can edit all projects
+        // can edit all survey plans
         return false
       }
       else if (
@@ -203,17 +203,17 @@ export default Vue.extend({
     ]),
     ...mapMutations('surveyPlan', {
       'surveyPlanUpdate': pmMutTypes.UPDATE,
-      'projectSetDirty': pmMutTypes.SET_DIRTY,
+      'surveyPlanSetDirty': pmMutTypes.SET_DIRTY,
     }),
 
-    addProject() {
+    addSurveyPlan() {
       this.RESET_PROJECT_METADATA();
       let clonedHippReq = _.cloneDeep(this.surveyRequest);
       this.surveyPlanUpdate(
         {path:'surveyPlan.surveyRequest', value:clonedHippReq}
       );
-      this.projectSetDirty(false);
-      this.$router.push({ path: `/survey/new`, query: {reset:false} })
+      this.surveyPlanSetDirty(false);
+      this.$router.push({ path: `/survey-plan/new`, query: {reset:false} })
     },
 
     linkPlan() {
@@ -249,7 +249,7 @@ export default Vue.extend({
           this.notifySuccess(msg)
         }
       } else {
-        const planUrl = `/survey/${plan.id}/summary/`
+        const planUrl = `/survey-plan/${plan.id}/summary/`
         this.$router.push({ path: planUrl})
       }
     },

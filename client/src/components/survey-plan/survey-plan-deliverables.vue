@@ -355,14 +355,14 @@ export default Vue.extend({
       'requestError',
     ]),
     readOnly: function() {
-      if (this.hasPermission('canEditAllProjects')) {
-        // can edit all projects
+      if (this.hasPermission('canEditAllSurveyPlans')) {
+        // can edit all survey plans
         return false
       } else if (
-        this.hasPermission('canEditCustodianProjects') &&
+        this.hasPermission('canEditCustodianSurveyPlans') &&
         this.hasCustodianLink('surveyPlan.custodians')
       ) {
-        // can only edit projects that are linked to user
+        // can only edit survey plans that are linked to user
         return false
       } else {
         return true

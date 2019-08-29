@@ -12,9 +12,9 @@ export default ({ Vue }) => {
     attributes: {
       name: "Name",
       surveyName: "survey name",
-      projectCustodians: "custodians",
-      projectInstrumentTypes: "instrument types",
-      projectDataCaptureTypes: "data capture types",
+      surveyPlanCustodians: "custodians",
+      surveyPlanInstrumentTypes: "instrument types",
+      surveyPlanDataCaptureTypes: "data capture types",
       email: "Email",
       text: "Text"
     }

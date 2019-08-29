@@ -2,8 +2,8 @@
 
 const _ = require('lodash');
 
-export function projectStatusIconDetails(projectStatus) {
-  const ps = projectStatus.toLowerCase()
+export function surveyPlanStatusIconDetails(surveyPlanStatus) {
+  const ps = surveyPlanStatus.toLowerCase()
   if (ps == "planning") {
     return {icon: "assignment", color:"amber-5"};
   } else if (ps == "scheduled") {

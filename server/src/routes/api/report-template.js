@@ -31,8 +31,8 @@ const router = express.Router()
 const TEMPLATE_TYPE_MAP = {
   'HIPP Request': {
     entityType: HippRequest,
-    allowedPermissionAll: 'canViewAllHippRequests',
-    allowedPermissionCustodian: 'canViewCustodianHippRequests',
+    allowedPermissionAll: 'canViewAllSurveyRequests',
+    allowedPermissionCustodian: 'canViewCustodianSurveyRequests',
     custodianAttributes: ['custodians'],
     reportGenerator: HippRequestReportGenerator,
     relations: [

@@ -141,8 +141,8 @@ router.get(
     permitCustodianBasedPermission({
       entityType:HippRequest,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canViewAllHippRequests',
-      allowedPermissionCustodian: 'canViewCustodianHippRequests'}),
+      allowedPermissionAll: 'canViewAllSurveyRequests',
+      allowedPermissionCustodian: 'canViewCustodianSurveyRequests'}),
   ],
   asyncMiddleware(async function(req, res) {
 

@@ -63,9 +63,9 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     {deleted: false}
   )
 
-  if (hasPermission(req.user.role, 'canViewAllHippRequests')) {
+  if (hasPermission(req.user.role, 'canViewAllSurveyRequests')) {
     // then no additional where clauses
-  } else if (hasPermission(req.user.role, 'canViewCustodianHippRequests')) {
+  } else if (hasPermission(req.user.role, 'canViewCustodianSurveyRequests')) {
     // need to filter list to include only hipp requests that include the
     // custodian this user is assigned.
     hippRequestQuery = hippRequestQuery
@@ -96,8 +96,8 @@ router.get(
     permitCustodianBasedPermission({
       entityType:HippRequest,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canViewAllHippRequests',
-      allowedPermissionCustodian: 'canViewCustodianHippRequests'})
+      allowedPermissionAll: 'canViewAllSurveyRequests',
+      allowedPermissionCustodian: 'canViewCustodianSurveyRequests'})
   ],
   asyncMiddleware(async function (req, res) {
 
@@ -158,8 +158,8 @@ router.get(
     permitCustodianBasedPermission({
       entityType:HippRequest,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canViewAllHippRequests',
-      allowedPermissionCustodian: 'canViewCustodianHippRequests'})
+      allowedPermissionAll: 'canViewAllSurveyRequests',
+      allowedPermissionCustodian: 'canViewCustodianSurveyRequests'})
   ],
   asyncMiddleware(async function (req, res) {
 
@@ -199,9 +199,9 @@ router.post(
     permitCustodianBasedPermission({
       entityType: HippRequest,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canEditAllHippRequests',
-      allowedPermissionCustodian: 'canEditCustodianHippRequests',
-      allowedPermissionNoEntityId: 'canAddHippRequest',
+      allowedPermissionAll: 'canEditAllSurveyRequests',
+      allowedPermissionCustodian: 'canEditCustodianSurveyRequests',
+      allowedPermissionNoEntityId: 'canAddSurveyRequest',
     })
   ],
   asyncMiddleware(async function (req, res) {
@@ -283,9 +283,9 @@ router.post(
     permitCustodianBasedPermission({
       entityType: HippRequest,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canEditAllHippRequests',
-      allowedPermissionCustodian: 'canEditCustodianHippRequests',
-      allowedPermissionNoEntityId: 'canAddHippRequest',
+      allowedPermissionAll: 'canEditAllSurveyRequests',
+      allowedPermissionCustodian: 'canEditCustodianSurveyRequests',
+      allowedPermissionNoEntityId: 'canAddSurveyRequest',
     })
   ],
   asyncMiddleware(async function (req, res) {
@@ -339,9 +339,9 @@ router.delete(
     permitCustodianBasedPermission({
       entityType: HippRequest,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canEditAllHippRequests',
-      allowedPermissionCustodian: 'canEditCustodianHippRequests',
-      allowedPermissionNoEntityId: 'canAddHippRequest',
+      allowedPermissionAll: 'canEditAllSurveyRequests',
+      allowedPermissionCustodian: 'canEditCustodianSurveyRequests',
+      allowedPermissionNoEntityId: 'canAddSurveyRequest',
     })
   ],
   asyncMiddleware(async function (req, res) {

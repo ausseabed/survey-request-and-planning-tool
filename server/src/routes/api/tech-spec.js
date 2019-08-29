@@ -86,8 +86,8 @@ router.post(
     permitCustodianBasedPermission({
       entityType:ProjectMetadata,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canEditAllProjects',
-      allowedPermissionCustodian: 'canEditCustodianProjects',
+      allowedPermissionAll: 'canEditAllSurveyPlans',
+      allowedPermissionCustodian: 'canEditCustodianSurveyPlans',
     })
   ],
   asyncMiddleware(async function (req, res) {

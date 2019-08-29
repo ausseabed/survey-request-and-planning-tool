@@ -151,7 +151,7 @@ router.get(
 
 
 router.get(
-  '/project-metadata/:id',
+  '/survey-plan/:id',
   [
     isAuthenticated,
     permitCustodianBasedPermission({
@@ -193,7 +193,7 @@ router.post(
     recordType = 'request';
     machine = await buildRecordMachine(
       entityType, entityId, req.user, 'custodians', recordType);
-  } else if (entityTypeStr == 'project-metadata') {
+  } else if (entityTypeStr == 'survey-plan') {
     entityType = ProjectMetadata;
     recordType = 'plan';
     machine = await buildRecordMachine(
@@ -201,7 +201,7 @@ router.post(
   } else {
     let err = boom.badRequest(
       `entityTypeStr (/:entityTypeStr/:id) must be 'hipp-request' ` +
-      `or 'project-metadata'`);
+      `or 'survey-plan'`);
     throw err;
   }
 

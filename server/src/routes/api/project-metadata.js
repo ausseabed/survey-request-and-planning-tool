@@ -47,9 +47,9 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     {deleted: false}
   )
   .orderBy("project_metadata.surveyName")
-  if (!_.isNil(req.query['hipp-request'])) {
+  if (!_.isNil(req.query['survey-request'])) {
     projectsQuery = projectsQuery.andWhere(`"project_metadata"."surveyRequestId" = :hrid`,
-      {hrid: req.query['hipp-request']})
+      {hrid: req.query['survey-request']})
   }
 
   if (hasPermission(req.user.role, 'canViewAllSurveyPlans')) {

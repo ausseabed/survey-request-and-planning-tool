@@ -270,7 +270,7 @@ export default Vue.extend({
 
     done() {
       this.linking = false
-      let hrfilter = {'hipp-request': this.surveyRequest.id}
+      let hrfilter = {'survey-request': this.surveyRequest.id}
       this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
       this.getSurveyPlanList()
     },
@@ -296,7 +296,7 @@ export default Vue.extend({
   watch: {
     'surveyRequest.id': {
       handler: function (newId, oldId) {
-        let hrfilter = _.isNil(newId) ? undefined : {'hipp-request': newId}
+        let hrfilter = _.isNil(newId) ? undefined : {'survey-request': newId}
         this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
       },
       immediate: true,

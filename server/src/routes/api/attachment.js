@@ -21,12 +21,12 @@ import { SurveyAttachment } from '../../lib/entity/survey-attachment';
  // SurveyAttachment table.
  // custodian attributes are used for the authorisation middleware check
 const attachmentmap = {
-  'survey': {
+  'survey-plan': {
     entity: ProjectMetadata,
     attachment: SurveyAttachment,
     custodianAttributes: ['custodians'],
   },
-  'hipp-request': {
+  'survey-request': {
     entity: HippRequest,
     attachment: HippRequestAttachment,
     custodianAttributes: ['custodians'],

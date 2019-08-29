@@ -4,7 +4,7 @@ import * as mutTypes from './survey-request-mutation-types'
 import { RequestStatus } from '../request-status'
 
 export const getSurveyRequest = async ({ commit, state }, payload) => {
-  const urlEndpoint = '/api/hipp-request/' + payload.id;
+  const urlEndpoint = '/api/survey-request/' + payload.id;
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   try {
@@ -24,7 +24,7 @@ export const getSurveyRequest = async ({ commit, state }, payload) => {
 }
 
 export const getSurveyRequests = async ({ commit, state }) => {
-  const urlEndpoint = '/api/hipp-request/';
+  const urlEndpoint = '/api/survey-request/';
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   try {
@@ -46,7 +46,7 @@ export const getSurveyRequests = async ({ commit, state }) => {
 
 
 export const saveSurveyRequest = async ({ commit, state }) => {
-  const urlEndpoint = '/api/hipp-request/';
+  const urlEndpoint = '/api/survey-request/';
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
 
@@ -72,7 +72,7 @@ export const saveSurveyRequest = async ({ commit, state }) => {
 
 
 export const updatePlanLinks = async ({ commit, state }, payload) => {
-  const urlEndpoint = `/api/hipp-request/${payload.id}/linked-plans`;
+  const urlEndpoint = `/api/survey-request/${payload.id}/linked-plans`;
   const linkedPlans = payload.linkedPlans
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
@@ -99,7 +99,7 @@ export const updatePlanLinks = async ({ commit, state }, payload) => {
 
 
 export const deleteSurveyRequest = ({ commit, state }, payload) => {
-  var url_endpoint = '/api/hipp-request/' + payload.id;
+  var url_endpoint = '/api/survey-request/' + payload.id;
   return new Promise((resolve, reject) => {
     Vue.axios.delete(url_endpoint)
     .then((response) => {
@@ -114,7 +114,7 @@ export const deleteSurveyRequest = ({ commit, state }, payload) => {
 
 
 export const getRiskMatrix = ({ commit, state }) => {
-  var url_endpoint = '/api/hipp-request/risk-matrix';
+  var url_endpoint = '/api/survey-request/risk-matrix';
 
   return Vue.axios.get(url_endpoint)
   .then((response) => {
@@ -123,7 +123,7 @@ export const getRiskMatrix = ({ commit, state }) => {
 }
 
 export const getGeojsonAttributeMap = ({ commit, state }) => {
-  var url_endpoint = '/api/hipp-request/geojson-attribute-map';
+  var url_endpoint = '/api/survey-request/geojson-attribute-map';
 
   return Vue.axios.get(url_endpoint)
   .then((response) => {
@@ -132,7 +132,7 @@ export const getGeojsonAttributeMap = ({ commit, state }) => {
 }
 
 export const getChartProductQualityImpactRequirements = ({ commit, state }) => {
-  var url_endpoint = '/api/hipp-request/chart-product-quality-impact-requirements';
+  var url_endpoint = '/api/survey-request/chart-product-quality-impact-requirements';
 
   return Vue.axios.get(url_endpoint)
   .then((response) => {
@@ -144,7 +144,7 @@ export const getChartProductQualityImpactRequirements = ({ commit, state }) => {
 }
 
 export const getSurveyQualityRequirements = ({ commit, state }) => {
-  var url_endpoint = '/api/hipp-request/survey-quality-requirements';
+  var url_endpoint = '/api/survey-request/survey-quality-requirements';
 
   return Vue.axios.get(url_endpoint)
   .then((response) => {

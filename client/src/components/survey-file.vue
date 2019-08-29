@@ -149,9 +149,9 @@ export default Vue.extend({
     ]),
     custodianLink: function() {
       let custodianLink = undefined
-      if (this.attachesTo === 'survey') {
+      if (this.attachesTo === 'survey-plan') {
         custodianLink = 'surveyPlan.custodians'
-      } else if (this.attachesTo === 'hipp-request') {
+      } else if (this.attachesTo === 'survey-request') {
         custodianLink = 'surveyRequest.custodians'
       }
       return custodianLink

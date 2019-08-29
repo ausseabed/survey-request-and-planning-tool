@@ -34,7 +34,7 @@ router
 .use('/tech-spec', techSpecRoutes)
 .use('/reference-system', referenceSystemRoutes)
 .use('/deliverable', deliverableRoutes)
-.use('/hipp-request', hippRequestRoutes)
+.use('/survey-request', hippRequestRoutes)
 .use('/report-template', reportTemplateRoutes)
 .use('/role', roleRoutes)
 .use('/user', userRoutes)

@@ -142,17 +142,17 @@
 import Vue from 'vue'
 import { mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
-import { errorHandler } from './mixins/error-handling'
-import { permission } from './mixins/permission'
+import { errorHandler } from './../mixins/error-handling'
+import { permission } from './../mixins/permission'
 import { date } from 'quasar'
 import { scroll } from 'quasar'
 const { getScrollTarget, setScrollPosition } = scroll
 
 import * as types
-  from '../store/modules/deliverable/deliverable-mutation-types'
+  from '../../store/modules/deliverable/deliverable-mutation-types'
 import { RequestStatus }
-  from '../store/modules/request-status'
-import DeliverableList from './deliverable/deliverable-list'
+  from '../../store/modules/request-status'
+import DeliverableList from './../deliverable/deliverable-list'
 
 const path = require('path');
 

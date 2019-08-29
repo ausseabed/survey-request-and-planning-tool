@@ -649,17 +649,17 @@ import Vue from 'vue'
 import { date } from 'quasar'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
-import { DirtyRouteGuard } from './mixins/dirty-route-guard'
-import { permission } from './mixins/permission'
-import { errorHandler } from './mixins/error-handling'
+import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
+import { permission } from './../mixins/permission'
+import { errorHandler } from './../mixins/error-handling'
 import * as custodianMutTypes
-  from '../store/modules/custodian/custodian-mutation-types'
+  from '../../store/modules/custodian/custodian-mutation-types'
 import * as organisationMutTypes
-  from '../store/modules/organisation/organisation-mutation-types'
+  from '../../store/modules/organisation/organisation-mutation-types'
 import * as pmMutTypes
-  from '../store/modules/project-metadata/project-metadata-mutation-types'
+  from '../../store/modules/project-metadata/project-metadata-mutation-types'
 
-import { projectStatusIconDetails, recordStateDetails } from './utils'
+import { projectStatusIconDetails, recordStateDetails } from './../utils'
 
 const timespan = require('readable-timespan');
 timespan.set({
@@ -672,7 +672,7 @@ const path = require('path');
 
 import { required, email, minLength } from 'vuelidate/lib/validators';
 
-import OlMap from './olmap/olmap';
+import OlMap from './../olmap/olmap';
 
 // custom validators
 const validDataCaptureType = (value, vm) => {

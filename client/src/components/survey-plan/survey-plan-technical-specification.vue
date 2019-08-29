@@ -780,10 +780,10 @@
 import Vue from 'vue'
 import { mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
-import { DirtyRouteGuard } from './mixins/dirty-route-guard'
-import { permission } from './mixins/permission'
-import { errorHandler } from './mixins/error-handling'
-import * as types from '../store/modules/tech-spec/tech-spec-mutation-types'
+import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
+import { permission } from './../mixins/permission'
+import { errorHandler } from './../mixins/error-handling'
+import * as types from '../../store/modules/tech-spec/tech-spec-mutation-types'
 const uuidv4 = require('uuid/v4');
 
 const timespan = require('readable-timespan');
@@ -797,9 +797,9 @@ const path = require('path');
 
 import { required, email, minLength } from 'vuelidate/lib/validators';
 import { RequestStatus }
-  from '../store/modules/request-status'
-import surveyLinesMap from './olmap/survey-lines-map';
-import tidalGaugeMap from './olmap/tidal-gauge-map';
+  from '../../store/modules/request-status'
+import surveyLinesMap from './../olmap/survey-lines-map';
+import tidalGaugeMap from './../olmap/tidal-gauge-map';
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],

@@ -88,8 +88,8 @@ import Vue from 'vue'
 const _ = require('lodash');
 import { mapActions, mapGetters } from 'vuex'
 
-import { errorHandler } from './mixins/error-handling'
-import { permission } from './mixins/permission'
+import { errorHandler } from './../mixins/error-handling'
+import { permission } from './../mixins/permission'
 
 export default Vue.extend({
   mixins: [errorHandler, permission],

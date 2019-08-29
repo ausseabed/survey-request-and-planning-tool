@@ -3,17 +3,17 @@ import Custodians from 'components/administration/custodians/custodians.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
 import Organisations from 'components/administration/organisations/organisations.vue'
-import ProjectMain from 'components/project-main.vue'
-import ProjectMetadata from 'components/project-metadata.vue'
 import RecordStateLog from 'components/administration/record-state-log.vue'
 import ReportTemplates from 'components/administration/report-template/report-templates.vue'
 import Roles from 'components/administration/roles.vue'
-import SurveyDeliverables from 'components/survey-deliverables.vue'
 import SurveyFile from 'components/survey-file.vue'
+import SurveyPlanDeliverables from 'components/survey-plan/survey-plan-deliverables.vue'
+import SurveyPlanMain from 'components/survey-plan/survey-plan-main.vue'
+import SurveyPlanSummary from 'components/survey-plan/survey-plan-summary.vue'
+import SurveyPlanTechnicalSpecification from 'components/survey-plan/survey-plan-technical-specification.vue'
 import SurveyRequestMain from 'components/survey-request/survey-request-main.vue'
 import SurveyRequestPlans from 'components/survey-request/survey-request-plans.vue'
 import SurveyRequestSummary from 'components/survey-request/survey-request-summary.vue'
-import SurveyTechnicalSpecification from 'components/survey-technical-specification.vue'
 import Users from 'components/administration/users/users.vue'
 
 const routes = [
@@ -73,23 +73,23 @@ const routes = [
 
     {
       path: '/survey/new',
-      component: ProjectMetadata,
+      component: SurveyPlanSummary,
     },
     {
       path: '/survey/:id',
-      component: ProjectMain,
+      component: SurveyPlanMain,
       children: [
         {
           path: 'summary',
-          component: ProjectMetadata,
+          component: SurveyPlanSummary,
         },
         {
           path: 'specifications',
-          component: SurveyTechnicalSpecification,
+          component: SurveyPlanTechnicalSpecification,
         },
         {
           path: 'deliverables',
-          component: SurveyDeliverables,
+          component: SurveyPlanDeliverables,
         },
         {
           path: 'attachments',

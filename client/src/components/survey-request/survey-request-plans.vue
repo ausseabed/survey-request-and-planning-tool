@@ -30,7 +30,7 @@
               </div>
             </div>
             <div
-              v-else-if="!projectMetadataList || projectMetadataList.length == 0"
+              v-else-if="!surveyPlanList || surveyPlanList.length == 0"
               class="row justify-center fit"
               >
               <div class="column justify-center text-light">
@@ -43,7 +43,7 @@
               <q-list no-border padding>
 
                 <q-item clickable
-                  v-for="pm in projectMetadataList"
+                  v-for="pm in surveyPlanList"
                   :key="pm.id"
                   class="column"
                   @click="clickPlan(pm)"
@@ -147,17 +147,17 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyPlan',[
-      'projectMetadataList',
-      'projectMetadataListFilter',
+      'surveyPlanList',
+      'surveyPlanListFilter',
     ]),
     ...mapGetters('surveyPlan',{
-      projectMetadataRequestStatus:'requestStatus'
+      surveyPlanRequestStatus:'requestStatus'
     }),
     ...mapGetters('surveyRequest',[
       'surveyRequest',
     ]),
     loading() {
-      return this.projectMetadataRequestStatus == RequestStatus.REQUESTED
+      return this.surveyPlanRequestStatus == RequestStatus.REQUESTED
     },
     readonly: function() {
       if (
@@ -202,15 +202,15 @@ export default Vue.extend({
       pmMutTypes.SET_PROJECT_METADATA_LIST,
     ]),
     ...mapMutations('surveyPlan', {
-      'projectMetadataUpdate': pmMutTypes.UPDATE,
+      'surveyPlanUpdate': pmMutTypes.UPDATE,
       'projectSetDirty': pmMutTypes.SET_DIRTY,
     }),
 
     addProject() {
       this.RESET_PROJECT_METADATA();
       let clonedHippReq = _.cloneDeep(this.surveyRequest);
-      this.projectMetadataUpdate(
-        {path:'projectMetadata.surveyRequest', value:clonedHippReq}
+      this.surveyPlanUpdate(
+        {path:'surveyPlan.surveyRequest', value:clonedHippReq}
       );
       this.projectSetDirty(false);
       this.$router.push({ path: `/survey/new`, query: {reset:false} })
@@ -305,7 +305,7 @@ export default Vue.extend({
       },
       immediate: true,
     },
-    'projectMetadataListFilter': {
+    'surveyPlanListFilter': {
       handler: function (newFilter, oldFilter) {
         if (!_.isNil(this.surveyRequest.id)) {
           this.getSurveyPlanList()

@@ -58,8 +58,8 @@ export default {
 
   computed: {
     ...mapGetters('surveyPlan',[
-      'projectMetadataList',
-      'projectMetadataListFilter',
+      'surveyPlanList',
+      'surveyPlanListFilter',
     ]),
     ...mapGetters('surveyRequest',[
       'surveyRequest',
@@ -75,7 +75,7 @@ export default {
       pmMutTypes.RESET_PROJECT_METADATA,
     ]),
     ...mapMutations('surveyPlan', {
-      'projectMetadataUpdate': pmMutTypes.UPDATE,
+      'surveyPlanUpdate': pmMutTypes.UPDATE,
       'projectSetDirty': pmMutTypes.SET_DIRTY,
     }),
 

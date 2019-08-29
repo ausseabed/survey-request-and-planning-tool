@@ -23,8 +23,8 @@
           </q-btn>
 
           <q-btn
-            @click="generateReport({id: projectMetadata.id, templateType: 'Plan'})"
-            :disable="!projectMetadata.id"
+            @click="generateReport({id: surveyPlan.id, templateType: 'Plan'})"
+            :disable="!surveyPlan.id"
             :loading="reportDownloading"
             round
             color="primary"
@@ -38,8 +38,8 @@
           </q-btn>
           <q-btn
             type="a"
-            :href="`/api/report-template/generate/Plan/${projectMetadata.id}?format=csv`"
-            :disable="!projectMetadata.id"
+            :href="`/api/report-template/generate/Plan/${surveyPlan.id}?format=csv`"
+            :disable="!surveyPlan.id"
             round
             color="primary"
             icon="dehaze">
@@ -62,16 +62,16 @@
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
         <record-state
-          v-if="projectMetadata.id"
+          v-if="surveyPlan.id"
           class="full-width"
           :entity-type="`project-metadata`"
-          :entity-id="projectMetadata.id"
+          :entity-id="surveyPlan.id"
           :validation-callback="recordStateValidationCallback"
           :disable="dirty"
           @updated-state="stateUpdated($event)"
           >
         </record-state>
-        <div v-if="!projectMetadata.id" class="text-h5"> New Plan </div>
+        <div v-if="!surveyPlan.id" class="text-h5"> New Plan </div>
         <q-card class="full-width">
           <q-card-section>
             <div class="text-h6"> Basic </div>
@@ -82,7 +82,7 @@
               label="Survey name"
               hint="Name of data collection survey"
               :value="surveyName"
-              @input="update('projectMetadata.surveyName', $event)"
+              @input="update('surveyPlan.surveyName', $event)"
               @blur="$v.surveyName.$touch"
               type="text"
               :readonly="readonly"
@@ -93,7 +93,7 @@
               label="Survey ID"
               hint="Optional"
               :value="surveyId"
-              @input="update('projectMetadata.surveyId', $event)"
+              @input="update('surveyPlan.surveyId', $event)"
               type="text"
               :readonly="readonly"
               >
@@ -105,7 +105,7 @@
                   type="radio" inline
                   :value="projectStatus"
                   color="secondary"
-                  @input="update('projectMetadata.projectStatus', $event)"
+                  @input="update('surveyPlan.projectStatus', $event)"
                   :options="projectStatusOptions"
                   :disable="readonly"
                 />
@@ -128,19 +128,19 @@
             </form-field-validated-select>
 
             <form-field-validated-select
-              name="projectMetadata.organisations"
+              name="surveyPlan.organisations"
               label="Organisations"
               multiple
               use-chips
               use-input
               input-debounce="200"
               @filter="filterOrganisationFunction"
-              :value="projectMetadata.organisations"
+              :value="surveyPlan.organisations"
               @input="setProjectOrganisations($event)"
               :options="organisationsList"
               option-label="name"
               option-value="id"
-              @blur="$v.projectMetadata.organisations.$touch"
+              @blur="$v.surveyPlan.organisations.$touch"
               :readonly="readonly"
               >
             </form-field-validated-select>
@@ -151,7 +151,7 @@
               :error="$v.contactPerson.$error"
               error-message="Contact person is required"
               :value="contactPerson"
-              @input="update('projectMetadata.contactPerson', $event)"
+              @input="update('surveyPlan.contactPerson', $event)"
               @blur="$v.contactPerson.$touch"
               type="text"
               :readonly="readonly"
@@ -164,7 +164,7 @@
               icon="fas fa-envelope"
               label="Contact email"
               :value="email"
-              @input="update('projectMetadata.email', $event)"
+              @input="update('surveyPlan.email', $event)"
               @blur="$v.email.$touch"
               type="email"
               :readonly="readonly"
@@ -203,11 +203,11 @@
                       class="no-margin full-width"
                       icon="cloud_download"
                       type="a"
-                      :href="`/api/project-metadata/${projectMetadata.id}/geometry`"
-                      :disable="!projectMetadata.id || addingFile || !projectMetadata.areaOfInterest || dirty"
+                      :href="`/api/project-metadata/${surveyPlan.id}/geometry`"
+                      :disable="!surveyPlan.id || addingFile || !surveyPlan.areaOfInterest || dirty"
                     >
                       <q-tooltip>
-                        {{!projectMetadata.id || addingFile || !projectMetadata.areaOfInterest || dirty ? "Must save plan before download" : "Download Area of Interest"}}
+                        {{!surveyPlan.id || addingFile || !surveyPlan.areaOfInterest || dirty ? "Must save plan before download" : "Download Area of Interest"}}
                       </q-tooltip>
                     </q-btn>
                   </div>
@@ -232,8 +232,8 @@
                         hidden
                       />
                       <q-btn outline class="no-margin full-width" icon="clear"
-                        :disable="!projectMetadata.areaOfInterest"
-                        @click="update('projectMetadata.areaOfInterest', undefined)">
+                        :disable="!surveyPlan.areaOfInterest"
+                        @click="update('surveyPlan.areaOfInterest', undefined)">
                         <q-tooltip>
                           Clear Area of Interest
                         </q-tooltip>
@@ -425,7 +425,7 @@
               label="Statement of Expected Survey Quality"
               hint="Optional"
               :value="quality"
-              @input="update('projectMetadata.quality', $event)"
+              @input="update('surveyPlan.quality', $event)"
               type="textarea"
               autogrow
               :readonly="readonly"
@@ -446,7 +446,7 @@
               label="Contract number"
               hint="Optional"
               :value="contractNumber"
-              @input="update('projectMetadata.contractNumber', $event)"
+              @input="update('surveyPlan.contractNumber', $event)"
               type="text"
               :readonly="readonly"
               >
@@ -456,7 +456,7 @@
               label="Tenderer"
               hint="Optional"
               :value="tenderer"
-              @input="update('projectMetadata.tenderer', $event)"
+              @input="update('surveyPlan.tenderer', $event)"
               type="text"
               :readonly="readonly"
               >
@@ -466,7 +466,7 @@
               label="Surveyors"
               hint="Optional"
               :value="surveyors"
-              @input="update('projectMetadata.surveyors', $event)"
+              @input="update('surveyPlan.surveyors', $event)"
               type="text"
               :readonly="readonly"
               >
@@ -476,7 +476,7 @@
               label="Vessel"
               hint="Optional"
               :value="vessel"
-              @input="update('projectMetadata.vessel', $event)"
+              @input="update('surveyPlan.vessel', $event)"
               type="text"
               :readonly="readonly"
               >
@@ -545,24 +545,24 @@
               <div class="row q-col-gutter-md">
                 <form-field-validated-date
                   class="col-xs-12 col-sm-6"
-                  name="projectMetadata.startDate"
+                  name="surveyPlan.startDate"
                   attribute="Start date"
                   label="Start date (YYYY/MM/DD)"
-                  :date="projectMetadata.startDate"
-                  @updated-date="update('projectMetadata.startDate', $event)"
-                  @blur="$v.projectMetadata.startDate.$touch"
+                  :date="surveyPlan.startDate"
+                  @updated-date="update('surveyPlan.startDate', $event)"
+                  @blur="$v.surveyPlan.startDate.$touch"
                   :readonly="readonly"
                   >
                 </form-field-validated-date>
 
                 <form-field-validated-date
                   class="col-xs-12 col-sm-6"
-                  name="projectMetadata.endDate"
+                  name="surveyPlan.endDate"
                   attribute="End date"
                   label="End date (YYYY/MM/DD)"
-                  :date="projectMetadata.endDate"
-                  @updated-date="update('projectMetadata.endDate', $event)"
-                  @blur="$v.projectMetadata.endDate.$touch"
+                  :date="surveyPlan.endDate"
+                  @updated-date="update('surveyPlan.endDate', $event)"
+                  @blur="$v.surveyPlan.endDate.$touch"
                   :readonly="readonly"
                   hint="Optional"
                   >
@@ -583,7 +583,7 @@
               hint="Optional"
               autogrow
               :value="comment"
-              @input="update('projectMetadata.comment', $event)"
+              @input="update('surveyPlan.comment', $event)"
               type="textarea"
               :readonly="readonly"
               >
@@ -605,21 +605,21 @@
               :readonly="readonly"
               >
               <q-checkbox
-                :value="projectMetadata.hasMoratorium"
-                @input="update('projectMetadata.hasMoratorium', $event)"
+                :value="surveyPlan.hasMoratorium"
+                @input="update('surveyPlan.hasMoratorium', $event)"
                 />
             </q-field>
 
             <form-field-validated-input
               class="col-12 col-md-6"
-              v-if="projectMetadata.hasMoratorium"
+              v-if="surveyPlan.hasMoratorium"
               filled
-              name="projectMetadata.moratoriumDate"
+              name="surveyPlan.moratoriumDate"
               attribute="Date moratorium ends"
               label="Date moratorium ends (YYYY/MM/DD)"
               :value="formattedMoratoriumDate"
               @input="setFormattedMoratoriumDate($event)"
-              @blur="$v.projectMetadata.moratoriumDate.$touch"
+              @blur="$v.surveyPlan.moratoriumDate.$touch"
               :readonly="readonly"
               >
 
@@ -628,7 +628,7 @@
                     <q-date
                       :value="formattedMoratoriumDate"
                       @input="setFormattedMoratoriumDate($event)"
-                      @blur="$v.projectMetadata.moratoriumDate.$touch"
+                      @blur="$v.surveyPlan.moratoriumDate.$touch"
                       />
                   </q-popup-proxy>
                 </q-icon>
@@ -885,15 +885,15 @@ export default Vue.extend({
       if (this.$route.params.id) {
         this.$store.dispatch(
           'surveyPlan/getSurveyPlan', { id: this.$route.params.id })
-        .then(projectMetadata => {
-          if (!_.isNil(projectMetadata.surveyApplication)) {
+        .then(surveyPlan => {
+          if (!_.isNil(surveyPlan.surveyApplication)) {
             this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
-              projectMetadata.surveyApplication.group);
+              surveyPlan.surveyApplication.group);
 
-            if (projectMetadata.surveyApplication.userSubmitted) {
-              let saName = projectMetadata.surveyApplication.name;
-              let saId = projectMetadata.surveyApplication.id;
-              let saGroup = projectMetadata.surveyApplication.group;
+            if (surveyPlan.surveyApplication.userSubmitted) {
+              let saName = surveyPlan.surveyApplication.name;
+              let saId = surveyPlan.surveyApplication.id;
+              let saGroup = surveyPlan.surveyApplication.group;
 
               this.setSurveyApplicationNameOther(saName);
               this.setSurveyApplicationIdOther(saId);
@@ -911,12 +911,12 @@ export default Vue.extend({
 
             } else {
               this.setSelectedSurveyApplication(
-                projectMetadata.surveyApplication);
+                surveyPlan.surveyApplication);
             }
           }
 
-          if (!_.isNil(projectMetadata.areaOfInterest)) {
-            this.map.addGeojsonFeature(projectMetadata.areaOfInterest);
+          if (!_.isNil(surveyPlan.areaOfInterest)) {
+            this.map.addGeojsonFeature(surveyPlan.areaOfInterest);
           }
         });
       } else {
@@ -957,15 +957,15 @@ export default Vue.extend({
       this.tmpMoratoriumDateEntry = requestDate;
       // check if no text provided, or if the string contains two / chars
       if (_.isNil(requestDate) || (requestDate.match(/\//g) || []).length != 2) {
-        this.update('projectMetadata.moratoriumDate', undefined)
+        this.update('surveyPlan.moratoriumDate', undefined)
         return
       }
       let d = Date.parse(requestDate)
       if (_.isNaN(d)) {
-        this.update('projectMetadata.moratoriumDate', undefined)
+        this.update('surveyPlan.moratoriumDate', undefined)
         return
       }
-      this.update('projectMetadata.moratoriumDate', d)
+      this.update('surveyPlan.moratoriumDate', d)
     },
 
     setSelectedSurveyApplicationGroup(group) {
@@ -1030,7 +1030,7 @@ export default Vue.extend({
         return
       }
 
-      // before sending to the server, update the projectMetadata survey
+      // before sending to the server, update the surveyPlan survey
       // application to account for it possibly being a user submitted
       // survey purpose.
       if (!_.isNil(this.selectedSurveyApplication)) {
@@ -1207,7 +1207,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
-      projectMetadata: 'surveyPlan/projectMetadata',
+      surveyPlan: 'surveyPlan/surveyPlan',
       id: 'surveyPlan/id',
       surveyName: 'surveyPlan/surveyName',
       projectStatus: 'surveyPlan/projectStatus',
@@ -1344,9 +1344,9 @@ export default Vue.extend({
       return custodians;
     },
     formattedMoratoriumDate: function() {
-      if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.projectMetadata.moratoriumDate)) {
+      if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.surveyPlan.moratoriumDate)) {
         const d = new Date();
-        d.setTime(this.projectMetadata.moratoriumDate);
+        d.setTime(this.surveyPlan.moratoriumDate);
         let formattedString = date.formatDate(d, 'YYYY/MM/DD')
         this.tmpMoratoriumDateEntry = formattedString
       }
@@ -1371,7 +1371,7 @@ export default Vue.extend({
         },
         projectInstrumentTypes: { },
         projectDataCaptureTypes: { },
-        projectMetadata: {
+        surveyPlan: {
           startDate: { },
           endDate: { },
           moratoriumDate: { },
@@ -1401,7 +1401,7 @@ export default Vue.extend({
           minLength:minLength(1),
           validDataCaptureType
         },
-        projectMetadata: {
+        surveyPlan: {
           startDate: { required },
           endDate: { },
           moratoriumDate: {validMoratorium},
@@ -1449,8 +1449,8 @@ export default Vue.extend({
       }
 
     },
-    'projectMetadata.hasMoratorium': function (newM, oldM) {
-      this.$v.projectMetadata.moratoriumDate.$touch()
+    'surveyPlan.hasMoratorium': function (newM, oldM) {
+      this.$v.surveyPlan.moratoriumDate.$touch()
     },
   },
 

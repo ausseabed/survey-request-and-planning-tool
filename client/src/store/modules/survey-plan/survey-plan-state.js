@@ -7,7 +7,7 @@ import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
-    projectMetadata: {
+    surveyPlan: {
       id: undefined,
       surveyName: null,
       custodians: [],
@@ -37,8 +37,8 @@ function initialState() {
     surveyApplicationGroupNameOther:undefined,
     surveyApplicationNameOther:undefined,
     surveyApplicationIdOther:undefined,
-    projectMetadataListFilter:{},
-    projectMetadataList:[],
+    surveyPlanListFilter:{},
+    surveyPlanList:[],
     projectStatuses:[],
     dirty:false,
 
@@ -60,7 +60,7 @@ export default {
       })
     },
     [types.RESET_PROJECT_METADATA] (state) {
-      state.projectMetadata = initialState().projectMetadata;
+      state.surveyPlan = initialState().surveyPlan;
     },
     ...mutations.mutations
   }

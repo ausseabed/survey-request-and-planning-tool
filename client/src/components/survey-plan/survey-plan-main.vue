@@ -5,7 +5,7 @@
         <q-toolbar class="q-py-none bg-secondary text-white">
           <q-toolbar-title class="column">
             <div>
-              {{projectMetadata.surveyName}}
+              {{surveyPlan.surveyName}}
             </div>
             <div class="tabs-toolbar-sub-title">
               Survey Plan
@@ -129,14 +129,14 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyPlan',[
-      'projectMetadata',
+      'surveyPlan',
     ]),
     canViewAttachments: function() {
       if (this.hasPermission('canViewAllAttachments')) {
         return true
       } else if (
         this.hasPermission('canViewCustodianAttachments') &&
-        this.hasCustodianLink('projectMetadata.custodians')
+        this.hasCustodianLink('surveyPlan.custodians')
       ) {
         return true
       } else {

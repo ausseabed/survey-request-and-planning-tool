@@ -14,7 +14,7 @@ export const checkAoi = ({ commit, state }, payload) => {
   }
   return new Promise((resolve, reject) => {
     Vue.axios
-    .post('/api/check-aoi', state.projectMetadata.areaOfInterest, cfg)
+    .post('/api/check-aoi', state.surveyPlan.areaOfInterest, cfg)
     .then((response) => {
       resolve(response.data);
     })
@@ -29,9 +29,9 @@ export const save = ({ commit, state }) => {
   console.log(state);
 
   return new Promise((resolve, reject) => {
-    Vue.axios.post('/api/project-metadata', state.projectMetadata)
+    Vue.axios.post('/api/project-metadata', state.surveyPlan)
     .then((response) => {
-      commit(mutTypes.UPDATE, { path: 'projectMetadata', value: response.data })
+      commit(mutTypes.UPDATE, { path: 'surveyPlan', value: response.data })
       resolve(response.data);
     })
     .catch((error) => {
@@ -62,7 +62,7 @@ export const getSurveyPlan = ({ commit, state }, payload) => {
     Vue.axios.get(url_endpoint)
     .then((response) => {
       commit(mutTypes.RESET_PROJECT_METADATA)
-      commit(mutTypes.UPDATE, { path: 'projectMetadata', value: response.data })
+      commit(mutTypes.UPDATE, { path: 'surveyPlan', value: response.data })
       commit(mutTypes.SET_DIRTY, false);
       resolve(response.data);
     })
@@ -78,8 +78,8 @@ export const getSurveyPlanList = ({ commit, state }, payload) => {
 
   var url_endpoint = '/api/project-metadata/';
   var getConfig = _.isNil(payload) ? {} : payload;
-  if (!_.isNil(state.projectMetadataListFilter)) {
-    let params = {params: state.projectMetadataListFilter};
+  if (!_.isNil(state.surveyPlanListFilter)) {
+    let params = {params: state.surveyPlanListFilter};
     _.merge(getConfig, params);
   }
 

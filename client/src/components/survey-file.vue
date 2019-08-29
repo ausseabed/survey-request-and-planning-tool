@@ -138,7 +138,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyPlan',[
-      'projectMetadata',
+      'surveyPlan',
     ]),
     ...mapGetters('surveyRequest',[
       'surveyRequest',
@@ -150,7 +150,7 @@ export default Vue.extend({
     custodianLink: function() {
       let custodianLink = undefined
       if (this.attachesTo === 'survey') {
-        custodianLink = 'projectMetadata.custodians'
+        custodianLink = 'surveyPlan.custodians'
       } else if (this.attachesTo === 'hipp-request') {
         custodianLink = 'surveyRequest.custodians'
       }

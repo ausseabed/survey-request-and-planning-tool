@@ -200,7 +200,7 @@ export default Vue.extend({
     },
 
     applyDefaults() {
-      const defaults = this.projectMetadata.surveyApplication.defaults;
+      const defaults = this.surveyPlan.surveyApplication.defaults;
       if (_.isNil(defaults)) {
         this.notifyError("No defaults available for survey application.");
       } else if (_.isNil(defaults.deliverables)) {
@@ -220,7 +220,7 @@ export default Vue.extend({
 
           const sd = {
             definitionId: defn.id,
-            projectMetadataId: this.projectMetadata.id,
+            surveyPlanId: this.surveyPlan.id,
           }
           if (!_.isNil(dd.data)) {
             sd['data'] = dd.data;
@@ -233,7 +233,7 @@ export default Vue.extend({
           this.notifyInfo("No default deliverables");
         } else {
           const payload = {
-            id: this.projectMetadata.id,
+            id: this.surveyPlan.id,
             deliverableList: surveyDeliverables,
           }
           this.$store.dispatch('deliverable/addDeliverablesToSurvey', payload);
@@ -249,7 +249,7 @@ export default Vue.extend({
 
       this.$store.dispatch(
         'deliverable/saveDeliverableList',
-        { id: this.projectMetadata.id }
+        { id: this.surveyPlan.id }
       ).then(pmd => {
         if (this.requestStatus == RequestStatus.SUCCESS) {
           this.notifySuccess('Saved deliverables');
@@ -266,13 +266,13 @@ export default Vue.extend({
       const surveyDeliverables = this.tempDeliverableDefinitions.map((dd) => {
         const sd = {
           definitionId: dd.id,
-          projectMetadataId: this.projectMetadata.id,
+          surveyPlanId: this.surveyPlan.id,
         };
         return sd;
       });
 
       const payload = {
-        id: this.projectMetadata.id,
+        id: this.surveyPlan.id,
         deliverableList: surveyDeliverables,
       }
       this.$store.dispatch('deliverable/addDeliverablesToSurvey', payload);
@@ -293,7 +293,7 @@ export default Vue.extend({
       this.$store.dispatch(
         'deliverable/deleteDeliverable',
         {
-          pid: this.projectMetadata.id,
+          pid: this.surveyPlan.id,
           did: deliverable.id
         });
     },
@@ -346,7 +346,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyPlan',[
-      'projectMetadata',
+      'surveyPlan',
     ]),
     ...mapGetters('deliverable',[
       'definitionList',
@@ -360,7 +360,7 @@ export default Vue.extend({
         return false
       } else if (
         this.hasPermission('canEditCustodianProjects') &&
-        this.hasCustodianLink('projectMetadata.custodians')
+        this.hasCustodianLink('surveyPlan.custodians')
       ) {
         // can only edit projects that are linked to user
         return false

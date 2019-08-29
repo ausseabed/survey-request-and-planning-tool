@@ -870,13 +870,13 @@ export default Vue.extend({
     },
 
     clear() {
-      const defaults = this.projectMetadata.surveyApplication.defaults;
+      const defaults = this.surveyPlan.surveyApplication.defaults;
       this.RESET_TECH_SPEC();
       this.notifySuccess("Specifications cleared");
     },
 
     applyDefaults() {
-      const defaults = this.projectMetadata.surveyApplication.defaults;
+      const defaults = this.surveyPlan.surveyApplication.defaults;
       if (_.isNil(defaults)) {
         this.notifyError("No defaults available for survey application.");
       } else {
@@ -951,7 +951,7 @@ export default Vue.extend({
       'dirty',
     ]),
     ...mapGetters('surveyPlan',[
-      'projectMetadata',
+      'surveyPlan',
     ]),
     readOnly: function() {
       if (this.hasPermission('canEditAllProjects')) {
@@ -959,7 +959,7 @@ export default Vue.extend({
         return false
       } else if (
         this.hasPermission('canEditCustodianProjects') &&
-        this.hasCustodianLink('projectMetadata.custodians')
+        this.hasCustodianLink('surveyPlan.custodians')
       ) {
         // can only edit projects that are linked to user
         return false
@@ -1046,7 +1046,7 @@ export default Vue.extend({
         this.mapTidalGauge.fit();
       }
     },
-    'projectMetadata.areaOfInterest': function (newAoi, oldAoi) {
+    'surveyPlan.areaOfInterest': function (newAoi, oldAoi) {
       if (newAoi) {
         this.mapSurveyLines.setGeojsonFeatureIntersecting(newAoi);
         this.mapSurveyLines.fit();

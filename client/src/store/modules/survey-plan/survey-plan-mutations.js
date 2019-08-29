@@ -14,55 +14,55 @@ const mutations = {
   },
 
   [types.SET_AOI] (state, geojson) {
-    state.projectMetadata.areaOfInterest = geojson;
+    state.surveyPlan.areaOfInterest = geojson;
     state.dirty = true;
   },
 
   [types.SET_INSTRUMENT_TYPES] (state, instrumentTypes) {
-    state.projectMetadata.instrumentTypes = instrumentTypes;
+    state.surveyPlan.instrumentTypes = instrumentTypes;
     state.dirty = true;
   },
 
   [types.SET_DATA_CAPTURE_TYPES] (state, dataCaptureTypes) {
-    state.projectMetadata.dataCaptureTypes = dataCaptureTypes;
+    state.surveyPlan.dataCaptureTypes = dataCaptureTypes;
     state.dirty = true;
   },
 
   [types.ADD_CUSTODIAN] (state, custodian) {
-    state.projectMetadata.custodians.push(custodian);
+    state.surveyPlan.custodians.push(custodian);
     state.dirty = true;
   },
 
   [types.SET_CUSTODIANS] (state, custodians) {
-    state.projectMetadata.custodians = custodians;
+    state.surveyPlan.custodians = custodians;
     state.dirty = true;
   },
 
   [types.SET_ORGANISATIONS] (state, organisations) {
-    Vue.set(state.projectMetadata, 'organisations', organisations);
+    Vue.set(state.surveyPlan, 'organisations', organisations);
     state.dirty = true;
   },
 
   [types.REMOVE_CUSTODIAN] (state, custodians) {
-    state.projectMetadata.custodians = custodians;
+    state.surveyPlan.custodians = custodians;
     state.dirty = true;
   },
 
   [types.REMOVE_CUSTODIAN] (state, custodian) {
-    let index = state.projectMetadata.custodians.findIndex(function (o) {
+    let index = state.surveyPlan.custodians.findIndex(function (o) {
       return o.id == custodian.id;
     });
-    state.projectMetadata.custodians.splice(index, 1);
+    state.surveyPlan.custodians.splice(index, 1);
     state.dirty = true;
   },
 
   [types.SET_START_DATE] (state, startDate) {
-    state.projectMetadata.startDate = startDate;
+    state.surveyPlan.startDate = startDate;
     state.dirty = true;
   },
 
   [types.SET_SURVEY_APPLICATION] (state, surveyApplication) {
-    state.projectMetadata.surveyApplication = surveyApplication;
+    state.surveyPlan.surveyApplication = surveyApplication;
     state.dirty = true;
   },
 
@@ -71,12 +71,12 @@ const mutations = {
   },
 
   [types.SET_SURVEYORS] (state, custodians) {
-    state.projectMetadata.surveyors = custodians;
+    state.surveyPlan.surveyors = custodians;
     state.dirty = true;
   },
 
   [types.SET_TENDERER] (state, custodian) {
-    state.projectMetadata.tenderer = custodian;
+    state.surveyPlan.tenderer = custodian;
     state.dirty = true;
   },
 
@@ -97,15 +97,15 @@ const mutations = {
   },
 
   [types.SET_PROJECT_METADATA_LIST_FILTER] (state, listfilterparams) {
-    return state.projectMetadataListFilter = listfilterparams;
+    return state.surveyPlanListFilter = listfilterparams;
   },
 
   [types.UPDATE_PROJECT_METADATA_LIST_FILTER] (state, { path, value }) {
-    _.set(state.projectMetadataListFilter, path, _.cloneDeep(value))
+    _.set(state.surveyPlanListFilter, path, _.cloneDeep(value))
   },
 
   [types.SET_PROJECT_METADATA_LIST] (state, pmlist) {
-    return state.projectMetadataList = pmlist;
+    return state.surveyPlanList = pmlist;
   },
 
   [types.SET_REQUEST_ERROR] (state, error) {

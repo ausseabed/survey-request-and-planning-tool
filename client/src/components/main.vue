@@ -200,7 +200,7 @@ import { projectStatusIconDetails, recordStateDetails } from './utils'
 import OlMap from './olmap/olmap';
 
 import * as pmMutTypes
-  from '../store/modules/project-metadata/project-metadata-mutation-types'
+  from '../store/modules/survey-plan/survey-plan-mutation-types'
 
 export default Vue.extend({
   mixins: [errorHandler, permission],
@@ -222,7 +222,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapMutations('projectMetadata', [
+    ...mapMutations('surveyPlan', [
       pmMutTypes.SET_AOI,
       pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
     ]),
@@ -238,7 +238,7 @@ export default Vue.extend({
     fetchProjects (extents) {
       this.SET_PROJECT_METADATA_LIST_FILTER(undefined);
       this.$store.dispatch(
-        'projectMetadata/getProjectMetadataList',
+        'surveyPlan/getProjectMetadataList',
         {params:{includeGeometry:true}})
       .then(matchingProjMetas => {
         this.matchingProjMetas = matchingProjMetas;

@@ -41,7 +41,7 @@
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
 import * as pmMutTypes
-  from '../../store/modules/project-metadata/project-metadata-mutation-types'
+  from '../../store/modules/survey-plan/survey-plan-mutation-types'
 
 
 export default {
@@ -57,7 +57,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('projectMetadata',[
+    ...mapGetters('surveyPlan',[
       'projectMetadataList',
       'projectMetadataListFilter',
     ]),
@@ -67,14 +67,14 @@ export default {
   },
 
   methods: {
-    ...mapActions('projectMetadata', [
+    ...mapActions('surveyPlan', [
       'getProjectMetadataList',
     ]),
-    ...mapMutations('projectMetadata', [
+    ...mapMutations('surveyPlan', [
       pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
       pmMutTypes.RESET_PROJECT_METADATA,
     ]),
-    ...mapMutations('projectMetadata', {
+    ...mapMutations('surveyPlan', {
       'projectMetadataUpdate': pmMutTypes.UPDATE,
       'projectSetDirty': pmMutTypes.SET_DIRTY,
     }),

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { EventBus } from './../../../event-bus';
 import _ from 'lodash';
 
-import * as mutTypes from './project-metadata-mutation-types'
+import * as mutTypes from './survey-plan-mutation-types'
 import { RequestStatus } from '../request-status'
 
 export const checkAoi = ({ commit, state }, payload) => {

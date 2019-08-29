@@ -1,4 +1,3 @@
-// import * as actions from './uav-project-metadata-actions'
 import * as actions from './instrument-type-actions'
 import * as getters from './instrument-type-getters'
 import * as mutations from './instrument-type-mutations'

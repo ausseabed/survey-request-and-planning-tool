@@ -124,7 +124,7 @@ import { errorHandler } from '../mixins/error-handling'
 import { permission } from './../mixins/permission'
 import { date } from 'quasar'
 import * as pmMutTypes
-  from '../../store/modules/project-metadata/project-metadata-mutation-types'
+  from '../../store/modules/survey-plan/survey-plan-mutation-types'
 import { RequestStatus } from '../../store/modules/request-status'
 
 import PlanSelection from '../dialogs/plan-selection'
@@ -146,11 +146,11 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters('projectMetadata',[
+    ...mapGetters('surveyPlan',[
       'projectMetadataList',
       'projectMetadataListFilter',
     ]),
-    ...mapGetters('projectMetadata',{
+    ...mapGetters('surveyPlan',{
       projectMetadataRequestStatus:'requestStatus'
     }),
     ...mapGetters('hippRequest',[
@@ -193,15 +193,15 @@ export default Vue.extend({
     ...mapActions('hippRequest', [
       'updatePlanLinks',
     ]),
-    ...mapActions('projectMetadata', [
+    ...mapActions('surveyPlan', [
       'getProjectMetadataList',
     ]),
-    ...mapMutations('projectMetadata', [
+    ...mapMutations('surveyPlan', [
       pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
       pmMutTypes.RESET_PROJECT_METADATA,
       pmMutTypes.SET_PROJECT_METADATA_LIST,
     ]),
-    ...mapMutations('projectMetadata', {
+    ...mapMutations('surveyPlan', {
       'projectMetadataUpdate': pmMutTypes.UPDATE,
       'projectSetDirty': pmMutTypes.SET_DIRTY,
     }),

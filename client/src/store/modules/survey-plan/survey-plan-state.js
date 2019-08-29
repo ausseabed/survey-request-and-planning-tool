@@ -1,8 +1,7 @@
-// import * as actions from './uav-project-metadata-actions'
-import * as actions from './project-metadata-actions'
-import * as getters from './project-metadata-getters'
-import mutations from './project-metadata-mutations'
-import * as types from './project-metadata-mutation-types'
+import * as actions from './survey-plan-actions'
+import * as getters from './survey-plan-getters'
+import mutations from './survey-plan-mutations'
+import * as types from './survey-plan-mutation-types'
 
 import { RequestStatus } from '../request-status'
 

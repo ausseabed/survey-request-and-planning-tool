@@ -99,7 +99,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions('projectMetadata', [
+    ...mapActions('surveyPlan', [
       'getProjectMetadata',
     ]),
 
@@ -128,7 +128,7 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters('projectMetadata',[
+    ...mapGetters('surveyPlan',[
       'projectMetadata',
     ]),
     canViewAttachments: function() {

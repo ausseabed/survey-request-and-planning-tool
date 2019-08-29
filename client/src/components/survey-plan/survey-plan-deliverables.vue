@@ -183,7 +183,7 @@ export default Vue.extend({
     fetchData () {
       const id = this.$route.params.id;
       this.$store.dispatch(
-        'projectMetadata/getProjectMetadata', { id: id });
+        'surveyPlan/getProjectMetadata', { id: id });
       this.$store.dispatch(
         'deliverable/getDeliverableList', { id: id })
     },
@@ -345,7 +345,7 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters('projectMetadata',[
+    ...mapGetters('surveyPlan',[
       'projectMetadata',
     ]),
     ...mapGetters('deliverable',[

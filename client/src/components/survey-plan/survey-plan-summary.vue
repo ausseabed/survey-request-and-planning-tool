@@ -657,7 +657,7 @@ import * as custodianMutTypes
 import * as organisationMutTypes
   from '../../store/modules/organisation/organisation-mutation-types'
 import * as pmMutTypes
-  from '../../store/modules/project-metadata/project-metadata-mutation-types'
+  from '../../store/modules/survey-plan/survey-plan-mutation-types'
 
 import { projectStatusIconDetails, recordStateDetails } from './../utils'
 
@@ -763,13 +763,13 @@ export default Vue.extend({
     ...mapActions('organisation', [
       'getOrganisations',
     ]),
-    ...mapMutations('projectMetadata', {
+    ...mapMutations('surveyPlan', {
       'setDirty': pmMutTypes.SET_DIRTY,
       'setProjectCustodians': pmMutTypes.SET_CUSTODIANS,
       'setProjectOrganisations': pmMutTypes.SET_ORGANISATIONS,
       'updateProjectMetadata': pmMutTypes.UPDATE,
     }),
-    ...mapMutations('projectMetadata', [
+    ...mapMutations('surveyPlan', [
       pmMutTypes.RESET_PROJECT_METADATA,
       pmMutTypes.SET_START_DATE,
       pmMutTypes.SET_TENDERER,
@@ -884,7 +884,7 @@ export default Vue.extend({
       this.map.clear();
       if (this.$route.params.id) {
         this.$store.dispatch(
-          'projectMetadata/getProjectMetadata', { id: this.$route.params.id })
+          'surveyPlan/getProjectMetadata', { id: this.$route.params.id })
         .then(projectMetadata => {
           if (!_.isNil(projectMetadata.surveyApplication)) {
             this.$store.commit('surveyApplication/setSelectedSurveyApplicationGroup',
@@ -1045,7 +1045,7 @@ export default Vue.extend({
 
       const isNew = _.isNil(this.id) || (this.id.length == 0);
 
-      this.$store.dispatch('projectMetadata/save')
+      this.$store.dispatch('surveyPlan/save')
       .then(pmd => {
         this.setDirty(false);
         if (isNew) {
@@ -1070,7 +1070,7 @@ export default Vue.extend({
         }).onOk(() => {
 
           this.$store.dispatch(
-            'projectMetadata/deleteProjectMetadata',
+            'surveyPlan/deleteProjectMetadata',
             { id: this.id }
           ).then(pmd => {
             this.notifySuccess('Deleted plan');
@@ -1088,7 +1088,7 @@ export default Vue.extend({
     checkGeometry() {
       // Send geojson to server to check for interescting surveys
       this.$store.dispatch(
-        'projectMetadata/checkAoi', { id: this.id })
+        'surveyPlan/checkAoi', { id: this.id })
       .then(matchingProjMetas => {
         this.intersectionCheckRun = true;
         this.matchingProjMetas = matchingProjMetas;
@@ -1123,7 +1123,7 @@ export default Vue.extend({
       this.setDeletedCustodians(null);
       // gets the list of all custodians, not just those associated to this project
       this.$store.dispatch('custodian/getCustodians');
-      this.$store.dispatch('projectMetadata/getProjectStatuses');
+      this.$store.dispatch('surveyPlan/getProjectStatuses');
       // get data capture types, but only those not created by users (eg; the
       // default system defined ones.
       this.$store.dispatch(
@@ -1207,22 +1207,22 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
-      projectMetadata: 'projectMetadata/projectMetadata',
-      id: 'projectMetadata/id',
-      surveyName: 'projectMetadata/surveyName',
-      projectStatus: 'projectMetadata/projectStatus',
-      projectStatuses: 'projectMetadata/projectStatuses',
-      contactPerson: 'projectMetadata/contactPerson',
-      email: 'projectMetadata/email',
-      comment: 'projectMetadata/comment',
-      quality: 'projectMetadata/quality',
-      vessel: 'projectMetadata/vessel',
-      startDate: 'projectMetadata/startDate',
-      areaOfInterest: 'projectMetadata/areaOfInterest',
-      projectCustodians: 'projectMetadata/custodians',
-      projectInstrumentTypes: 'projectMetadata/instrumentTypes',
-      projectDataCaptureTypes: 'projectMetadata/dataCaptureTypes',
-      projectSurveyApplication: 'projectMetadata/surveyApplication',
+      projectMetadata: 'surveyPlan/projectMetadata',
+      id: 'surveyPlan/id',
+      surveyName: 'surveyPlan/surveyName',
+      projectStatus: 'surveyPlan/projectStatus',
+      projectStatuses: 'surveyPlan/projectStatuses',
+      contactPerson: 'surveyPlan/contactPerson',
+      email: 'surveyPlan/email',
+      comment: 'surveyPlan/comment',
+      quality: 'surveyPlan/quality',
+      vessel: 'surveyPlan/vessel',
+      startDate: 'surveyPlan/startDate',
+      areaOfInterest: 'surveyPlan/areaOfInterest',
+      projectCustodians: 'surveyPlan/custodians',
+      projectInstrumentTypes: 'surveyPlan/instrumentTypes',
+      projectDataCaptureTypes: 'surveyPlan/dataCaptureTypes',
+      projectSurveyApplication: 'surveyPlan/surveyApplication',
       custodians: 'custodian/custodians',
       instrumentTypes: 'instrumentType/instrumentTypes',
       dataCaptureTypes: 'dataCaptureType/dataCaptureTypes',
@@ -1230,14 +1230,14 @@ export default Vue.extend({
       surveyApplications: 'surveyApplication/surveyApplications',
       selectedSurveyApplication: 'surveyApplication/selectedSurveyApplication',
       selectedSurveyApplicationGroup: 'surveyApplication/selectedSurveyApplicationGroup',
-      surveyId: 'projectMetadata/surveyId',
-      contractNumber: 'projectMetadata/contractNumber',
-      surveyors: 'projectMetadata/surveyors',
-      tenderer: 'projectMetadata/tenderer',
-      surveyApplicationIdOther: 'projectMetadata/surveyApplicationIdOther',
-      surveyApplicationNameOther: 'projectMetadata/surveyApplicationNameOther',
-      surveyApplicationGroupNameOther: 'projectMetadata/surveyApplicationGroupNameOther',
-      dirty: 'projectMetadata/dirty',
+      surveyId: 'surveyPlan/surveyId',
+      contractNumber: 'surveyPlan/contractNumber',
+      surveyors: 'surveyPlan/surveyors',
+      tenderer: 'surveyPlan/tenderer',
+      surveyApplicationIdOther: 'surveyPlan/surveyApplicationIdOther',
+      surveyApplicationNameOther: 'surveyPlan/surveyApplicationNameOther',
+      surveyApplicationGroupNameOther: 'surveyPlan/surveyApplicationGroupNameOther',
+      dirty: 'surveyPlan/dirty',
     }),
     ...mapGetters('reportTemplate', [
       'reportDownloading',

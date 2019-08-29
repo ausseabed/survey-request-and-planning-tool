@@ -137,7 +137,7 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters('projectMetadata',[
+    ...mapGetters('surveyPlan',[
       'projectMetadata',
     ]),
     ...mapGetters('hippRequest',[

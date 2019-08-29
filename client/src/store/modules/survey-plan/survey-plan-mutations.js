@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import * as types from './project-metadata-mutation-types'
+import * as types from './survey-plan-mutation-types'
 
 const mutations = {
   [types.UPDATE] (state, { path, value }) {

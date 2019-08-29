@@ -8,7 +8,7 @@ import { getConnection } from 'typeorm';
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
   hasPermission, permitCustodianBasedPermission }
   from '../utils';
-import { ProjectMetadata, PROJECT_STATUSES }
+import { ProjectMetadata, SURVEY_PLAN_STATUSES }
   from '../../lib/entity/project-metadata';
 import { SurveyApplication } from '../../lib/entity/survey-application';
 import { TechSpec } from '../../lib/entity/tech-spec';
@@ -18,7 +18,7 @@ var router = express.Router();
 
 // Gets a list of project metadata
 router.get('/valid-statuses', async function (req, res) {
-  return res.json(PROJECT_STATUSES);
+  return res.json(SURVEY_PLAN_STATUSES);
 });
 
 // Gets a list of project metadata
@@ -32,7 +32,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   .getRepository(ProjectMetadata)
   .createQueryBuilder("project_metadata")
   .select(["project_metadata.id", "project_metadata.surveyName",
-    "project_metadata.startDate", "project_metadata.projectStatus"])
+    "project_metadata.startDate", "project_metadata.status"])
   .leftJoinAndSelect("project_metadata.recordState", "record_state")
   .leftJoin("project_metadata.hippRequest", "hipp_request")
   .addSelect("hipp_request.id")
@@ -288,14 +288,14 @@ router.post(
   project.surveyApplication = surveyApp;
 
 
-  if (!_.isNil(req.body.projectStatus)) {
-    const status = req.body.projectStatus
-    if (!PROJECT_STATUSES.includes(status)) {
-      let err = boom.badRequest(`Bad projectStatus "${status}", must be one of\
-        ${PROJECT_STATUSES.join(', ')}`);
+  if (!_.isNil(req.body.status)) {
+    const status = req.body.status
+    if (!SURVEY_PLAN_STATUSES.includes(status)) {
+      let err = boom.badRequest(`Bad status "${status}", must be one of\
+        ${SURVEY_PLAN_STATUSES.join(', ')}`);
       throw err;
     }
-    project.projectStatus = status;
+    project.status = status;
   }
   project.comment = req.body.comment;
   project.quality = req.body.quality;

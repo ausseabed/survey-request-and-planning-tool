@@ -14,7 +14,7 @@ import { SurveyAttachment } from './survey-attachment';
 import { TechSpec } from './tech-spec';
 
 // valid values for the `projectStatus` attribute
-export const PROJECT_STATUSES = [
+export const SURVEY_PLAN_STATUSES = [
   "Planning",
   "Scheduled",
   "Complete",
@@ -37,7 +37,7 @@ export class ProjectMetadata {
   email = "";
 
   @Column("varchar")
-  projectStatus = PROJECT_STATUSES[0];
+  status = SURVEY_PLAN_STATUSES[0];
 
   @Column({
       type:"varchar",

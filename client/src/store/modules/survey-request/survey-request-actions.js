@@ -3,7 +3,7 @@ import Vue from 'vue'
 import * as mutTypes from './survey-request-mutation-types'
 import { RequestStatus } from '../request-status'
 
-export const getHippRequest = async ({ commit, state }, payload) => {
+export const getSurveyRequest = async ({ commit, state }, payload) => {
   const urlEndpoint = '/api/hipp-request/' + payload.id;
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
@@ -11,9 +11,9 @@ export const getHippRequest = async ({ commit, state }, payload) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
 
     const response = await Vue.axios.get(urlEndpoint);
-    const hippRequest = response.data;
-    hippRequest.areaOfInterest = Object.freeze(hippRequest.areaOfInterest);
-    commit(mutTypes.UPDATE, {path: 'hippRequest', value: hippRequest});
+    const surveyRequest = response.data;
+    surveyRequest.areaOfInterest = Object.freeze(surveyRequest.areaOfInterest);
+    commit(mutTypes.UPDATE, {path: 'surveyRequest', value: surveyRequest});
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
     commit(mutTypes.SET_DIRTY, false);
   } catch (error) {
@@ -23,7 +23,7 @@ export const getHippRequest = async ({ commit, state }, payload) => {
   }
 }
 
-export const getHippRequests = async ({ commit, state }) => {
+export const getSurveyRequests = async ({ commit, state }) => {
   const urlEndpoint = '/api/hipp-request/';
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
@@ -31,9 +31,9 @@ export const getHippRequests = async ({ commit, state }) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
 
     const response = await Vue.axios.get(urlEndpoint);
-    const hippRequests = response.data;
+    const surveyRequests = response.data;
 
-    commit(mutTypes.UPDATE, {path: 'hippRequests', value: hippRequests});
+    commit(mutTypes.UPDATE, {path: 'surveyRequests', value: surveyRequests});
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
     commit(mutTypes.SET_DIRTY, false);
   } catch (error) {
@@ -45,18 +45,18 @@ export const getHippRequests = async ({ commit, state }) => {
 
 
 
-export const saveHippRequest = async ({ commit, state }) => {
+export const saveSurveyRequest = async ({ commit, state }) => {
   const urlEndpoint = '/api/hipp-request/';
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
 
   return new Promise((resolve, reject) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
-    Vue.axios.post(urlEndpoint, state.hippRequest)
+    Vue.axios.post(urlEndpoint, state.surveyRequest)
     .then((response) => {
-      const hippRequest = response.data;
+      const surveyRequest = response.data;
 
-      commit(mutTypes.UPDATE, {path: 'hippRequest', value: hippRequest});
+      commit(mutTypes.UPDATE, {path: 'surveyRequest', value: surveyRequest});
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
       commit(mutTypes.SET_DIRTY, false);
       resolve(response.data);
@@ -81,9 +81,9 @@ export const updatePlanLinks = async ({ commit, state }, payload) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
     Vue.axios.post(urlEndpoint, linkedPlans)
     .then((response) => {
-      const hippRequest = response.data;
+      const surveyRequest = response.data;
 
-      // commit(mutTypes.UPDATE, {path: 'hippRequest', value: hippRequest});
+      // commit(mutTypes.UPDATE, {path: 'surveyRequest', value: surveyRequest});
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
       commit(mutTypes.SET_DIRTY, false);
       resolve(response.data);
@@ -98,7 +98,7 @@ export const updatePlanLinks = async ({ commit, state }, payload) => {
 }
 
 
-export const deleteHippRequest = ({ commit, state }, payload) => {
+export const deleteSurveyRequest = ({ commit, state }, payload) => {
   var url_endpoint = '/api/hipp-request/' + payload.id;
   return new Promise((resolve, reject) => {
     Vue.axios.delete(url_endpoint)

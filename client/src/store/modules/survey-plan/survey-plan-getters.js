@@ -102,8 +102,8 @@ export const projectMetadataList = state => {
   return state.projectMetadataList;
 }
 
-export const hippRequest = state => {
-  return state.projectMetadata.hippRequest;
+export const surveyRequest = state => {
+  return state.projectMetadata.surveyRequest;
 }
 
 export const requestError = state => {

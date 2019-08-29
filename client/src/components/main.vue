@@ -13,7 +13,7 @@
               v-if="hasPermission(['canViewAllProjects', 'canViewCustodianProjects'])"
               name="projects" label="Plans" icon="layers"/>
             <q-tab
-              v-if="hasPermission(['canViewAllHippRequests', 'canViewCustodianHippRequests'])"
+              v-if="hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])"
               name="requests" label="Requests" icon="device_hub"/>
           </q-tabs>
           <div class="fat-spacer bg-secondary"></div>
@@ -108,7 +108,7 @@
             </q-tab-panel>
 
             <q-tab-panel
-              v-if="hasPermission(['canViewAllHippRequests', 'canViewCustodianHippRequests'])"
+              v-if="hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])"
               name="requests" class="column col-auto no-padding">
 
               <q-scroll-area class="col">
@@ -117,31 +117,31 @@
                   >
 
                   <q-item clickable
-                    v-for="hippRequest in hippRequests"
-                    :key="hippRequest.id"
-                    @mouseover="mouseoverMatchingProjMeta(hippRequest, false)"
+                    v-for="surveyRequest in surveyRequests"
+                    :key="surveyRequest.id"
+                    @mouseover="mouseoverMatchingProjMeta(surveyRequest, false)"
                     class="column"
                     >
                     <div class="row">
                       <q-item-section>
-                        <q-item-label>{{hippRequest.name}}</q-item-label>
+                        <q-item-label>{{surveyRequest.name}}</q-item-label>
                       </q-item-section>
 
                       <q-item-section side top>
-                        <q-item-label caption>{{hippRequest.requestDateStart | dateString }}</q-item-label>
+                        <q-item-label caption>{{surveyRequest.requestDateStart | dateString }}</q-item-label>
                       </q-item-section>
                     </div>
                     <q-item-section>
                       <transition-expand>
-                        <div v-if="activeProjMetaId == hippRequest.id">
+                        <div v-if="activeProjMetaId == surveyRequest.id">
                           <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
-                            :to="`/hipp-request/${hippRequest.id}/summary`">
+                            :to="`/hipp-request/${surveyRequest.id}/summary`">
                           </q-btn>
                           <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
-                            :to="`/hipp-request/${hippRequest.id}/attachments`">
+                            :to="`/hipp-request/${surveyRequest.id}/attachments`">
                           </q-btn>
                           <q-btn outline size="sm" color="primary" label="Plans" class="q-mt-xs q-ml-xs"
-                            :to="`/hipp-request/${hippRequest.id}/projects`">
+                            :to="`/hipp-request/${surveyRequest.id}/projects`">
                           </q-btn>
                         </div>
                       </transition-expand>
@@ -154,7 +154,7 @@
               </q-scroll-area>
 
               <div
-                v-if="hasPermission('canAddHippRequest')"
+                v-if="hasPermission('canAddSurveyRequest')"
                 class="full-width column"
                 >
                 <q-separator style="height:1px;"/>
@@ -218,7 +218,7 @@ export default Vue.extend({
       this.debounceExtents(extents);
     };
     this.fetchProjects(this.map.getExtents());
-    this.getHippRequests();
+    this.getSurveyRequests();
   },
 
   methods: {
@@ -227,7 +227,7 @@ export default Vue.extend({
       pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
     ]),
     ...mapActions('surveyRequest', [
-      'getHippRequests',
+      'getSurveyRequests',
     ]),
     heightTweak (offset) {
       return {
@@ -278,7 +278,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyRequest', [
-      'hippRequests',
+      'surveyRequests',
     ]),
   },
 
@@ -297,7 +297,7 @@ export default Vue.extend({
       handler(newRole, oldRole) {
         if (this.hasPermission(['canViewAllProjects', 'canViewCustodianProjects'])) {
           this.tab = 'projects';
-        } else if (this.hasPermission(['canViewAllHippRequests', 'canViewCustodianHippRequests'])) {
+        } else if (this.hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])) {
           this.tab = 'requests';
         }
       },

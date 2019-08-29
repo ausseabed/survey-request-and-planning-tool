@@ -5,10 +5,10 @@
     <div style="width: 900px; max-width: 900px;" class="column no-wrap fit">
       <div class="column q-pa-md fit">
         <record-state
-          v-if="this.hippRequest.id"
+          v-if="this.surveyRequest.id"
           class="full-width q-pb-sm"
           :entity-type="`hipp-request`"
-          :entity-id="hippRequest.id"
+          :entity-id="surveyRequest.id"
           :validation-callback="recordStateValidationCallback"
           @updated-state="stateUpdated($event)"
           >
@@ -154,15 +154,15 @@ export default Vue.extend({
       projectMetadataRequestStatus:'requestStatus'
     }),
     ...mapGetters('surveyRequest',[
-      'hippRequest',
+      'surveyRequest',
     ]),
     loading() {
       return this.projectMetadataRequestStatus == RequestStatus.REQUESTED
     },
     readonly: function() {
       if (
-        this.hasPermission('canAddHippRequest') &&
-        _.isNil(this.hippRequest.id)
+        this.hasPermission('canAddSurveyRequest') &&
+        _.isNil(this.surveyRequest.id)
       ) {
         // user has permission to add new request, and this is a new request
         // this is a new request, so no need to worry about record state
@@ -173,13 +173,13 @@ export default Vue.extend({
         // if the state says read only
         return true
       }
-      if (this.hasPermission('canEditAllHippRequests')) {
+      if (this.hasPermission('canEditAllSurveyRequests')) {
         // can edit all projects
         return false
       }
       else if (
-        this.hasPermission('canEditCustodianHippRequests') &&
-        this.hasCustodianLink('hippRequest.custodians')
+        this.hasPermission('canEditCustodianSurveyRequests') &&
+        this.hasCustodianLink('surveyRequest.custodians')
       ) {
         // can only edit hipp requests that are linked to user
         return false
@@ -208,9 +208,9 @@ export default Vue.extend({
 
     addProject() {
       this.RESET_PROJECT_METADATA();
-      let clonedHippReq = _.cloneDeep(this.hippRequest);
+      let clonedHippReq = _.cloneDeep(this.surveyRequest);
       this.projectMetadataUpdate(
-        {path:'projectMetadata.hippRequest', value:clonedHippReq}
+        {path:'projectMetadata.surveyRequest', value:clonedHippReq}
       );
       this.projectSetDirty(false);
       this.$router.push({ path: `/survey/new`, query: {reset:false} })
@@ -225,7 +225,7 @@ export default Vue.extend({
       .then((planList) => {
         this.linkedPlans = []
         planList.forEach((plan) => {
-          if (plan.hippRequest && plan.hippRequest.id == this.hippRequest.id) {
+          if (plan.surveyRequest && plan.surveyRequest.id == this.surveyRequest.id) {
             this.linkedPlans.push(plan);
           }
         })
@@ -256,7 +256,7 @@ export default Vue.extend({
 
     updatePlanLink(plan, linked) {
       const payload = {
-        id: this.hippRequest.id,
+        id: this.surveyRequest.id,
         linkedPlans: [{
           id: plan.id,
           linked: linked,
@@ -274,7 +274,7 @@ export default Vue.extend({
 
     done() {
       this.linking = false
-      let hrfilter = {'hipp-request': this.hippRequest.id}
+      let hrfilter = {'hipp-request': this.surveyRequest.id}
       this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
       this.getProjectMetadataList()
     },
@@ -298,7 +298,7 @@ export default Vue.extend({
   },
 
   watch: {
-    'hippRequest.id': {
+    'surveyRequest.id': {
       handler: function (newId, oldId) {
         let hrfilter = _.isNil(newId) ? undefined : {'hipp-request': newId}
         this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
@@ -307,7 +307,7 @@ export default Vue.extend({
     },
     'projectMetadataListFilter': {
       handler: function (newFilter, oldFilter) {
-        if (!_.isNil(this.hippRequest.id)) {
+        if (!_.isNil(this.surveyRequest.id)) {
           this.getProjectMetadataList()
         }
       },

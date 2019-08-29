@@ -1,9 +1,9 @@
-export const hippRequest = state => {
-  return state.hippRequest;
+export const surveyRequest = state => {
+  return state.surveyRequest;
 }
 
-export const hippRequests = state => {
-  return state.hippRequests;
+export const surveyRequests = state => {
+  return state.surveyRequests;
 }
 
 export const requestStatus = state => {

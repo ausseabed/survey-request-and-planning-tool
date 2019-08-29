@@ -7,7 +7,7 @@ import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
-    hippRequest: {
+    surveyRequest: {
       id: undefined,
       name: undefined,
       custodians: [],
@@ -36,7 +36,7 @@ function initialState() {
       riskData: {},
       riskIssues: undefined,
     },
-    hippRequests:[],  // list of hipp requests, minimal detail
+    surveyRequests:[],  // list of hipp requests, minimal detail
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
     dirty: false,
@@ -61,7 +61,7 @@ export default {
       })
     },
     [types.RESET_HIPP_REQUEST](state) {
-      state.hippRequest = initialState().hippRequest;
+      state.surveyRequest = initialState().surveyRequest;
     },
     ...mutations.mutations
   }

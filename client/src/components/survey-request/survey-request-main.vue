@@ -5,7 +5,7 @@
         <q-toolbar class="col-auto q-py-none bg-secondary text-white">
           <q-toolbar-title class="column">
             <div>
-              {{hippRequest.name}}
+              {{surveyRequest.name}}
             </div>
             <div class="tabs-toolbar-sub-title">
               HIPP Request
@@ -88,7 +88,7 @@ export default Vue.extend({
 
   methods: {
     ...mapActions('surveyRequest', [
-      'getHippRequest',
+      'getSurveyRequest',
     ]),
 
     heightTweak (offset) {
@@ -99,7 +99,7 @@ export default Vue.extend({
     },
     fetchData () {
       this.id = this.$route.params.id;
-      this.getHippRequest({ id: this.id })
+      this.getSurveyRequest({ id: this.id })
     },
 
   },
@@ -117,14 +117,14 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyRequest',[
-      'hippRequest',
+      'surveyRequest',
     ]),
     canViewAttachments: function() {
       if (this.hasPermission('canViewAllAttachments')) {
         return true
       } else if (
         this.hasPermission('canViewCustodianAttachments') &&
-        this.hasCustodianLink('hippRequest.custodians')
+        this.hasCustodianLink('surveyRequest.custodians')
       ) {
         return true
       } else {

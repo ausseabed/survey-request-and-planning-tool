@@ -141,7 +141,7 @@ export default Vue.extend({
       'projectMetadata',
     ]),
     ...mapGetters('surveyRequest',[
-      'hippRequest',
+      'surveyRequest',
     ]),
     ...mapGetters('surveyFile',[
       'files',
@@ -152,7 +152,7 @@ export default Vue.extend({
       if (this.attachesTo === 'survey') {
         custodianLink = 'projectMetadata.custodians'
       } else if (this.attachesTo === 'hipp-request') {
-        custodianLink = 'hippRequest.custodians'
+        custodianLink = 'surveyRequest.custodians'
       }
       return custodianLink
     },

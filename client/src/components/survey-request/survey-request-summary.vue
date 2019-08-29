@@ -8,7 +8,7 @@
     <q-page padding class="docs-input row justify-center">
       <q-page-sticky
         position="top-right"
-        :offset="hippRequest.id ? [18, 18+66] : [18, 18]"
+        :offset="surveyRequest.id ? [18, 18+66] : [18, 18]"
         style="z-index:100" >
 
         <div class="row q-gutter-x-sm">
@@ -22,8 +22,8 @@
             <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save summary</q-tooltip>
           </q-btn>
           <q-btn
-            @click="generateReport({id: hippRequest.id, templateType: 'HIPP Request'})"
-            :disable="!hippRequest.id"
+            @click="generateReport({id: surveyRequest.id, templateType: 'HIPP Request'})"
+            :disable="!surveyRequest.id"
             :loading="reportDownloading"
             round
             color="primary"
@@ -37,8 +37,8 @@
           </q-btn>
           <q-btn
             type="a"
-            :href="`/api/report-template/generate/HIPP Request/${hippRequest.id}?format=csv`"
-            :disable="!hippRequest.id"
+            :href="`/api/report-template/generate/HIPP Request/${surveyRequest.id}?format=csv`"
+            :disable="!surveyRequest.id"
             round
             color="primary"
             icon="dehaze">
@@ -48,10 +48,10 @@
           </q-btn>
           <q-btn
             v-if="!readonly"
-            :disable="!hippRequest.id"
+            :disable="!surveyRequest.id"
             round
             color="primary"
-            @click="deleteHippRequestClick"
+            @click="deleteSurveyRequestClick"
             icon="delete"
           >
             <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Delete HIPP request</q-tooltip>
@@ -61,16 +61,16 @@
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
         <record-state
-          v-if="this.hippRequest.id"
+          v-if="this.surveyRequest.id"
           class="full-width"
           :entity-type="`hipp-request`"
-          :entity-id="hippRequest.id"
+          :entity-id="surveyRequest.id"
           :validation-callback="recordStateValidationCallback"
           :disable="dirty"
           @updated-state="stateUpdated($event)"
           >
         </record-state>
-        <div v-if="!hippRequest.id" class="text-h5"> New HIPP Request </div>
+        <div v-if="!surveyRequest.id" class="text-h5"> New HIPP Request </div>
         <q-card class="full-width">
           <q-card-section>
             <div class="text-h6"> Requester’s Details </div>
@@ -78,22 +78,22 @@
           <q-card-section>
 
             <form-field-validated-select
-              name="hippRequest.custodians"
+              name="surveyRequest.custodians"
               attribute="Custodian"
               label="Custodian"
               multiple use-chips
-              :value="hippRequest.custodians"
-              @input="update({path:'hippRequest.custodians', value:$event})"
+              :value="surveyRequest.custodians"
+              @input="update({path:'surveyRequest.custodians', value:$event})"
               :options="custodians"
               option-label="name"
               option-value="id"
-              @blur="$v.hippRequest.custodians.$touch"
+              @blur="$v.surveyRequest.custodians.$touch"
               :readonly="readonly"
               >
             </form-field-validated-select>
 
             <form-field-validated-select
-              name="hippRequest.organisations"
+              name="surveyRequest.organisations"
               label="Organisations"
               multiple
               use-chips
@@ -101,59 +101,59 @@
               input-debounce="200"
               autocomplete="new-password"
               @filter="filterOrganisationFunction"
-              :value="hippRequest.organisations"
-              @input="update({path:'hippRequest.organisations', value:$event})"
+              :value="surveyRequest.organisations"
+              @input="update({path:'surveyRequest.organisations', value:$event})"
               :options="organisationsList"
               option-label="name"
               option-value="id"
-              @blur="$v.hippRequest.organisations.$touch"
+              @blur="$v.surveyRequest.organisations.$touch"
               :readonly="readonly"
               >
             </form-field-validated-select>
 
             <form-field-validated-input
-              name="hippRequest.requestorName"
+              name="surveyRequest.requestorName"
               attribute="Requestor’s Name"
               label="Requestor’s Name"
-              :value="hippRequest.requestorName"
-              @input="update({path:'hippRequest.requestorName', value:$event})"
-              @blur="$v.hippRequest.requestorName.$touch"
+              :value="surveyRequest.requestorName"
+              @input="update({path:'surveyRequest.requestorName', value:$event})"
+              @blur="$v.surveyRequest.requestorName.$touch"
               type="text"
               :readonly="readonly"
               >
             </form-field-validated-input>
 
             <form-field-validated-input
-              name="hippRequest.requestorPosition"
+              name="surveyRequest.requestorPosition"
               attribute="Requestor’s Position"
               label="Requestor’s Position"
-              :value="hippRequest.requestorPosition"
-              @input="update({path:'hippRequest.requestorPosition', value:$event})"
-              @blur="$v.hippRequest.requestorPosition.$touch"
+              :value="surveyRequest.requestorPosition"
+              @input="update({path:'surveyRequest.requestorPosition', value:$event})"
+              @blur="$v.surveyRequest.requestorPosition.$touch"
               type="text"
               :readonly="readonly"
               >
             </form-field-validated-input>
 
             <form-field-validated-input
-              name="hippRequest.pointOfContactEmail"
+              name="surveyRequest.pointOfContactEmail"
               label="Contact email"
               attribute="Contact email"
-              :value="hippRequest.pointOfContactEmail"
-              @input="update({path:'hippRequest.pointOfContactEmail', value:$event})"
-              @blur="$v.hippRequest.pointOfContactEmail.$touch"
+              :value="surveyRequest.pointOfContactEmail"
+              @input="update({path:'surveyRequest.pointOfContactEmail', value:$event})"
+              @blur="$v.surveyRequest.pointOfContactEmail.$touch"
               type="email"
               :readonly="readonly"
               >
             </form-field-validated-input>
 
             <form-field-validated-input
-              name="hippRequest.pointOfContactPhone"
+              name="surveyRequest.pointOfContactPhone"
               label="Contact phone number"
               attribute="Contact phone number"
-              :value="hippRequest.pointOfContactPhone"
-              @input="update({path:'hippRequest.pointOfContactPhone', value:$event})"
-              @blur="$v.hippRequest.pointOfContactPhone.$touch"
+              :value="surveyRequest.pointOfContactPhone"
+              @input="update({path:'surveyRequest.pointOfContactPhone', value:$event})"
+              @blur="$v.surveyRequest.pointOfContactPhone.$touch"
               type="text"
               :readonly="readonly"
               >
@@ -169,12 +169,12 @@
           <q-card-section>
 
             <form-field-validated-input
-              name="hippRequest.name"
+              name="surveyRequest.name"
               attribute="Area Name"
               label="Name of the Area to be surveyed"
-              :value="hippRequest.name"
-              @input="update({path:'hippRequest.name', value:$event})"
-              @blur="$v.hippRequest.name.$touch"
+              :value="surveyRequest.name"
+              @input="update({path:'surveyRequest.name', value:$event})"
+              @blur="$v.surveyRequest.name.$touch"
               type="text"
               :readonly="readonly"
               >
@@ -186,7 +186,7 @@
               stack-label
               bottom-slots
               attribute="Area of interest"
-              name="hippRequest.areaOfInterest"
+              name="surveyRequest.areaOfInterest"
               >
               <div class="column full-width">
                 <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
@@ -218,11 +218,11 @@
                           class="no-margin full-width"
                           icon="cloud_download"
                           type="a"
-                          :href="`/api/hipp-request/${hippRequest.id}/geometry`"
-                          :disable="!hippRequest.id || addingFile || !hippRequest.areaOfInterest || dirty"
+                          :href="`/api/hipp-request/${surveyRequest.id}/geometry`"
+                          :disable="!surveyRequest.id || addingFile || !surveyRequest.areaOfInterest || dirty"
                         >
                           <q-tooltip>
-                            {{!hippRequest.id || addingFile || !hippRequest.areaOfInterest || dirty ? "Must save request before download" : "Download Area of Interest"}}
+                            {{!surveyRequest.id || addingFile || !surveyRequest.areaOfInterest || dirty ? "Must save request before download" : "Download Area of Interest"}}
                           </q-tooltip>
                         </q-btn>
                       </div>
@@ -247,8 +247,8 @@
                             hidden
                           />
                           <q-btn outline class="no-margin full-width" icon="clear"
-                            :disable="!hippRequest.areaOfInterest"
-                            @click="update({path:'hippRequest.areaOfInterest', value:undefined })">
+                            :disable="!surveyRequest.areaOfInterest"
+                            @click="update({path:'surveyRequest.areaOfInterest', value:undefined })">
                             <q-tooltip>
                               Clear Area of Interest
                             </q-tooltip>
@@ -264,13 +264,13 @@
             <div class="row q-col-gutter-md q-pt-md">
               <form-field-validated-input
                 class="col-xs-12 col-sm-6"
-                name="hippRequest.area"
+                name="surveyRequest.area"
                 attribute="Area"
                 label="Area (eg; km^2)"
                 hint="Optional"
-                :value="hippRequest.area"
-                @input="update({path:'hippRequest.area', value:$event})"
-                @blur="$v.hippRequest.area.$touch"
+                :value="surveyRequest.area"
+                @input="update({path:'surveyRequest.area', value:$event})"
+                @blur="$v.surveyRequest.area.$touch"
                 type="text"
                 :readonly="readonly"
                 >
@@ -299,12 +299,12 @@
           </q-card-section>
           <q-card-section class="column q-col-gutter-md">
             <form-field-validated-input
-              name="hippRequest.businessJustification"
+              name="surveyRequest.businessJustification"
               attribute="Business Justification"
               label="Business Justification"
-              :value="hippRequest.businessJustification"
-              @input="update({path:'hippRequest.businessJustification', value:$event})"
-              @blur="$v.hippRequest.businessJustification.$touch"
+              :value="surveyRequest.businessJustification"
+              @input="update({path:'surveyRequest.businessJustification', value:$event})"
+              @blur="$v.surveyRequest.businessJustification.$touch"
               type="textarea"
               :readonly="readonly"
               >
@@ -323,17 +323,17 @@
             <!-- options-selected-class="text-secondary" -->
             <form-field-validated-select-multiple-check
               multiple
-              name="hippRequest.purposes"
+              name="surveyRequest.purposes"
               attribute="Request purpose"
-              :value="hippRequest.purposes"
-              @input="updateHippRequest({path:'purposes', value:$event})"
+              :value="surveyRequest.purposes"
+              @input="updateSurveyRequest({path:'purposes', value:$event})"
               :options="requestPurposeOptions"
               label="Purpose"
               clearable
               option-label="name"
               option-value="id"
               emit-values map-options
-              @blur="$v.hippRequest.purposes.$touch"
+              @blur="$v.surveyRequest.purposes.$touch"
               :readonly="readonly"
             >
             </form-field-validated-select-multiple-check>
@@ -341,29 +341,29 @@
             <form-field-validated-select-multiple-check
               class="col-12"
               multiple
-              name="hippRequest.surveyQualityRequirements"
+              name="surveyRequest.surveyQualityRequirements"
               attribute="Survey Quality Requirements"
               label="Survey Quality Requirements"
-              :value="hippRequest.surveyQualityRequirements"
-              @input="updateHippRequest({path:'surveyQualityRequirements', value:$event})"
+              :value="surveyRequest.surveyQualityRequirements"
+              @input="updateSurveyRequest({path:'surveyQualityRequirements', value:$event})"
               :options="surveyQualityRequirements"
               option-label="name"
               option-value="id"
               emit-value map-options
-              @blur="$v.hippRequest.surveyQualityRequirements.$touch"
+              @blur="$v.surveyRequest.surveyQualityRequirements.$touch"
               clearable
               :readonly="readonly"
               >
             </form-field-validated-select-multiple-check>
 
             <form-field-validated-input
-              name="hippRequest.surveyQualityRequirementsComments"
+              name="surveyRequest.surveyQualityRequirementsComments"
               attribute="Survey Quality Requirements Comments"
               label="Survey Quality Requirements Comments"
               hint="Optional"
-              :value="hippRequest.surveyQualityRequirementsComments"
-              @input="update({path:'hippRequest.surveyQualityRequirementsComments', value:$event})"
-              @blur="$v.hippRequest.surveyQualityRequirementsComments.$touch"
+              :value="surveyRequest.surveyQualityRequirementsComments"
+              @input="update({path:'surveyRequest.surveyQualityRequirementsComments', value:$event})"
+              @blur="$v.surveyRequest.surveyQualityRequirementsComments.$touch"
               type="textarea"
               :readonly="readonly"
               >
@@ -372,29 +372,29 @@
             <form-field-validated-select-multiple-check
               class="col-12"
               multiple
-              name="hippRequest.chartProductQualityImpactRequirements"
+              name="surveyRequest.chartProductQualityImpactRequirements"
               attribute="Chart Product Quality Impact Requirements"
               label="Chart Product Quality Impact Requirements"
-              :value="hippRequest.chartProductQualityImpactRequirements"
-              @input="updateHippRequest({path:'chartProductQualityImpactRequirements', value:$event})"
+              :value="surveyRequest.chartProductQualityImpactRequirements"
+              @input="updateSurveyRequest({path:'chartProductQualityImpactRequirements', value:$event})"
               :options="chartProductQualityImpactRequirements"
               option-label="name"
               option-value="value"
               emit-value map-options
-              @blur="$v.hippRequest.chartProductQualityImpactRequirements.$touch"
+              @blur="$v.surveyRequest.chartProductQualityImpactRequirements.$touch"
               clearable
               :readonly="readonly"
               >
             </form-field-validated-select-multiple-check>
 
             <form-field-validated-input
-              name="hippRequest.chartProductQualityImpactRequirementsComments"
+              name="surveyRequest.chartProductQualityImpactRequirementsComments"
               attribute="Chart Product Quality Impact Requirements Comments"
               label="Chart Product Quality Impact Requirements Comments"
               hint="Optional"
-              :value="hippRequest.chartProductQualityImpactRequirementsComments"
-              @input="update({path:'hippRequest.chartProductQualityImpactRequirementsComments', value:$event})"
-              @blur="$v.hippRequest.chartProductQualityImpactRequirementsComments.$touch"
+              :value="surveyRequest.chartProductQualityImpactRequirementsComments"
+              @input="update({path:'surveyRequest.chartProductQualityImpactRequirementsComments', value:$event})"
+              @blur="$v.surveyRequest.chartProductQualityImpactRequirementsComments.$touch"
               type="textarea"
               :readonly="readonly"
               >
@@ -403,15 +403,15 @@
             <form-field-validated-select-multiple-check
               class="col-12"
               multiple
-              name="hippRequest.dataCaptureTypes"
+              name="surveyRequest.dataCaptureTypes"
               attribute="Data to Capture"
               label="Data to Capture"
-              :value="hippRequest.dataCaptureTypes"
-              @input="updateHippRequest({path:'dataCaptureTypes', value:$event})"
+              :value="surveyRequest.dataCaptureTypes"
+              @input="updateSurveyRequest({path:'dataCaptureTypes', value:$event})"
               :options="dataCaptureTypes"
               option-label="name"
               option-value="id"
-              @blur="$v.hippRequest.dataCaptureTypes.$touch"
+              @blur="$v.surveyRequest.dataCaptureTypes.$touch"
               clearable
               :readonly="readonly"
               >
@@ -427,13 +427,13 @@
           <q-card-section class="column q-col-gutter-md items-stretch">
 
             <form-field-validated-input
-              name="hippRequest.comments"
+              name="surveyRequest.comments"
               attribute="Comments"
               label="Comments"
               hint="Optional"
-              :value="hippRequest.comments"
-              @input="update({path:'hippRequest.comments', value:$event})"
-              @blur="$v.hippRequest.comments.$touch"
+              :value="surveyRequest.comments"
+              @input="update({path:'surveyRequest.comments', value:$event})"
+              @blur="$v.surveyRequest.comments.$touch"
               type="textarea"
               :readonly="readonly"
               >
@@ -444,24 +444,24 @@
               <div class="row q-col-gutter-md">
                 <form-field-validated-date
                   class="col-xs-12 col-sm-6"
-                  name="hippRequest.requestDateStart"
+                  name="surveyRequest.requestDateStart"
                   attribute="Start date"
                   label="Start date (YYYY/MM/DD)"
-                  :date="hippRequest.requestDateStart"
-                  @updated-date="update({path:'hippRequest.requestDateStart', value:$event})"
-                  @blur="$v.hippRequest.requestDateStart.$touch"
+                  :date="surveyRequest.requestDateStart"
+                  @updated-date="update({path:'surveyRequest.requestDateStart', value:$event})"
+                  @blur="$v.surveyRequest.requestDateStart.$touch"
                   :readonly="readonly"
                   >
                 </form-field-validated-date>
 
                 <form-field-validated-date
                   class="col-xs-12 col-sm-6"
-                  name="hippRequest.requestDateEnd"
+                  name="surveyRequest.requestDateEnd"
                   attribute="End date"
                   label="End date (YYYY/MM/DD)"
-                  :date="hippRequest.requestDateEnd"
-                  @updated-date="update({path:'hippRequest.requestDateEnd', value:$event})"
-                  @blur="$v.hippRequest.requestDateEnd.$touch"
+                  :date="surveyRequest.requestDateEnd"
+                  @updated-date="update({path:'surveyRequest.requestDateEnd', value:$event})"
+                  @blur="$v.surveyRequest.requestDateEnd.$touch"
                   :readonly="readonly"
                   >
                 </form-field-validated-date>
@@ -480,7 +480,7 @@
 
             <risk-widget
               :risk-matrix="riskMatrix"
-              :risk-data="hippRequest.riskData"
+              :risk-data="surveyRequest.riskData"
               :readonly="readonly"
               @updated-risks="risksUpdated($event)"
               :can-view-priority="hasPermission('canViewRiskPriority')"
@@ -489,13 +489,13 @@
             </risk-widget>
 
             <form-field-validated-input
-              name="hippRequest.riskIssues"
+              name="surveyRequest.riskIssues"
               attribute="Risk Issues"
               label="Risk Issues"
               hint="Optional"
-              :value="hippRequest.riskIssues"
-              @input="update({path:'hippRequest.riskIssues', value:$event})"
-              @blur="$v.hippRequest.riskIssues.$touch"
+              :value="surveyRequest.riskIssues"
+              @input="update({path:'surveyRequest.riskIssues', value:$event})"
+              @blur="$v.surveyRequest.riskIssues.$touch"
               type="textarea"
               :readonly="readonly"
               >
@@ -521,34 +521,34 @@
                   :readonly="readonly"
                   >
                   <q-checkbox
-                    :value="hippRequest.hasMoratorium"
-                    @input="update({path:'hippRequest.hasMoratorium', value: $event})"
+                    :value="surveyRequest.hasMoratorium"
+                    @input="update({path:'surveyRequest.hasMoratorium', value: $event})"
                     />
                 </q-field>
 
                 <form-field-validated-date
                   class="col-xs-12 col-sm-6"
-                  v-if="hippRequest.hasMoratorium"
-                  name="hippRequest.moratoriumDate"
+                  v-if="surveyRequest.hasMoratorium"
+                  name="surveyRequest.moratoriumDate"
                   attribute="Date moratorium ends"
                   label="Date moratorium ends (YYYY/MM/DD)"
-                  :date="hippRequest.moratoriumDate"
-                  @updated-date="update({path:'hippRequest.moratoriumDate', value:$event})"
-                  @blur="$v.hippRequest.moratoriumDate.$touch"
+                  :date="surveyRequest.moratoriumDate"
+                  @updated-date="update({path:'surveyRequest.moratoriumDate', value:$event})"
+                  @blur="$v.surveyRequest.moratoriumDate.$touch"
                   :readonly="readonly"
                   >
                 </form-field-validated-date>
               </div>
 
               <form-field-validated-input
-                v-if="hippRequest.hasMoratorium"
-                name="hippRequest.moratoriumComment"
+                v-if="surveyRequest.hasMoratorium"
+                name="surveyRequest.moratoriumComment"
                 attribute="Moratorium Comments"
                 label="Moratorium Comments"
                 hint="Optional"
-                :value="hippRequest.moratoriumComment"
-                @input="update({path:'hippRequest.moratoriumComment', value:$event})"
-                @blur="$v.hippRequest.moratoriumComment.$touch"
+                :value="surveyRequest.moratoriumComment"
+                @input="update({path:'surveyRequest.moratoriumComment', value:$event})"
+                @blur="$v.surveyRequest.moratoriumComment.$touch"
                 type="textarea"
                 :readonly="readonly"
                 >
@@ -620,7 +620,7 @@ export default Vue.extend({
     this.map = olmap;
     this.map.onAdd = (geojson) => {
       this.update({
-        path: "hippRequest.areaOfInterest",
+        path: "surveyRequest.areaOfInterest",
         value: Object.freeze(geojson)
       });
       this.updateFromGeojson(geojson);
@@ -650,12 +650,12 @@ export default Vue.extend({
 
   methods: {
     ...mapActions('surveyRequest', [
-      'getHippRequest',
-      'saveHippRequest',
+      'getSurveyRequest',
+      'saveSurveyRequest',
       'getRiskMatrix',
       'getChartProductQualityImpactRequirements',
       'getSurveyQualityRequirements',
-      'deleteHippRequest',
+      'deleteSurveyRequest',
       'getGeojsonAttributeMap',
     ]),
     ...mapActions('custodian', [
@@ -676,8 +676,8 @@ export default Vue.extend({
     ...mapMutations('surveyRequest', {
       'setDirty': hippMutTypes.SET_DIRTY,
       'update': hippMutTypes.UPDATE,
-      'resetHippRequest': hippMutTypes.RESET_HIPP_REQUEST,
-      'updateHippRequest': hippMutTypes.UPDATE_HIPP_REQUEST,
+      'resetSurveyRequest': hippMutTypes.RESET_HIPP_REQUEST,
+      'updateSurveyRequest': hippMutTypes.UPDATE_HIPP_REQUEST,
     }),
     ...mapMutations('custodian', {
       'setDeletedCustodians': custodianMutTypes.SET_DELETED_CUSTODIANS,
@@ -690,37 +690,37 @@ export default Vue.extend({
       if (this.$route.params.id) {
         // if id given, then load this hipp request
         this.loadingData = true
-        this.getHippRequest({ id: this.$route.params.id }).then(hr => {
+        this.getSurveyRequest({ id: this.$route.params.id }).then(hr => {
           this.loadingData = false
         })
       } else {
         // a new hipp request so clear whatever is in store
-        this.resetHippRequest()
+        this.resetSurveyRequest()
       }
     },
 
     setFormattedRequestDate(requestDate) {
       if (_.isNil(requestDate)) {
-        this.update({path:'hippRequest.requestDate', value:undefined})
+        this.update({path:'surveyRequest.requestDate', value:undefined})
         return
       }
       let d = Date.parse(requestDate)
-      this.update({path:'hippRequest.requestDate', value:d})
+      this.update({path:'surveyRequest.requestDate', value:d})
     },
 
     setFormattedMoratoriumDate(requestDate) {
       this.tmpMoratoriumDateEntry = requestDate;
       // check if no text provided, or if the string contains two / chars
       if (_.isNil(requestDate) || (requestDate.match(/\//g) || []).length != 2) {
-        this.update({path:'hippRequest.moratoriumDate', value:undefined})
+        this.update({path:'surveyRequest.moratoriumDate', value:undefined})
         return
       }
       let d = Date.parse(requestDate)
       if (_.isNaN(d)) {
-        this.update({path:'hippRequest.moratoriumDate', value:undefined})
+        this.update({path:'surveyRequest.moratoriumDate', value:undefined})
         return
       }
-      this.update({path:'hippRequest.moratoriumDate', value:d})
+      this.update({path:'surveyRequest.moratoriumDate', value:d})
     },
 
     submit() {
@@ -734,10 +734,10 @@ export default Vue.extend({
       }
 
       const isNew = (
-        _.isNil(this.hippRequest.id) ||
-        this.hippRequest.id.length == 0)
+        _.isNil(this.surveyRequest.id) ||
+        this.surveyRequest.id.length == 0)
 
-      this.saveHippRequest().then((hr) => {
+      this.saveSurveyRequest().then((hr) => {
         if (isNew) {
           this.$router.replace({ path: `/hipp-request/${hr.id}/summary` })
         }
@@ -745,17 +745,17 @@ export default Vue.extend({
       })
     },
 
-    deleteHippRequestClick() {
-      if (this.hippRequest.id) {
+    deleteSurveyRequestClick() {
+      if (this.surveyRequest.id) {
         // an existing id indicated this project has been saved, so check
         // with user if they really want to delete project.
         this.$q.dialog({
           title: 'Delete HIPP Request',
-          message: `HIPP Request ${this.hippRequest.name} will be deleted`,
+          message: `HIPP Request ${this.surveyRequest.name} will be deleted`,
           ok: 'Delete',
           cancel: 'Cancel'
         }).onOk(() => {
-          this.deleteHippRequest({ id: this.hippRequest.id })
+          this.deleteSurveyRequest({ id: this.surveyRequest.id })
           .then(pmd => {
             this.notifySuccess('Deleted HIPP Request');
             this.$router.replace({ path: `/` });
@@ -764,7 +764,7 @@ export default Vue.extend({
       } else {
         // no id, so hasn't been saved. I this case reset form and go back
         // to main page.
-        this.resetHippRequest()
+        this.resetSurveyRequest()
         this.$router.replace({ path: `/` })
       }
     },
@@ -799,7 +799,7 @@ export default Vue.extend({
       this.map.addFile(event.target.files[0]);
     },
     risksUpdated(event) {
-      let path = `hippRequest.riskData${event.path}`
+      let path = `surveyRequest.riskData${event.path}`
       this.update({path:path, value:event.value})
     },
     stateUpdated(state) {
@@ -872,7 +872,7 @@ export default Vue.extend({
             value = _.get(props, entityAttrName)
           }
 
-          this.updateHippRequest({
+          this.updateSurveyRequest({
             path:entityAttrName,
             value:value,
           })
@@ -891,7 +891,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyRequest', [
-      'hippRequest',
+      'surveyRequest',
       'dirty',
       'riskMatrix',
       'chartProductQualityImpactRequirements',
@@ -915,8 +915,8 @@ export default Vue.extend({
     }),
     readonly: function() {
       if (
-        this.hasPermission('canAddHippRequest') &&
-        _.isNil(this.hippRequest.id)
+        this.hasPermission('canAddSurveyRequest') &&
+        _.isNil(this.surveyRequest.id)
       ) {
         // user has permission to add new request, and this is a new request
         // this is a new request, so no need to worry about record state
@@ -927,13 +927,13 @@ export default Vue.extend({
         // if the state says read only
         return true
       }
-      if (this.hasPermission('canEditAllHippRequests')) {
+      if (this.hasPermission('canEditAllSurveyRequests')) {
         // can edit all projects
         return false
       }
       else if (
-        this.hasPermission('canEditCustodianHippRequests') &&
-        this.hasCustodianLink('hippRequest.custodians')
+        this.hasPermission('canEditCustodianSurveyRequests') &&
+        this.hasCustodianLink('surveyRequest.custodians')
       ) {
         // can only edit hipp requests that are linked to user
         return false
@@ -942,18 +942,18 @@ export default Vue.extend({
       }
     },
     formattedRequestDate: function() {
-      if (_.isNil(this.hippRequest.requestDate)) {
+      if (_.isNil(this.surveyRequest.requestDate)) {
         return undefined;
       }
       const d = new Date();
-      d.setTime(this.hippRequest.requestDate);
+      d.setTime(this.surveyRequest.requestDate);
       let formattedString = date.formatDate(d, 'YYYY/MM/DD')
       return formattedString
     },
     formattedMoratoriumDate: function() {
-      if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.hippRequest.moratoriumDate)) {
+      if (_.isNil(this.tmpMoratoriumDateEntry) && !_.isNil(this.surveyRequest.moratoriumDate)) {
         const d = new Date();
-        d.setTime(this.hippRequest.moratoriumDate);
+        d.setTime(this.surveyRequest.moratoriumDate);
         let formattedString = date.formatDate(d, 'YYYY/MM/DD')
         this.tmpMoratoriumDateEntry = formattedString
       }
@@ -1015,7 +1015,7 @@ export default Vue.extend({
   validations() {
     if (this.validationIntent == 'save') {
       return {
-        hippRequest: {
+        surveyRequest: {
           name: { required },
           custodians: { required, minLength:minLength(1) },
           organisations: { },
@@ -1044,7 +1044,7 @@ export default Vue.extend({
       }
     } else if (this.validationIntent == 'final') {
       return {
-        hippRequest: {
+        surveyRequest: {
           name: { required },
           custodians: { required, minLength:minLength(1) },
           organisations: {
@@ -1055,8 +1055,8 @@ export default Vue.extend({
           requestorPosition: { },
           pointOfContactEmail: { required, email },
           pointOfContactPhone: { required },
-          requestDateStart: { required, maxValue:maxValue(this.hippRequest.requestDateEnd) },
-          requestDateEnd: { required, minValue:minValue(this.hippRequest.requestDateStart) },
+          requestDateStart: { required, maxValue:maxValue(this.surveyRequest.requestDateEnd) },
+          requestDateEnd: { required, minValue:minValue(this.surveyRequest.requestDateStart) },
           comments: {},
           area: {},
           areaOfInterest: { required },
@@ -1086,10 +1086,10 @@ export default Vue.extend({
         this.fetchData();
       }
     },
-    'hippRequest.hasMoratorium': function (newM, oldM) {
-      this.$v.hippRequest.moratoriumDate.$touch()
+    'surveyRequest.hasMoratorium': function (newM, oldM) {
+      this.$v.surveyRequest.moratoriumDate.$touch()
     },
-    'hippRequest.areaOfInterest': function (newArea, oldArea) {
+    'surveyRequest.areaOfInterest': function (newArea, oldArea) {
       this.map.clear();
       if (newArea) {
         this.map.addGeojsonFeature(newArea);

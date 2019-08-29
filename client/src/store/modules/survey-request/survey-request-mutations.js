@@ -23,12 +23,12 @@ const mutations = {
     Object.keys(item).forEach(function(key) {
       item[key] = item[key] == null ? undefined : item[key];
     })
-    _.merge(state.hippRequest, item);
+    _.merge(state.surveyRequest, item);
     // set tech spec attributes to new objects for Vue change detection to
     // pick up on. Mostly works without this, but array types aren't being
     // picked up.
-    Object.keys(state.hippRequest).forEach(function(key) {
-      state.hippRequest[key] = _.cloneDeep(state.hippRequest[key]);
+    Object.keys(state.surveyRequest).forEach(function(key) {
+      state.surveyRequest[key] = _.cloneDeep(state.surveyRequest[key]);
     })
 
     state.dirty = true;
@@ -56,7 +56,7 @@ const mutations = {
 
   [types.UPDATE_HIPP_REQUEST] (state, { path, value }) {
     state.dirty = true;
-    Vue.set(state.hippRequest, path, value)
+    Vue.set(state.surveyRequest, path, value)
   },
 }
 

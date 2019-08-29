@@ -203,7 +203,7 @@
                       class="no-margin full-width"
                       icon="cloud_download"
                       type="a"
-                      :href="`/api/project-metadata/${surveyPlan.id}/geometry`"
+                      :href="`/api/survey-plan/${surveyPlan.id}/geometry`"
                       :disable="!surveyPlan.id || addingFile || !surveyPlan.areaOfInterest || dirty"
                     >
                       <q-tooltip>

@@ -29,7 +29,7 @@ export const save = ({ commit, state }) => {
   console.log(state);
 
   return new Promise((resolve, reject) => {
-    Vue.axios.post('/api/project-metadata', state.surveyPlan)
+    Vue.axios.post('/api/survey-plan', state.surveyPlan)
     .then((response) => {
       commit(mutTypes.UPDATE, { path: 'surveyPlan', value: response.data })
       resolve(response.data);
@@ -41,7 +41,7 @@ export const save = ({ commit, state }) => {
 }
 
 export const deleteSurveyPlan = ({ commit, state }, payload) => {
-  var url_endpoint = '/api/project-metadata/' + payload.id;
+  var url_endpoint = '/api/survey-plan/' + payload.id;
   return new Promise((resolve, reject) => {
     Vue.axios.delete(url_endpoint)
     .then((response) => {
@@ -55,7 +55,7 @@ export const deleteSurveyPlan = ({ commit, state }, payload) => {
 }
 
 export const getSurveyPlan = ({ commit, state }, payload) => {
-  var url_endpoint = '/api/project-metadata/' + payload.id;
+  var url_endpoint = '/api/survey-plan/' + payload.id;
   if (payload.version) { url_endpoint += "?version=" + payload.version }
 
   return new Promise((resolve, reject) => {
@@ -76,7 +76,7 @@ export const getSurveyPlan = ({ commit, state }, payload) => {
 export const getSurveyPlanList = ({ commit, state }, payload) => {
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
 
-  var url_endpoint = '/api/project-metadata/';
+  var url_endpoint = '/api/survey-plan/';
   var getConfig = _.isNil(payload) ? {} : payload;
   if (!_.isNil(state.surveyPlanListFilter)) {
     let params = {params: state.surveyPlanListFilter};
@@ -101,7 +101,7 @@ export const getSurveyPlanList = ({ commit, state }, payload) => {
 }
 
 export const getSurveyPlanStatuses = ({ commit, state }) => {
-  var url_endpoint = '/api/project-metadata/valid-statuses';
+  var url_endpoint = '/api/survey-plan/valid-statuses';
 
   return Vue.axios.get(url_endpoint)
   .then((response) => {

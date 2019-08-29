@@ -27,7 +27,7 @@ router
 .use('/check-aoi', checkAoi)
 .use('/data-capture-type', dataCaptureTypeRoutes)
 .use('/instrument-type', instrumentTypeRoutes)
-.use('/project-metadata', projectMetadataRoutes)
+.use('/survey-plan', projectMetadataRoutes)
 .use('/custodian', custodianRoutes)
 .use('/survey-application', surveyApplicationRoutes)
 .use('/attachment', attachmentRoutes)

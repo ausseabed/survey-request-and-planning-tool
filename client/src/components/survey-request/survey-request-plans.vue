@@ -70,7 +70,7 @@
                         style="max-width:80%;max-height:200px;"
                         class="self-center"
                         spinner-color="white"
-                        :src="`api/project-metadata/${pm.id}/thumbnail`">
+                        :src="`api/survey-plan/${pm.id}/thumbnail`">
                       </q-img>
                       <div class="top-left q-pa-sm rounded-borders" style="background-color:rgba(255, 255, 255, 0.5);">
                         <div class="text-light">Survey Plan AOI</div>

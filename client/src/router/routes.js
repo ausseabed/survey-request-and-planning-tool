@@ -1,8 +1,5 @@
 import Administration from 'components/administration/administration.vue'
 import Custodians from 'components/administration/custodians/custodians.vue'
-import HippMain from 'components/hipp/hipp-main.vue'
-import HippProjects from 'components/hipp/hipp-projects.vue'
-import HippSummary from 'components/hipp/hipp-summary.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
 import Organisations from 'components/administration/organisations/organisations.vue'
@@ -13,6 +10,9 @@ import ReportTemplates from 'components/administration/report-template/report-te
 import Roles from 'components/administration/roles.vue'
 import SurveyDeliverables from 'components/survey-deliverables.vue'
 import SurveyFile from 'components/survey-file.vue'
+import SurveyRequestMain from 'components/survey-request/survey-request-main.vue'
+import SurveyRequestPlans from 'components/survey-request/survey-request-plans.vue'
+import SurveyRequestSummary from 'components/survey-request/survey-request-summary.vue'
 import SurveyTechnicalSpecification from 'components/survey-technical-specification.vue'
 import Users from 'components/administration/users/users.vue'
 
@@ -101,15 +101,15 @@ const routes = [
 
     {
       path: '/hipp-request/new',
-      component: HippSummary,
+      component: SurveyRequestSummary,
     },
     {
       path: '/hipp-request/:id',
-      component: HippMain,
+      component: SurveyRequestMain,
       children: [
         {
           path: 'summary',
-          component: HippSummary,
+          component: SurveyRequestSummary,
         },
         {
           path: 'attachments',
@@ -118,7 +118,7 @@ const routes = [
         },
         {
           path: 'projects',
-          component: HippProjects,
+          component: SurveyRequestPlans,
         },
       ]
     },

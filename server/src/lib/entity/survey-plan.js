@@ -4,16 +4,16 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
 import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
-import { SurveyRequest } from './survey-request';
 import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
 import { RecordState } from './record-state';
 import { SurveyApplication } from './survey-application';
-import { SurveyDeliverable } from './survey-deliverable';
 import { SurveyAttachment } from './survey-attachment';
+import { SurveyDeliverable } from './survey-deliverable';
+import { SurveyRequest } from './survey-request';
 import { TechSpec } from './tech-spec';
 
-// valid values for the `projectStatus` attribute
+// valid values for the `status` attribute
 export const SURVEY_PLAN_STATUSES = [
   "Planning",
   "Scheduled",

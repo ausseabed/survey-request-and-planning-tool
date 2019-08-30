@@ -34,8 +34,8 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   .select(["project_metadata.id", "project_metadata.surveyName",
     "project_metadata.startDate", "project_metadata.status"])
   .leftJoinAndSelect("project_metadata.recordState", "record_state")
-  .leftJoin("project_metadata.surveyRequest", "hipp_request")
-  .addSelect("hipp_request.id")
+  .leftJoin("project_metadata.surveyRequest", "survey_request")
+  .addSelect("survey_request.id")
 
   if (includeGeometry) {
     projectsQuery = projectsQuery.addSelect("project_metadata.areaOfInterest")

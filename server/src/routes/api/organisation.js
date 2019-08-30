@@ -20,7 +20,7 @@ async function getOrganisation(id) {
     .getRepository(Organisation)
     .createQueryBuilder('organisation')
     .addSelect(
-      '(SELECT COUNT(*) FROM hipp_request_organisations_organisation WHERE "hipp_request_organisations_organisation"."organisationId" = organisation.id) AS request_count'
+      '(SELECT COUNT(*) FROM survey_request_organisations_organisation WHERE "survey_request_organisations_organisation"."organisationId" = organisation.id) AS request_count'
     )
     .addSelect(
       '(SELECT COUNT(*) FROM project_metadata_organisations_organisation WHERE "project_metadata_organisations_organisation"."organisationId" = organisation.id) AS plan_count'
@@ -74,7 +74,7 @@ router.get(
   .getRepository(Organisation)
   .createQueryBuilder('organisation')
   .addSelect(
-    '(SELECT COUNT(*) FROM hipp_request_organisations_organisation WHERE "hipp_request_organisations_organisation"."organisationId" = organisation.id) AS request_count'
+    '(SELECT COUNT(*) FROM survey_request_organisations_organisation WHERE "survey_request_organisations_organisation"."organisationId" = organisation.id) AS request_count'
   )
   .addSelect(
     '(SELECT COUNT(*) FROM project_metadata_organisations_organisation WHERE "project_metadata_organisations_organisation"."organisationId" = organisation.id) AS plan_count'

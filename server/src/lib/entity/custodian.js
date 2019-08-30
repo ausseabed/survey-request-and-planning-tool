@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
-import { HippRequest } from './hipp-request';
+import { SurveyRequest } from './survey-request';
 import { ProjectMetadata } from './project-metadata';
 import { TechSpec } from './tech-spec';
 import { User } from './user'
@@ -34,8 +34,8 @@ export class Custodian {
   projectMetadatas;
 
   @ManyToMany(
-    type => HippRequest,
-    hippRequest => hippRequest.custodians)
+    type => SurveyRequest,
+    surveyRequest => surveyRequest.custodians)
   custodiansHipp;
 
   @OneToMany(type => User, user => user.custodian)

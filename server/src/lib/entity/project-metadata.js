@@ -4,7 +4,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
 import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
-import { HippRequest } from './hipp-request';
+import { SurveyRequest } from './survey-request';
 import { InstrumentType } from './instrument-type';
 import { Organisation } from './organisation';
 import { RecordState } from './record-state';
@@ -165,8 +165,8 @@ export class ProjectMetadata {
   deliverables;
 
   @ManyToOne(
-    type => HippRequest,
-    hippRequest => hippRequest.surveyPlans,
+    type => SurveyRequest,
+    surveyRequest => surveyRequest.surveyPlans,
     { nullable: true }
   )
   @JoinColumn({ name: "surveyRequestId" })

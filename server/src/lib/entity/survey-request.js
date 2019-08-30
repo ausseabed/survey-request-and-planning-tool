@@ -5,7 +5,7 @@ import { DateTransformer } from './utils';
 
 import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
-import { HippRequestAttachment } from './hipp-request-attachment';
+import { SurveyRequestAttachment } from './survey-request-attachment';
 import { ProjectMetadata } from './project-metadata';
 import { Organisation } from './organisation';
 import { RecordState } from './record-state';
@@ -98,7 +98,7 @@ export const RISK_MATRIX = {
 
 
 @Entity()
-export class HippRequest {
+export class SurveyRequest {
 
   @PrimaryGeneratedColumn('uuid')
   id;
@@ -117,7 +117,7 @@ export class HippRequest {
 
   @ManyToMany(
     type => Organisation,
-    organisation => organisation.hippRequests)
+    organisation => organisation.surveyRequests)
   @JoinTable()
   organisations;
 
@@ -252,19 +252,19 @@ export class HippRequest {
 
   @ManyToMany(
     type => DataCaptureType,
-    dataCaptureType => dataCaptureType.hippRequests)
+    dataCaptureType => dataCaptureType.surveyRequests)
   @JoinTable()
   dataCaptureTypes;
 
   @OneToMany(
-    type => HippRequestAttachment,
+    type => SurveyRequestAttachment,
     attachment => attachment.entity)
   attachments;
 
   @OneToMany(
     type => ProjectMetadata,
     projectMetadata => projectMetadata.surveyRequest)
-  projects;
+  surveyPlans;
 
   @OneToOne(type => RecordState, { cascade: true })
   @JoinColumn()

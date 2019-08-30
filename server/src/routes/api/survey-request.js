@@ -7,9 +7,9 @@ import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
   permitCustodianBasedPermission } from '../utils';
-import { HippRequest, SURVEY_QUALITY_REQUIREMENTS,
+import { SurveyRequest, SURVEY_QUALITY_REQUIREMENTS,
   CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
-  from '../../lib/entity/hipp-request';
+  from '../../lib/entity/survey-request';
 import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { updateRecordState } from '../state-management';
 
@@ -53,13 +53,13 @@ router.get('/geojson-attribute-map', async function (req, res) {
 // Gets a list of HIPP Requests
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
-  let hippRequestQuery = getConnection()
-  .getRepository(HippRequest)
-  .createQueryBuilder("hipp_request")
-  .select(["hipp_request.id", "hipp_request.name",
-    "hipp_request.requestDateStart", "hipp_request.requestDateEnd"])
+  let surveyRequestQuery = getConnection()
+  .getRepository(SurveyRequest)
+  .createQueryBuilder("survey_request")
+  .select(["survey_request.id", "survey_request.name",
+    "survey_request.requestDateStart", "survey_request.requestDateEnd"])
   .where(
-    `hipp_request.deleted = :deleted`,
+    `survey_request.deleted = :deleted`,
     {deleted: false}
   )
 
@@ -68,8 +68,8 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   } else if (hasPermission(req.user.role, 'canViewCustodianSurveyRequests')) {
     // need to filter list to include only hipp requests that include the
     // custodian this user is assigned.
-    hippRequestQuery = hippRequestQuery
-    .innerJoin("hipp_request.custodians", "custodian")
+    surveyRequestQuery = surveyRequestQuery
+    .innerJoin("survey_request.custodians", "custodian")
     .andWhere(
       `custodian.id = :custodianId`,
       {custodianId: req.user.custodian.id}
@@ -81,10 +81,10 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     // throw err;
   }
 
-  hippRequestQuery = hippRequestQuery.orderBy("hipp_request.name")
+  surveyRequestQuery = surveyRequestQuery.orderBy("survey_request.name")
 
-  const hippRequests = await hippRequestQuery.getMany()
-  return res.json(hippRequests);
+  const surveyRequests = await surveyRequestQuery.getMany()
+  return res.json(surveyRequests);
 }));
 
 
@@ -94,15 +94,15 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:HippRequest,
+      entityType:SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyRequests',
       allowedPermissionCustodian: 'canViewCustodianSurveyRequests'})
   ],
   asyncMiddleware(async function (req, res) {
 
-  let hippRequest = await getConnection()
-  .getRepository(HippRequest)
+  let surveyRequest = await getConnection()
+  .getRepository(SurveyRequest)
   .findOne(
     req.params.id,
     {
@@ -112,9 +112,9 @@ router.get(
     }
   );
 
-  if (!hippRequest || hippRequest.deleted) {
+  if (!surveyRequest || surveyRequest.deleted) {
     let err = boom.notFound(
-      `HippRequest ${req.params.id} does not exist`);
+      `SurveyRequest ${req.params.id} does not exist`);
     throw err;
   }
 
@@ -127,20 +127,20 @@ router.get(
     const entityAttribName = etj[0];
     const gjAttribName = etj[1];
     let attribValue = undefined;
-    if (_.has(hippRequest, entityAttribName)) {
-      attribValue = _.get(hippRequest, entityAttribName)
+    if (_.has(surveyRequest, entityAttribName)) {
+      attribValue = _.get(surveyRequest, entityAttribName)
     }
     properties[gjAttribName] = attribValue
   }
 
-  const aoiMultipolygon = hippRequest.areaOfInterest;
+  const aoiMultipolygon = surveyRequest.areaOfInterest;
   const aoiFeature = feature(aoiMultipolygon, properties);
 
   const collection = featureCollection([
     aoiFeature,
   ]);
 
-  let areaName = _.isNil(hippRequest.name) ? 'request' : hippRequest.name
+  let areaName = _.isNil(surveyRequest.name) ? 'request' : surveyRequest.name
   areaName = areaName.replace(/[^a-zA-Z0-9 ]*/g, "")   // remove special chars
   areaName = areaName.replace(/ /g, "-")   // replace spaces with dash
   const filename = `${areaName}-asb-rapt-download.json`;
@@ -156,15 +156,15 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:HippRequest,
+      entityType:SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyRequests',
       allowedPermissionCustodian: 'canViewCustodianSurveyRequests'})
   ],
   asyncMiddleware(async function (req, res) {
 
-  let hippRequest = await getConnection()
-  .getRepository(HippRequest)
+  let surveyRequest = await getConnection()
+  .getRepository(SurveyRequest)
   .findOne(
     req.params.id,
     {
@@ -178,16 +178,16 @@ router.get(
     }
   );
 
-  if (!hippRequest || hippRequest.deleted) {
+  if (!surveyRequest || surveyRequest.deleted) {
     let err = boom.notFound(
-      `HippRequest ${req.params.id} does not exist`);
+      `SurveyRequest ${req.params.id} does not exist`);
     throw err;
   }
 
   // don't return the deleted flag
-  delete hippRequest.deleted;
+  delete surveyRequest.deleted;
 
-  return res.json(hippRequest);
+  return res.json(surveyRequest);
 }));
 
 
@@ -197,7 +197,7 @@ router.post(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType: HippRequest,
+      entityType: SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyRequests',
       allowedPermissionCustodian: 'canEditCustodianSurveyRequests',
@@ -209,14 +209,14 @@ router.post(
   // Note: this doesn't change the HIPP Request itself, only the project
   // metadatas linked to it.
 
-  const hrRepo = getConnection().getRepository(HippRequest);
+  const hrRepo = getConnection().getRepository(SurveyRequest);
   const planRepo = getConnection().getRepository(ProjectMetadata);
 
   let hr = await hrRepo.findOne(req.params.id);
 
   if (!hr) {
     let err = boom.notFound(
-      `HippRequest ${req.params.id} does not exist, cannot update`);
+      `SurveyRequest ${req.params.id} does not exist, cannot update`);
     throw err;
   }
 
@@ -232,7 +232,7 @@ router.post(
         plan.id,
         {
           relations: [
-            "hippRequest",
+            "surveyRequest",
           ]
         }
       );
@@ -244,18 +244,18 @@ router.post(
       }
 
       if (plan.linked) {
-        if (_.isNil(entityPlan.hippRequest)) {
+        if (_.isNil(entityPlan.surveyRequest)) {
           newLinkedCount += 1
-        } else if (entityPlan.hippRequest.id != hr.id) {
+        } else if (entityPlan.surveyRequest.id != hr.id) {
           reLinkedCount += 1
         }
 
-        entityPlan.hippRequest = hr
+        entityPlan.surveyRequest = hr
       } else {
-        if (!_.isNil(entityPlan.hippRequest)) {
+        if (!_.isNil(entityPlan.surveyRequest)) {
           removeLinkedCount += 1
         }
-        entityPlan.hippRequest = null
+        entityPlan.surveyRequest = null
       }
 
       await getConnection()
@@ -281,7 +281,7 @@ router.post(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType: HippRequest,
+      entityType: SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyRequests',
       allowedPermissionCustodian: 'canEditCustodianSurveyRequests',
@@ -290,35 +290,35 @@ router.post(
   ],
   asyncMiddleware(async function (req, res) {
 
-  var hippRequest = new HippRequest()
-  _.merge(hippRequest, req.body)
+  var surveyRequest = new SurveyRequest()
+  _.merge(surveyRequest, req.body)
 
   // DO NOT update the record state here. Record state changes should only
   // happen in the record state handlers
-  delete hippRequest.recordState
+  delete surveyRequest.recordState
 
   if (!_.isNil(req.body.areaOfInterest)) {
     let geojson = geojsonToMultiPolygon(req.body.areaOfInterest)
-    hippRequest.areaOfInterest = geojson
+    surveyRequest.areaOfInterest = geojson
   }
 
   // TODO fix below, would be nice to add record state when creating new record
   // But it is not required.
   // const changeDesc = _.isNil(req.body.id) ? "New record" : "Updated record"
   // const recordState = await updateRecordState(
-  //   HippRequest, req.body.id, req.user, 'request', changeDesc);
+  //   SurveyRequest, req.body.id, req.user, 'request', changeDesc);
   //
-  // hippRequest.recordState = recordState
+  // surveyRequest.recordState = recordState
 
-  hippRequest = await getConnection()
-  .getRepository(HippRequest)
-  .save(hippRequest)
+  surveyRequest = await getConnection()
+  .getRepository(SurveyRequest)
+  .save(surveyRequest)
 
   // because the saved version of custodian doesn't include all attribs
-  hippRequest = await getConnection()
-  .getRepository(HippRequest)
+  surveyRequest = await getConnection()
+  .getRepository(SurveyRequest)
   .findOne(
-    hippRequest.id,
+    surveyRequest.id,
     {
       relations: [
         "custodians",
@@ -328,7 +328,7 @@ router.post(
       ]
     }
   )
-  return res.json(hippRequest)
+  return res.json(surveyRequest)
 }));
 
 
@@ -337,7 +337,7 @@ router.delete(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType: HippRequest,
+      entityType: SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyRequests',
       allowedPermissionCustodian: 'canEditCustodianSurveyRequests',
@@ -346,13 +346,13 @@ router.delete(
   ],
   asyncMiddleware(async function (req, res) {
 
-  const hrRepo = getConnection().getRepository(HippRequest);
+  const hrRepo = getConnection().getRepository(SurveyRequest);
 
   let hr = await hrRepo.findOne(req.params.id);
 
   if (!hr) {
     let err = boom.notFound(
-      `HippRequest ${req.params.id} does not exist, cannot delete`);
+      `SurveyRequest ${req.params.id} does not exist, cannot delete`);
     throw err;
   }
 

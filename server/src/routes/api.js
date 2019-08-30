@@ -11,7 +11,7 @@ var attachmentRoutes = require('./api/attachment');
 var techSpecRoutes = require('./api/tech-spec');
 var referenceSystemRoutes = require('./api/reference-system');
 var deliverableRoutes = require('./api/deliverable');
-var hippRequestRoutes = require('./api/hipp-request');
+var surveyRequestRoutes = require('./api/survey-request');
 var reportTemplateRoutes = require('./api/report-template');
 var roleRoutes = require('./api/role');
 var userRoutes = require('./api/user');
@@ -34,7 +34,7 @@ router
 .use('/tech-spec', techSpecRoutes)
 .use('/reference-system', referenceSystemRoutes)
 .use('/deliverable', deliverableRoutes)
-.use('/survey-request', hippRequestRoutes)
+.use('/survey-request', surveyRequestRoutes)
 .use('/report-template', reportTemplateRoutes)
 .use('/role', roleRoutes)
 .use('/user', userRoutes)

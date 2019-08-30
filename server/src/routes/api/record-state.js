@@ -10,7 +10,7 @@ import { asyncMiddleware, isAuthenticated, isUuid, permitCustodianBasedPermissio
   from '../utils';
 
 import { buildRecordMachine, updateRecordState } from '../state-management';
-import { HippRequest } from '../../lib/entity/hipp-request';
+import { SurveyRequest } from '../../lib/entity/survey-request';
 import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { RecordState } from '../../lib/entity/record-state';
 
@@ -34,7 +34,7 @@ router.get(
   let qb = getConnection().getRepository(RecordState)
   .createQueryBuilder("record_state")
   .leftJoinAndSelect("record_state.user", "user")
-  .leftJoinAndSelect("hipp_request", "hipp_request", 'record_state."recordType" = \'request\' AND hipp_request.id = record_state."recordId"')
+  .leftJoinAndSelect("survey_request", "survey_request", 'record_state."recordType" = \'request\' AND survey_request.id = record_state."recordId"')
   .leftJoinAndSelect("project_metadata", "project_metadata", 'record_state."recordType" = \'plan\' AND project_metadata.id = record_state."recordId"')
   .select('record_state.id', 'id')
   .addSelect('record_state.state', 'state')
@@ -45,13 +45,13 @@ router.get(
   .addSelect('record_state."changeDescription"', 'changeDescription')
   .addSelect('record_state."previousId"', 'previousId')
   .addSelect('user.name', 'userName')
-  .addSelect('hipp_request.name', 'hippRequestName')
+  .addSelect('survey_request.name', 'surveyRequestName')
   .addSelect('project_metadata."surveyName"', 'projectMetadataName')
   .orderBy('record_state.created', 'DESC')
 
   if (!_.isNil(filter)) {
     qb = qb
-    .where('hipp_request.name ilike :name', {name: '%' + filter + '%' })
+    .where('survey_request.name ilike :name', {name: '%' + filter + '%' })
     .orWhere('project_metadata."surveyName" ilike :name', {name: '%' + filter + '%' })
     .orWhere('user.name ilike :name', {name: '%' + filter + '%' })
   }
@@ -68,9 +68,9 @@ router.get(
   // into a consistent attribute `entityName`
   recordStates.forEach(rs => {
     rs.entityName =
-      _.isNil(rs.hippRequestName) ?
+      _.isNil(rs.surveyRequestName) ?
         rs.projectMetadataName :
-        rs.hippRequestName
+        rs.surveyRequestName
   })
 
   return res.json({
@@ -139,14 +139,14 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:HippRequest,
+      entityType:SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyRequests',
       allowedPermissionCustodian: 'canViewCustodianSurveyRequests'}),
   ],
   asyncMiddleware(async function(req, res) {
 
-  await handleGetRequest(req, res, HippRequest, 'custodians', 'request')
+  await handleGetRequest(req, res, SurveyRequest, 'custodians', 'request')
 }));
 
 
@@ -189,7 +189,7 @@ router.post(
   let entityType = undefined;
 
   if (entityTypeStr == 'survey-request') {
-    entityType = HippRequest;
+    entityType = SurveyRequest;
     recordType = 'request';
     machine = await buildRecordMachine(
       entityType, entityId, req.user, 'custodians', recordType);

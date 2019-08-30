@@ -14,7 +14,7 @@ import { getConnection } from 'typeorm'
 
 import { asyncMiddleware, isAuthenticated, permitPermission,
   permitCustodianBasedPermission } from '../utils'
-import { HippRequest } from '../../lib/entity/hipp-request'
+import { SurveyRequest } from '../../lib/entity/survey-request'
 import { ProjectMetadata } from '../../lib/entity/project-metadata'
 import { ReportGenerator, HippRequestReportGenerator,
   ProjectMetadataReportGenerator }
@@ -30,7 +30,7 @@ const router = express.Router()
 // custodian attributes are used for the authorisation middleware check
 const TEMPLATE_TYPE_MAP = {
   'HIPP Request': {
-    entityType: HippRequest,
+    entityType: SurveyRequest,
     allowedPermissionAll: 'canViewAllSurveyRequests',
     allowedPermissionCustodian: 'canViewCustodianSurveyRequests',
     custodianAttributes: ['custodians'],
@@ -123,7 +123,7 @@ router.get(
   const templateDetails = TEMPLATE_TYPE_MAP[templateType]
   const entityRepo = getConnection().getRepository(templateDetails.entityType)
 
-  // get the entity (eg; HippRequest, ProjectMetadata), the values from this
+  // get the entity (eg; SurveyRequest, ProjectMetadata), the values from this
   // will be fed into the generated report
   let entity = await entityRepo
   .findOne(entityId, {relations: templateDetails.relations})

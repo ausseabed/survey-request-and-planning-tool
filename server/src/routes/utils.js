@@ -102,7 +102,7 @@ export function permitPermission(allowedPermission) {
 
 // Following middleware takes an object as follows
 // {
-//   entityType: HippRequest,
+//   entityType: SurveyRequest,
 //   entityTypeFn: getetypes,
 //   custodianAttributes: ['custodians'],
 //   custodianAttributesFn: getcustodianattrs,

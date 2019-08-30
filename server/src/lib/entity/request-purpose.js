@@ -1,6 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
 
-import { HippRequest } from './hipp-request';
+import { SurveyRequest } from './survey-request';
 
 @Entity()
 export class RequestPurpose {
@@ -27,8 +27,8 @@ export class RequestPurpose {
   groupOrder;
 
   @ManyToMany(
-    type => HippRequest,
-    hippRequest => hippRequest.purposes)
+    type => SurveyRequest,
+    surveyRequest => surveyRequest.purposes)
   requests;
 
 }

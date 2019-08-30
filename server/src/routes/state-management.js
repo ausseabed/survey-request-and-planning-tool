@@ -2,7 +2,7 @@ const _ = require('lodash');
 import { getConnection } from 'typeorm';
 import { Machine } from 'xstate';
 
-import { HippRequest } from '../lib/entity/hipp-request';
+import { SurveyRequest } from '../lib/entity/survey-request';
 import { ProjectMetadata } from '../lib/entity/project-metadata';
 import { RecordState } from '../lib/entity/record-state';
 
@@ -141,7 +141,7 @@ export const buildRecordMachine =
   // the states, and migrations between them differ based on entity
   // so get the right states for the given entity type
   let states = undefined
-  if (entityType == HippRequest) {
+  if (entityType == SurveyRequest) {
     states = requestStates
   } else if (entityType == ProjectMetadata) {
     states = planStates

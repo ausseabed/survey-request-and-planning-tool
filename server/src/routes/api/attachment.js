@@ -10,8 +10,8 @@ import { getConnection } from 'typeorm';
 import { asyncMiddleware, isAuthenticated, isUuid, permitCustodianBasedPermission }
   from '../utils';
 import { Attachment } from '../../lib/entity/attachment';
-import { HippRequest } from '../../lib/entity/hipp-request';
-import { HippRequestAttachment } from '../../lib/entity/hipp-request-attachment';
+import { SurveyRequest } from '../../lib/entity/survey-request';
+import { SurveyRequestAttachment } from '../../lib/entity/survey-request-attachment';
 import { ProjectMetadata } from '../../lib/entity/project-metadata';
 import { SurveyAttachment } from '../../lib/entity/survey-attachment';
 
@@ -27,8 +27,8 @@ const attachmentmap = {
     custodianAttributes: ['custodians'],
   },
   'survey-request': {
-    entity: HippRequest,
-    attachment: HippRequestAttachment,
+    entity: SurveyRequest,
+    attachment: SurveyRequestAttachment,
     custodianAttributes: ['custodians'],
   },
 }

@@ -482,7 +482,7 @@ export class HippRequestReportGenerator extends ReportGenerator {
 }
 
 
-export class ProjectMetadataReportGenerator extends ReportGenerator {
+export class SurveyPlanReportGenerator extends ReportGenerator {
 
   constructor (entity, entityType, reportTemplate) {
     super(entity, entityType, reportTemplate)
@@ -563,7 +563,7 @@ export class ProjectMetadataReportGenerator extends ReportGenerator {
   getRawDataFields(entityData) {
     const flatData = this.flattenObject(
       entityData,
-      ['defaults', 'id', 'recordId', 'projectMetadatas']
+      ['defaults', 'id', 'recordId', 'surveyPlans']
     );
 
     const flatDataArray = [];

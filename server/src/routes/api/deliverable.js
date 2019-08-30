@@ -6,7 +6,7 @@ import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, permitCustodianBasedPermission }
   from '../utils';
-import { ProjectMetadata } from '../../lib/entity/project-metadata';
+import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { DeliverableDefinition } from '../../lib/entity/deliverable-definition';
 import { SurveyDeliverable } from '../../lib/entity/survey-deliverable';
 
@@ -39,7 +39,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType: ProjectMetadata,
+      entityType: SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlanss',
       allowedPermissionCustodian: 'canViewCustodianSurveyPlans',
@@ -52,7 +52,7 @@ router.get(
   .getRepository(SurveyDeliverable)
   .createQueryBuilder("survey_deliverable")
   .where(
-    `"projectMetadataId" = :id`,
+    `"surveyPlanId" = :id`,
     {id: id}
   )
   .getMany();
@@ -66,7 +66,7 @@ router.post(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType: ProjectMetadata,
+      entityType: SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyPlans',
       allowedPermissionCustodian: 'canEditCustodianSurveyPlans',
@@ -93,7 +93,7 @@ router.delete(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType: ProjectMetadata,
+      entityType: SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyPlans',
       allowedPermissionCustodian: 'canEditCustodianSurveyPlans',

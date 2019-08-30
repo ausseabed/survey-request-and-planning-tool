@@ -3,7 +3,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable }
 
 import { SurveyRequest } from './survey-request';
 import { InstrumentType } from './instrument-type';
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 
 @Entity()
 export class DataCaptureType {
@@ -38,9 +38,9 @@ export class DataCaptureType {
   instrumentTypes;
 
   @ManyToMany(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.dataCaptureTypes)
-  projectMetadatas;
+    type => SurveyPlan,
+    surveyPlan => surveyPlan.dataCaptureTypes)
+  surveyPlans;
 
   @ManyToMany(
     type => SurveyRequest,

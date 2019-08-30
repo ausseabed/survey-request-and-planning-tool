@@ -2,7 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
 import { SurveyRequest } from './survey-request';
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 import { TechSpec } from './tech-spec';
 import { User } from './user'
 
@@ -29,9 +29,9 @@ export class Custodian {
   deleted = false;
 
   @ManyToMany(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.custodians)
-  projectMetadatas;
+    type => SurveyPlan,
+    surveyPlan => surveyPlan.custodians)
+  surveyPlans;
 
   @ManyToMany(
     type => SurveyRequest,

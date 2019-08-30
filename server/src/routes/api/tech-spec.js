@@ -7,7 +7,7 @@ import { getConnection } from 'typeorm';
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
   geojsonToMultiLineString, geojsonToMultiPoint, permitCustodianBasedPermission }
   from '../utils';
-import { ProjectMetadata } from '../../lib/entity/project-metadata';
+import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { TechSpec, SURVEY_TYPES, SURVEY_CLASSIFICATIONS,
   GROUND_TRUTHING_METHODS, POSITIONING_REQUIREMENTS, DELIVERY_METHODS }
   from '../../lib/entity/tech-spec';
@@ -54,7 +54,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:ProjectMetadata,
+      entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlans',
       allowedPermissionCustodian: 'canViewCustodianProjects'})
@@ -84,7 +84,7 @@ router.post(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:ProjectMetadata,
+      entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyPlans',
       allowedPermissionCustodian: 'canEditCustodianSurveyPlans',

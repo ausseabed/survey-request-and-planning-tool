@@ -4,7 +4,7 @@ var auth = require('./auth');
 var checkAoi = require('./api/check-aoi');
 var dataCaptureTypeRoutes = require('./api/data-capture-type');
 var instrumentTypeRoutes = require('./api/instrument-type');
-var projectMetadataRoutes = require('./api/project-metadata');
+var surveyPlanRoutes = require('./api/survey-plan');
 var custodianRoutes = require('./api/custodian');
 var surveyApplicationRoutes = require('./api/survey-application');
 var attachmentRoutes = require('./api/attachment');
@@ -27,7 +27,7 @@ router
 .use('/check-aoi', checkAoi)
 .use('/data-capture-type', dataCaptureTypeRoutes)
 .use('/instrument-type', instrumentTypeRoutes)
-.use('/survey-plan', projectMetadataRoutes)
+.use('/survey-plan', surveyPlanRoutes)
 .use('/custodian', custodianRoutes)
 .use('/survey-application', surveyApplicationRoutes)
 .use('/attachment', attachmentRoutes)

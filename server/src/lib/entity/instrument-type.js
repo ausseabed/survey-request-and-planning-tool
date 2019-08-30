@@ -2,7 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable }
   from "typeorm";
 
 import { DataCaptureType } from './data-capture-type';
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 
 @Entity()
 export class InstrumentType {
@@ -24,7 +24,7 @@ export class InstrumentType {
   dataCaptureTypes;
 
   @ManyToMany(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.instrumentTypes)
-  projectMetadatas;
+    type => SurveyPlan,
+    surveyPlan => surveyPlan.instrumentTypes)
+  surveyPlans;
 }

@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 
 @Entity()
 export class SurveyApplication {
@@ -31,8 +31,8 @@ export class SurveyApplication {
   defaults = undefined;
 
   @OneToMany(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.surveyApplication)
-  projectMetadatas;
+    type => SurveyPlan,
+    surveyPlan => surveyPlan.surveyApplication)
+  surveyPlans;
 
 }

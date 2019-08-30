@@ -8,8 +8,8 @@ import { getConnection } from 'typeorm';
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
   hasPermission, permitCustodianBasedPermission }
   from '../utils';
-import { ProjectMetadata, SURVEY_PLAN_STATUSES }
-  from '../../lib/entity/project-metadata';
+import { SurveyPlan, SURVEY_PLAN_STATUSES }
+  from '../../lib/entity/survey-plan';
 import { SurveyApplication } from '../../lib/entity/survey-application';
 import { TechSpec } from '../../lib/entity/tech-spec';
 
@@ -29,26 +29,26 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   includeGeometry = (includeGeometry == 'true'); // convert string to bool
 
   let projectsQuery = getConnection()
-  .getRepository(ProjectMetadata)
-  .createQueryBuilder("project_metadata")
-  .select(["project_metadata.id", "project_metadata.surveyName",
-    "project_metadata.startDate", "project_metadata.status"])
-  .leftJoinAndSelect("project_metadata.recordState", "record_state")
-  .leftJoin("project_metadata.surveyRequest", "survey_request")
+  .getRepository(SurveyPlan)
+  .createQueryBuilder("survey_plan")
+  .select(["survey_plan.id", "survey_plan.surveyName",
+    "survey_plan.startDate", "survey_plan.status"])
+  .leftJoinAndSelect("survey_plan.recordState", "record_state")
+  .leftJoin("survey_plan.surveyRequest", "survey_request")
   .addSelect("survey_request.id")
 
   if (includeGeometry) {
-    projectsQuery = projectsQuery.addSelect("project_metadata.areaOfInterest")
+    projectsQuery = projectsQuery.addSelect("survey_plan.areaOfInterest")
   }
 
   projectsQuery = projectsQuery
   .where(
-    `project_metadata.deleted = :deleted`,
+    `survey_plan.deleted = :deleted`,
     {deleted: false}
   )
-  .orderBy("project_metadata.surveyName")
+  .orderBy("survey_plan.surveyName")
   if (!_.isNil(req.query['survey-request'])) {
-    projectsQuery = projectsQuery.andWhere(`"project_metadata"."surveyRequestId" = :hrid`,
+    projectsQuery = projectsQuery.andWhere(`"survey_plan"."surveyRequestId" = :hrid`,
       {hrid: req.query['survey-request']})
   }
 
@@ -58,7 +58,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     // need to filter list to include only projects that include the
     // custodian this user is assigned.
     projectsQuery = projectsQuery
-    .innerJoin("project_metadata.custodians", "custodian")
+    .innerJoin("survey_plan.custodians", "custodian")
     .andWhere(
       `custodian.id = :custodianId`,
       {custodianId: req.user.custodian.id}
@@ -81,7 +81,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:ProjectMetadata,
+      entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlans',
       allowedPermissionCustodian: 'canViewCustodianSurveyPlans'})
@@ -94,7 +94,7 @@ router.get(
   .from(subQuery => {
       return subQuery
           .select('ST_Extent("areaOfInterest")', 'extent')
-          .from(ProjectMetadata)
+          .from(SurveyPlan)
           .where(`"id" = :id`, { id: req.params.id });
   }, "extent")
   .getRawOne();
@@ -116,43 +116,43 @@ router.get(
   let rasterSize = 800
   let scale = maxDelta / rasterSize
   // let projectImage = await getConnection()
-  // .getRepository(ProjectMetadata)
-  // .createQueryBuilder("project_metadata")
+  // .getRepository(SurveyPlan)
+  // .createQueryBuilder("survey_plan")
   // .select(`ST_MakeEmptyRaster(${rasterSize},${rasterSize},${newExtents.minX}, ${newExtents.maxY}, ${scale}, ${scale}, 0,0,4326)`, 'imageData')
-  // .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  // .where(`"survey_plan"."id" = :id`, {id: req.params.id})
   // .getRawOne();
 
   let nrq = `ST_MakeEmptyRaster(${rasterSize},${rasterSize},${newExtents.minX}, ${newExtents.maxY}, ${scale}, ${-1*scale}, 0,0,4326)`
 
   let projectImage = await getConnection()
-  .getRepository(ProjectMetadata)
+  .getRepository(SurveyPlan)
   .createQueryBuilder()
   .select(`ST_AsPNG(ST_AsRaster("areaOfInterest",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[97, 173, 216], ARRAY[255,255,255]))`, 'imageData')
   .where(`"id" = :id`, {id: req.params.id})
   .getRawOne();
 
   // let projectImage = await getConnection()
-  // .getRepository(ProjectMetadata)
-  // .createQueryBuilder("project_metadata")
-  // .select(`ST_AsPNG(ST_AsRaster(ST_Buffer(ST_Boundary("project_metadata"."areaOfInterest"), 0.02,\'join=round\'),${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[118,154,118], ARRAY[255,255,255]))`, 'imageData')
-  // .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  // .getRepository(SurveyPlan)
+  // .createQueryBuilder("survey_plan")
+  // .select(`ST_AsPNG(ST_AsRaster(ST_Buffer(ST_Boundary("survey_plan"."areaOfInterest"), 0.02,\'join=round\'),${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[118,154,118], ARRAY[255,255,255]))`, 'imageData')
+  // .where(`"survey_plan"."id" = :id`, {id: req.params.id})
   // .getRawOne();
 
 
   // let projectExtent = await getConnection()
-  // .getRepository(ProjectMetadata)
-  // .createQueryBuilder("project_metadata")
-  // .select('ST_Extent("project_metadata"."areaOfInterest")', 'extent')
-  // .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  // .getRepository(SurveyPlan)
+  // .createQueryBuilder("survey_plan")
+  // .select('ST_Extent("survey_plan"."areaOfInterest")', 'extent')
+  // .where(`"survey_plan"."id" = :id`, {id: req.params.id})
   // .getRawOne();
   // console.log(projectExtent)
 
 
   // let projectImage = await getConnection()
-  // .getRepository(ProjectMetadata)
-  // .createQueryBuilder("project_metadata")
-  // .select('ST_AsPNG(ST_AsRaster(ST_Buffer(ST_Boundary("project_metadata"."areaOfInterest"), 0.02,\'join=round\'),400,400,ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[118,154,118], ARRAY[255,255,255]))', 'imageData')
-  // .where(`"project_metadata"."id" = :id`, {id: req.params.id})
+  // .getRepository(SurveyPlan)
+  // .createQueryBuilder("survey_plan")
+  // .select('ST_AsPNG(ST_AsRaster(ST_Buffer(ST_Boundary("survey_plan"."areaOfInterest"), 0.02,\'join=round\'),400,400,ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[118,154,118], ARRAY[255,255,255]))', 'imageData')
+  // .where(`"survey_plan"."id" = :id`, {id: req.params.id})
   // .getRawOne();
 
   res.writeHead(200, {'Content-Type': 'image/png' });
@@ -166,7 +166,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:ProjectMetadata,
+      entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyPlans',
       allowedPermissionCustodian: 'canEditCustodianSurveyPlans',
@@ -176,7 +176,7 @@ router.get(
   asyncMiddleware(async function (req, res) {
 
   let plan = await getConnection()
-  .getRepository(ProjectMetadata)
+  .getRepository(SurveyPlan)
   .findOne(
     req.params.id,
     {
@@ -215,14 +215,14 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:ProjectMetadata,
+      entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlans',
       allowedPermissionCustodian: 'canViewCustodianSurveyPlans'})
   ],
   asyncMiddleware(async function (req, res) {
   let project = await getConnection()
-  .getRepository(ProjectMetadata)
+  .getRepository(SurveyPlan)
   .findOne(
     req.params.id,
     {
@@ -239,7 +239,7 @@ router.get(
 
   if (!project || project.deleted) {
     let err = boom.notFound(
-      `ProjectMetadata ${req.params.id} does not exist`);
+      `SurveyPlan ${req.params.id} does not exist`);
     throw err;
   }
 
@@ -256,7 +256,7 @@ router.post(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:ProjectMetadata,
+      entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyPlans',
       allowedPermissionCustodian: 'canEditCustodianSurveyPlans',
@@ -265,7 +265,7 @@ router.post(
   ],
   asyncMiddleware(async function (req, res) {
 
-  var project = new ProjectMetadata()
+  var project = new SurveyPlan()
   if (req.body.id) {
     project.id = req.body.id;
   }
@@ -324,7 +324,7 @@ router.post(
   delete project.deleted;
 
   project = await getConnection()
-  .getRepository(ProjectMetadata)
+  .getRepository(SurveyPlan)
   .save(project)
 
   return res.json(project)
@@ -336,7 +336,7 @@ router.delete(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:ProjectMetadata,
+      entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyPlans',
       allowedPermissionCustodian: 'canEditCustodianSurveyPlans',
@@ -344,14 +344,14 @@ router.delete(
   ],
   asyncMiddleware(async function (req, res) {
 
-  const projMetaRepo = getConnection().getRepository(ProjectMetadata);
+  const projMetaRepo = getConnection().getRepository(SurveyPlan);
   const techSpecRepo = getConnection().getRepository(TechSpec);
 
   let project = await projMetaRepo.findOne(req.params.id);
 
   if (!project) {
     let err = boom.notFound(
-      `ProjectMetadata ${req.params.id} does not exist, cannot delete`);
+      `SurveyPlan ${req.params.id} does not exist, cannot delete`);
     throw err;
   }
 

@@ -7,7 +7,7 @@ import { getConnection } from 'typeorm';
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon,
   hasPermission }
   from '../utils';
-import { ProjectMetadata } from '../../lib/entity/project-metadata';
+import { SurveyPlan } from '../../lib/entity/survey-plan';
 
 var router = express.Router();
 
@@ -26,23 +26,23 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       JSON.stringify(geojson);
 
   let projectsQuery = getConnection()
-  .getRepository(ProjectMetadata)
-  .createQueryBuilder("project_metadata")
-  .leftJoinAndSelect("project_metadata.recordState", "record_state")
+  .getRepository(SurveyPlan)
+  .createQueryBuilder("survey_plan")
+  .leftJoinAndSelect("survey_plan.recordState", "record_state")
   .where(
     `ST_Intersects(
-      project_metadata.areaOfInterest,
+      survey_plan.areaOfInterest,
       ST_SetSRID(ST_GeomFromGeoJSON(:geomStr),4326)
     )`,
     {geomStr: geomString}
   ).andWhere(
-    `project_metadata.deleted = :deleted`,
+    `survey_plan.deleted = :deleted`,
     {deleted: false}
   )
-  .orderBy("project_metadata.startDate")
+  .orderBy("survey_plan.startDate")
 
   if (!_.isNil(req.query['ignore-id'])) {
-    projectsQuery = projectsQuery.andWhere(`"project_metadata"."id" != :id`,
+    projectsQuery = projectsQuery.andWhere(`"survey_plan"."id" != :id`,
       {id: req.query['ignore-id']})
   }
 
@@ -52,7 +52,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     // need to filter list to include only projects that include the
     // custodian this user is assigned.
     projectsQuery = projectsQuery
-    .innerJoin("project_metadata.custodians", "custodian")
+    .innerJoin("survey_plan.custodians", "custodian")
     .andWhere(
       `custodian.id = :custodianId`,
       {custodianId: req.user.custodian.id}

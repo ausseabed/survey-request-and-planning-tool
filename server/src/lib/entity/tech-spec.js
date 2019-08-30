@@ -5,7 +5,7 @@ import {Entity, PrimaryColumn, Column, OneToOne, ManyToMany, ManyToOne,
 import { DataCaptureType } from './data-capture-type';
 import { DateTransformer } from './utils';
 import { InstrumentType } from './instrument-type';
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 import { Custodian } from './custodian';
 
 

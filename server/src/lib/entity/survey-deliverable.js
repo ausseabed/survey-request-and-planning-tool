@@ -2,7 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn }
   from "typeorm";
 
 import { DeliverableDefinition } from './deliverable-definition';
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 
 @Entity()
 export class SurveyDeliverable {
@@ -32,11 +32,11 @@ export class SurveyDeliverable {
   definition;
 
   @Column("uuid")
-  projectMetadataId;
+  surveyPlanId;
 
   @ManyToOne(
-    type => ProjectMetadata,
+    type => SurveyPlan,
     pmd => pmd.deliverables)
-  @JoinColumn({ name: "projectMetadataId" })
-  projectMetadata;
+  @JoinColumn({ name: "surveyPlanId" })
+  surveyPlan;
 }

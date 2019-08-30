@@ -6,7 +6,7 @@ import { DateTransformer } from './utils';
 import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { SurveyRequestAttachment } from './survey-request-attachment';
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 import { Organisation } from './organisation';
 import { RecordState } from './record-state';
 import { RequestPurpose } from './request-purpose';
@@ -262,8 +262,8 @@ export class SurveyRequest {
   attachments;
 
   @OneToMany(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.surveyRequest)
+    type => SurveyPlan,
+    surveyPlan => surveyPlan.surveyRequest)
   surveyPlans;
 
   @OneToOne(type => RecordState, { cascade: true })

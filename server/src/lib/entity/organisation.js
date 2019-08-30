@@ -2,7 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
 import { SurveyRequest } from './survey-request';
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 import { TechSpec } from './tech-spec';
 
 
@@ -42,9 +42,9 @@ export class Organisation {
   sourceId = undefined;
 
   @ManyToMany(
-    type => ProjectMetadata,
-    projectMetadata => projectMetadata.organisations)
-  projectMetadatas;
+    type => SurveyPlan,
+    surveyPlan => surveyPlan.organisations)
+  surveyPlans;
 
   @ManyToMany(
     type => SurveyRequest,

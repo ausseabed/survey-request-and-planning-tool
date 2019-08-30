@@ -22,7 +22,7 @@ export const SURVEY_PLAN_STATUSES = [
 ];
 
 @Entity()
-export class ProjectMetadata {
+export class SurveyPlan {
 
   @PrimaryGeneratedColumn('uuid')
   id = undefined;
@@ -59,13 +59,13 @@ export class ProjectMetadata {
 
   @ManyToMany(
     type => Organisation,
-    organisation => organisation.projectMetadatas)
+    organisation => organisation.surveyPlans)
   @JoinTable()
   organisations;
 
   @ManyToMany(
     type => Custodian,
-    custodian => custodian.projectMetadatas)
+    custodian => custodian.surveyPlans)
   @JoinTable()
   custodians;
 
@@ -94,19 +94,19 @@ export class ProjectMetadata {
 
   @ManyToMany(
     type => DataCaptureType,
-    dataCaptureType => dataCaptureType.projectMetadatas)
+    dataCaptureType => dataCaptureType.surveyPlans)
   @JoinTable()
   dataCaptureTypes;
 
   @ManyToMany(
     type => InstrumentType,
-    instrumentType => instrumentType.projectMetadatas)
+    instrumentType => instrumentType.surveyPlans)
   @JoinTable()
   instrumentTypes;
 
   @ManyToOne(
     type => SurveyApplication,
-    surveyApplication => surveyApplication.projectMetadatas)
+    surveyApplication => surveyApplication.surveyPlans)
   surveyApplication;
 
   //survey metadata fields
@@ -161,7 +161,7 @@ export class ProjectMetadata {
 
   @OneToMany(
     type => SurveyDeliverable,
-    sd => sd.projectMetadata)
+    sd => sd.surveyPlan)
   deliverables;
 
   @ManyToOne(

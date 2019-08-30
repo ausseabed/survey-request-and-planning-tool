@@ -23,7 +23,7 @@ async function getOrganisation(id) {
       '(SELECT COUNT(*) FROM survey_request_organisations_organisation WHERE "survey_request_organisations_organisation"."organisationId" = organisation.id) AS request_count'
     )
     .addSelect(
-      '(SELECT COUNT(*) FROM project_metadata_organisations_organisation WHERE "project_metadata_organisations_organisation"."organisationId" = organisation.id) AS plan_count'
+      '(SELECT COUNT(*) FROM survey_plan_organisations_organisation WHERE "survey_plan_organisations_organisation"."organisationId" = organisation.id) AS plan_count'
     )
     .orderBy('organisation.name', 'ASC')
     .where('organisation.id = :id', {id: id})
@@ -77,7 +77,7 @@ router.get(
     '(SELECT COUNT(*) FROM survey_request_organisations_organisation WHERE "survey_request_organisations_organisation"."organisationId" = organisation.id) AS request_count'
   )
   .addSelect(
-    '(SELECT COUNT(*) FROM project_metadata_organisations_organisation WHERE "project_metadata_organisations_organisation"."organisationId" = organisation.id) AS plan_count'
+    '(SELECT COUNT(*) FROM survey_plan_organisations_organisation WHERE "survey_plan_organisations_organisation"."organisationId" = organisation.id) AS plan_count'
   )
   .orderBy('organisation.name', 'ASC');
 

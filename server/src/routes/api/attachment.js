@@ -12,17 +12,17 @@ import { asyncMiddleware, isAuthenticated, isUuid, permitCustodianBasedPermissio
 import { Attachment } from '../../lib/entity/attachment';
 import { SurveyRequest } from '../../lib/entity/survey-request';
 import { SurveyRequestAttachment } from '../../lib/entity/survey-request-attachment';
-import { ProjectMetadata } from '../../lib/entity/project-metadata';
+import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { SurveyAttachment } from '../../lib/entity/survey-attachment';
 
 
- // How do the attachments link to each entity. 'survey' is a projectMetadata
- // entry. A projectMetadata entries attachments are linked via the
+ // How do the attachments link to each entity. 'survey' is a surveyPlan
+ // entry. A surveyPlan entries attachments are linked via the
  // SurveyAttachment table.
  // custodian attributes are used for the authorisation middleware check
 const attachmentmap = {
   'survey-plan': {
-    entity: ProjectMetadata,
+    entity: SurveyPlan,
     attachment: SurveyAttachment,
     custodianAttributes: ['custodians'],
   },

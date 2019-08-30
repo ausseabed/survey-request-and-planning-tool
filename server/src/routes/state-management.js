@@ -3,7 +3,7 @@ import { getConnection } from 'typeorm';
 import { Machine } from 'xstate';
 
 import { SurveyRequest } from '../lib/entity/survey-request';
-import { ProjectMetadata } from '../lib/entity/project-metadata';
+import { SurveyPlan } from '../lib/entity/survey-plan';
 import { RecordState } from '../lib/entity/record-state';
 
 
@@ -143,7 +143,7 @@ export const buildRecordMachine =
   let states = undefined
   if (entityType == SurveyRequest) {
     states = requestStates
-  } else if (entityType == ProjectMetadata) {
+  } else if (entityType == SurveyPlan) {
     states = planStates
   } else {
     throw new Error(`Unknown entityType ${entityType.name}`);

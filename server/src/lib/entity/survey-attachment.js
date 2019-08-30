@@ -4,7 +4,7 @@ import {Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne,
 import { DateTransformer } from './utils';
 
 import { Attachment } from './attachment';
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 
 @Entity()
 export class SurveyAttachment {
@@ -12,7 +12,7 @@ export class SurveyAttachment {
   @PrimaryGeneratedColumn('uuid')
   id;
 
-  @ManyToOne(type => ProjectMetadata, entity => entity.attachments)
+  @ManyToOne(type => SurveyPlan, entity => entity.attachments)
   @JoinColumn()
   entity;
 

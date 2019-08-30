@@ -10,7 +10,7 @@ import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
 import { SurveyRequest, SURVEY_QUALITY_REQUIREMENTS,
   CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
   from '../../lib/entity/survey-request';
-import { ProjectMetadata } from '../../lib/entity/project-metadata';
+import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { updateRecordState } from '../state-management';
 
 // mapping of the entity attribute names to what they should be in the
@@ -210,7 +210,7 @@ router.post(
   // metadatas linked to it.
 
   const hrRepo = getConnection().getRepository(SurveyRequest);
-  const planRepo = getConnection().getRepository(ProjectMetadata);
+  const planRepo = getConnection().getRepository(SurveyPlan);
 
   let hr = await hrRepo.findOne(req.params.id);
 
@@ -238,7 +238,7 @@ router.post(
       );
 
       if (!entityPlan) {
-        let err = boom.notFound(`ProjectMetadata ${plan.id} does not exist, ` +
+        let err = boom.notFound(`SurveyPlan ${plan.id} does not exist, ` +
           `cannot update link to request`);
         throw err;
       }
@@ -259,7 +259,7 @@ router.post(
       }
 
       await getConnection()
-      .getRepository(ProjectMetadata)
+      .getRepository(SurveyPlan)
       .save(entityPlan)
 
     }

@@ -11,7 +11,7 @@ import { asyncMiddleware, isAuthenticated, isUuid, permitCustodianBasedPermissio
 
 import { buildRecordMachine, updateRecordState } from '../state-management';
 import { SurveyRequest } from '../../lib/entity/survey-request';
-import { ProjectMetadata } from '../../lib/entity/project-metadata';
+import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { RecordState } from '../../lib/entity/record-state';
 
 const router = express.Router();
@@ -35,7 +35,7 @@ router.get(
   .createQueryBuilder("record_state")
   .leftJoinAndSelect("record_state.user", "user")
   .leftJoinAndSelect("survey_request", "survey_request", 'record_state."recordType" = \'request\' AND survey_request.id = record_state."recordId"')
-  .leftJoinAndSelect("project_metadata", "project_metadata", 'record_state."recordType" = \'plan\' AND project_metadata.id = record_state."recordId"')
+  .leftJoinAndSelect("survey_plan", "survey_plan", 'record_state."recordType" = \'plan\' AND survey_plan.id = record_state."recordId"')
   .select('record_state.id', 'id')
   .addSelect('record_state.state', 'state')
   .addSelect('record_state.created', 'created')
@@ -46,13 +46,13 @@ router.get(
   .addSelect('record_state."previousId"', 'previousId')
   .addSelect('user.name', 'userName')
   .addSelect('survey_request.name', 'surveyRequestName')
-  .addSelect('project_metadata."surveyName"', 'projectMetadataName')
+  .addSelect('survey_plan."surveyName"', 'surveyPlanName')
   .orderBy('record_state.created', 'DESC')
 
   if (!_.isNil(filter)) {
     qb = qb
     .where('survey_request.name ilike :name', {name: '%' + filter + '%' })
-    .orWhere('project_metadata."surveyName" ilike :name', {name: '%' + filter + '%' })
+    .orWhere('survey_plan."surveyName" ilike :name', {name: '%' + filter + '%' })
     .orWhere('user.name ilike :name', {name: '%' + filter + '%' })
   }
 
@@ -69,7 +69,7 @@ router.get(
   recordStates.forEach(rs => {
     rs.entityName =
       _.isNil(rs.surveyRequestName) ?
-        rs.projectMetadataName :
+        rs.surveyPlanName :
         rs.surveyRequestName
   })
 
@@ -155,14 +155,14 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
-      entityType:ProjectMetadata,
+      entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlans',
       allowedPermissionCustodian: 'canViewCustodianSurveyPlans'}),
   ],
   asyncMiddleware(async function(req, res) {
 
-  await handleGetRequest(req, res, ProjectMetadata, 'custodians', 'plan')
+  await handleGetRequest(req, res, SurveyPlan, 'custodians', 'plan')
 }));
 
 
@@ -194,7 +194,7 @@ router.post(
     machine = await buildRecordMachine(
       entityType, entityId, req.user, 'custodians', recordType);
   } else if (entityTypeStr == 'survey-plan') {
-    entityType = ProjectMetadata;
+    entityType = SurveyPlan;
     recordType = 'plan';
     machine = await buildRecordMachine(
       entityType, entityId, req.user, 'custodians', recordType);

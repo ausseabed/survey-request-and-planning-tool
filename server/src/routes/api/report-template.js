@@ -15,9 +15,9 @@ import { getConnection } from 'typeorm'
 import { asyncMiddleware, isAuthenticated, permitPermission,
   permitCustodianBasedPermission } from '../utils'
 import { SurveyRequest } from '../../lib/entity/survey-request'
-import { ProjectMetadata } from '../../lib/entity/project-metadata'
+import { SurveyPlan } from '../../lib/entity/survey-plan'
 import { ReportGenerator, HippRequestReportGenerator,
-  ProjectMetadataReportGenerator }
+  SurveyPlanReportGenerator }
   from '../../lib/report-generator'
 import { ReportTemplate, REPORT_TEMPLATE_TYPES }
   from '../../lib/entity/report-template'
@@ -42,11 +42,11 @@ const TEMPLATE_TYPE_MAP = {
     ],
   },
   'Plan': {
-    entityType: ProjectMetadata,
+    entityType: SurveyPlan,
     allowedPermissionAll: 'canViewAllSurveyPlans',
     allowedPermissionCustodian: 'canViewCustodianSurveyPlans',
     custodianAttributes: ['custodians'],
-    reportGenerator: ProjectMetadataReportGenerator,
+    reportGenerator: SurveyPlanReportGenerator,
     relations: [
       'custodians',
       'dataCaptureTypes',
@@ -123,7 +123,7 @@ router.get(
   const templateDetails = TEMPLATE_TYPE_MAP[templateType]
   const entityRepo = getConnection().getRepository(templateDetails.entityType)
 
-  // get the entity (eg; SurveyRequest, ProjectMetadata), the values from this
+  // get the entity (eg; SurveyRequest, SurveyPlan), the values from this
   // will be fed into the generated report
   let entity = await entityRepo
   .findOne(entityId, {relations: templateDetails.relations})

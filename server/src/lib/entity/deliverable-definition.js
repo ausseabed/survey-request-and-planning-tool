@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany,
   JoinTable} from "typeorm";
 
-import { ProjectMetadata } from './project-metadata';
+import { SurveyPlan } from './survey-plan';
 import { SurveyDeliverable } from './survey-deliverable';
 import { TechSpec }
   from './tech-spec';

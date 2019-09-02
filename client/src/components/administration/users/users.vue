@@ -65,6 +65,18 @@
                     >
                   </form-field-validated-input>
 
+                  <form-field-validated-input
+                    name="activeUser.department"
+                    attribute="Department"
+                    label="Department"
+                    :value="activeUser.department"
+                    @input="updateActiveUserValue({path:'department', value:$event})"
+                    @blur="$v.activeUser.department.$touch"
+                    type="text"
+                    :readonly="!hasPermission('canEditUser')"
+                    >
+                  </form-field-validated-input>
+
                   <form-field-validated-select
                     name="activeUser.custodian"
                     label="Custodian"
@@ -241,6 +253,7 @@ export default Vue.extend({
   validations: {
     activeUser: {
       name: { required },
+      department: { },
       role: { required },
       custodian: { },
     }

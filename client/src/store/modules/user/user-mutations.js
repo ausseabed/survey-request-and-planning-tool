@@ -49,7 +49,7 @@ const mutations = {
 
   [types.UPDATE_ACTIVE_USER_VALUE] (state, { path, value }) {
     state.dirty = true;
-    _.set(state.activeUser, path, _.cloneDeep(value))
+    Vue.set(state.activeUser, path, _.cloneDeep(value))
   },
 }
 

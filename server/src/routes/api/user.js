@@ -19,7 +19,7 @@ router.get(
   let users = await getConnection()
   .getRepository(User)
   .find({
-    select: ['id', 'name', 'email', 'lastSeen'],
+    select: ['id', 'name', 'email', 'lastSeen', 'department'],
     relations: ['role', 'custodian'],
     order: {name: 'ASC'}
   });
@@ -55,6 +55,7 @@ router.post(
   user.role = req.body.role;
   user.custodian = req.body.custodian;
   user.name = req.body.name;
+  user.department = req.body.department;
 
   user = await getConnection()
   .getRepository(User)
@@ -64,7 +65,7 @@ router.post(
   user = await getConnection()
   .getRepository(User)
   .findOne(user.id, {
-    select: ['id', 'name', 'email'],
+    select: ['id', 'name', 'email', 'department'],
     relations: ['role', 'custodian'],
   })
 

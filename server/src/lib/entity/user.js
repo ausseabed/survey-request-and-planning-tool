@@ -27,6 +27,12 @@ export class User {
   @Column("varchar")
   name = undefined;
 
+  @Column({
+    type:"varchar",
+    nullable: true,
+  })
+  department;
+
   // last time user did something within the application
   @Column({
       type:"timestamp with time zone",

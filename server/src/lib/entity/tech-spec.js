@@ -325,6 +325,8 @@ export class TechSpec {
   })
   additionalRequirements = undefined;
 
+  @OneToOne(type => SurveyPlan, surveyPlan => surveyPlan.techSpec, { nullable: true })
+  surveyPlan;
 
 
   @Column({

@@ -41,7 +41,7 @@ router.get(
     permitCustodianBasedPermission({
       entityType: SurveyPlan,
       custodianAttributes: ['custodians'],
-      allowedPermissionAll: 'canViewAllSurveyPlanss',
+      allowedPermissionAll: 'canViewAllSurveyPlans',
       allowedPermissionCustodian: 'canViewCustodianSurveyPlans',
     })
   ],

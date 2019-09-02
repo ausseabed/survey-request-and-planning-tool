@@ -172,7 +172,7 @@ export class SurveyPlan {
   @JoinColumn({ name: "surveyRequestId" })
   surveyRequest;
 
-  @OneToOne(type => TechSpec, { nullable: true })
+  @OneToOne(type => TechSpec, techSpec => techSpec.surveyPlan, { nullable: true })
   @JoinColumn({ name: "id" })
   techSpec;
 

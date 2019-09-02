@@ -124,6 +124,18 @@
                   </form-field-validated-input>
 
                   <form-field-validated-input
+                    name="activeOrganisation.abbreviation"
+                    attribute="Abbreviation"
+                    label="Abbreviation"
+                    :value="activeOrganisation.abbreviation"
+                    @input="updateActiveOrganisationValue({path:'abbreviation', value:$event})"
+                    @blur="$v.activeOrganisation.abbreviation.$touch"
+                    type="text"
+                    :readonly="readonly"
+                   >
+                  </form-field-validated-input>
+
+                  <form-field-validated-input
                     name="activeOrganisation.abn"
                     attribute="ABN"
                     label="ABN"
@@ -482,6 +494,7 @@ export default Vue.extend({
   validations: {
     activeOrganisation: {
       name: { required, duplicateOrganisationName },
+      abbreviation: {},
       abn: { duplicateOrganisationAbn },
       description: {},
       source: {},

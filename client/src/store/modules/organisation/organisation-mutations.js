@@ -73,7 +73,7 @@ const mutations = {
 
   [types.UPDATE_ACTIVE_ORGANISATION_VALUE] (state, { path, value }) {
     state.dirty = true;
-    _.set(state.activeOrganisation, path, _.cloneDeep(value))
+    Vue.set(state.activeOrganisation, path, _.cloneDeep(value))
   },
 
 }

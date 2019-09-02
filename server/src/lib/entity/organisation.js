@@ -19,6 +19,12 @@ export class Organisation {
       type:"varchar",
       nullable: true,
   })
+  abbreviation = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
   description = undefined;
 
   @Column({

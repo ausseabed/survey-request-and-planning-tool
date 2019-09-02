@@ -84,8 +84,9 @@ router.get(
   if (!_.isNil(filter)) {
     // if filter provided, check if filtering by org name or abn
     qb = qb
-    .where('organisation.name ilike :name', {name: '%' + filter + '%' })
-    .orWhere('organisation.abn ilike :abn', {abn: '%' + filter + '%' })
+    .where('organisation.name ilike :name', {name: `%${filter}%`})
+    .orWhere('organisation.abbreviation ilike :abbr', {abbr: `%${filter}%` })
+    .orWhere('organisation.abn ilike :abn', {abn: `%${filter}%` })
   }
 
   let count = await qb.getCount();

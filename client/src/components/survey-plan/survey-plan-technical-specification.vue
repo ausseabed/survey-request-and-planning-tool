@@ -45,6 +45,16 @@
       </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
+        <record-state
+          v-if="this.surveyPlan.id"
+          class="full-width q-pb-sm"
+          :entity-type="`survey-plan`"
+          :entity-id="surveyPlan.id"
+          :validation-callback="recordStateValidationCallback"
+          @updated-state="stateUpdated($event)"
+          >
+        </record-state>
+
         <q-card inline class="full-width">
           <q-card-section>
             <div class="text-h6"> Survey Requirements </div>
@@ -932,6 +942,23 @@ export default Vue.extend({
       this.mapTidalGauge.addFile(event.target.files[0]);
     },
 
+    stateUpdated(state) {
+      if (_.isNil(state)) {
+        this.stateReadonly = true
+      } else {
+        this.stateReadonly = state.readonly
+      }
+    },
+
+    recordStateValidationCallback(recordStateEvent) {
+      if (this.dirty) {
+        this.notifyError('Cannot change record state with unsaved changes');
+        return false
+      } else {
+        return true
+      }
+    },
+
   },
 
   computed: {
@@ -954,6 +981,9 @@ export default Vue.extend({
       'surveyPlan',
     ]),
     readOnly: function() {
+      if (this.stateReadonly) {
+        return true
+      }
       if (this.hasPermission('canEditAllSurveyPlans')) {
         // can edit all survey plans
         return false
@@ -1063,6 +1093,7 @@ export default Vue.extend({
     return {
       custodianSearchTerms: '',
       loading: false,
+      stateReadonly: true,
       mapSurveyLines:undefined,
       mapTidalGauge:undefined,
       surveyLinesFile: undefined,

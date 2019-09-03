@@ -120,6 +120,9 @@ export default Vue.extend({
       'surveyRequest',
     ]),
     canViewAttachments: function() {
+      if (this.surveyRequest.public) {
+        return true
+      }
       if (this.hasPermission('canViewAllAttachments')) {
         return true
       } else if (

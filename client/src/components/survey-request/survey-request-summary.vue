@@ -77,6 +77,19 @@
           </q-card-section>
           <q-card-section>
 
+            <q-field
+              stack-label
+              label="Public"
+              hint="Make survey request visible to all users"
+              bottom-slots
+              :readonly="readonly"
+              >
+              <q-checkbox
+                :value="surveyRequest.public"
+                @input="update({path:'surveyRequest.public', value:$event})"
+                />
+            </q-field>
+
             <form-field-validated-select
               name="surveyRequest.custodians"
               attribute="Custodian"

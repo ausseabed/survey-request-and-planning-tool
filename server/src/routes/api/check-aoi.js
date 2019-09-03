@@ -54,7 +54,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     projectsQuery = projectsQuery
     .innerJoin("survey_plan.custodians", "custodian")
     .andWhere(
-      `custodian.id = :custodianId`,
+      `(custodian.id = :custodianId OR survey_plan.public = true)`,
       {custodianId: req.user.custodian.id}
     )
   } else {

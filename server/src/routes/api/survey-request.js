@@ -71,7 +71,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     surveyRequestQuery = surveyRequestQuery
     .innerJoin("survey_request.custodians", "custodian")
     .andWhere(
-      `custodian.id = :custodianId`,
+      `(custodian.id = :custodianId OR survey_request.public = true)`,
       {custodianId: req.user.custodian.id}
     )
   } else {
@@ -94,6 +94,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
+      overrideFlag:'public',
       entityType:SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyRequests',
@@ -156,6 +157,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
+      overrideFlag:'public',
       entityType:SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyRequests',

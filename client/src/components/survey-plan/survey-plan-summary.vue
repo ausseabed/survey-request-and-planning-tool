@@ -89,6 +89,19 @@
               >
             </form-field-validated-input>
 
+            <q-field
+              stack-label
+              label="Public"
+              hint="Make survey plan visible to all users"
+              bottom-slots
+              :readonly="readonly"
+              >
+              <q-checkbox
+                :value="surveyPlan.public"
+                @input="update('surveyPlan.public', $event)"
+                />
+            </q-field>
+
             <q-input
               label="Survey ID"
               hint="Optional"

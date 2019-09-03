@@ -118,6 +118,12 @@ export function permitPermission(allowedPermission) {
 export function permitCustodianBasedPermission(params) {
   const allowedPermissionNoEntityId = params.allowedPermissionNoEntityId
 
+  // this is the name of an entity attribute that allows permission checks
+  // to be skipped if the flag attribute is true. This is used for the `public`
+  // attribute allowing all users to view plans/requests that have been marked
+  // as public by a user.
+  const overrideFlag = params.overrideFlag
+
   // eg; if trying to add a new entity (instead of editing existing)
   const isAllowedNoEntityId = role => {
     if (_.isNil(allowedPermissionNoEntityId)) {
@@ -198,6 +204,8 @@ export function permitCustodianBasedPermission(params) {
           "allowedPermissionCustodianFn");
       }
 
+      const selectAttrs = _.isNil(overrideFlag) ? ['id'] : ['id', overrideFlag]
+
       // get the entity, but only the id attribute and the attributes that link
       // to one or more custodians
       let entity = await getConnection()
@@ -205,10 +213,15 @@ export function permitCustodianBasedPermission(params) {
       .findOne(
         eid,
         {
-          select: ['id'],
+          select: selectAttrs,
           relations: custodianAttributes
         }
       );
+
+      if (!_.isNil(overrideFlag) && entity[overrideFlag]) {
+        next();
+        return
+      }
 
       // aggregate the various list of custodians associated with this
       // entity into the one array

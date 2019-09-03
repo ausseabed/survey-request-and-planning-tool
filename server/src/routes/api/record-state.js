@@ -139,6 +139,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
+      overrideFlag:'public',
       entityType:SurveyRequest,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyRequests',
@@ -155,6 +156,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
+      overrideFlag:'public',
       entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlans',

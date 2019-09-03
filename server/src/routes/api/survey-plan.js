@@ -60,7 +60,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     projectsQuery = projectsQuery
     .innerJoin("survey_plan.custodians", "custodian")
     .andWhere(
-      `custodian.id = :custodianId`,
+      `(custodian.id = :custodianId OR survey_plan.public = true)`,
       {custodianId: req.user.custodian.id}
     )
   } else {
@@ -81,6 +81,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
+      overrideFlag:'public',
       entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlans',
@@ -166,6 +167,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
+      overrideFlag:'public',
       entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canEditAllSurveyPlans',
@@ -215,6 +217,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
+      overrideFlag:'public',
       entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlans',
@@ -319,6 +322,8 @@ router.post(
     let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);
     project.areaOfInterest = geojson;
   }
+
+  project.public = req.body.public;
 
   // don't let the post request mark a project as deleted
   delete project.deleted;

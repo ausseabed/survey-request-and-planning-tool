@@ -77,6 +77,7 @@ function writeData(res, reportData, reportGen, reportTemplate) {
 
 function reportGenPermit() {
   return permitCustodianBasedPermission({
+    overrideFlag:'public',
     entityTypeFn:(request) => {
       return TEMPLATE_TYPE_MAP[request.params.templateType].entityType
     },

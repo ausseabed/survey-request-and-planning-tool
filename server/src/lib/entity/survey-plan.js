@@ -185,5 +185,12 @@ export class SurveyPlan {
       nullable: false,
       default: false,
   })
+  public = false;
+
+  @Column({
+      type:"bool",
+      nullable: false,
+      default: false,
+  })
   deleted = false;
 }

@@ -54,6 +54,7 @@ router.get(
   [
     isAuthenticated,
     permitCustodianBasedPermission({
+      overrideFlag:'public',
       entityType:SurveyPlan,
       custodianAttributes: ['custodians'],
       allowedPermissionAll: 'canViewAllSurveyPlans',

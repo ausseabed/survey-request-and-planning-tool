@@ -33,7 +33,12 @@ const attachmentmap = {
   },
 }
 
-function attachmentPermit(allowedPermissionAll, allowedPermissionCustodian) {
+function attachmentPermit(
+  allowedPermissionAll,
+  allowedPermissionCustodian,
+  supportPublic = false)
+{
+
   const entityTypeFn = (request) => {
     let attachDetails = attachmentmap[request.params.entityType]
     return attachDetails.entity
@@ -42,11 +47,16 @@ function attachmentPermit(allowedPermissionAll, allowedPermissionCustodian) {
     let attachDetails = attachmentmap[request.params.entityType]
     return attachDetails.custodianAttributes
   }
-  return permitCustodianBasedPermission({
+  const params = {
     entityTypeFn:entityTypeFn,
     custodianAttributesFn:custodianAttrsFn,
     allowedPermissionAll,
-    allowedPermissionCustodian})
+    allowedPermissionCustodian
+  }
+  if (supportPublic) {
+    params.overrideFlag = 'public'
+  }
+  return permitCustodianBasedPermission(params)
 }
 
 
@@ -98,7 +108,11 @@ router.get(
   '/:entityType/:id/download/:name',
   [
     isAuthenticated,
-    attachmentPermit('canViewAllAttachments', 'canViewCustodianAttachments')
+    attachmentPermit(
+      'canViewAllAttachments',
+      'canViewCustodianAttachments',
+      true
+    )
   ],
   asyncMiddleware(async function(req, res){
 
@@ -181,7 +195,11 @@ router.get(
   '/:entityType/:id',
   [
     isAuthenticated,
-    attachmentPermit('canViewAllAttachments', 'canViewCustodianAttachments')
+    attachmentPermit(
+      'canViewAllAttachments',
+      'canViewCustodianAttachments',
+      true
+    )
   ],
   asyncMiddleware(async function(req, res){
   // gets a  list of survey files for the given project id

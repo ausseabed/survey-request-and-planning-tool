@@ -277,6 +277,7 @@ router.post(
   project.email = req.body.email;
   project.custodians = req.body.custodians;
   project.organisations = req.body.organisations;
+  project.otherOrganisations = req.body.otherOrganisations;
   project.startDate = req.body.startDate;
   project.endDate = req.body.endDate;
   project.instrumentTypes = req.body.instrumentTypes;

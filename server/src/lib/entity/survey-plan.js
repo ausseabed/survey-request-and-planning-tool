@@ -63,6 +63,12 @@ export class SurveyPlan {
   @JoinTable()
   organisations;
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  otherOrganisations = undefined;
+
   @ManyToMany(
     type => Custodian,
     custodian => custodian.surveyPlans)

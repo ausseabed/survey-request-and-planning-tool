@@ -125,6 +125,12 @@ export class SurveyRequest {
       type:"varchar",
       nullable: true,
   })
+  otherOrganisations = undefined;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
   requestorName;
 
   @Column({

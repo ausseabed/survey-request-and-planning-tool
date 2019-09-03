@@ -158,6 +158,16 @@
               >
             </form-field-validated-select>
 
+            <form-field-validated-input
+              label="Other organisations"
+              hint="Optional"
+              :value="surveyPlan.otherOrganisations"
+              @input="update('surveyPlan.otherOrganisations', $event)"
+              type="text"
+              :readonly="readonly"
+              >
+            </form-field-validated-input>
+
             <q-input
               icon="fas fa-user"
               label="Contact person"

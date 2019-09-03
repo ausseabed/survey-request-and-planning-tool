@@ -7,6 +7,15 @@
     <q-page padding class="docs-input row justify-center">
       <div style="width: 900px; max-width: 90vw;" class="q-gutter-y-md">
 
+        <record-state
+          v-if="attachesToId"
+          class="full-width q-pb-sm"
+          :entity-type="attachesTo"
+          :entity-id="attachesToId"
+          @updated-state="stateUpdated($event)"
+          >
+        </record-state>
+
         <q-table
           title="Attachments"
           class="full-width"
@@ -34,7 +43,7 @@
                   @click="downloadFile({id: props.row.id, name: props.row.fileName})"
                   :disable="props.row.downloading"/>
                 <q-btn
-                  v-if="canDelete"
+                  v-if="canDelete && !stateReadonly"
                   size="md" flat dense
                   icon="delete"
                   @click="deleteFile($event, props.row)"
@@ -48,7 +57,7 @@
         </q-table>
 
         <q-uploader
-          v-if="canUpload"
+          v-if="canUpload && !stateReadonly"
           label="Upload"
           class="full-width"
           ref="uploader"
@@ -134,6 +143,13 @@ export default Vue.extend({
       console.log(xhr);
     },
 
+    stateUpdated(state) {
+      if (_.isNil(state)) {
+        this.stateReadonly = true
+      } else {
+        this.stateReadonly = state.readonly
+      }
+    },
   },
 
   computed: {
@@ -196,6 +212,7 @@ export default Vue.extend({
     return {
       loading: false,
       fileUploadFailed: false,
+      stateReadonly: true,
       columns: [
         {
           name: 'fileName',

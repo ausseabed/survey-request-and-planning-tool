@@ -33,6 +33,16 @@
       <div class="row q-pl-md q-gutter-md fit ">
         <div class="column col-4 q-gutter-md">
 
+          <record-state
+            v-if="surveyPlan.id"
+            class="full-width q-pb-sm"
+            :entity-type="`survey-plan`"
+            :entity-id="surveyPlan.id"
+            :validation-callback="recordStateValidationCallback"
+            @updated-state="stateUpdated($event)"
+            >
+          </record-state>
+
           <q-card
             v-if="!readOnly"
             class="full-width column"
@@ -342,6 +352,23 @@ export default Vue.extend({
         height: offset ? `calc(100vh - ${offset*2}px)` : '100vh'
       }
     },
+
+    stateUpdated(state) {
+      if (_.isNil(state)) {
+        this.stateReadonly = true
+      } else {
+        this.stateReadonly = state.readonly
+      }
+    },
+
+    recordStateValidationCallback(recordStateEvent) {
+      if (this.dirty) {
+        this.notifyError('Cannot change record state with unsaved changes');
+        return false
+      } else {
+        return true
+      }
+    },
   },
 
   computed: {
@@ -355,6 +382,9 @@ export default Vue.extend({
       'requestError',
     ]),
     readOnly: function() {
+      if (this.stateReadonly) {
+        return true
+      }
       if (this.hasPermission('canEditAllSurveyPlans')) {
         // can edit all survey plans
         return false
@@ -396,6 +426,7 @@ export default Vue.extend({
   data() {
     return {
       loading: false,
+      stateReadonly: true,
       deliverables: [],
       tempDeliverableDefinitions: [],
       activeDeliverableId: undefined,

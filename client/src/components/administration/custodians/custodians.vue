@@ -68,17 +68,24 @@
                 class="overflow-hidden"
               >
                 <div class="column q-gutter-sm">
-                  <form-field-validated-input
+                  <form-field-validated-select
                     name="activeCustodian.name"
-                    attribute="Name"
                     label="Name"
+                    use-input
+                    input-debounce="200"
+                    @filter="filterOrganisationFunction"
                     :value="activeCustodian.name"
                     @input="updateActiveCustodianValue({path:'name', value:$event})"
+                    @new-value="updateActiveCustodianValue({path:'name', value:$event})"
+                    :options="organisationNamesList"
                     @blur="$v.activeCustodian.name.$touch"
-                    type="text"
                     :readonly="!hasPermission('canEditCustodian')"
-                   >
-                  </form-field-validated-input>
+                    clearable
+                    fill-input
+                    hide-selected
+                    new-value-mode="add-unique"
+                    >
+                  </form-field-validated-select>
                 </div>
 
               </form-wrapper>
@@ -133,6 +140,8 @@ import { permission } from './../../mixins/permission'
 import { errorHandler } from './../../mixins/error-handling'
 import * as mTypes
   from '../../../store/modules/custodian/custodian-mutation-types'
+import * as organisationMutTypes
+  from '../../../store/modules/organisation/organisation-mutation-types'
 
 // custom validators
 const duplicateCustodianName = function (value, vm) {
@@ -164,6 +173,13 @@ export default Vue.extend({
       'dirty',
       'custodians',
     ]),
+    ...mapGetters('organisation', {
+      organisationsList: 'organisations',
+      organisationsCount: 'count',
+    }),
+    organisationNamesList: function() {
+      return this.organisationsList.map((org) => org.name);
+    }
   },
 
   methods: {
@@ -173,12 +189,29 @@ export default Vue.extend({
       'deleteCustodian',
       'restoreCustodian',
     ]),
+    ...mapActions('organisation', [
+      'getOrganisations',
+    ]),
     ...mapMutations('custodian', {
       'setActiveCustodian': mTypes.SET_ACTIVE_CUSTODIAN,
       'setDeletedCustodians': mTypes.SET_DELETED_CUSTODIANS,
       'setDirty': mTypes.SET_DIRTY,
       'updateActiveCustodianValue': mTypes.UPDATE_ACTIVE_CUSTODIAN_VALUE,
     }),
+    ...mapMutations('organisation', {
+      'setOrganisationFilter': organisationMutTypes.SET_FILTER,
+    }),
+
+    filterOrganisationFunction(val, update, abort) {
+      // setting the custodian name here is a workaround for setting the name
+      // on when focus is lost. Without the user is required to press enter
+      // on non-autocomplete options.
+      this.updateActiveCustodianValue({path:'name', value:val})
+      this.setOrganisationFilter(val)
+      this.getOrganisations().then((orgs) => {
+        update()
+      })
+    },
 
     setDeletedCustodiansChange(deletedCustodians) {
       // deletedCustodians can be true, false, or null

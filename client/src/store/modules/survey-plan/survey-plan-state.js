@@ -37,8 +37,8 @@ function initialState() {
     surveyApplicationGroupNameOther:undefined,
     surveyApplicationNameOther:undefined,
     surveyApplicationIdOther:undefined,
-    surveyPlanListFilter:{},
-    surveyPlanList:[],
+    surveyPlansFilter:{},
+    surveyPlans:[],
     surveyPlanStatuses:[],
     dirty:false,
 

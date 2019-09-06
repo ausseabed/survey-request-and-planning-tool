@@ -97,15 +97,15 @@ const mutations = {
   },
 
   [types.SET_SURVEY_PLAN_LIST_FILTER] (state, listfilterparams) {
-    return state.surveyPlanListFilter = listfilterparams;
+    return state.surveyPlansFilter = listfilterparams;
   },
 
   [types.UPDATE_SURVEY_PLAN_LIST_FILTER] (state, { path, value }) {
-    _.set(state.surveyPlanListFilter, path, _.cloneDeep(value))
+    _.set(state.surveyPlansFilter, path, _.cloneDeep(value))
   },
 
   [types.SET_SURVEY_PLAN_LIST] (state, pmlist) {
-    return state.surveyPlanList = pmlist;
+    return state.surveyPlans = pmlist;
   },
 
   [types.SET_REQUEST_ERROR] (state, error) {

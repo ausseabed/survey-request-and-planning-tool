@@ -94,12 +94,12 @@ export const dirty = state => {
   return state.dirty;
 }
 
-export const surveyPlanListFilter = state => {
-  return state.surveyPlanListFilter;
+export const surveyPlansFilter = state => {
+  return state.surveyPlansFilter;
 }
 
-export const surveyPlanList = state => {
-  return state.surveyPlanList;
+export const surveyPlans = state => {
+  return state.surveyPlans;
 }
 
 export const surveyRequest = state => {

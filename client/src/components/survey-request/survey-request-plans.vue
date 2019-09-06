@@ -30,7 +30,7 @@
               </div>
             </div>
             <div
-              v-else-if="!surveyPlanList || surveyPlanList.length == 0"
+              v-else-if="!surveyPlans || surveyPlans.length == 0"
               class="row justify-center fit"
               >
               <div class="column justify-center text-light">
@@ -43,7 +43,7 @@
               <q-list no-border padding>
 
                 <q-item clickable
-                  v-for="pm in surveyPlanList"
+                  v-for="pm in surveyPlans"
                   :key="pm.id"
                   class="column"
                   @click="clickPlan(pm)"
@@ -143,8 +143,8 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyPlan',[
-      'surveyPlanList',
-      'surveyPlanListFilter',
+      'surveyPlans',
+      'surveyPlansFilter',
     ]),
     ...mapGetters('surveyPlan',{
       surveyPlanRequestStatus:'requestStatus'
@@ -301,7 +301,7 @@ export default Vue.extend({
       },
       immediate: true,
     },
-    'surveyPlanListFilter': {
+    'surveyPlansFilter': {
       handler: function (newFilter, oldFilter) {
         if (!_.isNil(this.surveyRequest.id)) {
           this.getSurveyPlanList()

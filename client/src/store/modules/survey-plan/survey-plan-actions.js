@@ -78,8 +78,8 @@ export const getSurveyPlanList = ({ commit, state }, payload) => {
 
   var url_endpoint = '/api/survey-plan/';
   var getConfig = _.isNil(payload) ? {} : payload;
-  if (!_.isNil(state.surveyPlanListFilter)) {
-    let params = {params: state.surveyPlanListFilter};
+  if (!_.isNil(state.surveyPlansFilter)) {
+    let params = {params: state.surveyPlansFilter};
     _.merge(getConfig, params);
   }
 

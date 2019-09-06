@@ -125,7 +125,7 @@
             </form-field-validated-select>
 
             <form-field-validated-input
-              label="Other organisations"
+              label="Other organisations (if not listed above)"
               hint="Optional"
               :value="surveyRequest.otherOrganisations"
               @input="update({path:'surveyRequest.otherOrganisations', value:$event})"

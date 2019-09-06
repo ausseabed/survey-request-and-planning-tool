@@ -228,6 +228,18 @@ var OlMap = function (target, options) {
           this.onExtentsChange(extents);
         }
       });
+      this.map.on("click", (event) => {
+        if (_.isFunction(this.onFeaturesSelected)) {
+          const selectedFeatures = map.getFeaturesAtPixel(event.pixel);
+          if (_.isNil(selectedFeatures)) {
+            return
+          }
+          const selectedFeatureIds = selectedFeatures.map((feat) => {
+            return feat.get('id');
+          })
+          this.onFeaturesSelected(selectedFeatureIds);
+        }
+      });
       this.source = source;
       this.sourceIntersecting = sourceIntersecting;
       this.selectInteraction = selectInteraction;
@@ -423,6 +435,7 @@ var OlMap = function (target, options) {
     onFileAddStart: null,
     onFileAddDone: null,
     onFileAddBad: null,
+    onFeaturesSelected: null,
     set: function (value) {
       if (value) {
         this.addFeatures(this.source, (new ol.format.GeoJSON()).readFeatures(JSON.parse(value)));

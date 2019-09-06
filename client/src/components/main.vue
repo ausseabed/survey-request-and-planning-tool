@@ -217,6 +217,7 @@ export default Vue.extend({
     this.map.onExtentsChange = (extents) => {
       this.debounceExtents(extents);
     };
+    this.map.onFeaturesSelected = this.mapFeaturesSelected;
     this.fetchSurveyPlans(this.map.getExtents());
     this.getSurveyRequests();
   },
@@ -258,6 +259,10 @@ export default Vue.extend({
     debounceExtents: _.debounce(function(extents) {
       this.fetchSurveyPlans(extents);
     }, 500),
+
+    mapFeaturesSelected(featureIds) {
+      console.log(featureIds)
+    },
 
     mouseoverMatchingProjMeta(matchingProjMeta, updateMap) {
       this.activeProjMetaId = matchingProjMeta.id;

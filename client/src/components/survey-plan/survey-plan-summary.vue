@@ -789,7 +789,7 @@ export default Vue.extend({
       'updateSurveyPlan': pmMutTypes.UPDATE,
     }),
     ...mapMutations('surveyPlan', [
-      pmMutTypes.RESET_PROJECT_METADATA,
+      pmMutTypes.RESET_SURVEY_PLAN,
       pmMutTypes.SET_START_DATE,
       pmMutTypes.SET_TENDERER,
       pmMutTypes.SET_SURVEYORS,
@@ -943,7 +943,7 @@ export default Vue.extend({
           // don't reset the metadata if the `reset` query param is set to
           // true. It's likely the survey plan metadata has been pre-populated with
           // some information we care about (such as from a hipp request)
-          this.RESET_PROJECT_METADATA();
+          this.RESET_SURVEY_PLAN();
         }
         // need to clear the selected options here, otherwise they persist
         // to a new survey
@@ -1099,7 +1099,7 @@ export default Vue.extend({
       } else {
         // no id, so hasn't been saved. I this case reset form and go back
         // to main page.
-        this.RESET_PROJECT_METADATA()
+        this.RESET_SURVEY_PLAN()
         this.$router.replace({ path: `/` });
       }
     },

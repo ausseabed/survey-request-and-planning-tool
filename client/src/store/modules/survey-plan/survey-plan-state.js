@@ -59,7 +59,7 @@ export default {
         state[key] = s[key]
       })
     },
-    [types.RESET_PROJECT_METADATA] (state) {
+    [types.RESET_SURVEY_PLAN] (state) {
       state.surveyPlan = initialState().surveyPlan;
     },
     ...mutations.mutations

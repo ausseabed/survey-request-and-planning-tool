@@ -134,7 +134,7 @@ export default Vue.extend({
   mixins: [errorHandler, permission],
 
   beforeMount() {
-    this.SET_PROJECT_METADATA_LIST([])
+    this.SET_SURVEY_PLAN_LIST([])
   },
 
   mounted() {
@@ -193,9 +193,9 @@ export default Vue.extend({
       'getSurveyPlanList',
     ]),
     ...mapMutations('surveyPlan', [
-      pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
-      pmMutTypes.RESET_PROJECT_METADATA,
-      pmMutTypes.SET_PROJECT_METADATA_LIST,
+      pmMutTypes.SET_SURVEY_PLAN_LIST_FILTER,
+      pmMutTypes.RESET_SURVEY_PLAN,
+      pmMutTypes.SET_SURVEY_PLAN_LIST,
     ]),
     ...mapMutations('surveyPlan', {
       'surveyPlanUpdate': pmMutTypes.UPDATE,
@@ -203,7 +203,7 @@ export default Vue.extend({
     }),
 
     addSurveyPlan() {
-      this.RESET_PROJECT_METADATA();
+      this.RESET_SURVEY_PLAN();
       let clonedHippReq = _.cloneDeep(this.surveyRequest);
       this.surveyPlanUpdate(
         {path:'surveyPlan.surveyRequest', value:clonedHippReq}
@@ -214,8 +214,8 @@ export default Vue.extend({
 
     linkPlan() {
       this.linking = true;
-      this.SET_PROJECT_METADATA_LIST([])
-      this.SET_PROJECT_METADATA_LIST_FILTER(undefined)
+      this.SET_SURVEY_PLAN_LIST([])
+      this.SET_SURVEY_PLAN_LIST_FILTER(undefined)
 
       this.getSurveyPlanList()
       .then((planList) => {
@@ -271,7 +271,7 @@ export default Vue.extend({
     done() {
       this.linking = false
       let hrfilter = {'survey-request': this.surveyRequest.id}
-      this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
+      this.SET_SURVEY_PLAN_LIST_FILTER(hrfilter)
       this.getSurveyPlanList()
     },
 
@@ -297,7 +297,7 @@ export default Vue.extend({
     'surveyRequest.id': {
       handler: function (newId, oldId) {
         let hrfilter = _.isNil(newId) ? undefined : {'survey-request': newId}
-        this.SET_PROJECT_METADATA_LIST_FILTER(hrfilter)
+        this.SET_SURVEY_PLAN_LIST_FILTER(hrfilter)
       },
       immediate: true,
     },

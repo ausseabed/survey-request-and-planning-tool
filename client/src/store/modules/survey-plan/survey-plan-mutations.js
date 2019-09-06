@@ -96,15 +96,15 @@ const mutations = {
     return state.dirty = dirty;
   },
 
-  [types.SET_PROJECT_METADATA_LIST_FILTER] (state, listfilterparams) {
+  [types.SET_SURVEY_PLAN_LIST_FILTER] (state, listfilterparams) {
     return state.surveyPlanListFilter = listfilterparams;
   },
 
-  [types.UPDATE_PROJECT_METADATA_LIST_FILTER] (state, { path, value }) {
+  [types.UPDATE_SURVEY_PLAN_LIST_FILTER] (state, { path, value }) {
     _.set(state.surveyPlanListFilter, path, _.cloneDeep(value))
   },
 
-  [types.SET_PROJECT_METADATA_LIST] (state, pmlist) {
+  [types.SET_SURVEY_PLAN_LIST] (state, pmlist) {
     return state.surveyPlanList = pmlist;
   },
 

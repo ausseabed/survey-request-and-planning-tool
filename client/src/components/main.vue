@@ -225,7 +225,7 @@ export default Vue.extend({
   methods: {
     ...mapMutations('surveyPlan', [
       pmMutTypes.SET_AOI,
-      pmMutTypes.SET_PROJECT_METADATA_LIST_FILTER,
+      pmMutTypes.SET_SURVEY_PLAN_LIST_FILTER,
     ]),
     ...mapActions('surveyRequest', [
       'getSurveyRequests',
@@ -237,7 +237,7 @@ export default Vue.extend({
       }
     },
     fetchSurveyPlans (extents) {
-      this.SET_PROJECT_METADATA_LIST_FILTER(undefined);
+      this.SET_SURVEY_PLAN_LIST_FILTER(undefined);
       this.$store.dispatch(
         'surveyPlan/getSurveyPlanList',
         {params:{includeGeometry:true}})

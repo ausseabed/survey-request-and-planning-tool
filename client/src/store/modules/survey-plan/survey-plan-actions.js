@@ -61,7 +61,7 @@ export const getSurveyPlan = ({ commit, state }, payload) => {
   return new Promise((resolve, reject) => {
     Vue.axios.get(url_endpoint)
     .then((response) => {
-      commit(mutTypes.RESET_PROJECT_METADATA)
+      commit(mutTypes.RESET_SURVEY_PLAN)
       commit(mutTypes.UPDATE, { path: 'surveyPlan', value: response.data })
       commit(mutTypes.SET_DIRTY, false);
       resolve(response.data);
@@ -87,7 +87,7 @@ export const getSurveyPlanList = ({ commit, state }, payload) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
     Vue.axios.get(url_endpoint, getConfig)
     .then((response) => {
-      commit(mutTypes.SET_PROJECT_METADATA_LIST, response.data)
+      commit(mutTypes.SET_SURVEY_PLAN_LIST, response.data)
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
       resolve(response.data);
     })

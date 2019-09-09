@@ -30,6 +30,7 @@
 
                     <q-item clickable
                       v-for="surveyPlan in surveyPlans"
+                      :id="'survey-plan-' + surveyPlan.id"
                       :key="surveyPlan.id"
                       @mouseover="mouseoverMatchingProjMeta(surveyPlan, true)"
                       class="column"
@@ -194,6 +195,8 @@ import { date } from 'quasar'
 import Vue from 'vue'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 const _ = require('lodash');
+import { scroll } from 'quasar'
+const { getScrollTarget, setScrollPosition } = scroll
 
 import TransitionExpand from './transition-expand.vue';
 import { errorHandler } from './mixins/error-handling';
@@ -251,11 +254,36 @@ export default Vue.extend({
     }, 500),
 
     mapFeaturesSelected(featureIds) {
-      console.log(featureIds)
       if (featureIds.length > 0) {
-        this.activeProjMetaId = featureIds[0];
-        this.map.highlightFeatureId(featureIds[0]);
+        let spid = featureIds[0];
+
+        // in some cases the survey plans may overlay each other. The following
+        // block allows the user to cycle through each of the surveys found
+        // at the clicked location by repeatedly clicking.
+        if (featureIds.join(",") == this.lastSelectedFeatureIds.join(",")) {
+          let prevId = undefined;
+          for (const fId of featureIds) {
+            if (prevId == this.activeProjMetaId) {
+              spid = fId
+              break
+            }
+            prevId = fId
+          }
+        }
+
+        // sets the active plan set in the plan list
+        this.activeProjMetaId = spid;
+        this.map.highlightFeatureId(spid);
+
+        // set the list scroll position to the survey clicked on in the map
+        const surveyPlanId = `survey-plan-${this.activeProjMetaId}`;
+        const ele = document.getElementById(surveyPlanId);
+        const target = getScrollTarget(ele);
+        const offset = ele.offsetTop;
+        const duration = 200;
+        setScrollPosition(target, offset, duration);
       }
+      this.lastSelectedFeatureIds = featureIds;
     },
 
     mouseoverMatchingProjMeta(matchingProjMeta, updateMap) {
@@ -288,7 +316,8 @@ export default Vue.extend({
     return {
       map: null,
       tab: undefined,
-      activeProjMetaId:undefined,
+      activeProjMetaId: undefined,
+      lastSelectedFeatureIds: [],
     }
   },
 

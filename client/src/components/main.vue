@@ -29,10 +29,12 @@
                     @mouseleave.native="mouseleaveMatchingProjMeta">
 
                     <q-item clickable
-                      v-for="matchingProjMeta in matchingProjMetas"
-                      :key="matchingProjMeta.id"
-                      @mouseover="mouseoverMatchingProjMeta(matchingProjMeta, true)"
+                      v-for="surveyPlan in surveyPlans"
+                      :key="surveyPlan.id"
+                      @mouseover="mouseoverMatchingProjMeta(surveyPlan, true)"
                       class="column"
+                      :manual-focus="true"
+                      :focused="activeProjMetaId == surveyPlan.id"
                       >
 
                       <div class="row">
@@ -42,23 +44,23 @@
                             size="34px"
                             font-size="20px"
                             rounded
-                            :icon="surveyPlanStatusIconDetails(matchingProjMeta.status).icon"
-                            :color="surveyPlanStatusIconDetails(matchingProjMeta.status).color"
+                            :icon="surveyPlanStatusIconDetails(surveyPlan.status).icon"
+                            :color="surveyPlanStatusIconDetails(surveyPlan.status).color"
                           />
                         </q-item-section>
 
                         <q-item-section>
-                          <q-item-label>{{matchingProjMeta.surveyName}}</q-item-label>
-                          <q-item-label caption>{{matchingProjMeta.status}}</q-item-label>
+                          <q-item-label>{{surveyPlan.surveyName}}</q-item-label>
+                          <q-item-label caption>{{surveyPlan.status}}</q-item-label>
                         </q-item-section>
 
                         <q-item-section side top>
-                          <q-item-label caption>{{matchingProjMeta.startDate | dateString}}</q-item-label>
+                          <q-item-label caption>{{surveyPlan.startDate | dateString}}</q-item-label>
                           <q-icon
-                            :name="recordStateDetails(matchingProjMeta.recordState).icon"
+                            :name="recordStateDetails(surveyPlan.recordState).icon"
                           >
                             <q-tooltip>
-                              {{ recordStateDetails(matchingProjMeta.recordState).label }}
+                              {{ recordStateDetails(surveyPlan.recordState).label }}
                             </q-tooltip>
                           </q-icon>
                         </q-item-section>
@@ -66,18 +68,18 @@
 
                       <q-item-section>
                         <transition-expand>
-                          <div v-if="activeProjMetaId == matchingProjMeta.id">
+                          <div v-if="activeProjMetaId == surveyPlan.id">
                             <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
-                              :to="`/survey-plan/${matchingProjMeta.id}/summary`">
+                              :to="`/survey-plan/${surveyPlan.id}/summary`">
                             </q-btn>
                             <q-btn outline size="sm" color="primary" label="Specs" class="q-mt-xs q-ml-xs"
-                              :to="`/survey-plan/${matchingProjMeta.id}/specifications`">
+                              :to="`/survey-plan/${surveyPlan.id}/specifications`">
                             </q-btn>
                             <q-btn outline size="sm" color="primary" label="Deliverables" class="q-mt-xs q-ml-xs"
-                              :to="`/survey-plan/${matchingProjMeta.id}/deliverables`">
+                              :to="`/survey-plan/${surveyPlan.id}/deliverables`">
                             </q-btn>
                             <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
-                              :to="`/survey-plan/${matchingProjMeta.id}/attachments`">
+                              :to="`/survey-plan/${surveyPlan.id}/attachments`">
                             </q-btn>
                           </div>
                         </transition-expand>
@@ -227,6 +229,9 @@ export default Vue.extend({
       pmMutTypes.SET_AOI,
       pmMutTypes.SET_SURVEY_PLAN_LIST_FILTER,
     ]),
+    ...mapActions('surveyPlan', [
+      'getSurveyPlans',
+    ]),
     ...mapActions('surveyRequest', [
       'getSurveyRequests',
     ]),
@@ -238,22 +243,7 @@ export default Vue.extend({
     },
     fetchSurveyPlans (extents) {
       this.SET_SURVEY_PLAN_LIST_FILTER(undefined);
-      this.$store.dispatch(
-        'surveyPlan/getSurveyPlanList',
-        {params:{includeGeometry:true}})
-      .then(matchingProjMetas => {
-        this.matchingProjMetas = matchingProjMetas;
-
-        const mapableSurveyPlans = matchingProjMetas.filter(proj => {
-          return !_.isNil(proj.areaOfInterest);
-        })
-        const areaOfInterests = mapableSurveyPlans.map(mpm => {
-          let f = mpm.areaOfInterest;
-          f.id = mpm.id;
-          return f;
-        });
-        this.map.setGeojsonFeatureIntersecting(areaOfInterests);
-      })
+      this.getSurveyPlans({params:{includeGeometry:true}})
     },
 
     debounceExtents: _.debounce(function(extents) {
@@ -262,6 +252,10 @@ export default Vue.extend({
 
     mapFeaturesSelected(featureIds) {
       console.log(featureIds)
+      if (featureIds.length > 0) {
+        this.activeProjMetaId = featureIds[0];
+        this.map.highlightFeatureId(featureIds[0]);
+      }
     },
 
     mouseoverMatchingProjMeta(matchingProjMeta, updateMap) {
@@ -282,6 +276,9 @@ export default Vue.extend({
   },
 
   computed: {
+    ...mapGetters('surveyPlan', [
+      'surveyPlans',
+    ]),
     ...mapGetters('surveyRequest', [
       'surveyRequests',
     ]),
@@ -291,7 +288,6 @@ export default Vue.extend({
     return {
       map: null,
       tab: undefined,
-      matchingProjMetas:undefined,
       activeProjMetaId:undefined,
     }
   },
@@ -304,6 +300,22 @@ export default Vue.extend({
           this.tab = 'survey-plans';
         } else if (this.hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])) {
           this.tab = 'survey-requests';
+        }
+      },
+    },
+    'surveyPlans': {
+      immediate: true,
+      handler(newList, oldList) {
+        const mapableSurveyPlans = newList.filter(sp => {
+          return !_.isNil(sp.areaOfInterest);
+        })
+        const areaOfInterests = mapableSurveyPlans.map(mpm => {
+          let f = mpm.areaOfInterest;
+          f.id = mpm.id;
+          return f;
+        });
+        if (!_.isNil(this.map)) {
+          this.map.setGeojsonFeatureIntersecting(areaOfInterests);
         }
       },
     },

@@ -73,7 +73,7 @@ export const getSurveyPlan = ({ commit, state }, payload) => {
 
 }
 
-export const getSurveyPlanList = ({ commit, state }, payload) => {
+export const getSurveyPlans = ({ commit, state }, payload) => {
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
 
   var url_endpoint = '/api/survey-plan/';

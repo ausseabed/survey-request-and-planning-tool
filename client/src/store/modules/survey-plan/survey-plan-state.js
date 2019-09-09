@@ -10,6 +10,7 @@ function initialState() {
     surveyPlan: {
       id: undefined,
       surveyName: null,
+      public: false,
       custodians: [],
       organisations: [],
       contactPerson: null,

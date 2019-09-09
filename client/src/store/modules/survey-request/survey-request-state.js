@@ -10,6 +10,7 @@ function initialState() {
     surveyRequest: {
       id: undefined,
       name: undefined,
+      public: false,
       custodians: [],
       organisations: [],
       requestorName: undefined,

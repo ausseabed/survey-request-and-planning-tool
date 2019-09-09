@@ -180,7 +180,9 @@
       </div>
       <div class="gt-xs col-sm-8 full-height">
         <q-card class="fit">
-          <div ref="mapDiv" id="mapDiv" class="full-height"></div>
+          <div ref="mapDiv" id="mapDiv" class="full-height">
+            <q-resize-observer @resize="onResize" />
+          </div>
         </q-card>
 
       </div>
@@ -213,18 +215,18 @@ export default Vue.extend({
     TransitionExpand
   },
 
-  async mounted() {
+  beforeMount() {
+    this.fetchSurveyPlans();
+    this.getSurveyRequests();
+  },
+
+  mounted() {
     var olmap = OlMap(this.$refs.mapDiv, {
       basemap: "osm"
     })
-    await olmap.initMap(false);
+    olmap.initMap(false);
     this.map = olmap;
-    this.map.onExtentsChange = (extents) => {
-      this.debounceExtents(extents);
-    };
     this.map.onFeaturesSelected = this.mapFeaturesSelected;
-    this.fetchSurveyPlans(this.map.getExtents());
-    this.getSurveyRequests();
   },
 
   methods: {
@@ -244,7 +246,8 @@ export default Vue.extend({
         height: offset ? `calc(100vh - ${offset}px)` : '100vh'
       }
     },
-    fetchSurveyPlans (extents) {
+
+    fetchSurveyPlans () {
       this.SET_SURVEY_PLAN_LIST_FILTER(undefined);
       this.getSurveyPlans({params:{includeGeometry:true}})
     },
@@ -301,6 +304,12 @@ export default Vue.extend({
     },
     surveyPlanStatusIconDetails: surveyPlanStatusIconDetails,
     recordStateDetails: recordStateDetails,
+
+    onResize (size) {
+      if (this.map) {
+        this.map.setSize(size);
+      }
+    },
   },
 
   computed: {

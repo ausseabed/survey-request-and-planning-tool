@@ -9,7 +9,7 @@ import * as MapConstants from './map-constants'
 var shp = require('shpjs');
 var OlMap = function (target, options) {
   return {
-    initMap: async function (includeDrawButton) {
+    initMap: function (includeDrawButton) {
       if (_.isNil(includeDrawButton)) {
         includeDrawButton = true;
       }
@@ -29,10 +29,10 @@ var OlMap = function (target, options) {
         style: function(feature, resolution) {
           return new ol.style.Style({
             fill: new ol.style.Fill({
-              color: 'rgba(0, 0, 0, 0.2)'
+              color: 'rgba(255, 0, 0, 0.2)'
             }),
             stroke: new ol.style.Stroke({
-              color: 'rgba(0, 0, 0, 0.4)',
+              color: 'rgba(255, 0, 0, 0.4)',
               width: 3
             }),
             image: new ol.style.Circle({
@@ -436,6 +436,9 @@ var OlMap = function (target, options) {
     onFileAddDone: null,
     onFileAddBad: null,
     onFeaturesSelected: null,
+    setSize: function (size) {
+      this.map.setSize([size.width, size.height]);
+    },
     set: function (value) {
       if (value) {
         this.addFeatures(this.source, (new ol.format.GeoJSON()).readFeatures(JSON.parse(value)));

@@ -1,6 +1,6 @@
 <template>
   <q-page :style-fn="heightTweak" >
-    <div class="row q-pt-md q-pl-md q-col-gutter-md fit ">
+    <div class="row q-pt-sm q-pl-sm q-col-gutter-sm fit ">
       <div class="column col-xs-12 col-sm-4 full-height">
 
         <q-card class="column col">

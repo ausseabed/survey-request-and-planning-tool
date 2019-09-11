@@ -26,17 +26,17 @@
               <!-- <q-card-section class="column col" style="padding:0px"> -->
                 <q-scroll-area class="col">
                   <q-list no-border padding
-                    @mouseleave.native="mouseleaveMatchingProjMeta">
+                    @mouseleave.native="mouseleaveListItem">
 
                     <q-item clickable
                       v-for="surveyPlan in surveyPlans"
                       :id="'list-item-' + surveyPlan.id"
                       :key="surveyPlan.id"
-                      @mouseover="mouseoverMatchingProjMeta(surveyPlan, true)"
+                      @mouseover="mouseoverListItem(surveyPlan, true)"
                       class="column"
                       :to="`/survey-plan/${surveyPlan.id}/summary`"
                       :manual-focus="true"
-                      :focused="activeProjMetaId == surveyPlan.id"
+                      :focused="activeId == surveyPlan.id"
                       >
 
                       <div class="row">
@@ -70,7 +70,7 @@
 
                       <q-item-section>
                         <transition-expand>
-                          <div v-if="activeProjMetaId == surveyPlan.id">
+                          <div v-if="activeId == surveyPlan.id">
                             <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
                               :to="`/survey-plan/${surveyPlan.id}/summary`">
                             </q-btn>
@@ -117,18 +117,18 @@
 
               <q-scroll-area class="col">
                 <q-list no-border padding
-                  @mouseleave.native="mouseleaveMatchingProjMeta"
+                  @mouseleave.native="mouseleaveListItem"
                   >
 
                   <q-item clickable
                     v-for="surveyRequest in surveyRequests"
                     :id="'list-item-' + surveyRequest.id"
                     :key="surveyRequest.id"
-                    @mouseover="mouseoverMatchingProjMeta(surveyRequest, true)"
+                    @mouseover="mouseoverListItem(surveyRequest, true)"
                     class="column"
                     :to="`/survey-request/${surveyRequest.id}/summary`"
                     :manual-focus="true"
-                    :focused="activeProjMetaId == surveyRequest.id"
+                    :focused="activeId == surveyRequest.id"
                     >
                     <div class="row">
                       <q-item-section>
@@ -141,7 +141,7 @@
                     </div>
                     <q-item-section>
                       <transition-expand>
-                        <div v-if="activeProjMetaId == surveyRequest.id">
+                        <div v-if="activeId == surveyRequest.id">
                           <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
                             :to="`/survey-request/${surveyRequest.id}/summary`">
                           </q-btn>
@@ -268,10 +268,10 @@ export default Vue.extend({
         // in some cases the survey plans may overlay each other. The following
         // block allows the user to cycle through each of the surveys found
         // at the clicked location by repeatedly clicking.
-        if (_.includes(featureIds, this.activeProjMetaId)) {
+        if (_.includes(featureIds, this.activeId)) {
           let prevId = undefined;
           for (const fId of featureIds) {
-            if (prevId == this.activeProjMetaId) {
+            if (prevId == this.activeId) {
               spid = fId
               break
             }
@@ -280,11 +280,11 @@ export default Vue.extend({
         }
 
         // sets the active plan set in the plan list
-        this.activeProjMetaId = spid;
+        this.activeId = spid;
         this.map.highlightFeatureId(spid);
 
         // set the list scroll position to the survey clicked on in the map
-        const surveyPlanId = `list-item-${this.activeProjMetaId}`;
+        const surveyPlanId = `list-item-${this.activeId}`;
         const ele = document.getElementById(surveyPlanId);
         const target = getScrollTarget(ele);
         const offset = ele.offsetTop;
@@ -294,17 +294,17 @@ export default Vue.extend({
       this.lastSelectedFeatureIds = featureIds;
     },
 
-    mouseoverMatchingProjMeta(matchingProjMeta, updateMap) {
-      this.activeProjMetaId = matchingProjMeta.id;
+    mouseoverListItem(matchingProjMeta, updateMap) {
+      this.activeId = matchingProjMeta.id;
       if (_.isNil(matchingProjMeta.areaOfInterest)) {
         this.map.highlightFeatureId(undefined);
       } else if (updateMap) {
         this.map.highlightFeatureId(matchingProjMeta.id);
       }
     },
-    mouseleaveMatchingProjMeta() {
+    mouseleaveListItem() {
       //clears selection in map
-      this.activeProjMetaId = undefined;
+      this.activeId = undefined;
       this.map.highlightFeatureId(undefined);
     },
     surveyPlanStatusIconDetails: surveyPlanStatusIconDetails,
@@ -363,7 +363,7 @@ export default Vue.extend({
     return {
       map: null,
       tab: undefined,
-      activeProjMetaId: undefined,
+      activeId: undefined,
       lastSelectedFeatureIds: [],
     }
   },

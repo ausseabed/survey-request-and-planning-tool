@@ -268,7 +268,7 @@ export default Vue.extend({
         // in some cases the survey plans may overlay each other. The following
         // block allows the user to cycle through each of the surveys found
         // at the clicked location by repeatedly clicking.
-        if (featureIds.join(",") == this.lastSelectedFeatureIds.join(",")) {
+        if (_.includes(featureIds, this.activeProjMetaId)) {
           let prevId = undefined;
           for (const fId of featureIds) {
             if (prevId == this.activeProjMetaId) {

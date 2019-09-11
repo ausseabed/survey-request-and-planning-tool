@@ -124,7 +124,7 @@
                     v-for="surveyRequest in surveyRequests"
                     :id="'list-item-' + surveyRequest.id"
                     :key="surveyRequest.id"
-                    @mouseover="mouseoverMatchingProjMeta(surveyRequest, false)"
+                    @mouseover="mouseoverMatchingProjMeta(surveyRequest, true)"
                     class="column"
                     :to="`/survey-request/${surveyRequest.id}/summary`"
                     :manual-focus="true"

@@ -50,8 +50,12 @@ router.get('/geojson-attribute-map', async function (req, res) {
   return res.json(ENTITY_GEOJSON_MAP);
 });
 
-// Gets a list of HIPP Requests
+// Gets a list of Survey Requests
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+
+  let { includeGeometry } = req.query;
+  includeGeometry = _.isNil(includeGeometry) ? 'false' : includeGeometry;
+  includeGeometry = (includeGeometry == 'true'); // convert string to bool
 
   let surveyRequestQuery = getConnection()
   .getRepository(SurveyRequest)
@@ -62,6 +66,11 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     `survey_request.deleted = :deleted`,
     {deleted: false}
   )
+
+  if (includeGeometry) {
+    surveyRequestQuery = surveyRequestQuery
+    .addSelect("survey_request.areaOfInterest")
+  }
 
   if (hasPermission(req.user.role, 'canViewAllSurveyRequests')) {
     // then no additional where clauses

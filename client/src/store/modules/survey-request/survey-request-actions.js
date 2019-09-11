@@ -23,14 +23,20 @@ export const getSurveyRequest = async ({ commit, state }, payload) => {
   }
 }
 
-export const getSurveyRequests = async ({ commit, state }) => {
+export const getSurveyRequests = async ({ commit, state }, payload) => {
   const urlEndpoint = '/api/survey-request/';
+
+  var getConfig = _.isNil(payload) ? {} : payload;
+  if (!_.isNil(state.surveyPlansFilter)) {
+    let params = {params: state.surveyPlansFilter};
+    _.merge(getConfig, params);
+  }
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
   try {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
 
-    const response = await Vue.axios.get(urlEndpoint);
+    const response = await Vue.axios.get(urlEndpoint, getConfig);
     const surveyRequests = response.data;
 
     commit(mutTypes.UPDATE, {path: 'surveyRequests', value: surveyRequests});

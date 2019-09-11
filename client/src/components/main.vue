@@ -30,10 +30,11 @@
 
                     <q-item clickable
                       v-for="surveyPlan in surveyPlans"
-                      :id="'survey-plan-' + surveyPlan.id"
+                      :id="'list-item-' + surveyPlan.id"
                       :key="surveyPlan.id"
                       @mouseover="mouseoverMatchingProjMeta(surveyPlan, true)"
                       class="column"
+                      :to="`/survey-plan/${surveyPlan.id}/summary`"
                       :manual-focus="true"
                       :focused="activeProjMetaId == surveyPlan.id"
                       >
@@ -121,9 +122,13 @@
 
                   <q-item clickable
                     v-for="surveyRequest in surveyRequests"
+                    :id="'list-item-' + surveyRequest.id"
                     :key="surveyRequest.id"
                     @mouseover="mouseoverMatchingProjMeta(surveyRequest, false)"
                     class="column"
+                    :to="`/survey-request/${surveyRequest.id}/summary`"
+                    :manual-focus="true"
+                    :focused="activeProjMetaId == surveyRequest.id"
                     >
                     <div class="row">
                       <q-item-section>
@@ -217,7 +222,7 @@ export default Vue.extend({
 
   beforeMount() {
     this.fetchSurveyPlans();
-    this.getSurveyRequests();
+    this.getSurveyRequests({params:{includeGeometry:true}});
   },
 
   mounted() {
@@ -279,7 +284,7 @@ export default Vue.extend({
         this.map.highlightFeatureId(spid);
 
         // set the list scroll position to the survey clicked on in the map
-        const surveyPlanId = `survey-plan-${this.activeProjMetaId}`;
+        const surveyPlanId = `list-item-${this.activeProjMetaId}`;
         const ele = document.getElementById(surveyPlanId);
         const target = getScrollTarget(ele);
         const offset = ele.offsetTop;
@@ -310,6 +315,39 @@ export default Vue.extend({
         this.map.setSize(size);
       }
     },
+
+    updateMapFeatures() {
+      if (_.isNil(this.tab)) {
+        return;
+      }
+      if (this.tab == 'survey-plans') {
+        const mapableSurveyPlans = this.surveyPlans.filter(sp => {
+          return !_.isNil(sp.areaOfInterest);
+        })
+        const areaOfInterests = mapableSurveyPlans.map(mpm => {
+          let f = mpm.areaOfInterest;
+          f.id = mpm.id;
+          return f;
+        });
+        if (!_.isNil(this.map)) {
+          this.map.setGeojsonFeatureIntersecting(areaOfInterests);
+        }
+      } else if (this.tab == 'survey-requests') {
+        const mapableSurveyRequests = this.surveyRequests.filter(sp => {
+          return !_.isNil(sp.areaOfInterest);
+        });
+        let areaOfInterests = mapableSurveyRequests.map(mpm => {
+          let f = mpm.areaOfInterest;
+          f.id = mpm.id;
+          return f;
+        });
+        if (!_.isNil(this.map)) {
+          this.map.setGeojsonFeatureIntersecting(areaOfInterests);
+        }
+      } else {
+        console.error("Bad tab specified");
+      }
+    }
   },
 
   computed: {
@@ -344,18 +382,13 @@ export default Vue.extend({
     'surveyPlans': {
       immediate: true,
       handler(newList, oldList) {
-        const mapableSurveyPlans = newList.filter(sp => {
-          return !_.isNil(sp.areaOfInterest);
-        })
-        const areaOfInterests = mapableSurveyPlans.map(mpm => {
-          let f = mpm.areaOfInterest;
-          f.id = mpm.id;
-          return f;
-        });
-        if (!_.isNil(this.map)) {
-          this.map.setGeojsonFeatureIntersecting(areaOfInterests);
-        }
+        this.updateMapFeatures();
       },
+    },
+    'tab': {
+      handler(newTab, oldTab) {
+        this.updateMapFeatures();
+      }
     },
   }
 

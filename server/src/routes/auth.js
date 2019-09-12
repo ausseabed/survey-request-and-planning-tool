@@ -74,7 +74,16 @@ function crcsiAuth(req, res) {
       user = existingUser;
     } else {
       const roleRepo = getConnection().getRepository(Role);
-      const defaultRole = await roleRepo.findOne({isDefault: true});
+
+      // the first user is made an Administrator, otherwise no user would be
+      // able to access admin features to create an Administrator
+      const userCount = await userRepo.count();
+      let userRole = undefined;
+      if (userCount == 0) {
+        userRole = await roleRepo.findOne({name: "Administrator"});
+      } else {
+        userRole = await roleRepo.findOne({isDefault: true});
+      }
 
       const newUser = new User();
       newUser.id = user_id;
@@ -87,8 +96,8 @@ function crcsiAuth(req, res) {
       newUser.name = userScope.name;
       newUser.accessToken = userScope.access_token;
       newUser.refreshToken = userScope.refresh_token;
-      if (!_.isNil(defaultRole)) {
-        newUser.role = defaultRole;
+      if (!_.isNil(userRole)) {
+        newUser.role = userRole;
       }
       await userRepo.save(newUser);
       user = newUser;

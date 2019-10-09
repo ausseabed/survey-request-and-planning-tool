@@ -5,7 +5,7 @@ executors:
       IMAGE_NAME_API: crcsi/qa4mbes-api
       IMAGE_NAME_WWW: crcsi/qa4mbes-www
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: circleci/buildpack-deps@sha256:f15719b269c2c7337d2fb29a31abf4edcfe30311291765b831e699b0ad9ae77d
 
 jobs:
   build-api:

@@ -321,6 +321,8 @@ router.post(
   //
   // surveyRequest.recordState = recordState
 
+  surveyRequest.deleted = false
+
   surveyRequest = await getConnection()
   .getRepository(SurveyRequest)
   .save(surveyRequest)

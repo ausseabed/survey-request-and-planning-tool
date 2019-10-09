@@ -327,7 +327,7 @@ router.post(
   project.public = req.body.public;
 
   // don't let the post request mark a project as deleted
-  delete project.deleted;
+  project.deleted = false;
 
   project = await getConnection()
   .getRepository(SurveyPlan)

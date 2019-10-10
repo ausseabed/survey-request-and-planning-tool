@@ -21,7 +21,11 @@ ADD src $APPDIR/src
 
 RUN whoami
 
-RUN sudo npm install && npm run build
+RUN mkdir /code/node_modules
+
+RUN ls -al /code/node_modules
+
+RUN npm install && npm run build
 
 FROM nginx:1.13.9 as nginx
 

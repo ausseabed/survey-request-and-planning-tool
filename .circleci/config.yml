@@ -31,10 +31,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build WWW Docker image
-          command: docker build -t $IMAGE_NAME_WWW:develop --build-arg AUTH_HOST=https://staging.accounts.crcsi.com.au --build-arg AUTH_CLIENT_ID=720174 client
+          command: sudo docker build -t $IMAGE_NAME_WWW:develop --build-arg AUTH_HOST=https://staging.accounts.crcsi.com.au --build-arg AUTH_CLIENT_ID=720174 client
       - run:
           name: Archive WWW Docker image
-          command: docker save -o image-www.tar $IMAGE_NAME_WWW
+          command: sudo docker save -o image-www.tar $IMAGE_NAME_WWW
       - persist_to_workspace:
           root: .
           paths:

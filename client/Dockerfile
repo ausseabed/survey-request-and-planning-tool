@@ -19,6 +19,10 @@ RUN npm install -g @quasar/cli
 ADD package.json package-lock.json babel.config.js .postcssrc.js quasar.conf.js $APPDIR/
 ADD src $APPDIR/src
 
+RUN whoami
+
+RUN ls -al /code/node_modules
+
 RUN npm install && npm run build
 
 FROM nginx:1.13.9 as nginx

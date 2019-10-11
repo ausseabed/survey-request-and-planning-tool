@@ -25,7 +25,7 @@ RUN mkdir /code/node_modules
 
 RUN ls -al /code/node_modules
 
-RUN npm install && npm run build
+RUN yarn install && yarn run build
 
 FROM nginx:1.13.9 as nginx
 

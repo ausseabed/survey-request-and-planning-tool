@@ -901,6 +901,11 @@ export default Vue.extend({
     fetchData () {
       this.matchingProjMetas = undefined;
       this.map.clear();
+
+      this.setSurveyApplicationGroupNameOther(undefined)
+      this.setSurveyApplicationNameOther(undefined)
+      this.setSurveyApplicationIdOther(undefined)
+
       if (this.$route.params.id) {
         this.$store.dispatch(
           'surveyPlan/getSurveyPlan', { id: this.$route.params.id })

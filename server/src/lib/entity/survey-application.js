@@ -21,7 +21,10 @@ export class SurveyApplication {
   })
   userSubmitted = false;
 
-  @Column("bool")
+  @Column({
+    type: "bool",
+    default: false
+  })
   deleted = false;
 
   @Column({

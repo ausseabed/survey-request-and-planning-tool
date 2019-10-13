@@ -190,7 +190,7 @@ export default Vue.extend({
       'updatePlanLinks',
     ]),
     ...mapActions('surveyPlan', [
-      'getSurveyPlanList',
+      'getSurveyPlans',
     ]),
     ...mapMutations('surveyPlan', [
       pmMutTypes.SET_SURVEY_PLAN_LIST_FILTER,
@@ -217,7 +217,7 @@ export default Vue.extend({
       this.SET_SURVEY_PLAN_LIST([])
       this.SET_SURVEY_PLAN_LIST_FILTER(undefined)
 
-      this.getSurveyPlanList()
+      this.getSurveyPlans()
       .then((planList) => {
         this.linkedPlans = []
         planList.forEach((plan) => {
@@ -272,7 +272,7 @@ export default Vue.extend({
       this.linking = false
       let hrfilter = {'survey-request': this.surveyRequest.id}
       this.SET_SURVEY_PLAN_LIST_FILTER(hrfilter)
-      this.getSurveyPlanList()
+      this.getSurveyPlans()
     },
 
     stateUpdated(state) {
@@ -304,7 +304,7 @@ export default Vue.extend({
     'surveyPlansFilter': {
       handler: function (newFilter, oldFilter) {
         if (!_.isNil(this.surveyRequest.id)) {
-          this.getSurveyPlanList()
+          this.getSurveyPlans()
         }
       },
       immediate: true,

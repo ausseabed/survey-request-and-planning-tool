@@ -127,7 +127,7 @@
 
             <form-field-validated-select
               name="surveyPlanCustodians"
-              label="Custodians"
+              label="Survey plan custodian(s)"
               class="col-10"
               multiple use-chips
               :value="surveyPlanCustodians"
@@ -142,7 +142,7 @@
 
             <form-field-validated-select
               name="surveyPlan.organisations"
-              label="Organisations"
+              label="Commissioning organisation(s)"
               multiple
               use-chips
               use-input

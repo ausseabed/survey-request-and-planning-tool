@@ -93,7 +93,7 @@
             <form-field-validated-select
               name="surveyRequest.custodians"
               attribute="Custodian"
-              label="Custodian"
+              label="Survey request custodian(s)"
               multiple use-chips
               :value="surveyRequest.custodians"
               @input="update({path:'surveyRequest.custodians', value:$event})"
@@ -107,7 +107,7 @@
 
             <form-field-validated-select
               name="surveyRequest.organisations"
-              label="Organisations"
+              label="Submitting organisation(s)"
               multiple
               use-chips
               use-input

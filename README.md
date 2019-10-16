@@ -4,7 +4,7 @@ The AusSeabed Survey Request and Planning tool (ASB RPT) is a tool designed by G
 Its intent is to provide a location for, and consistency in specification of bathymetric data acquisition for scientific research purposes.
 
 ### Build status
-[![CircleCI](https://circleci.com/gh/frontiersi/asb-request-and-planning-tool.svg?style=svg&circle-token=cef4f50d53e7216004c240420e035eea4a4a389e)](https://circleci.com/gh/frontiersi/asb-request-and-planning-tool)
+[![CircleCI](https://circleci.com/gh/ausseabed/survey-request-and-planning-tool.svg?style=svg)](https://circleci.com/gh/ausseabed/survey-request-and-planning-tool)
 
 # Licensing Terms
 

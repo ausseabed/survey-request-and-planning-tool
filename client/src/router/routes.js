@@ -1,5 +1,6 @@
 import Administration from 'components/administration/administration.vue'
 import Custodians from 'components/administration/custodians/custodians.vue'
+import Documents from 'components/administration/document/documents.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
 import Organisations from 'components/administration/organisations/organisations.vue'
@@ -61,6 +62,10 @@ const routes = [
         {
           path: 'report-templates',
           component: ReportTemplates
+        },
+        {
+          path: 'documents',
+          component: Documents
         },
         {
           path: 'record-state-log',

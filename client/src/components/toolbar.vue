@@ -19,6 +19,18 @@
       </q-tooltip>
     </q-btn>
     <q-item v-if="isAuthenticated">
+      <q-item-section>
+        <q-btn
+          flat round dense
+          icon="help_outline"
+          type="a"
+          :href="`/api/document/User Guide/download`"
+          target="_blank"
+        >
+          <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Open user guide</q-tooltip>
+        </q-btn>
+      </q-item-section>
+
       <q-item-section
         v-if="hasPermission('isAdmin')"
         >

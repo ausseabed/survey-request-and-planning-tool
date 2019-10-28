@@ -62,6 +62,15 @@
             <q-item-label caption>Upload new report templates</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item to="/admin/documents">
+          <q-item-section avatar>
+            <q-icon name="description" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Documents</q-item-label>
+            <q-item-label caption>Upload user guides and other static documentation files</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-separator  class="q-my-sm" />
         <q-item to="/admin/record-state-log">
           <q-item-section avatar>

@@ -6,6 +6,7 @@ var checkAoi = require('./api/check-aoi');
 var custodianRoutes = require('./api/custodian');
 var dataCaptureTypeRoutes = require('./api/data-capture-type');
 var deliverableRoutes = require('./api/deliverable');
+var documentRoutes = require('./api/document');
 var instrumentTypeRoutes = require('./api/instrument-type');
 var organisationRoutes = require('./api/organisation');
 var recordStateRoutes = require('./api/record-state');
@@ -29,6 +30,7 @@ router
 .use('/custodian', custodianRoutes)
 .use('/data-capture-type', dataCaptureTypeRoutes)
 .use('/deliverable', deliverableRoutes)
+.use('/document', documentRoutes)
 .use('/instrument-type', instrumentTypeRoutes)
 .use('/organisation', organisationRoutes)
 .use('/record-state', recordStateRoutes)

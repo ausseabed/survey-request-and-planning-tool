@@ -17,7 +17,7 @@ import user from './modules/user/user-state'
 import role from './modules/role/role-state'
 import recordState from './modules/record-state/record-state-state'
 import requestPurpose from './modules/request-purpose/request-purpose-state'
-
+import document from './modules/document/document-state'
 
 Vue.use(Vuex)
 
@@ -40,6 +40,7 @@ export default new Vuex.Store({
     recordState,
     requestPurpose,
     organisation,
+    document,
   },
   strict: debug
 })

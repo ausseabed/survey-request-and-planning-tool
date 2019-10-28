@@ -1760,10 +1760,12 @@ crypto-random-string@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-1.0.0.tgz#a230f64f568310e1498009940790ec99545bca7e"
 
-csv-parse@^4.4.5:
-  version "4.4.5"
-  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.4.5.tgz#383255357a766c220be049e4f1f2c3016eb9ac66"
-  integrity sha512-koPV9m9AjNJCK3ig4ErgRJalZsLxWI7NP0Fd3+CO9hgDZt3FSljTeESnfWTbyRc8qk/3/LgX1s5naDqLxiuK9w==
+csv-parse@^4.6.5:
+  version "4.6.5"
+  resolved "https://registry.yarnpkg.com/csv-parse/-/csv-parse-4.6.5.tgz#e5175166dd883d6d89e29ad8174a63224cb02182"
+  integrity sha512-tUohmlM5X1Wtn7aRA4FsJMmnvGo+GUknK/Dp+//ms7pvpXADda5HIi5vFYOvAs/WSn5JUM1bt2AT3TxtDFV3Cw==
+  dependencies:
+    pad "^3.2.0"
 
 curry2@^1.0.0:
   version "1.0.3"
@@ -2433,6 +2435,16 @@ fstream@^1.0.0, fstream@^1.0.2:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/fstream/-/fstream-1.0.11.tgz#5c1fb1f117477114f0632a0eb4b71b3cb0fd3171"
   integrity sha1-XB+x8RdHcRTwYyoOtLcbPLD9MXE=
+  dependencies:
+    graceful-fs "^4.1.2"
+    inherits "~2.0.0"
+    mkdirp ">=0.5 0"
+    rimraf "2"
+
+fstream@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/fstream/-/fstream-1.0.12.tgz#4e8ba8ee2d48be4f7d0de505455548eae5932045"
+  integrity sha512-WvJ193OHa0GHPEL+AycEJgxvBEwyfRkN1vhjca23OaPVMCaLCXTd5qAu82AjTcgP1UJmytkOKb63Ypde7raDIg==
   dependencies:
     graceful-fs "^4.1.2"
     inherits "~2.0.0"
@@ -4650,6 +4662,13 @@ pacote@^8.1.6:
     unique-filename "^1.1.0"
     which "^1.3.0"
 
+pad@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/pad/-/pad-3.2.0.tgz#be7a1d1cb6757049b4ad5b70e71977158fea95d1"
+  integrity sha512-2u0TrjcGbOjBTJpyewEl4hBO3OeX5wWue7eIFPzQTg6wFSvoaHcBTTUY5m+n0hd04gmTCPuY0kCpVIVuw5etwg==
+  dependencies:
+    wcwidth "^1.0.1"
+
 pako@~1.0.2:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"
@@ -6422,7 +6441,7 @@ void-elements@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
-wcwidth@^1.0.0:
+wcwidth@^1.0.0, wcwidth@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/wcwidth/-/wcwidth-1.0.1.tgz#f0b0dcf915bc5ff1528afadb2c0e17b532da2fe8"
   integrity sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=

@@ -60,16 +60,20 @@
       </q-page-sticky>
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
-        <record-state
-          v-if="this.surveyRequest.id"
-          class="full-width"
-          :entity-type="`survey-request`"
-          :entity-id="surveyRequest.id"
-          :validation-callback="recordStateValidationCallback"
-          :disable="dirty"
-          @updated-state="stateUpdated($event)"
-          >
-        </record-state>
+        <div class="row justify-between full-width">
+          <record-state
+            v-if="this.surveyRequest.id"
+            :entity-type="`survey-request`"
+            :entity-id="surveyRequest.id"
+            :validation-callback="recordStateValidationCallback"
+            :disable="dirty"
+            @updated-state="stateUpdated($event)"
+            >
+          </record-state>
+          <q-img src="assets/hipp-logo-small.png" style="width:160px"></q-img>
+          <div></div>
+        </div>
+
         <div v-if="!surveyRequest.id" class="text-h5"> New HIPP Request </div>
         <q-card class="full-width">
           <q-card-section>

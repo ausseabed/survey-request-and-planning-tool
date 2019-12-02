@@ -24,3 +24,15 @@ services:
     env_file: ./server.conf
     volumes:
       - ./backup:/backup
+
+  mapserver:
+    build:
+      context: ./map
+      dockerfile: Dockerfile
+    env_file: ./server.conf
+    environment:
+      POSTGRES_HOSTNAME: "db-postgres"
+    depends_on:
+      - 'db-postgres'
+    ports:
+      - '3002:80'

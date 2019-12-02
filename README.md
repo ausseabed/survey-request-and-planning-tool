@@ -53,9 +53,11 @@ The following configuration parameters are required. These are set as environmen
 * `AUTH_CLIENT_SECRET`  
     * obtained from crcsi accounts drupal admin interface (view client details)
     * This secret must match the `AUTH_CLIENT_ID` id
-* `AWS_DEFAULT_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
-    * For an AWS account that has access to S3.
-    * Local deployments of QA4MB make use of remote S3.  
+* `JWT_TOKEN_KEY_PRIVATE`
+    * Private RSA key used for generation of jwt token.
+    * Must match the public key at `./server/ssh_keys/public`
+    * Newlines in key must be replaced by `\n` other characters within key may need to be escaped.
+
 
 ## Setup
 Clone the repository

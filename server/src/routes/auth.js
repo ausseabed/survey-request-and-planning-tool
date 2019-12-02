@@ -105,27 +105,20 @@ function crcsiAuth(req, res) {
     return user;
   })
   .then(function (user) {
-    var kms = new AWS.KMS();
-    kms.decrypt({
-      CiphertextBlob: fs.readFileSync(resolve(__dirname + './../../ssh_keys/private.encrypted'))
-    }, (err, data) => {
-      if (err) {
-        var logid = logIdGen();
-        logger.error(err, { id: logid });
-        return res.status(500).json({ error: "Error decrypting" });
-      }
+    //Get private key from env var
+    //This key needs some tweaks to get in usable form due to its
+    //specification as an env var (and limitations on new lines, etc)
+    var cert_priv = process.env.JWT_TOKEN_KEY_PRIVATE.replace(/\\n/g, '\n');
+    cert_priv = cert_priv.substring(1, cert_priv.length-1);
+    var signed_jwt = jwt.sign({
+      id: user.id,
+      avatar: user.avatar,
+      email: user.email,
+      name: user.name
+    }, cert_priv, { expiresIn: 30 * 24 * 60 * 60, algorithm: 'RS256' });
 
-      var cert_priv = base64url.decode(data.Plaintext.toString("base64"));
-      var signed_jwt = jwt.sign({
-        id: user.id,
-        avatar: user.avatar,
-        email: user.email,
-        name: user.name
-      }, cert_priv, { expiresIn: 30 * 24 * 60 * 60, algorithm: 'RS256' });
-
-      res.setHeader('Set-Cookie', `Authorization=Bearer ${signed_jwt} ; Path=/`);
-      return res.json({ 'access_token': signed_jwt });
-    });
+    res.setHeader('Set-Cookie', `Authorization=Bearer ${signed_jwt} ; Path=/`);
+    return res.json({ 'access_token': signed_jwt });
   })
   .catch(function (err) {
     var logid = logIdGen();

@@ -200,6 +200,7 @@ export class SurveyRequest {
   moratoriumComment;
 
   @Column("geometry", {
+    name: "area_of_interest",
     spatialFeatureType: "MultiPolygon",
     srid: 4326,
     nullable: true,

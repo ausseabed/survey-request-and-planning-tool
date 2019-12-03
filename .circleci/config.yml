@@ -4,6 +4,7 @@ executors:
     environment:
       IMAGE_NAME_API: crcsi/qa4mbes-api
       IMAGE_NAME_WWW: crcsi/qa4mbes-www
+      IMAGE_NAME_MAPSERVER: crcsi/qa4mbes-mapserver
     docker:
       - image: circleci/buildpack-deps@sha256:f15719b269c2c7337d2fb29a31abf4edcfe30311291765b831e699b0ad9ae77d
 
@@ -41,6 +42,21 @@ jobs:
           paths:
             - ./image-www.tar
 
+  build-mapserver:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build MapServer Docker image
+          command: docker build -t $IMAGE_NAME_MAPSERVER:develop map
+      - run:
+          name: Archive MapServer Docker image
+          command: docker save -o image-mapserver.tar $IMAGE_NAME_MAPSERVER
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image-mapserver.tar
 
   publish-develop:
     executor: docker-publisher
@@ -55,12 +71,15 @@ jobs:
           name: Load archived WWW Docker image
           command: docker load -i /tmp/workspace/image-www.tar
       - run:
+          name: Load archived MapServer Docker image
+          command: docker load -i /tmp/workspace/image-mapserver.tar
+      - run:
           name: Publish Docker Images to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME_WWW:develop
             docker push $IMAGE_NAME_API:develop
-
+            docker push $IMAGE_NAME_MAPSERVER:develop
 
 workflows:
   version: 2
@@ -74,10 +93,15 @@ workflows:
           filters:
             branches:
               only: develop
+      - build-mapserver:
+          filters:
+            branches:
+              only: develop
       - publish-develop:
           requires:
             - build-api
             - build-www
+            - build-mapserver
           filters:
             branches:
               only: develop

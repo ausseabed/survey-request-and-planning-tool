@@ -133,6 +133,9 @@ module.exports = function (ctx) {
         '/api': {
           target: 'http://api:3000',
           changeOrigin: true,
+        },
+        '/map': {
+          target: 'http://mapserver',
         }
       }
     },

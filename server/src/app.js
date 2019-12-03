@@ -18,56 +18,6 @@ var cors = require('cors');
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 
-// import { interpret } from 'xstate';
-// import { requestRecordMachine } from './routes/state-management';
-
-// // const machine = requestRecordMachine;
-// const service = interpret(requestRecordMachine).onTransition(state => {
-//   console.log(state.value);
-// });
-
-// service.start();
-// service.send('SAVE');
-// service.send('FINALIZE');
-// service.send('SAVE');
-// // service.send('FINALIZE');
-// service.send('ACCEPT');
-//
-// service.stop();
-
-
-// const runActions = (recordState, evtObj) => {
-//   recordState.actions.forEach((action) => {
-//     console.log(action)
-//     action.exec(evtObj)
-//   });
-// };
-//
-// const { initialState } = requestRecordMachine;
-// console.log(initialState.value);
-// runActions(initialState);
-//
-// let nextState = requestRecordMachine.transition(initialState, 'SAVE');
-// console.log(nextState.actions);
-// runActions(nextState);
-//
-// nextState = requestRecordMachine.transition(nextState, 'FINALIZE');
-// console.log(nextState.value);
-// runActions(nextState);
-//
-// nextState = requestRecordMachine.transition(nextState, 'SAVE');
-// console.log(nextState.value);
-// runActions(nextState);
-//
-// nextState = requestRecordMachine.transition(nextState, 'SAVE');
-// console.log(nextState.value);
-// runActions(nextState);
-//
-// nextState = requestRecordMachine.transition(nextState, 'FINALIZE');
-// console.log(nextState.value);
-// runActions(nextState);
-
-
 
 var app = express();
 
@@ -104,13 +54,6 @@ createConnection().then(connection => {
   let connOpts = connection.options;
   console.log(`Connected to database ${connOpts.host}:${connOpts.port} ` +
     `(${connOpts.type})`);
-
-  if (!process.env.AWS_REGION ||
-      !process.env.AWS_ACCESS_KEY_ID ||
-      !process.env.AWS_SECRET_ACCESS_KEY) {
-    console.log("AWS related environment variables not set");
-  }
-  AWS.config.setPromisesDependency(require('bluebird'));
 
   var server = app.listen(app.get('port'), function () {
     console.log('Server listening on port ' + server.address().port);

@@ -44,6 +44,8 @@ There are 3 docker containers:
     - VueJS, using the [Quasar framework](https://quasar-framework.org/).
 - db-postgres
     - PostgreSQL database with PostGIS extension
+- mapserver
+    - MapServer connects to db-postgres and publishes OGC web services (WMS, WFS)
 
 # Development
 
@@ -108,6 +110,12 @@ Web UI application can be found at:
 
 NodeJS express can be found at:  
     [http://localhost:3000](http://localhost:3000)
+
+MapServer is proxied to the `/map/` path of the Web UI:  
+    [http://localhost:3001/map/](http://localhost:3001/map/)
+
+The above URL will produce a MapServer error, to access a GetCapabilities request use the following URL.
+    [http://localhost:3001/map/?SERVICE=WMS&REQUEST=GetCapabilities](http://localhost:3001/map/?SERVICE=WMS&REQUEST=GetCapabilities)
 
 
 ## Development notes

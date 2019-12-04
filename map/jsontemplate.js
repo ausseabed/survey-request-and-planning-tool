@@ -18,7 +18,8 @@
         "endDate": "[endDate]",
         "contactPerson": "[contactPerson]",
         "contactEmail": "[contactEmail]",
-        "commissioningOrganisations": "[commissioningOrganisations]"
+        "commissioningOrganisations": "[commissioningOrganisations]",
+        "custodianOrganisations": "[custodianOrganisations]"
       }
     }
   ]

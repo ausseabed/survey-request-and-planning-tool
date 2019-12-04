@@ -12,7 +12,9 @@
       "properties": {
         "surveyName": "[surveyName]",
         "category": "[category]",
-        "purpose": "[purpose]"
+        "purpose": "[purpose]",
+        "startDate": "[startDate]",
+        "endDate": "[endDate]"
       }
     }
   ]

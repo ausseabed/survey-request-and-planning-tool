@@ -16,7 +16,25 @@ MAP
       ows_title "AusSeabed Survey Planning Tool"
       ows_enable_request "*"
       ows_srs "EPSG:4326 EPSG:25832 EPSG:25833"
+      wms_feature_info_mime_type "application/geojson"
+      wms_include_items "all"
+      wms_enable_request "*"
     END
+  END
+
+  OUTPUTFORMAT
+    NAME "application/geojson"
+    DRIVER 'template'
+    MIMETYPE "application/json; subtype=geojson"
+    FORMATOPTION 'FILE=geojsontemplate.js'
+  END
+
+
+  OUTPUTFORMAT
+    NAME "application/json"
+    DRIVER 'template'
+    MIMETYPE "application/json; subtype=geojson"
+    FORMATOPTION 'FILE=geojsontemplate.js'
   END
 
   LAYER
@@ -27,8 +45,12 @@ MAP
       "gml_include_items" "all" ## Optional (serves all attributes for layer)
       "gml_featureid"     "id" ## REQUIRED
       "wfs_enable_request" "*"
+      wms_enable_request "*"
+      "ows_enable_request" "*"
+      wms_getfeature_formatlist "application/geojson"
     END
-    STATUS DEFAULT
+    STATUS ON
+    TEMPLATE "/etc/mapserver/geojson_template.json"
     TYPE POLYGON
     CONNECTIONTYPE postgis
 

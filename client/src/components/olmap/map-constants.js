@@ -3,6 +3,9 @@ export const WMTS_MAPSERVER_URL = 'http://gaservices.ga.gov.au/gis/rest/services
 
 export const MAP_ATTRIBUTION_HTML = '© Geoscience Australia - <a target="_blank" href="http://gaservices.ga.gov.au/site_7/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer">details<a>'
 
+export const WMS_PRIORITY_AREAS = 'http://marine.ga.gov.au/geoserver/marine/wms';
+export const WMS_PRIORITY_AREAS_LAYER = 'marine:national_priorities';
+
 // Max Latitude -4.6 decimal degrees
 // Max Longitude 174.89 decimal degrees
 // Min Latitude -71.4 decimal degrees

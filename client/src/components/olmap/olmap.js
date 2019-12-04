@@ -87,6 +87,42 @@ var OlMap = function (target, options) {
         return DrawPolygonControl;
       }(ol.control.Control));
 
+      var TogglePriorityLayerControl = (function (Control) {
+        function TogglePriorityLayerControl(opt_options) {
+          var options = opt_options || {};
+
+          var pa_cbx = document.createElement('input');
+          pa_cbx.type = "checkbox";
+          pa_cbx.id = "strait_cbx";
+          pa_cbx.checked = true;
+
+          var element = document.createElement('div');
+          element.className = 'ol-priority-area ol-control-panel ol-unselectable ol-control';
+          element.innerHTML="<b>Priority areas</b>&nbsp;"
+          element.appendChild(pa_cbx);
+
+          Control.call(this, {
+            element: element,
+            target: options.target
+          });
+
+          pa_cbx.addEventListener(
+            'click', this.handlePriorityLayerToggle.bind(this), false);
+        }
+
+        if ( Control ) TogglePriorityLayerControl.__proto__ = Control;
+        TogglePriorityLayerControl.prototype =
+          Object.create( Control && Control.prototype );
+        TogglePriorityLayerControl.prototype.constructor = DrawPolygonControl;
+
+        TogglePriorityLayerControl.prototype.handlePriorityLayerToggle =
+          function handlePriorityLayerToggle () {
+            doPriorityLayerToggle();
+          };
+
+        return TogglePriorityLayerControl;
+      }(ol.control.Control));
+
       //
       // WMTS layer works, but leaves blue lines all over the map. Workaround
       // is to use Esri Tile server.
@@ -110,17 +146,32 @@ var OlMap = function (target, options) {
         attributions: [new ol.Attribution({
           html: MapConstants.MAP_ATTRIBUTION_HTML
         })],
-      })
+      });
+
+      var priorityAreasMap = new ol.source.ImageWMS({
+        url: MapConstants.WMS_PRIORITY_AREAS,
+        params: {'LAYERS': MapConstants.WMS_PRIORITY_AREAS_LAYER},
+        attributions: [new ol.Attribution({
+          html: MapConstants.MAP_ATTRIBUTION_HTML
+        })],
+      });
+      var priorityAreasLayer = new ol.layer.Image({
+        opacity: 0.35,
+        source: priorityAreasMap
+      });
+
 
       var center = [
         (MapConstants.WMTS_DEFAULT_EXTENT[0] + MapConstants.WMTS_DEFAULT_EXTENT[2] / 2),
         (MapConstants.WMTS_DEFAULT_EXTENT[1] + MapConstants.WMTS_DEFAULT_EXTENT[3] / 2)
       ];
 
-      let controls = []
+      let controls = [];
       if (includeDrawButton) {
-        controls.push(new DrawPolygonControl())
+        controls.push(new DrawPolygonControl());
       }
+
+      controls.push(new TogglePriorityLayerControl());
 
       var map = new ol.Map({
         interactions: ol.interaction.defaults().extend(
@@ -130,6 +181,7 @@ var OlMap = function (target, options) {
           new ol.layer.Tile({
             source: baseMap
           }),
+          priorityAreasLayer,
           new ol.layer.Vector({
             source: source,
             style: new ol.style.Style({
@@ -184,7 +236,11 @@ var OlMap = function (target, options) {
         if (typeof this.drawStart === 'function') {
           this.drawStart();
         }
-      }
+      };
+
+      var doPriorityLayerToggle = (i) => {
+        priorityAreasLayer.setVisible(!priorityAreasLayer.getVisible());
+      };
 
       drawInteraction.on('drawend', (event) => {
         map.removeInteraction(drawInteraction);

@@ -16,7 +16,7 @@ MAP
       ows_title "AusSeabed Survey Planning Tool"
       ows_enable_request "*"
       ows_srs "EPSG:3857 EPSG:4326 EPSG:25832 EPSG:25833"
-      wms_feature_info_mime_type "application/geojson"
+      wms_feature_info_mime_type "application/json, application/geojson"
       wms_include_items "all"
       wms_enable_request "*"
     END
@@ -31,7 +31,7 @@ MAP
 
 
   OUTPUTFORMAT
-    NAME "application/json"
+    NAME "json"
     DRIVER 'template'
     MIMETYPE "application/json; subtype=geojson"
     FORMATOPTION 'FILE=geojsontemplate.js'
@@ -47,15 +47,15 @@ MAP
       "wfs_enable_request" "*"
       wms_enable_request "*"
       "ows_enable_request" "*"
-      wms_getfeature_formatlist "application/geojson"
+      wms_getfeature_formatlist "application/json, application/geojson"
     END
     STATUS ON
-    TEMPLATE "/etc/mapserver/geojson_template.json"
+    TEMPLATE "jsontemplate.js"
     TYPE POLYGON
     CONNECTIONTYPE postgis
 
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
-    DATA "area_of_interest from survey_plan"
+    DATA "area_of_interest from (select sp.id as spid, sp.area_of_interest as area_of_interest, sp.\"surveyName\" from survey_plan sp) as subquery using unique spid"
     CLASS
       STYLE
         COLOR 128 128 128

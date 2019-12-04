@@ -2,4 +2,4 @@ FROM camptocamp/mapserver
 LABEL maintainer="lhurst@frontiersi.com.au"
 
 COPY mapserver.map.tmpl /etc/mapserver/
-COPY geojsontemplate.js /etc/mapserver/
+COPY *.js /etc/mapserver/

@@ -1,9 +1,7 @@
 <!– MapServer Template –>
-[resultset layer=Survey_Plans]
 {
   "type": "FeatureCollection",
   "features": [
-    [feature trimlast=","]
     {
       "type": "Feature",
       "id": "[spid]",
@@ -14,8 +12,6 @@
       "properties": {
         "Survey Name": "[surveyName]"
       }
-    },
-    [/feature]
+    }
   ]
 }
-[/resultset]

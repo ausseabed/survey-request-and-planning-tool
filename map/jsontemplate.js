@@ -10,7 +10,9 @@
         "coordinates":[[[shpxy precision="6" cs=", " xh="[" yf="]"]]]
       },
       "properties": {
-        "Survey Name": "[surveyName]"
+        "surveyName": "[surveyName]",
+        "category": "[category]",
+        "purpose": "[purpose]"
       }
     }
   ]

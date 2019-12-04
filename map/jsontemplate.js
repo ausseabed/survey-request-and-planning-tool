@@ -11,10 +11,13 @@
       },
       "properties": {
         "surveyName": "[surveyName]",
+        "status": "[status]",
         "category": "[category]",
         "purpose": "[purpose]",
         "startDate": "[startDate]",
-        "endDate": "[endDate]"
+        "endDate": "[endDate]",
+        "contactPerson": "[contactPerson]",
+        "contactEmail": "[contactEmail]"
       }
     }
   ]

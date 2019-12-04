@@ -55,7 +55,14 @@ MAP
     CONNECTIONTYPE postgis
 
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
-    DATA "area_of_interest from (select sp.id as spid, sp.status, sp.\"startDate\", sp.\"endDate\", sp.\"contactPerson\", sp.email as \"contactEmail\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\", sa.group as category, sa.name as purpose from survey_plan sp join survey_application sa on sp.\"surveyApplicationId\" = sa.id) as subquery using unique spid"
+    DATA "area_of_interest from (
+            select sp.id as spid, mergednames.orgname as \"commissioningOrganisations\", sp.status, sp.\"startDate\", sp.\"endDate\", sp.\"contactPerson\", sp.email as \"contactEmail\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\", sa.group as category, sa.name as purpose
+            from survey_plan sp
+            join survey_application sa on sp.\"surveyApplicationId\" = sa.id
+            full outer join (
+              SELECT survey_plan.id as id, string_agg(DISTINCT organisation.name, ', ') as orgname FROM survey_plan LEFT JOIN survey_plan_organisations_organisation ON survey_plan.id = survey_plan_organisations_organisation.\"surveyPlanId\" INNER JOIN organisation ON survey_plan_organisations_organisation.\"organisationId\" = organisation.id GROUP BY survey_plan.id
+            ) mergednames on mergednames.id = sp.id
+          ) as subquery using unique spid"
     CLASS
       STYLE
         COLOR 128 128 128

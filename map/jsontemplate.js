@@ -17,7 +17,8 @@
         "startDate": "[startDate]",
         "endDate": "[endDate]",
         "contactPerson": "[contactPerson]",
-        "contactEmail": "[contactEmail]"
+        "contactEmail": "[contactEmail]",
+        "commissioningOrganisations": "[commissioningOrganisations]"
       }
     }
   ]

@@ -6,7 +6,7 @@
     [feature trimlast=","]
     {
       "type": "Feature",
-      "id": "id",
+      "id": [id],
       "geometry": {
         "type": "Polygon",
         "coordinates":[[shpxy precision="6" xh="[" yf="],"]]

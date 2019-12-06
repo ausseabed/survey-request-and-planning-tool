@@ -19,7 +19,8 @@
         "contactPerson": "[contactPerson]",
         "contactEmail": "[contactEmail]",
         "commissioningOrganisations": "[commissioningOrganisations]",
-        "custodianOrganisations": "[custodianOrganisations]"
+        "custodianOrganisations": "[custodianOrganisations]",
+        "instrumentTypes": "[instrumentTypes]"
       }
     }
   ]

@@ -56,7 +56,7 @@ MAP
 
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
     DATA "area_of_interest from (
-            select sp.id as spid, commorgs.orgname as \"commissioningOrganisations\", custmerge.custname as \"custodianOrganisations\" ,sp.status, sp.\"startDate\", sp.\"endDate\", sp.\"contactPerson\", sp.email as \"contactEmail\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\", sa.group as category, sa.name as purpose
+            select sp.id as spid, commorgs.orgname as \"commissioningOrganisations\", custmerge.custname as \"custodianOrganisations\" ,sp.status, sp.\"startDate\", sp.\"endDate\", sp.\"contactPerson\", sp.email as \"contactEmail\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\", sa.group as category, sa.name as purpose, instmerge.instname as \"instrumentTypes\"
             from survey_plan sp
             join survey_application sa on sp.\"surveyApplicationId\" = sa.id
             full outer join (
@@ -65,6 +65,9 @@ MAP
             full outer join (
               SELECT survey_plan.id as id, string_agg(DISTINCT custodian.name, ', ') as custname FROM survey_plan LEFT JOIN survey_plan_custodians_custodian ON survey_plan.id = survey_plan_custodians_custodian.\"surveyPlanId\" INNER JOIN custodian ON survey_plan_custodians_custodian.\"custodianId\" = custodian.id GROUP BY survey_plan.id
             ) custmerge on custmerge.id = sp.id
+            full outer join (
+              SELECT survey_plan.id as id, string_agg(DISTINCT instrument_type.name, ', ') as instname FROM survey_plan LEFT JOIN survey_plan_instrument_types_instrument_type ON survey_plan.id = survey_plan_instrument_types_instrument_type.\"surveyPlanId\" INNER JOIN instrument_type ON survey_plan_instrument_types_instrument_type.\"instrumentTypeId\" = instrument_type.id GROUP BY survey_plan.id
+            ) instmerge on instmerge.id = sp.id
           ) as subquery using unique spid"
     CLASS
       STYLE

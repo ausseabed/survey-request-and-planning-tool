@@ -268,9 +268,10 @@ export class ReportGenerator {
     imgOpts.getImage =  (tagValue, tagName) => {
       return new Promise(async (resolve, reject) => { // <--- this line
         try {
+          // TODO fix this. Caused by mismatch between column and attr name of entity
           const attrName = tagValue
-          if (_.isNil(this.entity[attrName])) {
-            console.log("no region" )
+          if (_.isNil(this.entity["areaOfInterest"])) {
+            console.log("no region")
             const noRegionImg =
               await sharp('src/lib/report-generator-noregion.png')
               .png()
@@ -299,7 +300,7 @@ export class ReportGenerator {
       const tagValueBits = tagName.split('_')
       let sizeStr = 'md'
       if (tagValueBits.length > 1) {
-        sizeStr = tagValueBits[1].toLowerCase()
+        sizeStr = tagValueBits[tagValueBits.length - 1].toLowerCase()
       }
       let size = [400, 400]
       if (sizeStr == 'sm' || sizeStr == 'small') {
@@ -446,7 +447,7 @@ export class HippRequestReportGenerator extends ReportGenerator {
       hasAreaOfInterest: !_.isNil(this.entity.areaOfInterest),
     }
 
-    this.mergeImageKeys('areaOfInterest', data)
+    this.mergeImageKeys('area_of_interest', data)
 
     this.mergeRecordState(data)
 
@@ -556,7 +557,7 @@ export class SurveyPlanReportGenerator extends ReportGenerator {
     }
 
     data['hasAreaOfInterest'] = !_.isNil(this.entity.areaOfInterest);
-    this.mergeImageKeys('areaOfInterest', data);
+    this.mergeImageKeys('area_of_interest', data);
     this.mergeRecordState(data);
 
     return data

@@ -94,7 +94,7 @@ router.get(
   .select([`ST_XMin("extent")`, `ST_XMax("extent")`, `ST_YMin("extent")`, `ST_YMax("extent")`])
   .from(subQuery => {
       return subQuery
-          .select('ST_Extent("areaOfInterest")', 'extent')
+          .select('ST_Extent(area_of_interest)', 'extent')
           .from(SurveyPlan)
           .where(`"id" = :id`, { id: req.params.id });
   }, "extent")
@@ -128,7 +128,7 @@ router.get(
   let projectImage = await getConnection()
   .getRepository(SurveyPlan)
   .createQueryBuilder()
-  .select(`ST_AsPNG(ST_AsRaster("areaOfInterest",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[97, 173, 216], ARRAY[255,255,255]))`, 'imageData')
+  .select(`ST_AsPNG(ST_AsRaster(area_of_interest,${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[97, 173, 216], ARRAY[255,255,255]))`, 'imageData')
   .where(`"id" = :id`, {id: req.params.id})
   .getRawOne();
 

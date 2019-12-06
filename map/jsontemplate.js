@@ -20,7 +20,8 @@
         "contactEmail": "[contactEmail]",
         "commissioningOrganisations": "[commissioningOrganisations]",
         "custodianOrganisations": "[custodianOrganisations]",
-        "instrumentTypes": "[instrumentTypes]"
+        "instrumentTypes": "[instrumentTypes]",
+        "dataCaptureTypes": "[dataCaptureTypes]"
       }
     }
   ]

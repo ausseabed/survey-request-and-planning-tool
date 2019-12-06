@@ -56,7 +56,7 @@ MAP
 
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
     DATA "area_of_interest from (
-            select sp.id as spid, commorgs.orgname as \"commissioningOrganisations\", custmerge.custname as \"custodianOrganisations\" ,sp.status, sp.\"startDate\", sp.\"endDate\", sp.\"contactPerson\", sp.email as \"contactEmail\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\", sa.group as category, sa.name as purpose, instmerge.instname as \"instrumentTypes\"
+            select sp.id as spid, commorgs.orgname as \"commissioningOrganisations\", custmerge.custname as \"custodianOrganisations\" ,sp.status, sp.\"startDate\", sp.\"endDate\", sp.\"contactPerson\", sp.email as \"contactEmail\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\", sa.group as category, sa.name as purpose, instmerge.instname as \"instrumentTypes\", dctmerge.dctname as \"dataCaptureTypes\"
             from survey_plan sp
             join survey_application sa on sp.\"surveyApplicationId\" = sa.id
             full outer join (
@@ -68,6 +68,9 @@ MAP
             full outer join (
               SELECT survey_plan.id as id, string_agg(DISTINCT instrument_type.name, ', ') as instname FROM survey_plan LEFT JOIN survey_plan_instrument_types_instrument_type ON survey_plan.id = survey_plan_instrument_types_instrument_type.\"surveyPlanId\" INNER JOIN instrument_type ON survey_plan_instrument_types_instrument_type.\"instrumentTypeId\" = instrument_type.id GROUP BY survey_plan.id
             ) instmerge on instmerge.id = sp.id
+            full outer join (
+              SELECT survey_plan.id as id, string_agg(DISTINCT data_capture_type.name, ', ') as dctname FROM survey_plan LEFT JOIN survey_plan_data_capture_types_data_capture_type ON survey_plan.id = survey_plan_data_capture_types_data_capture_type.\"surveyPlanId\" INNER JOIN data_capture_type ON survey_plan_data_capture_types_data_capture_type.\"dataCaptureTypeId\" = data_capture_type.id GROUP BY survey_plan.id
+            ) dctmerge on dctmerge.id = sp.id
           ) as subquery using unique spid"
     CLASS
       STYLE

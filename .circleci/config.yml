@@ -1,62 +1,34 @@
 version: 2.1
 executors:
   docker-publisher:
-    environment:
-      IMAGE_NAME_API: crcsi/qa4mbes-api
-      IMAGE_NAME_WWW: crcsi/qa4mbes-www
-      IMAGE_NAME_MAPSERVER: crcsi/qa4mbes-mapserver
     docker:
       - image: circleci/buildpack-deps@sha256:f15719b269c2c7337d2fb29a31abf4edcfe30311291765b831e699b0ad9ae77d
 
-
 jobs:
-  build-api:
+  build:
+    parameters:
+      image-name:
+        type: string
+      image-tag:
+        type: string
+      image-file:
+        type: string
+      docker-file-path:
+        type: string
     executor: docker-publisher
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Build API Docker image
-          command: docker build -t $IMAGE_NAME_API:develop --build-arg AUTH_HOST=https://staging.accounts.crcsi.com.au --build-arg AUTH_CLIENT_ID=720174 server
+          command: docker build -t << parameters.image-name >>:<< parameters.image-tag >> --build-arg AUTH_HOST=https://staging.accounts.crcsi.com.au --build-arg AUTH_CLIENT_ID=720174 << parameters.docker-file-path >>
       - run:
           name: Archive API Docker image
-          command: docker save -o image-api.tar $IMAGE_NAME_API
+          command: docker save -o << parameters.image-file >> << parameters.image-name >>
       - persist_to_workspace:
           root: .
           paths:
-            - ./image-api.tar
-
-  build-www:
-    executor: docker-publisher
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build WWW Docker image
-          command: docker build -t $IMAGE_NAME_WWW:develop --build-arg AUTH_HOST=https://staging.accounts.crcsi.com.au --build-arg AUTH_CLIENT_ID=720174 client
-      - run:
-          name: Archive WWW Docker image
-          command: docker save -o image-www.tar $IMAGE_NAME_WWW
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./image-www.tar
-
-  build-mapserver:
-    executor: docker-publisher
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build MapServer Docker image
-          command: docker build -t $IMAGE_NAME_MAPSERVER:develop map
-      - run:
-          name: Archive MapServer Docker image
-          command: docker save -o image-mapserver.tar $IMAGE_NAME_MAPSERVER
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./image-mapserver.tar
+            - ./<< parameters.image-file >>
 
   publish-develop:
     executor: docker-publisher
@@ -85,23 +57,33 @@ workflows:
   version: 2
   build-develop:
     jobs:
-      - build-api:
+      - build:
+          image-name: crcsi/qa4mbes-api
+          image-tag: develop
+          image-file: image-api.tar
+          docker-file-path: server
           filters:
             branches:
               only: develop
-      - build-www:
+      - build:
+          image-name: crcsi/qa4mbes-www
+          image-tag: develop
+          image-file: image-www.tar
+          docker-file-path: client
           filters:
             branches:
               only: develop
-      - build-mapserver:
+      - build:
+          image-name: crcsi/qa4mbes-mapserver
+          image-tag: develop
+          image-file: image-mapserver.tar
+          docker-file-path: map
           filters:
             branches:
               only: develop
       - publish-develop:
           requires:
-            - build-api
-            - build-www
-            - build-mapserver
+            - build
           filters:
             branches:
               only: develop

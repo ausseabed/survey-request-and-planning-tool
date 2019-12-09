@@ -24,17 +24,19 @@ MAP
 
   OUTPUTFORMAT
     NAME "application/geojson"
-    DRIVER 'template'
     MIMETYPE "application/json; subtype=geojson"
-    FORMATOPTION 'FILE=geojsontemplate.js'
+    DRIVER "OGR/GEOJSON"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
   END
 
 
   OUTPUTFORMAT
     NAME "json"
-    DRIVER 'template'
     MIMETYPE "application/json"
-    FORMATOPTION 'FILE=geojsontemplate.js'
+    DRIVER "OGR/GEOJSON"
+    FORMATOPTION "STORAGE=stream"
+    FORMATOPTION "FORM=SIMPLE"
   END
 
   LAYER

@@ -58,6 +58,7 @@ workflows:
   build-develop:
     jobs:
       - build:
+          name: build-api-develop
           image-name: crcsi/qa4mbes-api
           image-tag: develop
           image-file: image-api.tar
@@ -66,6 +67,7 @@ workflows:
             branches:
               only: develop
       - build:
+          name: build-www-develop
           image-name: crcsi/qa4mbes-www
           image-tag: develop
           image-file: image-www.tar
@@ -74,6 +76,7 @@ workflows:
             branches:
               only: develop
       - build:
+          name: build-mapserver-develop
           image-name: crcsi/qa4mbes-mapserver
           image-tag: develop
           image-file: image-mapserver.tar
@@ -83,7 +86,9 @@ workflows:
               only: develop
       - publish-develop:
           requires:
-            - build
+            - build-api-develop
+            - build-www-develop
+            - build-mapserver-develop
           filters:
             branches:
               only: develop

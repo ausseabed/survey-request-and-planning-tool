@@ -1,7 +1,10 @@
 <!– MapServer Template –>
+Dummy template
+[resultset layer=Survey_Plans]
 {
   "type": "FeatureCollection",
   "features": [
+    [feature trimlast=","]
     {
       "type": "Feature",
       "id": "[spid]",
@@ -23,6 +26,8 @@
         "instrumentTypes": "[instrumentTypes]",
         "dataCaptureTypes": "[dataCaptureTypes]"
       }
-    }
+    },
+    [/feature]
   ]
 }
+[/resultset]

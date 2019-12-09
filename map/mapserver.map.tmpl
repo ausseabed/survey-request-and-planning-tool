@@ -33,12 +33,12 @@ MAP
   OUTPUTFORMAT
     NAME "json"
     DRIVER 'template'
-    MIMETYPE "application/json; subtype=geojson"
+    MIMETYPE "application/json"
     FORMATOPTION 'FILE=geojsontemplate.js'
   END
 
   LAYER
-    NAME "upcoming_surveys (beta)"
+    NAME "Survey_Plans"
     METADATA
       "wfs_title"         "Survey Plans" ##REQUIRED
       "wfs_srs"           "EPSG:4326" ## REQUIRED
@@ -50,7 +50,7 @@ MAP
       wms_getfeature_formatlist "application/json, application/geojson"
     END
     STATUS ON
-    TEMPLATE "jsontemplate.js"
+    TEMPLATE "dummy.js"
     TYPE POLYGON
     CONNECTIONTYPE postgis
 

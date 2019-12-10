@@ -83,9 +83,9 @@ jobs:
             kubectl config use-context fsi.staging.frontiersi.io
             # update image to latest
             export IMAGE_TAG=latest-beta
-            kubectl set image --namespace=qa4mbes deployment/spt-api api=ausseabed/spt-api:$IMAGE_TAG
-            kubectl set image --namespace=qa4mbes deployment/spt-www www=ausseabed/spt-www:$IMAGE_TAG
-            kubectl set image --namespace=qa4mbes deployment/spt-mapserver mapserver=ausseabed/spt-mapserver:$IMAGE_TAG
+            kubectl set image --namespace=qa4mbes deployment/api api=ausseabed/spt-api:$IMAGE_TAG
+            kubectl set image --namespace=qa4mbes deployment/www www=ausseabed/spt-www:$IMAGE_TAG
+            kubectl set image --namespace=qa4mbes deployment/mapserver mapserver=ausseabed/spt-mapserver:$IMAGE_TAG
 
 
 workflows:

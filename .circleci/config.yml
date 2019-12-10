@@ -76,7 +76,8 @@ jobs:
           command: |
             # connect to cluster
             export KUBE_CLUSTER=fsi.staging.frontiersi.io
-            kubectl config set-cluster $KUBE_CLUSTER --insecure-skip-tls-verify=true
+            export KUBE_SERVER=https://api.fsi.staging.frontiersi.io
+            kubectl config set-cluster $KUBE_CLUSTER --server=$KUBE_SERVER --insecure-skip-tls-verify=true
             kubectl config set-credentials $KUBE_USER --token=$KUBE_TOKEN
             kubectl config set-context fsi.staging.frontiersi.io --cluster=$KUBE_CLUSTER --user=$KUBE_USER
             kubectl config use-context fsi.staging.frontiersi.io

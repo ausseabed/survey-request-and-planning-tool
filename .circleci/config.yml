@@ -22,6 +22,7 @@ jobs:
         type: string
       image-tag-suffix:
         type: string
+        default: ''
       image-file:
         type: string
       docker-file-path:
@@ -122,14 +123,12 @@ workflows:
       - build:
           name: build-api-master
           image-name: ausseabed/spt-api
-          image-tag-suffix: '-beta'
           image-file: image-api.tar
           docker-file-path: server
           <<: *master_only
       - publish:
           name: publish-api-master
           image-name: ausseabed/spt-api
-          image-tag-suffix: '-beta'
           image-file: image-api.tar
           requires:
             - build-api-master
@@ -137,14 +136,12 @@ workflows:
       - build:
           name: build-www-master
           image-name: ausseabed/spt-www
-          image-tag-suffix: '-beta'
           image-file: image-www.tar
           docker-file-path: client
           <<: *master_only
       - publish:
           name: publish-www-master
           image-name: ausseabed/spt-www
-          image-tag-suffix: '-beta'
           image-file: image-www.tar
           requires:
             - build-www-master
@@ -152,14 +149,12 @@ workflows:
       - build:
           name: build-mapserver-master
           image-name: ausseabed/spt-mapserver
-          image-tag-suffix: '-beta'
           image-file: image-mapserver.tar
           docker-file-path: map
           <<: *master_only
       - publish:
           name: publish-mapserver-master
           image-name: ausseabed/spt-mapserver
-          image-tag-suffix: '-beta'
           image-file: image-mapserver.tar
           requires:
             - build-mapserver-master

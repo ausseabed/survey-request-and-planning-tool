@@ -21,7 +21,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Set env vars
-          command: export SHORT_GIT_HASH="$(echo "$CIRCLE_SHA1" | cut -c -7)"
+          command: cci-export SHORT_GIT_HASH "$(echo "$CIRCLE_SHA1" | cut -c -7)"
       - run:
           name: Build << parameters.image-name >> Docker image
           command: docker build -t << parameters.image-name >>:$SHORT_GIT_HASH<< parameters.image-tag-suffix >> --build-arg AUTH_HOST=https://staging.accounts.crcsi.com.au --build-arg AUTH_CLIENT_ID=720174 << parameters.docker-file-path >>

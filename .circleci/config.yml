@@ -59,7 +59,7 @@ workflows:
     jobs:
       - build:
           name: build-api-develop
-          image-name: crcsi/qa4mbes-api
+          image-name: ausseabed/spt-api
           image-tag: develop
           image-file: image-api.tar
           docker-file-path: server
@@ -68,7 +68,7 @@ workflows:
               only: develop
       - publish:
           name: publish-api-develop
-          image-name: crcsi/qa4mbes-api
+          image-name: ausseabed/spt-api
           image-tag: develop
           image-file: image-api.tar
           requires:
@@ -78,7 +78,7 @@ workflows:
               only: develop
       - build:
           name: build-www-develop
-          image-name: crcsi/qa4mbes-www
+          image-name: ausseabed/spt-www
           image-tag: develop
           image-file: image-www.tar
           docker-file-path: client
@@ -87,7 +87,7 @@ workflows:
               only: develop
       - publish:
           name: publish-www-develop
-          image-name: crcsi/qa4mbes-www
+          image-name: ausseabed/spt-www
           image-tag: develop
           image-file: image-www.tar
           requires:
@@ -97,7 +97,7 @@ workflows:
               only: develop
       - build:
           name: build-mapserver-develop
-          image-name: crcsi/qa4mbes-mapserver
+          image-name: ausseabed/spt-mapserver
           image-tag: develop
           image-file: image-mapserver.tar
           docker-file-path: map
@@ -106,7 +106,7 @@ workflows:
               only: develop
       - publish:
           name: publish-mapserver-develop
-          image-name: crcsi/qa4mbes-mapserver
+          image-name: ausseabed/spt-mapserver
           image-tag: develop
           image-file: image-mapserver.tar
           requires:

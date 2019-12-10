@@ -30,28 +30,28 @@ jobs:
           paths:
             - ./<< parameters.image-file >>
 
-  publish-develop:
+  publish:
+    parameters:
+      image-name:
+        type: string
+      image-tag:
+        type: string
+      image-file:
+        type: string
     executor: docker-publisher
     steps:
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker
       - run:
-          name: Load archived API Docker image
-          command: docker load -i /tmp/workspace/image-api.tar
-      - run:
-          name: Load archived WWW Docker image
-          command: docker load -i /tmp/workspace/image-www.tar
-      - run:
-          name: Load archived MapServer Docker image
-          command: docker load -i /tmp/workspace/image-mapserver.tar
+          name: Load archived << parameters.image-file >> Docker image
+          command: docker load -i /tmp/workspace/<< parameters.image-file >>
       - run:
           name: Publish Docker Images to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $IMAGE_NAME_WWW:develop
-            docker push $IMAGE_NAME_API:develop
-            docker push $IMAGE_NAME_MAPSERVER:develop
+            docker push << parameters.image-name >>:<< parameters.image-tag >>
+
 
 workflows:
   version: 2
@@ -66,12 +66,32 @@ workflows:
           filters:
             branches:
               only: develop
+      - publish:
+          name: publish-api-develop
+          image-name: crcsi/qa4mbes-api
+          image-tag: develop
+          image-file: image-api.tar
+          requires:
+            - build-api-develop
+          filters:
+            branches:
+              only: develop
       - build:
           name: build-www-develop
           image-name: crcsi/qa4mbes-www
           image-tag: develop
           image-file: image-www.tar
           docker-file-path: client
+          filters:
+            branches:
+              only: develop
+      - publish:
+          name: publish-www-develop
+          image-name: crcsi/qa4mbes-www
+          image-tag: develop
+          image-file: image-www.tar
+          requires:
+            - build-www-develop
           filters:
             branches:
               only: develop
@@ -84,10 +104,12 @@ workflows:
           filters:
             branches:
               only: develop
-      - publish-develop:
+      - publish:
+          name: publish-mapserver-develop
+          image-name: crcsi/qa4mbes-mapserver
+          image-tag: develop
+          image-file: image-mapserver.tar
           requires:
-            - build-api-develop
-            - build-www-develop
             - build-mapserver-develop
           filters:
             branches:

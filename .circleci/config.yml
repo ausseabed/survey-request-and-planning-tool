@@ -51,6 +51,7 @@ jobs:
         type: string
       image-tag-suffix:
         type: string
+        default: ''
       image-file:
         type: string
     executor: docker-publisher

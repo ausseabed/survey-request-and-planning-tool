@@ -1,8 +1,6 @@
 version: 2.1
 executors:
   docker-publisher:
-    environment:
-      SHORT_GIT_HASH: $(echo $CIRCLE_SHA1 | cut -c -7)
     docker:
       - image: circleci/buildpack-deps@sha256:f15719b269c2c7337d2fb29a31abf4edcfe30311291765b831e699b0ad9ae77d
 
@@ -21,6 +19,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Set env vars
+          command: export SHORT_GIT_HASH="$(echo "$CIRCLE_SHA1" | cut -c -7)"
       - run:
           name: Build << parameters.image-name >> Docker image
           command: docker build -t << parameters.image-name >>:$SHORT_GIT_HASH<< parameters.image-tag-suffix >> --build-arg AUTH_HOST=https://staging.accounts.crcsi.com.au --build-arg AUTH_CLIENT_ID=720174 << parameters.docker-file-path >>
@@ -55,7 +56,7 @@ jobs:
           name: Publish Docker Images to Docker Hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push << parameters.image-name >>:<< parameters.image-tag-suffix >>
+            docker push << parameters.image-name >>
 
 
 workflows:

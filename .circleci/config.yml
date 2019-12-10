@@ -68,6 +68,24 @@ jobs:
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push << parameters.image-name >>
 
+  deploy-staging:
+    docker:
+      - image: airhelp/kops:1.10
+    steps:
+      - run:
+          command: |
+            # connect to cluster
+            export KUBE_CLUSTER=fsi.staging.frontiersi.io
+            kubectl config set-cluster $KUBE_CLUSTER --insecure-skip-tls-verify=true
+            kubectl config set-credentials $KUBE_USER --token=$KUBE_TOKEN
+            kubectl config set-context fsi.staging.frontiersi.io --cluster=$KUBE_CLUSTER --user=$KUBE_USER
+            kubectl config use-context fsi.staging.frontiersi.io
+            # update image to latest
+            export IMAGE_TAG=latest-beta
+            kubectl set image --namespace=qa4mbes deployment/spt-api api=ausseabed/spt-api:$IMAGE_TAG
+            kubectl set image --namespace=qa4mbes deployment/spt-www www=ausseabed/spt-www:$IMAGE_TAG
+            kubectl set image --namespace=qa4mbes deployment/spt-mapserver mapserver=ausseabed/spt-mapserver:$IMAGE_TAG
+
 
 workflows:
   version: 2
@@ -117,6 +135,12 @@ workflows:
           image-file: image-mapserver.tar
           requires:
             - build-mapserver-develop
+          <<: *develop_only
+      - deploy-staging:
+          requires:
+            - publish-www-develop
+            - publish-mapserver-develop
+            - publish-api-develop
           <<: *develop_only
 
   build-master:

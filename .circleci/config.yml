@@ -1,3 +1,14 @@
+develop_only: &develop_only
+  filters:
+    branches:
+      only: develop
+
+master_only: &master_only
+  filters:
+    branches:
+      only: master
+
+
 version: 2.1
 executors:
   docker-publisher:
@@ -66,9 +77,7 @@ workflows:
           image-tag-suffix: '-beta'
           image-file: image-api.tar
           docker-file-path: server
-          filters:
-            branches:
-              only: develop
+          <<: *develop_only
       - publish:
           name: publish-api-develop
           image-name: ausseabed/spt-api
@@ -76,18 +85,14 @@ workflows:
           image-file: image-api.tar
           requires:
             - build-api-develop
-          filters:
-            branches:
-              only: develop
+          <<: *develop_only
       - build:
           name: build-www-develop
           image-name: ausseabed/spt-www
           image-tag-suffix: '-beta'
           image-file: image-www.tar
           docker-file-path: client
-          filters:
-            branches:
-              only: develop
+          <<: *develop_only
       - publish:
           name: publish-www-develop
           image-name: ausseabed/spt-www
@@ -95,18 +100,14 @@ workflows:
           image-file: image-www.tar
           requires:
             - build-www-develop
-          filters:
-            branches:
-              only: develop
+          <<: *develop_only
       - build:
           name: build-mapserver-develop
           image-name: ausseabed/spt-mapserver
           image-tag-suffix: '-beta'
           image-file: image-mapserver.tar
           docker-file-path: map
-          filters:
-            branches:
-              only: develop
+          <<: *develop_only
       - publish:
           name: publish-mapserver-develop
           image-name: ausseabed/spt-mapserver
@@ -114,6 +115,4 @@ workflows:
           image-file: image-mapserver.tar
           requires:
             - build-mapserver-develop
-          filters:
-            branches:
-              only: develop
+          <<: *develop_only

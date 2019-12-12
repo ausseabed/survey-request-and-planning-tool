@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import boom from 'boom'
+import * as Boom from '@hapi/boom';
 var Docxtemplater = require('docxtemplater')
 import express from 'express'
 import formidable from 'formidable'
@@ -106,18 +106,18 @@ router.get(
     req.query['format']
 
   if (!(format == 'docx' || format == 'csv')) {
-    let err = boom.badRequest(`format must be 'docx' or 'csv' not '${format}'`)
+    let err = Boom.badRequest(`format must be 'docx' or 'csv' not '${format}'`)
     throw err
   }
 
   if (_.isNil(entityId) || _.isNil(templateType)) {
-    let err = boom.badRequest(`entityId and templateType must be specified ` +
+    let err = Boom.badRequest(`entityId and templateType must be specified ` +
       `(eg; /generate/:templateType/:entityId)`)
     throw err
   }
 
   if (!(templateType in TEMPLATE_TYPE_MAP)) {
-    let err = boom.badRequest(`Template type ${templateType} is not defined`)
+    let err = Boom.badRequest(`Template type ${templateType} is not defined`)
     throw err
   }
 
@@ -130,7 +130,7 @@ router.get(
   .findOne(entityId, {relations: templateDetails.relations})
 
   if (_.isNil(entity) || entity.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Entity ${templateDetails.entityType} ${entityId} does not exist`);
     throw err;
   }
@@ -206,7 +206,7 @@ router.get(
     const id = req.params.id;
 
     if (_.isNil(id) || id.length == 0) {
-      let err = boom.notFound(`Must template id ` +
+      let err = Boom.notFound(`Must template id ` +
         `(eg; /api/report-template/:id/download)`);
       throw err;
     }
@@ -230,7 +230,7 @@ router.get(
     .getOne();
 
     if (_.isNil(rt)) {
-      let err = boom.notFound(`Report template with id ${id} does not exist`);
+      let err = Boom.notFound(`Report template with id ${id} does not exist`);
       throw err;
     }
 
@@ -247,11 +247,11 @@ router.get(
       readStream.pipe(res);
 
     } else if (surveyFile.storage == 's3') {
-      let err = boom.notImplemented(
+      let err = Boom.notImplemented(
         `ReportTemplate in s3 not implemented yet`);
       throw err;
     } else {
-      let err = boom.badImplementation(
+      let err = Boom.badImplementation(
         `ReportTemplate.storage should always be db or s3`);
       throw err;
     }

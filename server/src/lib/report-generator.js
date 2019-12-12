@@ -1,7 +1,7 @@
 import _ from 'lodash'
 var Axios = require('axios')
 var expressions= require('angular-expressions')
-const boom = require('boom')
+import * as Boom from '@hapi/boom';
 var Docxtemplater = require('docxtemplater')
 import { getConnection } from 'typeorm';
 var ImageModule = require('docxtemplater-image-module-free')
@@ -39,7 +39,7 @@ export class ReportGenerator {
   getData() {
     // return a dict containing the parameters that are substituted into
     // the template
-    let err = boom.notImplemented(
+    let err = Boom.notImplemented(
       `ReportGenerator.getData needs to be overwritten by child class`);
     throw err;
   }
@@ -200,11 +200,11 @@ export class ReportGenerator {
     if (this.reportTemplate.storage == 'db') {
       return this.reportTemplate.blob
     } else if (surveyFile.storage == 's3') {
-      let err = boom.notImplemented(
+      let err = Boom.notImplemented(
         `ReportTemplate in s3 not implemented yet`);
       throw err;
     } else {
-      let err = boom.badImplementation(
+      let err = Boom.badImplementation(
         `ReportTemplate.storage should always be db or s3`);
       throw err;
     }

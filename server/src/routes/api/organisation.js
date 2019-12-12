@@ -3,7 +3,7 @@ const formidable = require('formidable');
 const fs = require('fs');
 var parse = require('csv-parse');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 
@@ -30,7 +30,7 @@ async function getOrganisation(id) {
     const org = await qb.getOne();
 
     if (_.isNil(org)) {
-      let err = boom.notFound(
+      let err = Boom.notFound(
         `Organisation ${id} does not exist`);
       throw err;
     }
@@ -117,7 +117,7 @@ router.post(
   if (!_.isNil(req.body.id)) {
     const testOrg = await getOrganisation(req.body.id)
     if (testOrg.planCount != 0 || testOrg.requestCount != 0) {
-      let err = boom.badRequest(
+      let err = Boom.badRequest(
         `Organisation ${req.body.id} has linked request or plan, cannot modify`);
       throw err;
     }
@@ -146,7 +146,7 @@ router.delete(
   const organisation = await getOrganisation(req.params.id)
 
   if (!organisation) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Organisation ${req.params.id} does not exist, cannot delete`);
     throw err;
   }
@@ -155,7 +155,7 @@ router.delete(
   // removing the following will work, deleted orgs are then removed from
   // the projects they have been assigned too.
   if (organisation.planCount != 0 || organisation.requestCount != 0) {
-    let err = boom.badRequest(
+    let err = Boom.badRequest(
       `Organisation ${req.params.id} has linked request or plan, cannot delete`);
     throw err;
   }

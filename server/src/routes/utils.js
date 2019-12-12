@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 import { getConnection } from 'typeorm';
 
 var auth = require('../lib/auth')();
@@ -11,7 +11,7 @@ import truncate from "@turf/truncate";
 export const asyncMiddleware = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch((err) => {
     if (!err.isBoom) {
-      return next(boom.badImplementation(err));
+      return next(Boom.badImplementation(err));
     }
     err.statusCode = err.output.statusCode;
     next(err);
@@ -280,7 +280,7 @@ export function geojsonToMultiPolygon(geojson) {
     })
     return mp.geometry;
   } else {
-    let err = boom.notImplemented(
+    let err = Boom.notImplemented(
       `Geojson type ${geojson.type} is not supported`);
     throw err;
   }
@@ -313,7 +313,7 @@ export function geojsonToMultiLineString(geojson) {
     let mls = multiLineString(lines);
     return mls.geometry;
   } else {
-    let err = boom.notImplemented(
+    let err = Boom.notImplemented(
       `Geojson type ${geojson.type} is not supported`);
     throw err;
   }
@@ -346,7 +346,7 @@ export function geojsonToMultiPoint(geojson) {
     let mls = multiPoint(points);
     return mls.geometry;
   } else {
-    let err = boom.notImplemented(
+    let err = Boom.notImplemented(
       `Geojson type ${geojson.type} is not supported`);
     throw err;
   }

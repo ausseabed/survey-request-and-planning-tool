@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 

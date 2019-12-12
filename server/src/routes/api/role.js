@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 
@@ -21,7 +21,7 @@ router.get(
   let role = req.user.role
 
   if (!role || role.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Currently logged in user has no role`);
     throw err;
   }
@@ -107,12 +107,12 @@ router.delete(
 
   let role = await roleRepo.findOne(req.params.id);
   if (!role) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Role ${req.params.id} does not exist, cannot delete`);
     throw err;
   }
   if (role.isDefault) {
-    let err = boom.badRequest(
+    let err = Boom.badRequest(
       `Role ${req.params.id} is default, cannot delete`);
     throw err;
   }
@@ -123,7 +123,7 @@ router.delete(
     }
   });
   if (!role) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Default role does not exist, cannot delete`);
     throw err;
   }

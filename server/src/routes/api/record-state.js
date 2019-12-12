@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const express = require('express');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 import { interpret } from 'xstate';
 
 import { getConnection } from 'typeorm';
@@ -179,7 +179,7 @@ router.post(
 
   const nextEvent = req.body.nextEvent
   if (_.isNil(nextEvent)) {
-    let err = boom.badRequest(
+    let err = Boom.badRequest(
       `Request body needs to include 'nextEvent' parameter`);
     throw err;
   }
@@ -201,7 +201,7 @@ router.post(
     machine = await buildRecordMachine(
       entityType, entityId, req.user, 'custodians', recordType);
   } else {
-    let err = boom.badRequest(
+    let err = Boom.badRequest(
       `entityTypeStr (/:entityTypeStr/:id) must be 'survey-request' ` +
       `or 'survey-plan'`);
     throw err;

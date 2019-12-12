@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 import { feature, featureCollection } from "@turf/helpers";
 
 import { getConnection } from 'typeorm';
@@ -65,7 +65,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     )
   } else {
     return res.json([]);
-    // let err = boom.forbidden(
+    // let err = Boom.forbidden(
     //   `Missing permission required to list HIPP Requests`);
     // throw err;
   }
@@ -189,7 +189,7 @@ router.get(
   );
 
   if (!plan || plan.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Plan ${req.params.id} does not exist`);
     throw err;
   }
@@ -241,7 +241,7 @@ router.get(
   );
 
   if (!project || project.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `SurveyPlan ${req.params.id} does not exist`);
     throw err;
   }
@@ -295,7 +295,7 @@ router.post(
   if (!_.isNil(req.body.status)) {
     const status = req.body.status
     if (!SURVEY_PLAN_STATUSES.includes(status)) {
-      let err = boom.badRequest(`Bad status "${status}", must be one of\
+      let err = Boom.badRequest(`Bad status "${status}", must be one of\
         ${SURVEY_PLAN_STATUSES.join(', ')}`);
       throw err;
     }
@@ -356,7 +356,7 @@ router.delete(
   let project = await projMetaRepo.findOne(req.params.id);
 
   if (!project) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `SurveyPlan ${req.params.id} does not exist, cannot delete`);
     throw err;
   }

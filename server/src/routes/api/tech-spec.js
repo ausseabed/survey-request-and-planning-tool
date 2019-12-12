@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 
@@ -72,7 +72,7 @@ router.get(
   );
 
   if (!techSpec || techSpec.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `TechSpec ${req.params.id} does not exist`);
     throw err;
   }
@@ -97,7 +97,7 @@ router.post(
   if (!_.isNil(req.body.surveyType)) {
     const stype = req.body.surveyType
     if (!SURVEY_TYPES.includes(stype)) {
-      let err = boom.badRequest(`Bad surveyType "${stype}", must be one of\
+      let err = Boom.badRequest(`Bad surveyType "${stype}", must be one of\
         ${SURVEY_TYPES.join(', ')}`);
       throw err;
     }
@@ -106,7 +106,7 @@ router.post(
   if (!_.isNil(req.body.surveyClassification)) {
     const clas = req.body.surveyClassification
     if (!SURVEY_CLASSIFICATIONS.includes(clas)) {
-      let err = boom.badRequest(`Bad surveyClassification "${clas}", must be` +
+      let err = Boom.badRequest(`Bad surveyClassification "${clas}", must be` +
       `one of ${SURVEY_CLASSIFICATIONS.join(', ')}`);
       throw err;
     }

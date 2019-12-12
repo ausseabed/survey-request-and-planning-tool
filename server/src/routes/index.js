@@ -7,7 +7,6 @@ var logIdGen = require('../lib/logger').logId;
 var _ = require('lodash');
 var uuid5 = require('uuid/v5');
 var uuid4 = require('uuid/v4');
-var AWS = require('aws-sdk');
 var path = require('path');
 var hash = require('object-hash');
 var RouteError = require('./route-error');

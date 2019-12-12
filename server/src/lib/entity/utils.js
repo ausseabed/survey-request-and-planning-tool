@@ -11,6 +11,9 @@ export class DateTransformer {
   }
 
   from (value) {
+    if (_.isNil(value)) {
+      return undefined;
+    }
     return value.getTime();
   }
 }

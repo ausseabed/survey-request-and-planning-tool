@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 
@@ -19,7 +19,7 @@ router.get(
   let custodian = req.user.custodian
 
   if (!custodian || custodian.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Currently logged in user has no custodian`);
     throw err;
   }
@@ -81,7 +81,7 @@ router.delete(
   let custodian = await custodianRepo.findOne(req.params.id);
 
   if (!custodian) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Custodian ${req.params.id} does not exist, cannot delete`);
     throw err;
   }

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import boom from 'boom'
+import * as Boom from '@hapi/boom'
 import express from 'express'
 import formidable from 'formidable'
 import fs from 'fs'
@@ -46,7 +46,7 @@ router.get(
     const id = req.params.id;
 
     if (_.isNil(id) || id.length == 0) {
-      let err = boom.notFound(`Must provide document id ` +
+      let err = Boom.notFound(`Must provide document id ` +
         `(eg; /api/document/:id/download)`);
       throw err;
     }
@@ -77,7 +77,7 @@ router.get(
     const doc = await q.getOne();
 
     if (_.isNil(doc)) {
-      let err = boom.notFound(`Document with id ${id} does not exist`);
+      let err = Boom.notFound(`Document with id ${id} does not exist`);
       throw err;
     }
 
@@ -99,11 +99,11 @@ router.get(
       readStream.pipe(res);
 
     } else if (surveyFile.storage == 's3') {
-      let err = boom.notImplemented(
+      let err = Boom.notImplemented(
         `Document in s3 not implemented yet`);
       throw err;
     } else {
-      let err = boom.badImplementation(
+      let err = Boom.badImplementation(
         `Document.storage should always be db or s3`);
       throw err;
     }

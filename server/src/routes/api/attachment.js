@@ -3,7 +3,7 @@ const formidable = require('formidable')
 const fs = require('fs');
 const stream = require('stream');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 
@@ -75,7 +75,7 @@ router.delete(
   const fileId = req.params.fileId;
 
   if (!id || !fileId) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `Must provide project id and file id (eg; /:id/delete/:fileId)`);
     throw err;
   }
@@ -121,7 +121,7 @@ router.get(
   const fileName = req.params.name;
 
   if (!entityType || !id || !fileName) {
-    let err = boom.notFound(`Must provide entity type, project id and ` +
+    let err = Boom.notFound(`Must provide entity type, project id and ` +
       `file name (eg; :entityType/:id/download/:name)`);
     throw err;
   }
@@ -179,11 +179,11 @@ router.get(
     readStream.pipe(res);
 
   } else if (surveyFile.storage == 's3') {
-    let err = boom.notImplemented(
+    let err = Boom.notImplemented(
       `SurveyFile s3 not implemented yet`);
     throw err;
   } else {
-    let err = boom.badImplementation(
+    let err = Boom.badImplementation(
       `SurveyFile.storage should always be db or s3`);
     throw err;
   }
@@ -266,7 +266,7 @@ router.put(
   const enitityRepo = getConnection().getRepository(attachDetails.entity)
   let entity = await enitityRepo.findOne(req.params.id);
   if (!entity) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `${entityType} ${id} does not exist, cannot save file`);
     throw err;
   }

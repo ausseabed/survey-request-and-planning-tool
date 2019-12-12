@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 import { feature, featureCollection } from "@turf/helpers";
 
 import { getConnection } from 'typeorm';
@@ -85,7 +85,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     )
   } else {
     return res.json([]);
-    // let err = boom.forbidden(
+    // let err = Boom.forbidden(
     //   `Missing permission required to list HIPP Requests`);
     // throw err;
   }
@@ -123,7 +123,7 @@ router.get(
   );
 
   if (!surveyRequest || surveyRequest.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `SurveyRequest ${req.params.id} does not exist`);
     throw err;
   }
@@ -190,7 +190,7 @@ router.get(
   );
 
   if (!surveyRequest || surveyRequest.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `SurveyRequest ${req.params.id} does not exist`);
     throw err;
   }
@@ -226,7 +226,7 @@ router.post(
   let hr = await hrRepo.findOne(req.params.id);
 
   if (!hr) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `SurveyRequest ${req.params.id} does not exist, cannot update`);
     throw err;
   }
@@ -249,7 +249,7 @@ router.post(
       );
 
       if (!entityPlan) {
-        let err = boom.notFound(`SurveyPlan ${plan.id} does not exist, ` +
+        let err = Boom.notFound(`SurveyPlan ${plan.id} does not exist, ` +
           `cannot update link to request`);
         throw err;
       }
@@ -364,7 +364,7 @@ router.delete(
   let hr = await hrRepo.findOne(req.params.id);
 
   if (!hr) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `SurveyRequest ${req.params.id} does not exist, cannot delete`);
     throw err;
   }

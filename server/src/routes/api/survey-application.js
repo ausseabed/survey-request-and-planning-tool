@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 
@@ -19,7 +19,7 @@ router.get(
   // the two stage selection process of survey applications
   const userSub = req.query['user-submitted'];
   if (!_.isNil(userSub) && !(userSub == 'true' || userSub == 'false')) {
-    let err = boom.badRequest(
+    let err = Boom.badRequest(
       `Optional "user-submitted" query param must be true or false`);
     throw err;
   }
@@ -55,7 +55,7 @@ router.get(
   .findOne(req.params.id);
 
   if (!sa || sa.deleted) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `SurveyApplication ${req.params.id} does not exist`);
     throw err;
   }
@@ -79,7 +79,7 @@ router.get(
 
   const userSub = req.query['user-submitted'];
   if (!_.isNil(userSub) && (userSub != 'true' || userSub != 'false')) {
-    let err = boom.badRequest(
+    let err = Boom.badRequest(
       `Optional "user-submitted" query param must be true or false`);
   }
   if (!_.isNil(userSub)) {

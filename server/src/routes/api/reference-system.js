@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { asyncMiddleware, isAuthenticated } from '../utils';
 import * as rs from '../../lib/reference-system'
@@ -12,7 +12,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   const type = req.query.type;
   if (!type) {
-    let err = boom.badRequest(
+    let err = Boom.badRequest(
       `Must provide "type" query param`);
     throw err;
   }
@@ -27,7 +27,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   } else if (type.toLowerCase() == 'spheroid') {
     refSys = rs.VERTICAL_REFERENCE_SYSTEMS;
   } else {
-    let err = boom.badRequest(
+    let err = Boom.badRequest(
       `Type "${type}" not supported, expected horizontal, vertical, ` +
       `sounding, or spheroid`);
     throw err;

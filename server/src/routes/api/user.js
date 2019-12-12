@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 
@@ -35,7 +35,7 @@ router.post(
   // new users are never created here, they get made on first authentication
   // as they need a valida OAuth based set of credentials
   if (_.isNil(req.body.id)) {
-    let err = boom.badRequest(`request body does not include 'id' for user`)
+    let err = Boom.badRequest(`request body does not include 'id' for user`)
     throw err
   }
 
@@ -44,7 +44,7 @@ router.post(
   .findOne(req.body.id)
 
   if (_.isNil(user)) {
-    let err = boom.notFound(
+    let err = Boom.notFound(
       `User '${req.body.id}' does not exist, cannot update`);
     throw err;
   }

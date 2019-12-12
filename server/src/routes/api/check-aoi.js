@@ -1,6 +1,6 @@
 var express = require('express');
 var _ = require('lodash');
-const boom = require('boom');
+import * as Boom from '@hapi/boom';
 
 import { getConnection } from 'typeorm';
 
@@ -59,7 +59,7 @@ router.post('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     )
   } else {
     return res.json([]);
-    // let err = boom.forbidden(
+    // let err = Boom.forbidden(
     //   `Missing permission required to list HIPP Requests`);
     // throw err;
   }

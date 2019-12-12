@@ -72,6 +72,7 @@ jobs:
     docker:
       - image: airhelp/kops:1.10
     steps:
+      - checkout
       - run:
           command: |
             # connect to cluster
@@ -82,7 +83,7 @@ jobs:
             kubectl config set-context fsi.staging.frontiersi.io --cluster=$KUBE_CLUSTER --user=$KUBE_USER
             kubectl config use-context fsi.staging.frontiersi.io
             # update image to latest
-            export IMAGE_TAG=latest-beta
+            export IMAGE_TAG=$(echo "$CIRCLE_SHA1" | cut -c -7)-beta
             kubectl set image --namespace=qa4mbes deployment/api api=ausseabed/spt-api:$IMAGE_TAG
             kubectl set image --namespace=qa4mbes deployment/www www=ausseabed/spt-www:$IMAGE_TAG
             kubectl set image --namespace=qa4mbes deployment/mapserver mapserver=ausseabed/spt-mapserver:$IMAGE_TAG

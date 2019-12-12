@@ -70,7 +70,7 @@
             @updated-state="stateUpdated($event)"
             >
           </record-state>
-          <q-img src="assets/hipp-logo-small.png" style="width:160px"></q-img>
+          <q-img src="~/assets/hipp-logo-small.png" style="width:160px"></q-img>
           <div></div>
         </div>
 

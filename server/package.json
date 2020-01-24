@@ -19,7 +19,7 @@
     "@turf/helpers": "^6.1.4",
     "@turf/truncate": "^6.0.1",
     "@turf/union": "^6.0.3",
-    "angular-expressions": "^1.0.0",
+    "angular-expressions": "^1.0.1",
     "axios": "^0.18.1",
     "base64url": "^3.0.1",
     "body-parser": "^1.15.0",

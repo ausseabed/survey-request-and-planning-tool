@@ -902,10 +902,10 @@ align-text@^0.1.1, align-text@^0.1.3:
     longest "^1.0.1"
     repeat-string "^1.5.2"
 
-angular-expressions@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/angular-expressions/-/angular-expressions-1.0.0.tgz#3430436e4d8108ff7cf30c6b8b9dbfa7b437d395"
-  integrity sha512-ihYJFCr1S7vfBJTS7dE+zGQ3oNAMIL+NJ5aWs52Cz7frmvpVVA1NTMXBP9BFSP/Wk/zIJBeYn2o5Fo8txCka3A==
+angular-expressions@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/angular-expressions/-/angular-expressions-1.0.1.tgz#ec80db6c7e3ef7863c2a7fef93cd59e083020ce4"
+  integrity sha512-rMBuCZzxKNO706Bo5TarLowMXmScOR78fnSuWQSYaAAF23HsLt0gAVWo4PJtRtGBsRAV8pJjXUOGjgkMNlt56g==
 
 ansi-align@^2.0.0:
   version "2.0.0"

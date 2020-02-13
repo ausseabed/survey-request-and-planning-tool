@@ -77,11 +77,9 @@ function crcsiAuth(req, res) {
       // then it could be an older user id carried over from crcsi accounts
       // that hasn't had the issuer and issuerSub updated.
       // Once all legacy users have logged in this if block can be removed
-      existingUser = await userRepo.findOne({
-        where: {
-          'email': userScope.email
-        }
-      });
+      existingUser = await userRepo.createQueryBuilder()
+       .where("email ILIKE :email", { email: userScope.email })
+       .getOne();
       if (!_.isNil(existingUser)) {
         existingUser.issuer = 'ausseabed';
         existingUser.issuerSub = userScope.sub;

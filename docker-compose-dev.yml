@@ -5,9 +5,6 @@ services:
     build:
       context: ./client
       target: builder
-    environment:
-      - AUTH_HOST=https://staging.accounts.crcsi.com.au
-      - AUTH_CLIENT_ID=720174
     volumes:
       - ./client:/code
     ports:
@@ -20,7 +17,6 @@ services:
       context: ./server
     env_file: ./server.conf
     environment:
-      - POSTGRES_HOSTNAME=db-postgres
       - PYTHONUNBUFFERED=0
       - ENVIRONMENT=development
       - AWS_DEFAULT_REGION=ap-southeast-2

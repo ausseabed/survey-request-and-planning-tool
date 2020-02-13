@@ -5,7 +5,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    env_file: .dockerenv
+    env_file: ./server.conf
     depends_on:
       - 'api'
       - 'mapserver'

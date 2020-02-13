@@ -11,7 +11,7 @@ export default ({ app, router, store, Vue }) => {
         redirectUri: window.location.origin + '/auth/callback', // Your client app URL
         name: 'crcsi',
         url: '/api/auth/crcsi',
-        authorizationEndpoint: authServer + '/o/oauth2/authorize',
+        authorizationEndpoint: authServer + '/oauth2/authorize',
         requiredUrlParams: ['scope', 'state'],
         scope: ['profile', 'email'],
         scopePrefix: 'openid',

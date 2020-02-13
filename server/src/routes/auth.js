@@ -28,9 +28,9 @@ router.post('/:provider', function (req, res) {
 
 function crcsiAuth(req, res) {
   const authTokenEndpoint =
-    url.resolve(process.env.AUTH_HOST, 'o/oauth2/token');
+    url.resolve(process.env.AUTH_HOST, 'oauth2/token');
   const authUserInfoEndpoint =
-    url.resolve(process.env.AUTH_HOST, 'o/oauth2/userinfo');
+    url.resolve(process.env.AUTH_HOST, 'oauth2/userInfo');
 
   Axios.post(authTokenEndpoint, querystring.stringify({
     client_id: process.env.AUTH_CLIENT_ID,
@@ -45,7 +45,7 @@ function crcsiAuth(req, res) {
     logger.verbose(responseJson)
     if (responseJson.error) {
       var logid = logIdGen();
-      logger.error('CRCSI responsed with error', { id: logid });
+      logger.error('Auth system responsed with error', { id: logid });
       res.status(500).json({ error: responseJson.error, id: logid });
     } else {
       return Axios.get(authUserInfoEndpoint, {
@@ -61,9 +61,32 @@ function crcsiAuth(req, res) {
   })
   .then(async function (userScope) {
     logger.verbose(userScope);
-    var user_id = "crcsi" + userScope.sub;
+    var user_id = "ausseabed-" + userScope.sub;
     const userRepo = getConnection().getRepository(User);
-    const existingUser = await userRepo.findOne(user_id);
+    let existingUser = await userRepo.findOne(user_id);
+    if (_.isNil(existingUser)) {
+      // then it could be an older user id carried over from crcsi accounts
+      existingUser = await userRepo.findOne({
+        where: {
+          'issuer': 'ausseabed',
+          'issuerSub': userScope.sub
+        }
+      });
+    }
+    if (_.isNil(existingUser)) {
+      // then it could be an older user id carried over from crcsi accounts
+      // that hasn't had the issuer and issuerSub updated.
+      // Once all legacy users have logged in this if block can be removed
+      existingUser = await userRepo.findOne({
+        where: {
+          'email': userScope.email
+        }
+      });
+      if (!_.isNil(existingUser)) {
+        existingUser.issuer = 'ausseabed';
+        existingUser.issuerSub = userScope.sub;
+      }
+    }
 
     let user = undefined;
     if (existingUser) {
@@ -86,13 +109,13 @@ function crcsiAuth(req, res) {
 
       const newUser = new User();
       newUser.id = user_id;
-      newUser.issuer = "crcsi";
+      newUser.issuer = 'ausseabed';
       newUser.issuerSub = userScope.sub;
       newUser.avatar = 'https://www.gravatar.com/avatar/' +
         crypto.createHash('md5').update(userScope.email).digest("hex") +
         '?d=mm';
       newUser.email = userScope.email;
-      newUser.name = userScope.name;
+      newUser.name = _.isNil(userScope.name) ? "" : userScope.name;
       newUser.accessToken = userScope.access_token;
       newUser.refreshToken = userScope.refresh_token;
       if (!_.isNil(userRole)) {

@@ -163,7 +163,7 @@ workflows:
           image-file: image-api.tar
           docker-file-path: server
           auth-host: https://staging.accounts.crcsi.com.au
-          auth-client-id: 720174
+          auth-client-id: '720174'
           <<: *master_only
       - publish:
           name: publish-api-master
@@ -178,7 +178,7 @@ workflows:
           image-file: image-www.tar
           docker-file-path: client
           auth-host: https://staging.accounts.crcsi.com.au
-          auth-client-id: 720174
+          auth-client-id: '720174'
           <<: *master_only
       - publish:
           name: publish-www-master

@@ -28,7 +28,7 @@ With this in mind, the following banner should be used in any source code file t
 
 
 # Dependencies
-User authentication is provided by CRC Accounts, specifically the staging deployment available at [https://staging.accounts.crcsi.com.au](`https://staging.accounts.crcsi.com.au`). Development requires access to this system.
+User authentication is by an external OAuth2 provider; the staging environment makes use of AWS cognito by other OAuth2 providers will also work. Configuration is set in the `server.conf` and `docker-compose-prod.yml` files. The `AUTH_HOST` (domain name of auth server), `AUTH_CLIENT_ID` and `AUTH_CLIENT_SECRET` variables must be set (latter two are provided by the auth system). The auth system will need to be configured to accept the request tools domain name as a login/logout callback (even `localhost`).
 
 The development environment makes use of docker / docker-compose.
 
@@ -50,10 +50,10 @@ There are 3 docker containers:
 # Development
 
 ## Configuration
-The following configuration parameters are required. These are set as environment variables in the client and server config files.
+The following configuration parameters are required. These are set as environment variables in the `server.conf` config file.
 
 * `AUTH_CLIENT_SECRET`  
-    * obtained from crcsi accounts drupal admin interface (view client details)
+    * obtained from the auth system admin interface
     * This secret must match the `AUTH_CLIENT_ID` id
 * `JWT_TOKEN_KEY_PRIVATE`
     * Private RSA key used for generation of jwt token.

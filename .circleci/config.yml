@@ -162,8 +162,8 @@ workflows:
           image-name: ausseabed/spt-api
           image-file: image-api.tar
           docker-file-path: server
-          auth-host: https://staging.accounts.crcsi.com.au
-          auth-client-id: '720174'
+          auth-host: https://ausseabed.auth.ap-southeast-2.amazoncognito.com
+          auth-client-id: 38e4qejtpcl27uog98fif9ikgc
           <<: *master_only
       - publish:
           name: publish-api-master
@@ -177,8 +177,8 @@ workflows:
           image-name: ausseabed/spt-www
           image-file: image-www.tar
           docker-file-path: client
-          auth-host: https://staging.accounts.crcsi.com.au
-          auth-client-id: '720174'
+          auth-host: https://ausseabed.auth.ap-southeast-2.amazoncognito.com
+          auth-client-id: 38e4qejtpcl27uog98fif9ikgc
           <<: *master_only
       - publish:
           name: publish-www-master

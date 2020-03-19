@@ -80,6 +80,7 @@ module.exports = function (ctx) {
         'QImg',
         'QInfiniteScroll',
         'QResizeObserver',
+        'QExpansionItem',
       ],
 
       directives: [

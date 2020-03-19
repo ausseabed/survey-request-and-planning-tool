@@ -17,7 +17,10 @@ import { EventBus } from './event-bus.js';
 import { mapActions } from 'vuex'
 
 const appIcons = {
+  'app:survey-plan': 'layers',
+  'app:survey-request': 'device_hub',
   'app:priority-areas': 'img:statics/icons/priority-areas.svg',
+  'app:priority-areas-dark': 'img:statics/icons/priority-areas-dark.svg',
 }
 
 
@@ -43,12 +46,11 @@ export default {
     EventBus.$on('redirect', this.redirectURL);
 
     this.$q.iconMapFn = (iconName) => {
-      const icon = appIcons[iconName]
-      console.log(`${iconName}    ${icon}`)
+      const icon = appIcons[iconName];
       if (icon !== void 0) {
-        return { icon: icon }
+        return { icon: icon };
       }
-    }
+    };
   },
   methods: {
     ...mapActions('role', [

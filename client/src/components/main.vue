@@ -1,9 +1,9 @@
 <template>
   <q-page :style-fn="heightTweak" >
     <div class="row q-pt-sm q-pl-sm q-col-gutter-sm fit ">
-      <div class="column col-xs-12 col-sm-4 full-height">
+      <div class="column full-height">
 
-        <q-card class="column col">
+        <q-card class="column col" style="max-width: 400px; width: 400px">
 
           <q-tabs
             v-model="tab"
@@ -27,8 +27,10 @@
           <q-tab-panels v-model="tab" animated class="col">
             <q-tab-panel
               name="home"
+              class="no-padding"
             >
-
+              <main-home>
+              </main-home>
             </q-tab-panel>
 
             <q-tab-panel
@@ -202,7 +204,7 @@
         </q-card>
 
       </div>
-      <div class="gt-xs col-sm-8 full-height">
+      <div class="gt-xs col full-height">
         <q-card class="fit">
           <div ref="mapDiv" id="mapDiv" class="full-height">
             <q-resize-observer @resize="onResize" />
@@ -233,10 +235,13 @@ import OlMap from './olmap/olmap';
 import * as pmMutTypes
   from '../store/modules/survey-plan/survey-plan-mutation-types'
 
+import MainHome from './main-home';
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
   components: {
-    TransitionExpand
+    TransitionExpand,
+    MainHome,
   },
 
   beforeMount() {

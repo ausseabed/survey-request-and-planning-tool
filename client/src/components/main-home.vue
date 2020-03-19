@@ -178,13 +178,13 @@ export default Vue.extend({
       return true;
     },
     expandedSurveyPlans: function () {
-      return true;
+      return false;
     },
     expandedSurveyRequests: function () {
-      return true;
+      return false;
     },
     expandedPriorityAreas: function () {
-      return true;
+      return false;
     },
   },
 

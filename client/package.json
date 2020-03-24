@@ -1,8 +1,8 @@
 {
   "name": "qa4mbes-web",
   "version": "0.0.1",
-  "description": "Ausseabed request and planning tool",
-  "productName": "ASB Request and Planning Tool",
+  "description": "Priorities, Requests and Planning",
+  "productName": "Survey Coordination Tool",
   "cordovaId": "org.cordova.quasar.app",
   "author": "",
   "private": true,

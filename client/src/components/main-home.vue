@@ -2,7 +2,7 @@
   <div class="column q-py-sm">
     <div class="column q-gutter-y-sm">
       <div class="app-big-heading q-px-md">
-        Welcome to the AusSeabed Survey Planning Tool
+        Welcome to the ASB {{title}}
       </div>
 
       <q-list>
@@ -14,10 +14,10 @@
         >
           <div class="q-px-md q-pb-sm column q-gutter-y-sm">
             <div>
-              The ASB SPT was designed through consultation with the AusSeabed community. It was developed in partnership with FrontierSI and represents the first of a suite of technology solutions that are intended to support the marine community in developing a consistent approach to the capture of seabed mapping data. The initial release caters to the capture of bathymetric surveys and provides for both an inexperienced user and an expert user.
+              The ASB SCT was designed through consultation with the AusSeabed community. It was developed in partnership with FrontierSI and represents the first of a suite of technology solutions that are intended to support the marine community in developing a consistent approach to the capture of seabed mapping data. The initial release caters to the capture of bathymetric surveys and provides for both an inexperienced user and an expert user.
             </div>
             <div>
-              The ASB SPT captures two record types, a survey plan and a survey request.
+              The ASB SCT captures two record types, a survey plan and a survey request.
             </div>
             <div>
               The survey plans records the survey’s intended area of interest, its specifications and intended deliverable.
@@ -185,6 +185,9 @@ export default Vue.extend({
     },
     expandedPriorityAreas: function () {
       return false;
+    },
+    title() {
+      return process.env.PRODUCT_NAME;
     },
   },
 

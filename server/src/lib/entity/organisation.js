@@ -1,10 +1,10 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
-import { SurveyRequest } from './survey-request';
+import { PriorityAreaSubmission } from 'priority-area-submission';
 import { SurveyPlan } from './survey-plan';
+import { SurveyRequest } from './survey-request';
 import { TechSpec } from './tech-spec';
-
 
 @Entity()
 export class Organisation {
@@ -57,4 +57,17 @@ export class Organisation {
     surveyRequest => surveyRequest.organisations)
   surveyRequests;
 
+  @OneToMany(
+    type => PriorityAreaSubmission,
+    priorityAreaSubmission => priorityAreaSubmission.submittingOrganisation
+  )
+  priorityAreaSubmissions;
+
+  @OneToMany(
+    type => PriorityAreaSubmission,
+    priorityAreaSubmission => priorityAreaSubmission.citedOrganisation
+  )
+  priorityAreaCitations;
+
+  
 }

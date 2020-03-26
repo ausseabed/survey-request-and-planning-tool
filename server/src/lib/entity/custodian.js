@@ -38,6 +38,12 @@ export class Custodian {
     surveyRequest => surveyRequest.custodians)
   custodiansHipp;
 
+  @OneToMany(
+    type => PriorityAreaSubmission,
+    priorityAreaSubmission => priorityAreaSubmission.custodian
+  )
+  priorityAreaSubmissions;
+
   @OneToMany(type => User, user => user.custodian)
   users;
 }

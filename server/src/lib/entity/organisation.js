@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
-import { PriorityAreaSubmission } from 'priority-area-submission';
+import { PriorityAreaSubmission } from './priority-area-submission';
 import { SurveyPlan } from './survey-plan';
 import { SurveyRequest } from './survey-request';
 import { TechSpec } from './tech-spec';
@@ -69,5 +69,5 @@ export class Organisation {
   )
   priorityAreaCitations;
 
-  
+
 }

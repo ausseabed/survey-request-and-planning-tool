@@ -1,8 +1,9 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
-import { SurveyRequest } from './survey-request';
+import { PriorityAreaSubmission } from './priority-area-submission';
 import { SurveyPlan } from './survey-plan';
+import { SurveyRequest } from './survey-request';
 import { TechSpec } from './tech-spec';
 import { User } from './user'
 

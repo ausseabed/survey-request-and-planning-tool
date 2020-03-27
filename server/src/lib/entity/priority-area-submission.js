@@ -1,8 +1,10 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany,
-  ManyToOne} from "typeorm";
+  ManyToOne, OneToOne, JoinColumn} from "typeorm";
 
+import { Custodian } from './custodian';
+import { Organisation } from './organisation';
 import { PriorityArea } from './priority-area';
-import { Organisation } from './priority-area';
+import { RecordState } from './record-state';
 
 @Entity()
 export class PriorityAreaSubmission {
@@ -12,8 +14,8 @@ export class PriorityAreaSubmission {
 
   @ManyToOne(
     type => Organisation,
-    nullable: true,
-    organisation => organisation.priorityAreaSubmissions
+    organisation => organisation.priorityAreaSubmissions,
+    { nullable: true }
   )
   submittingOrganisation;
 
@@ -37,8 +39,8 @@ export class PriorityAreaSubmission {
 
   @ManyToOne(
     type => Organisation,
-    nullable: true,
-    organisation => organisation.priorityAreaCitations
+    organisation => organisation.priorityAreaCitations,
+    { nullable: true }
   )
   citedOrganisation;
 
@@ -54,10 +56,22 @@ export class PriorityAreaSubmission {
   })
   citedContactEmail;
 
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  riskIssues;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  furtherInformation;
+
   @ManyToOne(
     type => Custodian,
-    nullable: true,
-    custodian => custodian.priorityAreaSubmissions
+    custodian => custodian.priorityAreaSubmissions,
+    { nullable: true }
   )
   custodian;
 
@@ -69,7 +83,10 @@ export class PriorityAreaSubmission {
 
   @OneToOne(
     type => RecordState,
-    { cascade: true }
+    {
+      cascade: true,
+      nullable: true
+    }
   )
   @JoinColumn()
   recordState;

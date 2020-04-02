@@ -226,9 +226,16 @@ export function permitCustodianBasedPermission(params) {
       // aggregate the various list of custodians associated with this
       // entity into the one array
       for (let custodiansAttrName of custodianAttributes) {
-        let custodians = entity[custodiansAttrName]
+        let custodians = entity[custodiansAttrName];
         if (!_.isNil(custodians)) {
-          allCustodians.push(...custodians)
+          // most of the time custodians is a list, but for priority area
+          // submissions there is only one custodian. So we check...
+          if (Array.isArray(custodians)) {
+            allCustodians.push(...custodians);
+          } else {
+            allCustodians.push(custodians);
+          }
+
         }
       }
 

@@ -1,6 +1,8 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany,
   ManyToOne, OneToOne, JoinColumn} from "typeorm";
 
+import { DateTransformer } from './utils';
+
 import { Custodian } from './custodian';
 import { Organisation } from './organisation';
 import { PriorityArea } from './priority-area';
@@ -67,6 +69,22 @@ export class PriorityAreaSubmission {
       nullable: true,
   })
   furtherInformation;
+
+  @Column({
+      type:"timestamp with time zone",
+      default: () => 'CURRENT_TIMESTAMP',
+      transformer: new DateTransformer(),
+      nullable: false,
+  })
+  created;
+
+  @Column({
+      type:"timestamp with time zone",
+      default: () => 'CURRENT_TIMESTAMP',
+      transformer: new DateTransformer(),
+      nullable: true,
+  })
+  lastModified;
 
   @ManyToOne(
     type => Custodian,

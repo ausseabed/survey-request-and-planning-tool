@@ -33,6 +33,11 @@ router.get('/data_importance_options', async function (req, res) {
 
 // Gets a list of PriorityAreaSubmissions
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
+  let { start, limit, filter } = req.query;
+
+  start = _.isNil(start) ? 0 : start;
+  limit = _.isNil(limit) ? 20 : limit;
+  limit = limit > 100 ? 100 : limit;  // don't ever allow more than 100
 
   let pasQuery = getConnection()
   .getRepository(PriorityAreaSubmission)
@@ -73,8 +78,17 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   // this order by last modified
   pasQuery = pasQuery.orderBy("priority_area_submission.lastModified");
 
+  let count = await pasQuery.getCount();
+
+  pasQuery = pasQuery
+  .offset(start)
+  .limit(limit);
+
   const pasList = await pasQuery.getMany();
-  return res.json(pasList);
+  return res.json({
+    count: count,
+    data: pasList
+  });
 }));
 
 // up to here

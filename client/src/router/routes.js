@@ -4,6 +4,10 @@ import Documents from 'components/administration/document/documents.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
 import Organisations from 'components/administration/organisations/organisations.vue'
+import PriorityAreaSubmission from 'components/priority-area-submission/priority-area-submission.vue'
+import PriorityAreaSubmissionAreas from 'components/priority-area-submission/priority-area-submission-areas.vue'
+import PriorityAreaSubmissionConfirmation from 'components/priority-area-submission/priority-area-submission-confirmation.vue'
+import PriorityAreaSubmissionRegistration from 'components/priority-area-submission/priority-area-submission-registration.vue'
 import RecordStateLog from 'components/administration/record-state-log.vue'
 import ReportTemplates from 'components/administration/report-template/report-templates.vue'
 import Roles from 'components/administration/roles.vue'
@@ -127,6 +131,29 @@ const routes = [
         },
       ]
     },
+
+    {
+      path: '/priority-area-submission/:id',
+      component: PriorityAreaSubmission,
+      children: [
+        {
+          path: 'registration',
+          name: 'priority-area-submission-registration',
+          component: PriorityAreaSubmissionRegistration,
+        },
+        {
+          path: 'areas',
+          name: 'priority-area-submission-areas',
+          component: PriorityAreaSubmissionAreas,
+        },
+        {
+          path: 'confirmation',
+          name: 'priority-area-submission-confirmation',
+          component: PriorityAreaSubmissionConfirmation,
+        },
+      ]
+    },
+
 
     {
       path: '/auth/callback',

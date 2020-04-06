@@ -27,6 +27,7 @@
           exact
         />
       </q-tabs>
+      <div class="col-auto fat-spacer bg-secondary"></div>
       <router-view class="col"></router-view>
     </q-card>
     <div class="row justify-between q-pt-sm col-auto">

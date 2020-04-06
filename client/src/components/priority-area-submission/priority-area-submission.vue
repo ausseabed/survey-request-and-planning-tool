@@ -1,27 +1,42 @@
 <template>
-  <q-page>
-    <div> PAS </div>
-    <q-tabs>
-      <q-route-tab
-        name="registration"
-        label="Priority Area Registration"
-        :to="{name: 'priority-area-submission-registration'}"
-        exact
-      />
-      <q-route-tab
-        name="areas"
-        label="Priority Areas"
-        :to="{name: 'priority-area-submission-areas'}"
-        exact
-      />
-      <q-route-tab
-        name="confirmation"
-        label="Submission Confirmation"
-        :to="{name: 'priority-area-submission-confirmation'}"
-        exact
-      />
-    </q-tabs>
-    <router-view></router-view>
+  <q-page class="column q-pa-lg">
+    <div class="col-auto">
+      PAS
+    </div>
+    <q-card class="col">
+      <q-tabs
+        align="left"
+        class="bg-secondary text-white"
+      >
+        <q-route-tab
+          name="registration"
+          label="Priority Area Registration"
+          :to="{name: 'priority-area-submission-registration'}"
+          exact
+        />
+        <q-route-tab
+          name="areas"
+          label="Priority Areas"
+          :to="{name: 'priority-area-submission-areas'}"
+          exact
+        />
+        <q-route-tab
+          name="confirmation"
+          label="Submission Confirmation"
+          :to="{name: 'priority-area-submission-confirmation'}"
+          exact
+        />
+      </q-tabs>
+      <router-view></router-view>
+    </q-card>
+    <div class="row justify-between q-pt-sm col-auto">
+      <div class="row justify-start q-gutter-sm">
+        <q-btn color="primary" label="Save" />
+        <q-btn color="primary" label="Exit/Exit without saving" />
+      </div>
+      <q-btn color="primary" label="Save and next" />
+    </div>
+
   </q-page>
 </template>
 

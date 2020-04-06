@@ -3,7 +3,25 @@
     :validator="$v"
     class="scroll"
   >
-    <div class="column q-pa-md">
+    <div class="column q-pa-md q-gutter-y-sm">
+
+      <form-field-validated-select
+        name="priorityAreaSubmission.submittingOrganisation"
+        label="Submitting organisation"
+        hint="Organisation that is submitting the list or priorities"
+        use-input
+        clearable
+        input-debounce="200"
+        @filter="filterOrganisationFunction"
+        :value="priorityAreaSubmission.submittingOrganisation"
+        @input="updatePriorityAreaSubmissionValue({path:'submittingOrganisation', value:$event})"
+        :options="organisationsList"
+        option-label="name"
+        option-value="id"
+        @blur="$v.priorityAreaSubmission.submittingOrganisation.$touch"
+        >
+      </form-field-validated-select>
+
       <form-field-validated-input
         name="priorityAreaSubmission.contactPerson"
         label="Contact Person"
@@ -15,11 +33,76 @@
         @blur="$v.priorityAreaSubmission.contactPerson.$touch"
         >
       </form-field-validated-input>
-      <div v-for="n in 100" :key="n" class="q-py-xs">
-        Lorem ipsum dolor sit amet, consectetur adipisicing
-        elit, sed do eiusmod tempor incididunt ut labore et
-        dolore magna aliqua.
+
+      <form-field-validated-input
+        name="priorityAreaSubmission.contactEmail"
+        label="Contact Email"
+        attribute="Contact Email"
+        hint="Ideally, provide a group email to ensure continuity of the dataset"
+        :value="priorityAreaSubmission.contactEmail"
+        @input="updatePriorityAreaSubmissionValue({path:'contactEmail', value:$event})"
+        type="email"
+        @blur="$v.priorityAreaSubmission.contactEmail.$touch"
+        >
+      </form-field-validated-input>
+
+      <div class="q-pt-sm">
+        <q-separator class="q-my-md" style="min-height: 1px"/>
       </div>
+
+      <q-field
+        stack-label
+        label="Citation"
+        bottom-slots
+      >
+        <q-checkbox
+          :value="priorityAreaSubmission.citation"
+          label="Use above details for public citation"
+          @input="updatePriorityAreaSubmissionValue({path:'citation', value:$event})"
+          />
+      </q-field>
+
+      <form-field-validated-select
+        name="priorityAreaSubmission.citedOrganisation"
+        label="Cited Organisation"
+        hint="Organisation cited in the public records"
+        use-input
+        clearable
+        input-debounce="200"
+        @filter="filterOrganisationFunction"
+        :value="priorityAreaSubmission.citedOrganisation"
+        @input="updatePriorityAreaSubmissionValue({path:'citedOrganisation', value:$event})"
+        :options="organisationsList"
+        option-label="name"
+        option-value="id"
+        @blur="$v.priorityAreaSubmission.citedOrganisation.$touch"
+        >
+      </form-field-validated-select>
+
+      <form-field-validated-input
+        name="priorityAreaSubmission.citedContactName"
+        label="Cited Contact Name"
+        attribute="Cited Contact Name"
+        hint="Contact person from the commissioning organisation"
+        :value="priorityAreaSubmission.citedContactName"
+        @input="updatePriorityAreaSubmissionValue({path:'citedContactName', value:$event})"
+        type="text"
+        @blur="$v.priorityAreaSubmission.citedContactName.$touch"
+        >
+      </form-field-validated-input>
+
+      <form-field-validated-input
+        name="priorityAreaSubmission.citedContactEmail"
+        label="Cited Contact Email"
+        attribute="Contact Email"
+        hint="email that will appear in the public records"
+        :value="priorityAreaSubmission.citedContactEmail"
+        @input="updatePriorityAreaSubmissionValue({path:'citedContactEmail', value:$event})"
+        type="email"
+        @blur="$v.priorityAreaSubmission.citedContactEmail.$touch"
+        >
+      </form-field-validated-input>
+
     </div>
   </form-wrapper>
 </template>
@@ -28,11 +111,12 @@
 import Vue from 'vue';
 const _ = require('lodash');
 import { mapActions, mapGetters, mapMutations } from 'vuex';
-import { required, minLength } from 'vuelidate/lib/validators';
+import { required, minLength, email } from 'vuelidate/lib/validators';
 
 import { errorHandler } from './../mixins/error-handling';
 import { permission } from './../mixins/permission';
 
+import * as organisationMutTypes from '../../store/modules/organisation/organisation-mutation-types';
 import * as pasMutTypes from '../../store/modules/priority-area-submission/priority-area-submission-mutation-types';
 
 export default Vue.extend({
@@ -51,9 +135,19 @@ export default Vue.extend({
       'updatePriorityAreaSubmissionValue': pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
       'setDirty': pasMutTypes.SET_DIRTY,
     }),
+    ...mapMutations('organisation', {
+      'setOrganisationFilter': organisationMutTypes.SET_FILTER,
+    }),
 
     fetchData() {
       this.getOrganisations();
+    },
+
+    filterOrganisationFunction(val, update, abort) {
+      this.setOrganisationFilter(val);
+      this.getOrganisations().then((orgs) => {
+        update();
+      });
     },
   },
 
@@ -64,7 +158,13 @@ export default Vue.extend({
   validations() {
     return {
       priorityAreaSubmission: {
+        submittingOrganisation: { required },
         contactPerson: { required },
+        contactEmail: { required, email },
+        citation: {},
+        citedOrganisation: {},
+        citedContactName: {},
+        citedContactEmail: {},
       }
     }
   },

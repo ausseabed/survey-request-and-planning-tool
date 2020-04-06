@@ -80,6 +80,7 @@ export default Vue.extend({
       } else if (this.id == 'new') {
         let pas = {
           id: undefined,
+          citation: false,
         };
         this.setActivePriorityAreaSubmission(pas);
         this.setDirty(true);

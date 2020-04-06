@@ -1,7 +1,5 @@
 <template>
-  <q-page>
-    <div> Registration </div>
-  </q-page>
+  <div> Registration </div>
 </template>
 
 <script>

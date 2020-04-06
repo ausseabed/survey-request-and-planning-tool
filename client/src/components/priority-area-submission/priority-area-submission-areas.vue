@@ -1,7 +1,5 @@
 <template>
-  <q-page>
-    <div> Areas </div>
-  </q-page>
+  <div> Areas </div>
 </template>
 
 <script>

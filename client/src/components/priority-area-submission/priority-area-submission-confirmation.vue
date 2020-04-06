@@ -1,7 +1,5 @@
 <template>
-  <q-page>
-    <div> Confirmation </div>
-  </q-page>
+  <div> Confirmation </div>
 </template>
 
 <script>

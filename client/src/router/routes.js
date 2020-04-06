@@ -137,6 +137,10 @@ const routes = [
       component: PriorityAreaSubmission,
       children: [
         {
+          path: '',
+          component: PriorityAreaSubmissionRegistration,
+        },
+        {
           path: 'registration',
           name: 'priority-area-submission-registration',
           component: PriorityAreaSubmissionRegistration,

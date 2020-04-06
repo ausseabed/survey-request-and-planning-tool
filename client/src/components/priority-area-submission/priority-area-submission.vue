@@ -1,12 +1,12 @@
 <template>
-  <q-page class="column q-pa-lg">
+  <q-page :style-fn="heightTweak" class="column q-pa-lg">
     <div class="col-auto">
       PAS
     </div>
-    <q-card class="col">
+    <q-card class="col column">
       <q-tabs
         align="left"
-        class="bg-secondary text-white"
+        class="col-auto bg-secondary text-white"
       >
         <q-route-tab
           name="registration"
@@ -27,7 +27,7 @@
           exact
         />
       </q-tabs>
-      <router-view></router-view>
+      <router-view class="col"></router-view>
     </q-card>
     <div class="row justify-between q-pt-sm col-auto">
       <div class="row justify-start q-gutter-sm">
@@ -58,6 +58,7 @@ export default Vue.extend({
 
     // get list of PASs
     await this.getPriorityAreaSubmissions();
+    this.id = id;
   },
 
   methods: {
@@ -85,6 +86,13 @@ export default Vue.extend({
         // id has been included in url, so get and set this PAS
         this.setActivePriorityAreaSubmission({id: this.id});
         this.getActivePriorityAreaSubmission();
+      }
+    },
+
+    heightTweak (offset) {
+      return {
+        minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
+        height: offset ? `calc(100vh - ${offset}px)` : '100vh'
       }
     },
 

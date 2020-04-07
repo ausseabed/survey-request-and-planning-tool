@@ -156,7 +156,7 @@ router.post(
   delete pas.created;
 
   pas.lastModified = Date.now();
-
+  pas.custodian = req.user.custodian;
 
   // TODO fix below, would be nice to add record state when creating new record
   // But it is not required.

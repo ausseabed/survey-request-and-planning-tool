@@ -19,14 +19,28 @@ export default Vue.extend({
 
   methods: {
 
+    isValid() {
+      this.$v.$touch();
+      return !this.$v.$error;
+    },
   },
 
   watch: {
 
   },
 
-  computed: {
+  validations() {
+    return {
+      priorityAreaSubmission: {
 
+      }
+    }
+  },
+
+  computed: {
+    ...mapGetters('priorityAreaSubmission',{
+      'priorityAreaSubmission': 'activePriorityAreaSubmission',
+    }),
   },
 
   data() {

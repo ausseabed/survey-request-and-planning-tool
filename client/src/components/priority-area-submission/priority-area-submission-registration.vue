@@ -70,12 +70,13 @@
         clearable
         input-debounce="200"
         @filter="filterOrganisationFunction"
-        :value="priorityAreaSubmission.citedOrganisation"
+        :value="priorityAreaSubmission.citation ? priorityAreaSubmission.submittingOrganisation : priorityAreaSubmission.citedOrganisation"
         @input="updatePriorityAreaSubmissionValue({path:'citedOrganisation', value:$event})"
         :options="organisationsList"
         option-label="name"
         option-value="id"
         @blur="$v.priorityAreaSubmission.citedOrganisation.$touch"
+        :disable="priorityAreaSubmission.citation"
         >
       </form-field-validated-select>
 
@@ -84,10 +85,11 @@
         label="Cited Contact Name"
         attribute="Cited Contact Name"
         hint="Contact person from the commissioning organisation"
-        :value="priorityAreaSubmission.citedContactName"
+        :value="priorityAreaSubmission.citation ? priorityAreaSubmission.contactPerson : priorityAreaSubmission.citedContactName"
         @input="updatePriorityAreaSubmissionValue({path:'citedContactName', value:$event})"
         type="text"
         @blur="$v.priorityAreaSubmission.citedContactName.$touch"
+        :disable="priorityAreaSubmission.citation"
         >
       </form-field-validated-input>
 
@@ -96,10 +98,11 @@
         label="Cited Contact Email"
         attribute="Contact Email"
         hint="email that will appear in the public records"
-        :value="priorityAreaSubmission.citedContactEmail"
+        :value="priorityAreaSubmission.citation ? priorityAreaSubmission.contactEmail : priorityAreaSubmission.citedContactEmail"
         @input="updatePriorityAreaSubmissionValue({path:'citedContactEmail', value:$event})"
         type="email"
         @blur="$v.priorityAreaSubmission.citedContactEmail.$touch"
+        :disable="priorityAreaSubmission.citation"
         >
       </form-field-validated-input>
 
@@ -149,6 +152,11 @@ export default Vue.extend({
         update();
       });
     },
+
+    isValid() {
+      this.$v.$touch();
+      return !this.$v.$error;
+    },
   },
 
   watch: {
@@ -156,17 +164,32 @@ export default Vue.extend({
   },
 
   validations() {
-    return {
-      priorityAreaSubmission: {
-        submittingOrganisation: { required },
-        contactPerson: { required },
-        contactEmail: { required, email },
-        citation: {},
-        citedOrganisation: {},
-        citedContactName: {},
-        citedContactEmail: {},
-      }
+    if (this.priorityAreaSubmission.citation) {
+      return {
+        priorityAreaSubmission: {
+          submittingOrganisation: { required },
+          contactPerson: { required },
+          contactEmail: { required, email },
+          citation: {},
+          citedOrganisation: {},
+          citedContactName: {},
+          citedContactEmail: {},
+        }
+      };
+    } else {
+      return {
+        priorityAreaSubmission: {
+          submittingOrganisation: { required },
+          contactPerson: { required },
+          contactEmail: { required, email },
+          citation: {},
+          citedOrganisation: { required },
+          citedContactName: { required },
+          citedContactEmail: { required, email },
+        }
+      };
     }
+
   },
 
   computed: {

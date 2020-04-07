@@ -28,14 +28,19 @@
         />
       </q-tabs>
       <div class="col-auto fat-spacer bg-secondary"></div>
-      <router-view class="col"></router-view>
+      <router-view class="col" ref="pasComp"></router-view>
     </q-card>
     <div class="row justify-between q-pt-sm col-auto">
       <div class="row justify-start q-gutter-sm">
-        <q-btn color="primary" label="Save" />
-        <q-btn color="primary" label="Exit/Exit without saving" />
+        <q-btn
+          color="primary"
+          label="Save"
+          icon="save"
+          @click="saveClicked"
+        />
+        <q-btn color="primary" label="Exit/Exit without saving" icon="close"/>
       </div>
-      <q-btn color="primary" label="Save and next" />
+      <q-btn color="primary" label="Save and next" icon-right="forward"/>
     </div>
 
   </q-page>
@@ -71,6 +76,14 @@ export default Vue.extend({
       'setActivePriorityAreaSubmission': pasMutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION,
       'setDirty': pasMutTypes.SET_DIRTY,
     }),
+
+    saveClicked() {
+      let pasComp = this.$refs.pasComp;
+      if (!pasComp.isValid()) {
+        this.notifyError('Please review fields');
+        return;
+      }
+    },
 
     updateActivePriorityAreaSubmission () {
       if (_.isNil(this.id) && this.priorityAreaSubmissions.length != 0) {

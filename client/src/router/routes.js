@@ -133,7 +133,7 @@ const routes = [
     },
 
     {
-      path: '/priority-area-submission/:id',
+      path: '/priority-area-submission/:id?',
       component: PriorityAreaSubmission,
       children: [
         {

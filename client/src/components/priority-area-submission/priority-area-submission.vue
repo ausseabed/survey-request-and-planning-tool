@@ -36,11 +36,16 @@
           color="primary"
           label="Save"
           icon="save"
-          @click="saveClicked"
+          @click="saveClicked(false)"
         />
         <q-btn color="primary" label="Exit/Exit without saving" icon="close"/>
       </div>
-      <q-btn color="primary" label="Save and next" icon-right="forward"/>
+      <q-btn
+        color="primary"
+        label="Save and next"
+        icon-right="forward"
+        @click="saveClicked(true)"
+      />
     </div>
 
   </q-page>
@@ -56,6 +61,13 @@ import { permission } from './../mixins/permission';
 
 import * as pasMutTypes from '../../store/modules/priority-area-submission/priority-area-submission-mutation-types';
 
+// what the route gets changed to after save and continue is clicked
+const NEXT_ROUTES = {
+  'priority-area-submission-registration': 'priority-area-submission-areas',
+  'priority-area-submission-areas': 'priority-area-submission-confirmation',
+  'priority-area-submission-confirmation': 'priority-area-submission-confirmation',
+};
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
@@ -65,24 +77,51 @@ export default Vue.extend({
     // get list of PASs
     await this.getPriorityAreaSubmissions();
     this.id = id;
+    if (id == undefined) {
+      // usually triggered by a watch, but watch not called if id is undefined
+      this.updateActivePriorityAreaSubmission();
+    }
   },
 
   methods: {
     ...mapActions('priorityAreaSubmission', [
       'getPriorityAreaSubmissions',
       'getActivePriorityAreaSubmission',
+      'savePriorityAreaSubmission',
     ]),
     ...mapMutations('priorityAreaSubmission', {
       'setActivePriorityAreaSubmission': pasMutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION,
       'setDirty': pasMutTypes.SET_DIRTY,
     }),
 
-    saveClicked() {
+    saveClicked(moveNext) {
       let pasComp = this.$refs.pasComp;
       if (!pasComp.isValid()) {
         this.notifyError('Please review fields');
         return;
       }
+
+      const isNew = _.isNil(this.activePriorityAreaSubmission.id);
+      this.savePriorityAreaSubmission(this.activePriorityAreaSubmission).then(pas => {
+        // this.getFormData();
+        const successMsg = isNew ?
+          'Priority Area Submission created' :
+          'Priority Area Submission updated';
+        this.notifySuccess(successMsg);
+
+        // need to check the route, as it may have already been set to something
+        // else via "save and continue".
+        const currentId = this.$route.params.id;
+        if (isNew && currentId == 'new') {
+          let routeName = this.$route.name;
+          if (moveNext) {
+            routeName = NEXT_ROUTES[this.$route.name];
+          }
+          this.$router.push({ name: routeName, params: { id: pas.id } });
+        }
+      }).catch((err) => {
+        this.notifyError(`Failed to save Priority Area Submission`);
+      });
     },
 
     updateActivePriorityAreaSubmission () {
@@ -90,6 +129,13 @@ export default Vue.extend({
         // then just use a default PAS, the first one
         this.setActivePriorityAreaSubmission(this.priorityAreaSubmissions[0]);
         this.getActivePriorityAreaSubmission();
+
+        let routeName = this.$route.name ?
+          this.$route.name :
+          'priority-area-submission-registration';
+        let id = this.activePriorityAreaSubmission.id;
+        this.$router.push({ name: routeName, params: { id: id } });
+
       } else if (this.id == 'new') {
         let pas = {
           id: undefined,

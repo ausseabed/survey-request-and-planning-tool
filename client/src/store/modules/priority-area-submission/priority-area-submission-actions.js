@@ -23,7 +23,8 @@ export const savePriorityAreaSubmission = ({ commit, state }, payload) => {
   });
 }
 
-export const getActivePriorityAreaSubmission = ({ commit, state }, id) => {
+export const getActivePriorityAreaSubmission = ({ commit, state }) => {
+  var id = state.activePriorityAreaSubmission.id;
   var url_endpoint = `/api/priority-area-submission/${id}`;
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);

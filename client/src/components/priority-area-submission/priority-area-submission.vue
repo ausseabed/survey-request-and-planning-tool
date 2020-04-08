@@ -1,8 +1,16 @@
 <template>
-  <q-page :style-fn="heightTweak" class="column q-pa-lg">
-    <div class="col-auto">
-      PAS
-    </div>
+  <q-page :style-fn="heightTweak" class="column q-px-sm q-pt-sm q-gutter-y-sm">
+
+    <record-state
+      v-if="activePriorityAreaSubmission.id"
+      :entity-type="`priority-area-submission`"
+      :entity-id="activePriorityAreaSubmission.id"
+      :disable="dirty"
+      @updated-state="stateUpdated($event)"
+      class="col-auto"
+      >
+    </record-state>
+
     <q-card class="col column">
       <q-tabs
         align="left"
@@ -11,26 +19,31 @@
         <q-route-tab
           name="registration"
           label="Priority Area Registration"
-          :to="{name: 'priority-area-submission-registration'}"
+          :to="{name: 'priority-area-submission-registration', params: {id: activePriorityAreaSubmission.id}}"
           exact
         />
         <q-route-tab
           name="areas"
           label="Priority Areas"
-          :to="{name: 'priority-area-submission-areas'}"
+          :to="{name: 'priority-area-submission-areas', params: {id: activePriorityAreaSubmission.id}}"
           exact
         />
         <q-route-tab
           name="confirmation"
           label="Submission Confirmation"
-          :to="{name: 'priority-area-submission-confirmation'}"
+          :to="{name: 'priority-area-submission-confirmation', params: {id: activePriorityAreaSubmission.id}}"
           exact
         />
       </q-tabs>
       <div class="col-auto fat-spacer bg-secondary"></div>
-      <router-view class="col" ref="pasComp"></router-view>
+      <router-view
+        class="col"
+        ref="pasComp"
+        :readonly="stateReadonly"
+      >
+      </router-view>
     </q-card>
-    <div class="row justify-between q-pt-sm col-auto">
+    <div class="row justify-between col-auto">
       <div class="row justify-start q-gutter-sm">
         <q-btn
           color="primary"
@@ -112,13 +125,12 @@ export default Vue.extend({
         // need to check the route, as it may have already been set to something
         // else via "save and continue".
         const currentId = this.$route.params.id;
-        if (isNew && currentId == 'new') {
-          let routeName = this.$route.name;
-          if (moveNext) {
-            routeName = NEXT_ROUTES[this.$route.name];
-          }
-          this.$router.push({ name: routeName, params: { id: pas.id } });
+        let routeName = this.$route.name;
+        routeName = _.isNil(routeName) ? 'priority-area-submission-registration' : routeName;
+        if (moveNext) {
+          routeName = NEXT_ROUTES[routeName];
         }
+        this.$router.push({ name: routeName, params: { id: pas.id } });
       }).catch((err) => {
         this.notifyError(`Failed to save Priority Area Submission`);
       });
@@ -136,17 +148,26 @@ export default Vue.extend({
         let id = this.activePriorityAreaSubmission.id;
         this.$router.push({ name: routeName, params: { id: id } });
 
-      } else if (this.id == 'new') {
+      } else if (this.id == 'new' || this.priorityAreaSubmissions.length == 0) {
         let pas = {
           id: undefined,
           citation: false,
         };
         this.setActivePriorityAreaSubmission(pas);
         this.setDirty(true);
+        this.stateReadonly = false;
       } else {
         // id has been included in url, so get and set this PAS
         this.setActivePriorityAreaSubmission({id: this.id});
         this.getActivePriorityAreaSubmission();
+      }
+    },
+
+    stateUpdated(state) {
+      if (_.isNil(state)) {
+        this.stateReadonly = true
+      } else {
+        this.stateReadonly = state.readonly
       }
     },
 
@@ -175,12 +196,14 @@ export default Vue.extend({
     ...mapGetters('priorityAreaSubmission',[
       'priorityAreaSubmissions',
       'activePriorityAreaSubmission',
+      'dirty',
     ]),
   },
 
   data() {
     return {
       id: undefined,
+      stateReadonly: true,
     }
   },
 

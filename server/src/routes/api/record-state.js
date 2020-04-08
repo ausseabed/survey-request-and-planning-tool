@@ -13,6 +13,7 @@ import { buildRecordMachine, updateRecordState } from '../state-management';
 import { SurveyRequest } from '../../lib/entity/survey-request';
 import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { RecordState } from '../../lib/entity/record-state';
+import { PriorityAreaSubmission } from '../../lib/entity/priority-area-submission';
 
 const router = express.Router();
 
@@ -168,6 +169,22 @@ router.get(
 }));
 
 
+router.get(
+  '/priority-area-submission/:id',
+  [
+    isAuthenticated,
+    permitCustodianBasedPermission({
+      entityType:PriorityAreaSubmission,
+      custodianAttributes: ['custodian'],
+      allowedPermissionAll: 'canViewAllPriorityAreaSubmissions',
+      allowedPermissionCustodian: 'canViewCustodianPriorityAreaSubmissions'}),
+  ],
+  asyncMiddleware(async function(req, res) {
+
+  await handleGetRequest(req, res, PriorityAreaSubmission, 'custodian', 'priority area submission')
+}));
+
+
 // we don't include the `permitCustodianBasedPermission` because these checks are
 // handled by the guard checks in the state machine.
 router.post(
@@ -200,6 +217,11 @@ router.post(
     recordType = 'plan';
     machine = await buildRecordMachine(
       entityType, entityId, req.user, 'custodians', recordType);
+  } else if (entityTypeStr == 'priority-area-submission') {
+    entityType = PriorityAreaSubmission;
+    recordType = 'priority area submission';
+    machine = await buildRecordMachine(
+      entityType, entityId, req.user, 'custodian', recordType);
   } else {
     let err = Boom.badRequest(
       `entityTypeStr (/:entityTypeStr/:id) must be 'survey-request' ` +

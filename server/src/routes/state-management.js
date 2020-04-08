@@ -5,6 +5,7 @@ import { Machine } from 'xstate';
 import { SurveyRequest } from '../lib/entity/survey-request';
 import { SurveyPlan } from '../lib/entity/survey-plan';
 import { RecordState } from '../lib/entity/record-state';
+import { PriorityAreaSubmission } from '../lib/entity/priority-area-submission';
 
 
 // state machine definition for the survey plan
@@ -133,6 +134,94 @@ const requestStates = {
 }
 
 
+// state machine definition for the HIPP Request
+const pasStates = {
+  drafted: {
+    on: {
+      SAVE: {target: 'drafted'},
+      SUBMIT: {
+        target: 'submitted',
+        actions: ['incrementVersion'],
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canSubmitAllPriorityAreaSubmission',
+          custodianPermission: 'canSubmitCustodianPriorityAreaSubmission',
+        },
+      },
+      ARCHIVE: {
+        target: 'archived',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canPublishAllPriorityAreaSubmission',
+          custodianPermission: 'canPublishCustodianPriorityAreaSubmission',
+        },
+      },
+    },
+    entry: ['makeWriteable'],
+    exit: ['logAction'],
+  },
+  submitted: {
+    on: {
+      REVISE: {
+        target: 'drafted',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canSubmitAllPriorityAreaSubmission',
+          custodianPermission: 'canSubmitCustodianPriorityAreaSubmission',
+        },
+      },
+      PUBLISH: {
+        target:'published',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canPublishAllPriorityAreaSubmission',
+          custodianPermission: 'canPublishCustodianPriorityAreaSubmission',
+        },
+      }
+    },
+    entry: ['makeReadonly'],
+    exit: ['logAction'],
+  },
+  published: {
+    on: {
+      ARCHIVE: {
+        target: 'archived',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canPublishAllPriorityAreaSubmission',
+          custodianPermission: 'canPublishCustodianPriorityAreaSubmission',
+        },
+      },
+      REVISE: {
+        target:'submitted',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canPublishAllPriorityAreaSubmission',
+          custodianPermission: 'canPublishCustodianPriorityAreaSubmission',
+        },
+        actions: ['incrementVersion'],
+      }
+    },
+    entry: ['makeReadonly'],
+    exit: ['logAction'],
+  },
+  archived: {
+    on: {
+      EDIT: {
+        target: 'drafted',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canPublishAllPriorityAreaSubmission',
+          custodianPermission: 'canPublishCustodianPriorityAreaSubmission',
+        },
+      }
+    },
+    entry: ['makeReadonly'],
+    exit: ['logAction'],
+  },
+}
+
+
 // creates a state machine for the given record type and entity id
 // user is required to support permission based guards in the state machine.
 export const buildRecordMachine =
@@ -141,10 +230,16 @@ export const buildRecordMachine =
   // the states, and migrations between them differ based on entity
   // so get the right states for the given entity type
   let states = undefined
+  let defaultStateName = undefined
   if (entityType == SurveyRequest) {
     states = requestStates
+    defaultStateName = 'draft'
   } else if (entityType == SurveyPlan) {
     states = planStates
+    defaultStateName = 'draft'
+  } else if (entityType == PriorityAreaSubmission) {
+    states = pasStates
+    defaultStateName = 'drafted'
   } else {
     throw new Error(`Unknown entityType ${entityType.name}`);
   }
@@ -169,13 +264,18 @@ export const buildRecordMachine =
   let recordState = undefined;
   if (_.isNil(record.recordState)) {
     recordState = new RecordState();
-    recordState.state = 'draft';
+    recordState.state = defaultStateName;
     recordState.version = 0;
   } else {
     recordState = record.recordState;
   }
 
-  const entityCustodians = record[entityCustodianListAttribute];
+  // some entities may define just a single custodian and not a list
+  // so convert single objects to an array (containing the one object)
+  let entityCustodians = record[entityCustodianListAttribute];
+  if (!Array.isArray(entityCustodians)) {
+    entityCustodians = [entityCustodians];
+  }
 
   const id = entityType.name + 'Record'
   const machine = Machine({

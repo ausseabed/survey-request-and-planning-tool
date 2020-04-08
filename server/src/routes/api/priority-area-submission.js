@@ -12,6 +12,7 @@ import { PriorityAreaSubmission}
 import { PREFERRED_TIMEFRAME_OPTIONS, RISK_RATING_OPTIONS,
   REQUIRED_DATA_QUALITY_OPTIONS, DATA_IMPORTANCE_OPTIONS }
   from '../../lib/entity/priority-area';
+import { RecordState } from '../../lib/entity/record-state';
 
 
 import { updateRecordState } from '../state-management';
@@ -158,17 +159,33 @@ router.post(
   pas.lastModified = Date.now();
   pas.custodian = req.user.custodian;
 
-  // TODO fix below, would be nice to add record state when creating new record
-  // But it is not required.
-  // const changeDesc = _.isNil(req.body.id) ? "New record" : "Updated record"
-  // const recordState = await updateRecordState(
-  //   SurveyRequest, req.body.id, req.user, 'request', changeDesc);
-  //
-  // surveyRequest.recordState = recordState
+  await getConnection().transaction(async transactionalEntityManager => {
+    const isNew = _.isNil(pas.id);
+    if (isNew) {
+      // if it's new it won;t have an id, so we need to save it so we have
+      // an id to pass to the recordState.recordId attrib
+      // not idea, but fix requires reworking db schema
+      pas = await getConnection()
+      .getRepository(PriorityAreaSubmission)
+      .save(pas);
 
-  pas = await getConnection()
-  .getRepository(PriorityAreaSubmission)
-  .save(pas);
+      const message = `Created new Priority Area Submission`;
+      const recordState = new RecordState();
+      recordState.changeDescription = message;
+      recordState.state = 'drafted';
+      recordState.previous = undefined;
+      recordState.user = req.user;
+      recordState.created = Date.now();
+      recordState.recordType = 'priority area submission';
+      recordState.version = 0;
+      recordState.recordId = pas.id;
+      pas.recordState = recordState;
+    }
+
+    pas = await getConnection()
+    .getRepository(PriorityAreaSubmission)
+    .save(pas);
+  });
 
   // because the saved version of custodian doesn't include all attribs
   pas = await getConnection()
@@ -184,6 +201,7 @@ router.post(
       ]
     }
   );
+
   return res.json(pas);
 }));
 

@@ -19,6 +19,7 @@
         option-label="name"
         option-value="id"
         @blur="$v.priorityAreaSubmission.submittingOrganisation.$touch"
+        :readonly="readonly"
         >
       </form-field-validated-select>
 
@@ -31,6 +32,7 @@
         @input="updatePriorityAreaSubmissionValue({path:'contactPerson', value:$event})"
         type="text"
         @blur="$v.priorityAreaSubmission.contactPerson.$touch"
+        :readonly="readonly"
         >
       </form-field-validated-input>
 
@@ -43,6 +45,7 @@
         @input="updatePriorityAreaSubmissionValue({path:'contactEmail', value:$event})"
         type="email"
         @blur="$v.priorityAreaSubmission.contactEmail.$touch"
+        :readonly="readonly"
         >
       </form-field-validated-input>
 
@@ -54,11 +57,13 @@
         stack-label
         label="Citation"
         bottom-slots
+        :readonly="readonly"
       >
         <q-checkbox
           :value="priorityAreaSubmission.citation"
           label="Use above details for public citation"
           @input="updatePriorityAreaSubmissionValue({path:'citation', value:$event})"
+          :disable="readonly"
           />
       </q-field>
 
@@ -76,6 +81,7 @@
         option-label="name"
         option-value="id"
         @blur="$v.priorityAreaSubmission.citedOrganisation.$touch"
+        :readonly="readonly"
         :disable="priorityAreaSubmission.citation"
         >
       </form-field-validated-select>
@@ -89,6 +95,7 @@
         @input="updatePriorityAreaSubmissionValue({path:'citedContactName', value:$event})"
         type="text"
         @blur="$v.priorityAreaSubmission.citedContactName.$touch"
+        :readonly="readonly"
         :disable="priorityAreaSubmission.citation"
         >
       </form-field-validated-input>
@@ -102,6 +109,7 @@
         @input="updatePriorityAreaSubmissionValue({path:'citedContactEmail', value:$event})"
         type="email"
         @blur="$v.priorityAreaSubmission.citedContactEmail.$touch"
+        :readonly="readonly"
         :disable="priorityAreaSubmission.citation"
         >
       </form-field-validated-input>
@@ -124,6 +132,10 @@ import * as pasMutTypes from '../../store/modules/priority-area-submission/prior
 
 export default Vue.extend({
   mixins: [errorHandler, permission],
+
+  props: [
+    'readonly',
+  ],
 
   mounted() {
     this.fetchData();

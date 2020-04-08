@@ -146,4 +146,36 @@ export class Role {
 
   @Column({type: "bool", nullable: false, default: false})
   canRemoveCustodianRecordState;
+
+
+  // Priority Area permissions
+  @Column({type: "bool", nullable: false, default: false})
+  canAddPriorityAreaSubmission;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canViewAllPriorityAreaSubmissions;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canViewCustodianPriorityAreaSubmissions;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canEditAllPriorityAreaSubmissions;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canEditCustodianPriorityAreaSubmission;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canSubmitAllPriorityAreaSubmission;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canSubmitCustodianPriorityAreaSubmission;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canPublishAllPriorityAreaSubmission;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canPublishCustodianPriorityAreaSubmission;
+
+  @Column({type: "bool", nullable: false, default: false})
+  canSetPriorityAreaNationalPriority;  // admin only type permission
 }

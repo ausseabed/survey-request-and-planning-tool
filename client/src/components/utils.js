@@ -32,6 +32,16 @@ export function recordStateDetails(recordState) {
       label: "Draft",
       icon: 'edit',
     }
+  } else if (recordState == 'drafted') {
+    return {
+      label: "Drafted",
+      icon: 'edit',
+    }
+  } else if (recordState == 'submitted') {
+    return {
+      label: "Submitted",
+      icon: 'done',
+    }
   } else if (recordState == 'finalised') {
     return {
       label: "Finalised",
@@ -46,6 +56,16 @@ export function recordStateDetails(recordState) {
     return {
       label: "Accepted",
       icon: 'done_all'
+    }
+  } else if (recordState == 'published') {
+    return {
+      label: "Published",
+      icon: 'done_all'
+    }
+  } else if (recordState == 'archived') {
+    return {
+      label: "Archived",
+      icon: 'library_books'
     }
   } else {
     return {

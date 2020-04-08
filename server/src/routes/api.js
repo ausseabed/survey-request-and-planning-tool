@@ -9,6 +9,7 @@ var deliverableRoutes = require('./api/deliverable');
 var documentRoutes = require('./api/document');
 var instrumentTypeRoutes = require('./api/instrument-type');
 var organisationRoutes = require('./api/organisation');
+var priorityAreaSubmissionRoutes = require('./api/priority-area-submission');
 var recordStateRoutes = require('./api/record-state');
 var referenceSystemRoutes = require('./api/reference-system');
 var reportTemplateRoutes = require('./api/report-template');
@@ -33,6 +34,7 @@ router
 .use('/document', documentRoutes)
 .use('/instrument-type', instrumentTypeRoutes)
 .use('/organisation', organisationRoutes)
+.use('/priority-area-submission', priorityAreaSubmissionRoutes)
 .use('/record-state', recordStateRoutes)
 .use('/reference-system', referenceSystemRoutes)
 .use('/report-template', reportTemplateRoutes)

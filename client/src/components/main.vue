@@ -1,24 +1,38 @@
 <template>
   <q-page :style-fn="heightTweak" >
     <div class="row q-pt-sm q-pl-sm q-col-gutter-sm fit ">
-      <div class="column col-xs-12 col-sm-4 full-height">
+      <div class="column full-height">
 
-        <q-card class="column col">
+        <q-card class="column col" style="max-width: 400px; width: 400px">
 
           <q-tabs
             v-model="tab"
             class="bg-secondary text-white"
           >
             <q-tab
+              name="home" label="Home" icon="home"
+            />
+            <q-tab
               v-if="hasPermission(['canViewAllSurveyPlans', 'canViewCustodianSurveyPlans'])"
               name="survey-plans" label="Plans" icon="layers"/>
             <q-tab
               v-if="hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])"
               name="survey-requests" label="Requests" icon="device_hub"/>
+            <q-tab
+              name="priority-areas" label="Priority Areas" icon="app:priority-areas"
+            />
           </q-tabs>
           <div class="fat-spacer bg-secondary"></div>
 
           <q-tab-panels v-model="tab" animated class="col">
+            <q-tab-panel
+              name="home"
+              class="no-padding"
+            >
+              <main-home>
+              </main-home>
+            </q-tab-panel>
+
             <q-tab-panel
               v-if="hasPermission(['canViewAllSurveyPlans', 'canViewCustodianSurveyPlans'])"
               name="survey-plans" class="column col-auto no-padding">
@@ -178,12 +192,19 @@
               </div>
 
             </q-tab-panel>
+
+            <q-tab-panel
+              name="priority-areas"
+            >
+
+            </q-tab-panel>
+
           </q-tab-panels>
 
         </q-card>
 
       </div>
-      <div class="gt-xs col-sm-8 full-height">
+      <div class="gt-xs col full-height">
         <q-card class="fit">
           <div ref="mapDiv" id="mapDiv" class="full-height">
             <q-resize-observer @resize="onResize" />
@@ -214,10 +235,13 @@ import OlMap from './olmap/olmap';
 import * as pmMutTypes
   from '../store/modules/survey-plan/survey-plan-mutation-types'
 
+import MainHome from './main-home';
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
   components: {
-    TransitionExpand
+    TransitionExpand,
+    MainHome,
   },
 
   beforeMount() {
@@ -320,7 +344,9 @@ export default Vue.extend({
       if (_.isNil(this.tab)) {
         return;
       }
-      if (this.tab == 'survey-plans') {
+      if (this.tab == 'home') {
+        console.log("Home tab selected");
+      } else if (this.tab == 'survey-plans') {
         const mapableSurveyPlans = this.surveyPlans.filter(sp => {
           return !_.isNil(sp.areaOfInterest);
         })
@@ -344,6 +370,8 @@ export default Vue.extend({
         if (!_.isNil(this.map)) {
           this.map.setGeojsonFeatureIntersecting(areaOfInterests);
         }
+      } else if (this.tab == 'priority-areas') {
+        console.log("Priority Areas tab selected");
       } else {
         console.error("Bad tab specified");
       }
@@ -372,11 +400,7 @@ export default Vue.extend({
     'userRole': {
       immediate: true,
       handler(newRole, oldRole) {
-        if (this.hasPermission(['canViewAllSurveyPlans', 'canViewCustodianSurveyPlans'])) {
-          this.tab = 'survey-plans';
-        } else if (this.hasPermission(['canViewAllSurveyRequests', 'canViewCustodianSurveyRequests'])) {
-          this.tab = 'survey-requests';
-        }
+        this.tab = 'home';
       },
     },
     'surveyPlans': {
@@ -397,10 +421,5 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus">
-
-.fat-spacer {
-  width:100%;
-  height: 2px;
-}
 
 </style>

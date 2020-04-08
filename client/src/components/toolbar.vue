@@ -4,14 +4,23 @@
       <img class="ml-2" height="43" src="~/assets/aus-seabed-logo.png"/>
     </router-link>
 
+    <div style="width: 20px" class="gt-xs">
+    </div>
+
+
     <q-toolbar-title>
       <router-link to="/" style="color: white; text-decoration:none;" class="gt-xs">
-        {{ title }}
+        <div class="column">
+          <div>
+            {{ title }}
+          </div>
+          <div class="tabs-toolbar-sub-title">
+            {{ description }}
+          </div>
+        </div>
+
       </router-link>
 
-      <span slot="subtitle">
-        {{ description }}
-      </span>
     </q-toolbar-title>
     <q-btn v-if="!isAuthenticated" color="primary" @click="auth" label="Log In">
       <q-tooltip anchor="bottom right" self="top right" :offset="[10, 10]" :delay="400">

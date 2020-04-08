@@ -1,4 +1,5 @@
 // Uses the dirty flag to determine if component is in a dirty state.
+const _ = require('lodash');
 
 const DirtyRouteGuard = {
   beforeRouteUpdate (to, from, next) {
@@ -32,6 +33,12 @@ const DirtyRouteGuard = {
           next();
         }
       } else if (confirmResult == 'no save') {
+        if (_.isFunction(this.restore)) {
+          // check if restore function exists. If it does we need to call this
+          // funciton to restore state based on data fetched from the server
+          // (for example)
+          this.restore();
+        }
         next();
       } else if (confirmResult == 'cancel') {
         next(false);

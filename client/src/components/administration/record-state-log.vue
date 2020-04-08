@@ -144,6 +144,8 @@ export default Vue.extend({
         return 'layers'
       } else if (recordType == 'request') {
         return 'device_hub'
+      } else if (recordType == 'priority area submission') {
+        return 'app:priority-areas-dark'
       } else {
         return 'help'
       }

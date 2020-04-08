@@ -1,8 +1,9 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany,
   JoinTable} from "typeorm";
 
-import { SurveyRequest } from './survey-request';
+import { PriorityAreaSubmission } from './priority-area-submission';
 import { SurveyPlan } from './survey-plan';
+import { SurveyRequest } from './survey-request';
 import { TechSpec } from './tech-spec';
 import { User } from './user'
 
@@ -37,6 +38,12 @@ export class Custodian {
     type => SurveyRequest,
     surveyRequest => surveyRequest.custodians)
   custodiansHipp;
+
+  @OneToMany(
+    type => PriorityAreaSubmission,
+    priorityAreaSubmission => priorityAreaSubmission.custodian
+  )
+  priorityAreaSubmissions;
 
   @OneToMany(type => User, user => user.custodian)
   users;

@@ -49,18 +49,23 @@
           color="primary"
           label="Save"
           icon="save"
-          @click="saveClicked(false)"
+          @click="saveClicked(false, true)"
         />
-        <q-btn color="primary" label="Exit/Exit without saving" icon="close"/>
+        <q-btn
+          color="primary"
+          label="Exit/Exit without saving"
+          icon="close"
+          :to="'/'"
+        />
       </div>
       <q-btn
         color="primary"
         label="Save and next"
         icon-right="forward"
-        @click="saveClicked(true)"
+        @click="saveClicked(true, true)"
       />
     </div>
-
+    <confirm-navigation id="confirmNavigation" ref="confirmNavigation"></confirm-navigation>
   </q-page>
 </template>
 
@@ -71,6 +76,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 import { errorHandler } from './../mixins/error-handling';
 import { permission } from './../mixins/permission';
+import { DirtyRouteGuard } from './../mixins/dirty-route-guard';
 
 import * as pasMutTypes from '../../store/modules/priority-area-submission/priority-area-submission-mutation-types';
 
@@ -82,7 +88,7 @@ const NEXT_ROUTES = {
 };
 
 export default Vue.extend({
-  mixins: [errorHandler, permission],
+  mixins: [DirtyRouteGuard, errorHandler, permission],
 
   async mounted() {
     const id = this.$route.params.id;
@@ -105,9 +111,14 @@ export default Vue.extend({
     ...mapMutations('priorityAreaSubmission', {
       'setActivePriorityAreaSubmission': pasMutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION,
       'setDirty': pasMutTypes.SET_DIRTY,
+      'restore': pasMutTypes.RESTORE,
     }),
 
-    saveClicked(moveNext) {
+    submit() {
+      this.saveClicked(false, false);
+    },
+
+    saveClicked(moveNext, changeRoute) {
       let pasComp = this.$refs.pasComp;
       if (!pasComp.isValid()) {
         this.notifyError('Please review fields');
@@ -122,6 +133,10 @@ export default Vue.extend({
           'Priority Area Submission updated';
         this.notifySuccess(successMsg);
 
+        if (!changeRoute) {
+          // return here and don't do any change to the route (here at least)
+          return
+        }
         // need to check the route, as it may have already been set to something
         // else via "save and continue".
         const currentId = this.$route.params.id;
@@ -165,9 +180,9 @@ export default Vue.extend({
 
     stateUpdated(state) {
       if (_.isNil(state)) {
-        this.stateReadonly = true
+        this.stateReadonly = true;
       } else {
-        this.stateReadonly = state.readonly
+        this.stateReadonly = state.readonly;
       }
     },
 
@@ -175,7 +190,7 @@ export default Vue.extend({
       return {
         minHeight: offset ? `calc(100vh - ${offset}px)` : '100vh',
         height: offset ? `calc(100vh - ${offset}px)` : '100vh'
-      }
+      };
     },
 
   },
@@ -198,6 +213,14 @@ export default Vue.extend({
       'activePriorityAreaSubmission',
       'dirty',
     ]),
+    $v() {
+      // the dirty route guard wants to call the validation method (touch) to
+      // determin if the form is in a valid state. However in this case the
+      // form lives in the current child component. This exists solely for the
+      // DRG to hook onto.
+      let pasComp = this.$refs.pasComp;
+      return pasComp.$v;
+    }
   },
 
   data() {

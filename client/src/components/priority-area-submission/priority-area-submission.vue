@@ -53,7 +53,7 @@
         />
         <q-btn
           color="primary"
-          label="Exit/Exit without saving"
+          :label="dirty ? 'Exit without saving' : 'Exit'"
           icon="close"
           :to="'/'"
         />

@@ -53,7 +53,7 @@
         />
         <q-btn
           color="primary"
-          label="Exit/Exit without saving"
+          :label="dirty ? 'Exit without saving' : 'Exit'"
           icon="close"
           :to="'/'"
         />
@@ -145,7 +145,11 @@ export default Vue.extend({
         if (moveNext) {
           routeName = NEXT_ROUTES[routeName];
         }
-        this.$router.push({ name: routeName, params: { id: pas.id } });
+        if (isNew || moveNext) {
+          // don't push a new route that could be the same as the current
+          // route as it produces an error.
+          this.$router.push({ name: routeName, params: { id: pas.id } });
+        }
       }).catch((err) => {
         this.notifyError(`Failed to save Priority Area Submission`);
       });

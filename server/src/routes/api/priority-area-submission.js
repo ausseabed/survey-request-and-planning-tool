@@ -177,7 +177,7 @@ router.post(
       recordState.user = req.user;
       recordState.created = Date.now();
       recordState.recordType = 'priority area submission';
-      recordState.version = 0;
+      recordState.version = 1;
       recordState.recordId = pas.id;
       pas.recordState = recordState;
     }

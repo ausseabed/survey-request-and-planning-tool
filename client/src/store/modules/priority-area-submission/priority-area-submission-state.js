@@ -8,6 +8,7 @@ import { RequestStatus } from '../request-status';
 function initialState() {
   return {
     activePriorityAreaSubmission:{},
+    restorePriorityAreaSubmission:{},
     dirty: false,
     priorityAreaSubmissions:[],
     // total number of orgs irrespective of pagination, don't request more than

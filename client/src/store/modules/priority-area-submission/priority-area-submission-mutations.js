@@ -42,8 +42,17 @@ const mutations = {
     state.dirty = false;
   },
 
+  [types.SET_RESTORE_PRIORITY_AREA_SUBMISSION] (state, priorityAreaSubmission) {
+    state.restorePriorityAreaSubmission = _.cloneDeep(priorityAreaSubmission);
+  },
+
   [types.SET_DIRTY] (state, dirty) {
     state.dirty = dirty;
+  },
+
+  [types.RESTORE] (state) {
+    state.activePriorityAreaSubmission = _.cloneDeep(state.restorePriorityAreaSubmission);
+    state.dirty = false;
   },
 
   [types.SET_PRIORITY_AREA_SUBMISSIONS] (state, priorityAreaSubmissions) {

@@ -33,6 +33,7 @@ export const getActivePriorityAreaSubmission = ({ commit, state }) => {
     Vue.axios.get(url_endpoint)
     .then((response) => {
       commit(mutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION, response.data);
+      commit(mutTypes.SET_RESTORE_PRIORITY_AREA_SUBMISSION, response.data);
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
       resolve(response.data);
     })

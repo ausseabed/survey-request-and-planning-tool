@@ -3,7 +3,26 @@
     :validator="$v"
     class="scroll"
   >
-    <div> Areas </div>
+    <div class="column q-pa-md q-gutter-y-sm">
+      <div class="row q-gutter-x-md">
+        <div class="col">
+          The priority area tool also allows you to upload a simple shape file or geojson of named polygons that can then be profiled in the table below. If there is additional information that you would like to be provided when a user reviews the priorities, please upload it via the "additional readme file" function below the table. The readme file will be provided as an optional file to download or view when they are interacting with its related polygon(s).
+        </div>
+        <q-uploader
+          class="col-auto"
+          label="Upload Priority Area spatial data files"
+          flat bordered
+          :multiple="false"
+          accept=".zip,.json"
+          :auto-expand="true"
+          :auto-upload="true"
+          url="/api/priority-area/upload/"
+          method="PUT"
+        >
+
+        </q-uploader>
+      </div>
+    </div>
   </form-wrapper>
 
 

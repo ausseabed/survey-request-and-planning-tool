@@ -65,12 +65,12 @@ export class PriorityArea {
   dataImportance;
 
   @Column("geometry", {
-    name: "area_of_interest",
+    name: "geom",
     spatialFeatureType: "MultiPolygon",
     srid: 4326,
     nullable: true,
   })
-  areaOfInterest;
+  geom;
 
   @ManyToOne(
     type => PriorityAreaSubmission,

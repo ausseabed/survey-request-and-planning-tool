@@ -20,6 +20,7 @@ router.get(
   [isAuthenticated],
   asyncMiddleware(async function (req, res)
 {
+  const id = req.params.id;
   let task = await getConnection()
   .getRepository(Task)
   .findOne(id);

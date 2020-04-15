@@ -7,6 +7,7 @@ import { Custodian } from './custodian';
 import { Organisation } from './organisation';
 import { PriorityArea } from './priority-area';
 import { RecordState } from './record-state';
+import { Task } from './task';
 
 @Entity()
 export class PriorityAreaSubmission {
@@ -108,4 +109,15 @@ export class PriorityAreaSubmission {
   )
   @JoinColumn()
   recordState;
+
+  @OneToOne(
+    type => Task,
+    {
+      cascade: true,
+      nullable: true
+    }
+  )
+  @JoinColumn({ name: "upload_task_id" })
+  uploadTask;
+
 }

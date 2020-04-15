@@ -18,6 +18,7 @@
           :auto-upload="true"
           url="/api/priority-area/upload/"
           method="PUT"
+          :form-fields="[{name: 'priorityAreaSubmissionId', value: priorityAreaSubmission.id}]"
         >
 
         </q-uploader>

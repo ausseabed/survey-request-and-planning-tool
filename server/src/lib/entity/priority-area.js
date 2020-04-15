@@ -72,6 +72,12 @@ export class PriorityArea {
   })
   geom;
 
+  @Column("bytea", {
+    nullable: true,
+    select: false
+  })
+  thumbnail;
+
   @ManyToOne(
     type => PriorityAreaSubmission,
     submission => submission.priorityAreas

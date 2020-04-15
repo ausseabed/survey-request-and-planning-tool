@@ -65,6 +65,7 @@ export class Task {
   })
   blob;
 
+  // name of the file that was uploaded and saved as a blob
   @Column({
     name: "blob_file_name",
     type:"varchar",
@@ -72,4 +73,11 @@ export class Task {
   })
   blobFileName;
 
+  // some kind of output from the processing task
+  // eg; list of priority area id that were created
+  @Column({
+    type: "json",
+    nullable: true
+  })
+  output;
 }

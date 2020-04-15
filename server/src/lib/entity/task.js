@@ -1,4 +1,4 @@
-import {Entity, PrimaryColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 
 import { DateTransformer } from './utils';
 
@@ -10,7 +10,7 @@ import { DateTransformer } from './utils';
 @Entity()
 export class Task {
 
-  @PrimaryColumn('varchar')
+  @PrimaryGeneratedColumn('uuid')
   id = undefined;
 
   @Column({
@@ -57,5 +57,19 @@ export class Task {
     nullable: true,
   })
   lastUpdated;
+
+  // a blob of data that may be processed by the task
+  @Column("bytea", {
+    nullable: true,
+    select: false,
+  })
+  blob;
+
+  @Column({
+    name: "blob_file_name",
+    type:"varchar",
+    nullable: true,
+  })
+  blobFileName;
 
 }

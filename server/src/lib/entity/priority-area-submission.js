@@ -110,6 +110,13 @@ export class PriorityAreaSubmission {
   @JoinColumn()
   recordState;
 
+  @Column({
+      type:"uuid",
+      name:"upload_task_id",
+      nullable: true,
+  })
+  uploadTaskId;
+
   @OneToOne(
     type => Task,
     {

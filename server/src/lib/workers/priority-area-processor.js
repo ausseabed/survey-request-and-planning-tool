@@ -184,10 +184,10 @@ const doProcessing = async (taskId) => {
   const connection = await createConnection();
 
   await connection.getRepository(Task)
-    .update(taskId, {state: 'STARTED'});
-
-  await connection.getRepository(Task)
-    .update(taskId, {statusMessage: "Loading task data"});
+    .update(taskId, {
+      state: 'STARTED',
+      statusMessage: "Loading task data"
+    });
 
   const task = await connection.getRepository(Task)
     .findOne(

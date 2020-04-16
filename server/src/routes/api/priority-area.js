@@ -71,6 +71,7 @@ router.put(
   asyncMiddleware(async function (req, res)
 {
   let task = new Task();
+  task.statusMessage = "Initialising...";
   let fields = {};
 
   new formidable.IncomingForm().parse(req)

@@ -12,6 +12,7 @@ module.exports = function (ctx) {
       'global-components',
       'moment',
       'custom-filters',
+      'lodash',
     ],
 
     css: [

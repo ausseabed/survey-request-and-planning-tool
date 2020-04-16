@@ -20,15 +20,19 @@ import { updateRecordState } from '../state-management';
 
 var router = express.Router();
 
-router.get('/risk_rating_options', async function (req, res) {
+router.get('/preferred-timeframe-options', async function (req, res) {
+  return res.json(PREFERRED_TIMEFRAME_OPTIONS);
+});
+
+router.get('/risk-rating-options', async function (req, res) {
   return res.json(RISK_RATING_OPTIONS);
 });
 
-router.get('/required_data_quality_options', async function (req, res) {
+router.get('/required-data-quality-options', async function (req, res) {
   return res.json(REQUIRED_DATA_QUALITY_OPTIONS);
 });
 
-router.get('/data_importance_options', async function (req, res) {
+router.get('/data-importance-options', async function (req, res) {
   return res.json(DATA_IMPORTANCE_OPTIONS);
 });
 

@@ -95,3 +95,50 @@ export const deletePriorityAreaSubmission = ({ commit, state }, payload) => {
     });
   });
 }
+
+async function getOptions(commit, optionsType, setMutatation) {
+  const urlEndpoint = `/api/priority-area-submission/${optionsType}`;
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  try {
+    const response = await Vue.axios.get(urlEndpoint);
+    const options = response.data;
+
+    commit(setMutatation, options);
+  } catch (error) {
+    commit(mutTypes.SET_REQUEST_ERROR, error);
+    console.log(error);
+  }
+}
+
+export const getPreferredTimeframeOptions = async ({ commit, state }) => {
+  getOptions(
+    commit,
+    'preferred-timeframe-options',
+    mutTypes.SET_PREFERRED_TIMEFRAME_OPTIONS
+  );
+}
+
+export const getDataImportanceOptions = async ({ commit, state }) => {
+  getOptions(
+    commit,
+    'data-importance-options',
+    mutTypes.SET_DATA_IMPORTANCE_OPTIONS
+  );
+}
+
+export const getRequiredDataQualityOptions = async ({ commit, state }) => {
+  getOptions(
+    commit,
+    'required-data-quality-options',
+    mutTypes.SET_REQUIRED_DATA_QUALITY_OPTIONS
+  );
+}
+
+export const getRiskRatingOptions = async ({ commit, state }) => {
+  getOptions(
+    commit,
+    'risk-rating-options',
+    mutTypes.SET_RISK_RATING_OPTIONS
+  );
+}

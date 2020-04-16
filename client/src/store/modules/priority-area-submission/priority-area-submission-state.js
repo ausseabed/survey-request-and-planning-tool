@@ -19,6 +19,11 @@ function initialState() {
     filter: undefined,
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
+
+    preferredTimeframeOptions: [],
+    riskRatingOptions: [],
+    requiredDataQualityOptions: [],
+    dataImportanceOptions: [],
   }
 };
 

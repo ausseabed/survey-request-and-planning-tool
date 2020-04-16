@@ -124,7 +124,8 @@ export default Vue.extend({
         this.notifyError('Please review fields');
         return;
       }
-
+      return;
+      
       const isNew = _.isNil(this.activePriorityAreaSubmission.id);
       this.savePriorityAreaSubmission(this.activePriorityAreaSubmission).then(pas => {
         // this.getFormData();

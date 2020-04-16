@@ -118,6 +118,7 @@ router.get(
         "citedOrganisation",
         "custodian",
         "recordState",
+        "priorityAreas",
       ]
     }
   );

@@ -69,6 +69,7 @@ export class PriorityArea {
     spatialFeatureType: "MultiPolygon",
     srid: 4326,
     nullable: true,
+    select: false
   })
   geom;
 

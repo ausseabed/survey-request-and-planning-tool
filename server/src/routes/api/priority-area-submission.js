@@ -36,6 +36,14 @@ router.get('/data-importance-options', async function (req, res) {
   return res.json(DATA_IMPORTANCE_OPTIONS);
 });
 
+const PRIORITY_AREA_SUBMISSION_RELATIONS = [
+  'submittingOrganisation',
+  'citedOrganisation',
+  'custodian',
+  'recordState',
+  'priorityAreas',
+];
+
 // Gets a list of PriorityAreaSubmissions
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   let { start, limit, filter } = req.query;
@@ -117,13 +125,7 @@ router.get(
   .findOne(
     req.params.id,
     {
-      relations: [
-        "submittingOrganisation",
-        "citedOrganisation",
-        "custodian",
-        "recordState",
-        "priorityAreas",
-      ]
+      relations: PRIORITY_AREA_SUBMISSION_RELATIONS
     }
   );
 
@@ -163,6 +165,7 @@ router.post(
 
   pas.lastModified = Date.now();
   pas.custodian = req.user.custodian;
+  pas.uploadTaskId = null;
 
   await getConnection().transaction(async transactionalEntityManager => {
     const isNew = _.isNil(pas.id);
@@ -198,12 +201,7 @@ router.post(
   .findOne(
     pas.id,
     {
-      relations: [
-        "submittingOrganisation",
-        "citedOrganisation",
-        "custodian",
-        "recordState",
-      ]
+      relations: PRIORITY_AREA_SUBMISSION_RELATIONS
     }
   );
 

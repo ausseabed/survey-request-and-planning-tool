@@ -96,7 +96,8 @@ export class PriorityAreaSubmission {
 
   @OneToMany(
     type => PriorityArea,
-    priorityArea => priorityArea.priorityAreaSubmissionSubmission
+    priorityArea => priorityArea.priorityAreaSubmissionSubmission,
+    { cascade: true }
   )
   priorityAreas;
 

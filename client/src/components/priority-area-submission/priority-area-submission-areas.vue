@@ -178,11 +178,8 @@ export default Vue.extend({
     },
 
     isValid() {
-      debugger;
-      let valids = this.$refs.priorityAreaComponents.map((comp) => {
-        return comp.isValid();
-      });
-      let allValid = valids.reduce((sum, next) => sum && next, true);
+      let allValid = this.$refs.priorityAreaComponents
+        .reduce((sum, next) => sum && next.isValid(), true);
       return allValid;
     },
 

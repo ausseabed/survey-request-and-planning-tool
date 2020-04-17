@@ -272,19 +272,24 @@ const doProcessing = async (taskId) => {
       return;
     }
 
-    let dbImg = undefined;
-    try {
-      dbImg = await getDbImage(connection, paId, 'geom', extents, imageSize);
-    } catch (e) {
-      await setErrorState(
-        connection,
-        taskId,
-        `Unable to generate image from database geometry (${e})`
-      );
-      return;
-    }
+    let [dbImg, bmImg] = await Promise.all([
+      getDbImage(connection, paId, 'geom', extents, imageSize),
+      getBaseMapImage(extents, imageSize)
+    ]);
 
-    const bmImg = await getBaseMapImage(extents, imageSize);
+    // let dbImg = undefined;
+    // try {
+    //   dbImg = await getDbImage(connection, paId, 'geom', extents, imageSize);
+    // } catch (e) {
+    //   await setErrorState(
+    //     connection,
+    //     taskId,
+    //     `Unable to generate image from database geometry (${e})`
+    //   );
+    //   return;
+    // }
+    //
+    // const bmImg = await getBaseMapImage(extents, imageSize);
 
     const mergedImg = await sharp(bmImg)
       .modulate({saturation: 0.7})

@@ -13,6 +13,7 @@
       :class="{error: error}"
       :color="error ? 'red' : 'black'"
       :keep-color="true"
+      :disable="readonly"
     >
     <!-- :color="error ? 'red' : 'black'" -->
     </q-option-group>
@@ -28,6 +29,7 @@ export default {
   props: {
     options: undefined,
     label: "",
+    readonly: true,
   },
 
   computed: {

@@ -81,6 +81,7 @@
             />
           </div>
           <q-btn
+            v-if="!readonly"
             flat
             label="Remove"
             icon="delete"
@@ -112,6 +113,7 @@ export default Vue.extend({
 
   props: {
     priorityArea: {},
+    readonly: true
   },
 
   methods: {
@@ -163,10 +165,6 @@ export default Vue.extend({
       'requiredDataQualityOptions',
       'dataImportanceOptions',
     ]),
-
-    readonly() {
-      return false;
-    }
   },
 
   data() {

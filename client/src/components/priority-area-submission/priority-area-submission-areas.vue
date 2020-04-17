@@ -2,10 +2,16 @@
   <div class="scroll">
     <div class="column q-px-md q-gutter-y-sm">
       <div class="column q-gutter-y-sm">
-        <div class="col">
+        <div
+          v-if="!readonly"
+          class="col"
+        >
           The priority area tool also allows you to upload a simple shape file or geojson of named polygons that can then be profiled in the table below. If there is additional information that you would like to be provided when a user reviews the priorities, please upload it via the "additional readme file" function below the table. The readme file will be provided as an optional file to download or view when they are interacting with its related polygon(s).
         </div>
-        <div class="row q-gutter-x-md">
+        <div
+          v-if="!readonly"
+          class="row q-gutter-x-md"
+        >
           <q-uploader
             class="col"
             label="Upload Priority Area spatial data files"
@@ -116,6 +122,7 @@
               :priority-area="priorityArea"
               @priority-area-value-changed="priorityAreaValueChanged"
               @priority-area-deleted="priorityAreaDeleted"
+              :readonly="readonly"
             >
             </priority-area>
           </div>
@@ -143,6 +150,10 @@ import PriorityArea from './priority-area';
 
 export default Vue.extend({
   mixins: [errorHandler, permission],
+
+  props: [
+    'readonly',
+  ],
 
   components: {
     'priority-area': PriorityArea,

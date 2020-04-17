@@ -18,6 +18,7 @@
             method="PUT"
             :form-fields="[{name: 'priorityAreaSubmissionId', value: priorityAreaSubmission.id}]"
             @uploaded="uploadedPriorityAreas"
+            :disable="isProcessing"
           >
           </q-uploader>
 

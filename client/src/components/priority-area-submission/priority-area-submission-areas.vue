@@ -1,10 +1,137 @@
 <template>
-  <form-wrapper
-    :validator="$v"
-    class="scroll"
-  >
-    <div> Areas </div>
-  </form-wrapper>
+  <div class="scroll">
+    <div class="column q-px-md q-gutter-y-sm">
+      <div class="column q-gutter-y-sm">
+        <div
+          v-if="!readonly"
+          class="col"
+        >
+          The priority area tool also allows you to upload a simple shape file or geojson of named polygons that can then be profiled in the table below. If there is additional information that you would like to be provided when a user reviews the priorities, please upload it via the "additional readme file" function below the table. The readme file will be provided as an optional file to download or view when they are interacting with its related polygon(s).
+        </div>
+        <div
+          v-if="!readonly"
+          class="row q-gutter-x-md"
+        >
+          <q-uploader
+            class="col"
+            label="Upload Priority Area spatial data files"
+            flat bordered
+            :multiple="false"
+            accept=".zip,.json"
+            :auto-expand="true"
+            :auto-upload="true"
+            url="/api/priority-area/upload/"
+            method="PUT"
+            :form-fields="[{name: 'priorityAreaSubmissionId', value: priorityAreaSubmission.id}]"
+            @uploaded="uploadedPriorityAreas"
+            :disable="isProcessing"
+          >
+          </q-uploader>
+
+          <q-card flat bordered class="col-auto" style="width:300px">
+            <template v-if="task == undefined">
+              <q-card-section
+                class="fit column justify-center items-center"
+                style="color:#616161"
+              >
+                Awaiting upload to process
+              </q-card-section>
+            </template>
+            <template v-else-if="isProcessing">
+              <q-card-section
+                class="fit column justify-center"
+              >
+                <div class="row q-gutter-x-md">
+                  <q-circular-progress
+                    :indeterminate="task.progressType == 'INDETERMINATE'"
+                    :value="task.progress"
+                    :show-value="task.progressType != 'INDETERMINATE'"
+                    font-size="20px"
+                    size="50px"
+                    class="text-grey-5"
+                    color="grey-5"
+                  />
+                  <div class="column">
+                    <div class="main-page-sub-title">Processing</div>
+                    <div style="color:#616161">{{task.statusMessage}}</div>
+                  </div>
+                </div>
+              </q-card-section>
+            </template>
+            <template v-else-if="task.state == 'FAILED'">
+              <q-card-section
+                class="fit column justify-center"
+              >
+                <div class="row q-gutter-x-md">
+                  <q-avatar
+                    icon="error_outline"
+                    text-color="red"
+                    size="50px" font-size="40px">
+                  </q-avatar>
+                  <div class="column">
+                    <div class="main-page-sub-title">Processing failed</div>
+                    <div style="color:#616161">{{task.errorMessage}}</div>
+                  </div>
+                </div>
+              </q-card-section>
+            </template>
+            <template v-else-if="task.state == 'COMPLETED'">
+              <q-card-section
+                class="fit column justify-center"
+              >
+                <div class="row q-gutter-x-md">
+                  <q-avatar
+                    icon="check_circle_outline"
+                    text-color="grey-5"
+                    size="50px" font-size="40px">
+                  </q-avatar>
+                  <div class="column">
+                    <div class="main-page-sub-title">Processing complete</div>
+                    <div style="color:#616161">
+                      {{task.output.priorityAreaIds.length + " priority areas created"}}
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+            </template>
+
+          </q-card>
+        </div>
+
+        <q-separator/>
+
+        <div class="column q-gutter-y-xs">
+          <div class="main-page-sub-title">Priority Areas</div>
+          <div v-if="loadingPriorityAreaData" class="column">
+            <div style="color:#616161">Loading Priority Areas</div>
+            <q-linear-progress size="25px" :value="loadingPriorityAreaDataProgress" color="grey-5">
+              <div class="absolute-full flex flex-center">
+                <q-badge color="white" text-color="grey-5" :label="progressLabel" />
+              </div>
+            </q-linear-progress>
+          </div>
+          <div class="column items-center" v-if="_.get(priorityAreaSubmission, 'priorityAreas.length') == 0">
+            <div class="main-page-title">No priority areas provided</div>
+            <div style="color:#616161">Drag and drop geojson or zipped shapefile to upload area above.</div>
+          </div>
+          <div v-else class="column q-gutter-y-sm">
+            <priority-area
+              ref="priorityAreaComponents"
+              v-for="priorityArea of priorityAreaSubmission.priorityAreas"
+              :key="priorityArea.id"
+              :priority-area="priorityArea"
+              @priority-area-value-changed="priorityAreaValueChanged"
+              @priority-area-deleted="priorityAreaDeleted"
+              :readonly="readonly"
+            >
+            </priority-area>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
 
 
 </template>
@@ -19,32 +146,117 @@ import { permission } from './../mixins/permission';
 
 import * as pasMutTypes from '../../store/modules/priority-area-submission/priority-area-submission-mutation-types';
 
+import PriorityArea from './priority-area';
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
+
+  props: [
+    'readonly',
+  ],
+
+  components: {
+    'priority-area': PriorityArea,
+  },
 
   mounted() {
     this.fetchData();
   },
 
   methods: {
+    ...mapActions('priorityAreaSubmission', [
+      'getPreferredTimeframeOptions',
+      'getDataImportanceOptions',
+      'getRequiredDataQualityOptions',
+      'getRiskRatingOptions',
+    ]),
 
     ...mapMutations('priorityAreaSubmission', {
+      'addPriorityAreas': pasMutTypes.ADD_PRIORITY_AREAS,
+      'removePriorityArea': pasMutTypes.REMOVE_PRIORITY_AREA,
       'updatePriorityAreaSubmissionValue': pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
       'setDirty': pasMutTypes.SET_DIRTY,
     }),
 
     fetchData() {
+      this.getPreferredTimeframeOptions();
+      this.getDataImportanceOptions();
+      this.getRequiredDataQualityOptions();
+      this.getRiskRatingOptions();
 
+      if (!_.isNil(this.priorityAreaSubmission.uploadTaskId)) {
+        this.updateTaskStatus(this.priorityAreaSubmission.uploadTaskId);
+      }
     },
 
     isValid() {
-      this.$v.$touch();
-      return !this.$v.$error;
+      let allValid = this.$refs.priorityAreaComponents
+        .reduce((sum, next) => sum && next.isValid(), true);
+      return allValid;
     },
+
+    priorityAreaValueChanged({priorityArea, propertyName, value}) {
+      const paIndex = this.priorityAreaSubmission.priorityAreas.indexOf(priorityArea);
+      const path = `priorityAreas[${paIndex}].${propertyName}`;
+      this.updatePriorityAreaSubmissionValue({path:path, value:value});
+    },
+
+    priorityAreaDeleted({priorityArea}) {
+      this.removePriorityArea(priorityArea.id);
+    },
+
+    uploadedPriorityAreas(info) {
+      const res = JSON.parse(info.xhr.response);
+      console.log(res);
+      this.updateTaskStatus(res.taskId);
+    },
+
+    updateTaskStatus(taskId) {
+      const finishedStates = ["COMPLETED", "FAILED"];
+      Vue.axios
+        .get(`api/task/${taskId}`)
+        .then(res => {
+          this.task = res.data;
+
+          if (!finishedStates.includes(this.task.state)) {
+            setTimeout(() => this.updateTaskStatus(taskId), 750);
+          }
+        }).catch((err) => {
+          if (err.response.status == 404) {
+            // then no task has been provided, this is ok.
+          } else {
+            console.error(err);
+          }
+        });
+    },
+
+    async addTaskPriorityAreasToSubmission() {
+      this.loadingPriorityAreaData = true;
+      let newPaIds = this.task.output.priorityAreaIds;
+      let pasWithData = [];
+      let count = 0;
+      for (const paId of newPaIds) {
+        let paRes = await Vue.axios.get(`api/priority-area/${paId}`);
+        let pa = paRes.data;
+        pa.isNew = true;
+        pasWithData.push(pa);
+        count += 1;
+        this.loadingPriorityAreaDataProgress = count/newPaIds.length;
+      }
+      this.addPriorityAreas(pasWithData);
+      this.loadingPriorityAreaData = false;
+    }
   },
 
   watch: {
-
+    'priorityAreaSubmission.uploadTaskId': function (newId, oldId) {
+      this.fetchData();
+    },
+    'task.state': function (newState, oldState) {
+      if (newState == 'COMPLETED') {
+        this.addTaskPriorityAreasToSubmission();
+      }
+    }
   },
 
   validations() {
@@ -59,11 +271,29 @@ export default Vue.extend({
     ...mapGetters('priorityAreaSubmission',{
       'priorityAreaSubmission': 'activePriorityAreaSubmission',
     }),
+
+    isProcessing() {
+      if (this.task == undefined) {
+        return false;
+      } else if (["NOT_STARTED", "STARTED"].includes(this.task.state)) {
+        // because "NOT_STARTED" still means the task has been initialised and
+        // it is about to start very soon
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    progressLabel () {
+      return Math.round(this.loadingPriorityAreaDataProgress * 100) + '%';
+    },
   },
 
   data() {
     return {
-
+      task: undefined,
+      loadingPriorityAreaData: false,
+      loadingPriorityAreaDataProgress: 0,
     }
   },
 

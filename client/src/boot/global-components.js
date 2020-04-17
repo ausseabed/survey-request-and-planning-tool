@@ -8,6 +8,8 @@ import FormFieldValidatedDate from
   '../components/controls/form-field-validated-date';
 import FormFieldValidatedInput from
   '../components/controls/form-field-validated-input';
+import FormFieldValidatedOptionGroup from
+  '../components/controls/form-field-validated-option-group';
 import FormFieldValidatedSelect from
   '../components/controls/form-field-validated-select';
 import FormFieldValidatedSelectMultipleCheck from
@@ -19,6 +21,7 @@ export default ({ Vue }) => {
   Vue.component('form-field-validated', FormFieldValidated)
   Vue.component('form-field-validated-date', FormFieldValidatedDate)
   Vue.component('form-field-validated-input', FormFieldValidatedInput)
+  Vue.component('form-field-validated-option-group', FormFieldValidatedOptionGroup)
   Vue.component('form-field-validated-select', FormFieldValidatedSelect)
   Vue.component('form-field-validated-select-multiple-check',
     FormFieldValidatedSelectMultipleCheck)

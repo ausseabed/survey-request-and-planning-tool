@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Vue from 'vue';
 
 import * as types from './priority-area-submission-mutation-types';
@@ -82,7 +83,50 @@ const mutations = {
 
   [types.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE] (state, { path, value }) {
     state.dirty = true;
-    Vue.set(state.activePriorityAreaSubmission, path, _.cloneDeep(value))
+    _.set(state.activePriorityAreaSubmission, path, value)
+  },
+
+  [types.ADD_PRIORITY_AREAS] (state, priorityAreas) {
+    const pas = state.activePriorityAreaSubmission.priorityAreas;
+    // filter the given list of priority area so that no duplicates are
+    // added (based on id)
+    const filteredPas = priorityAreas.filter((pa) => {
+      var index = pas.findIndex(paInner => paInner.id == pa.id);
+      return index == -1;
+    });
+    if (filteredPas.length == 0) {
+      return;
+    }
+    state.dirty = true;
+    // use unshift, new PAs go at start of list
+    state.activePriorityAreaSubmission.priorityAreas.unshift(...filteredPas);
+  },
+
+  [types.REMOVE_PRIORITY_AREA] (state, priorityAreaId) {
+    const pas = state.activePriorityAreaSubmission.priorityAreas;
+    var index = pas.findIndex(pa => pa.id == priorityAreaId);
+    if (index == -1) {
+      return;
+    }
+    state.dirty = true;
+    // use unshift, new PAs go at start of list
+    state.activePriorityAreaSubmission.priorityAreas.splice(index, 1);
+  },
+
+  [types.SET_PREFERRED_TIMEFRAME_OPTIONS] (state, options) {
+    state.preferredTimeframeOptions = options;
+  },
+
+  [types.SET_DATA_IMPORTANCE_OPTIONS] (state, options) {
+    state.dataImportanceOptions = options;
+  },
+
+  [types.SET_REQUIRED_DATA_QUALITY_OPTIONS] (state, options) {
+    state.requiredDataQualityOptions = options;
+  },
+
+  [types.SET_RISK_RATING_OPTIONS] (state, options) {
+    state.riskRatingOptions = options;
   },
 
 }

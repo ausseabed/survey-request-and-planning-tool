@@ -20,17 +20,29 @@ import { updateRecordState } from '../state-management';
 
 var router = express.Router();
 
-router.get('/risk_rating_options', async function (req, res) {
+router.get('/preferred-timeframe-options', async function (req, res) {
+  return res.json(PREFERRED_TIMEFRAME_OPTIONS);
+});
+
+router.get('/risk-rating-options', async function (req, res) {
   return res.json(RISK_RATING_OPTIONS);
 });
 
-router.get('/required_data_quality_options', async function (req, res) {
+router.get('/required-data-quality-options', async function (req, res) {
   return res.json(REQUIRED_DATA_QUALITY_OPTIONS);
 });
 
-router.get('/data_importance_options', async function (req, res) {
+router.get('/data-importance-options', async function (req, res) {
   return res.json(DATA_IMPORTANCE_OPTIONS);
 });
+
+const PRIORITY_AREA_SUBMISSION_RELATIONS = [
+  'submittingOrganisation',
+  'citedOrganisation',
+  'custodian',
+  'recordState',
+  'priorityAreas',
+];
 
 // Gets a list of PriorityAreaSubmissions
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
@@ -113,12 +125,7 @@ router.get(
   .findOne(
     req.params.id,
     {
-      relations: [
-        "submittingOrganisation",
-        "citedOrganisation",
-        "custodian",
-        "recordState",
-      ]
+      relations: PRIORITY_AREA_SUBMISSION_RELATIONS
     }
   );
 
@@ -158,6 +165,7 @@ router.post(
 
   pas.lastModified = Date.now();
   pas.custodian = req.user.custodian;
+  pas.uploadTaskId = null;
 
   await getConnection().transaction(async transactionalEntityManager => {
     const isNew = _.isNil(pas.id);
@@ -193,12 +201,7 @@ router.post(
   .findOne(
     pas.id,
     {
-      relations: [
-        "submittingOrganisation",
-        "citedOrganisation",
-        "custodian",
-        "recordState",
-      ]
+      relations: PRIORITY_AREA_SUBMISSION_RELATIONS
     }
   );
 

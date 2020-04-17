@@ -111,8 +111,20 @@ export default Vue.extend({
     ...mapMutations('priorityAreaSubmission', {
       'setActivePriorityAreaSubmission': pasMutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION,
       'setDirty': pasMutTypes.SET_DIRTY,
-      'restore': pasMutTypes.RESTORE,
+      'restoreState': pasMutTypes.RESTORE,
     }),
+
+    restore() {
+      // setting only the id means that none of the props are updated in the
+      // database. This however will set the uploadTaskId to null in the
+      // database, so next time the priority area tab is opened it won't
+      // fetch the list of priority areas linked to the task, only those with
+      // a direct link to the submission.
+      this.savePriorityAreaSubmission({
+        id: this.activePriorityAreaSubmission.id
+      });
+      this.restoreState();
+    },
 
     submit() {
       this.saveClicked(false, false);
@@ -127,7 +139,7 @@ export default Vue.extend({
 
       const isNew = _.isNil(this.activePriorityAreaSubmission.id);
       this.savePriorityAreaSubmission(this.activePriorityAreaSubmission).then(pas => {
-        // this.getFormData();
+
         const successMsg = isNew ?
           'Priority Area Submission created' :
           'Priority Area Submission updated';

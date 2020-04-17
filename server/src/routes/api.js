@@ -9,6 +9,7 @@ var deliverableRoutes = require('./api/deliverable');
 var documentRoutes = require('./api/document');
 var instrumentTypeRoutes = require('./api/instrument-type');
 var organisationRoutes = require('./api/organisation');
+var priorityAreaRoutes = require('./api/priority-area');
 var priorityAreaSubmissionRoutes = require('./api/priority-area-submission');
 var recordStateRoutes = require('./api/record-state');
 var referenceSystemRoutes = require('./api/reference-system');
@@ -18,6 +19,7 @@ var roleRoutes = require('./api/role');
 var surveyApplicationRoutes = require('./api/survey-application');
 var surveyPlanRoutes = require('./api/survey-plan');
 var surveyRequestRoutes = require('./api/survey-request');
+var taskRoutes = require('./api/task');
 var techSpecRoutes = require('./api/tech-spec');
 var userRoutes = require('./api/user');
 
@@ -34,6 +36,7 @@ router
 .use('/document', documentRoutes)
 .use('/instrument-type', instrumentTypeRoutes)
 .use('/organisation', organisationRoutes)
+.use('/priority-area', priorityAreaRoutes)
 .use('/priority-area-submission', priorityAreaSubmissionRoutes)
 .use('/record-state', recordStateRoutes)
 .use('/reference-system', referenceSystemRoutes)
@@ -43,6 +46,7 @@ router
 .use('/survey-application', surveyApplicationRoutes)
 .use('/survey-plan', surveyPlanRoutes)
 .use('/survey-request', surveyRequestRoutes)
+.use('/task', taskRoutes)
 .use('/tech-spec', techSpecRoutes)
 .use('/user', userRoutes)
 

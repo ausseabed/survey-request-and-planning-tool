@@ -12,6 +12,7 @@ module.exports = function (ctx) {
       'global-components',
       'moment',
       'custom-filters',
+      'lodash',
     ],
 
     css: [
@@ -81,6 +82,7 @@ module.exports = function (ctx) {
         'QInfiniteScroll',
         'QResizeObserver',
         'QExpansionItem',
+        'QBadge',
       ],
 
       directives: [

@@ -87,12 +87,19 @@ const mutations = {
   },
 
   [types.ADD_PRIORITY_AREAS] (state, priorityAreas) {
-    if (priorityAreas.length == 0) {
+    const pas = state.activePriorityAreaSubmission.priorityAreas;
+    // filter the given list of priority area so that no duplicates are
+    // added (based on id)
+    const filteredPas = priorityAreas.filter((pa) => {
+      var index = pas.findIndex(paInner => paInner.id == pa.id);
+      return index == -1;
+    });
+    if (filteredPas.length == 0) {
       return;
     }
     state.dirty = true;
     // use unshift, new PAs go at start of list
-    state.activePriorityAreaSubmission.priorityAreas.unshift(...priorityAreas);
+    state.activePriorityAreaSubmission.priorityAreas.unshift(...filteredPas);
   },
 
   [types.REMOVE_PRIORITY_AREA] (state, priorityAreaId) {

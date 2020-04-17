@@ -18,7 +18,7 @@ import { PriorityArea } from '../../lib/entity/priority-area';
 const getDbImage = async (connection, paId, attrName, extents, imageSize) => {
   let tableName = "priority_area";
 
-  let rasterSize = imageSize;
+  let rasterSize = imageSize * 4;
   const dX = extents.maxX - extents.minX;
   const dY = extents.maxY - extents.minY;
   const maxDelta = dX > dY ? dX : dY;
@@ -34,7 +34,16 @@ const getDbImage = async (connection, paId, attrName, extents, imageSize) => {
   const mergedRaster = await connection
     .query(`select ST_AsPNG(ST_Union(rast, 'FIRST')) "imageData" from (${innSel}) foo`);
 
-  return mergedRaster[0].imageData;
+  const rasterImageData = mergedRaster[0].imageData;
+
+  const resizedRasterImageData = await sharp(rasterImageData)
+    .resize({
+      width: imageSize,
+      height: imageSize,
+    })
+    .png()
+    .toBuffer();
+  return resizedRasterImageData;
 }
 
 const getBaseMapImage = async(extents, imageSize) => {

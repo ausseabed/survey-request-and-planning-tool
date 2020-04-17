@@ -295,16 +295,16 @@ const doProcessing = async (taskId) => {
 
     await connection.getRepository(Task)
       .update(taskId, {
-        progress: percentageComplete,
-        output: {priorityAreaIds: completedPriorityAreaIds}
+        progress: percentageComplete
       });
-
   };
 
   await connection.getRepository(Task)
-    .update(taskId, {state: 'COMPLETED'});
-
-  return task.blobFileName;
+    .update(taskId, {
+      progress: 100,
+      state: 'COMPLETED',
+      output: {priorityAreaIds: completedPriorityAreaIds},
+    });
 };
 
 

@@ -124,10 +124,8 @@ router.put(
           console.log("error");
           console.log(err);
         }
-        console.log(outp);
         workerFarm.end(worker);
       });
-      console.log(fields);
       res.json({taskId: taskId});
     });
 

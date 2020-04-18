@@ -3,8 +3,30 @@
     :validator="$v"
   >
     <q-card flat bordered class="full-width" >
-      <q-card-section class="row q-gutter-md">
-        <div class="col q-gutter-xs">
+      <q-card-section class="row q-col-gutter-md">
+        <div class="column col-auto justify-between">
+          <div class="column q-gutter-sm">
+            <q-badge v-if="priorityArea.isNew" color="yellow-6" text-color="black">
+              New Priority Area
+            </q-badge>
+            <q-img
+              class="rounded-borders"
+              style="width:250px; max-height:250px; "
+              :src="`api/priority-area/${priorityArea.id}/thumbnail`"
+              :ratio="1"
+              contain
+            />
+          </div>
+          <q-btn
+            v-if="!readonly"
+            flat
+            label="Remove"
+            icon="delete"
+            @click="deleteClicked"
+          />
+        </div>
+
+        <div class="col column q-gutter-xs">
 
           <form-field-validated-input
             name="priorityArea.name"
@@ -66,27 +88,6 @@
             >
           </form-field-validated-option-group>
 
-        </div>
-        <div class="column col-auto justify-between">
-          <div class="column q-gutter-sm">
-            <q-badge v-if="priorityArea.isNew" color="yellow-6" text-color="black">
-              New Priority Area
-            </q-badge>
-            <q-img
-              class="rounded-borders"
-              style="width:250px; max-height:250px; "
-              :src="`api/priority-area/${priorityArea.id}/thumbnail`"
-              :ratio="1"
-              contain
-            />
-          </div>
-          <q-btn
-            v-if="!readonly"
-            flat
-            label="Remove"
-            icon="delete"
-            @click="deleteClicked"
-          />
         </div>
       </q-card-section>
 

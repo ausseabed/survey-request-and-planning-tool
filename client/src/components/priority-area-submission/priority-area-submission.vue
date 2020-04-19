@@ -1,70 +1,78 @@
 <template>
-  <q-page :style-fn="heightTweak" class="column q-px-sm q-pt-sm q-gutter-y-sm">
+  <q-page
+    :style-fn="heightTweak"
+    class="column items-center"
+  >
+    <div
+      class="column q-px-sm q-pt-sm q-gutter-y-sm fit"
+      style="max-width: 900px;"
+    >
+      <record-state
+        v-if="activePriorityAreaSubmission.id"
+        :entity-type="`priority-area-submission`"
+        :entity-id="activePriorityAreaSubmission.id"
+        :disable="dirty"
+        @updated-state="stateUpdated($event)"
+        class="col-auto"
+        >
+      </record-state>
 
-    <record-state
-      v-if="activePriorityAreaSubmission.id"
-      :entity-type="`priority-area-submission`"
-      :entity-id="activePriorityAreaSubmission.id"
-      :disable="dirty"
-      @updated-state="stateUpdated($event)"
-      class="col-auto"
-      >
-    </record-state>
-
-    <q-card class="col column">
-      <q-tabs
-        align="left"
-        class="col-auto bg-secondary text-white"
-      >
-        <q-route-tab
-          name="registration"
-          label="Priority Area Registration"
-          :to="{name: 'priority-area-submission-registration', params: {id: activePriorityAreaSubmission.id}}"
-          exact
-        />
-        <q-route-tab
-          name="areas"
-          label="Priority Areas"
-          :to="{name: 'priority-area-submission-areas', params: {id: activePriorityAreaSubmission.id}}"
-          exact
-        />
-        <q-route-tab
-          name="confirmation"
-          label="Submission Confirmation"
-          :to="{name: 'priority-area-submission-confirmation', params: {id: activePriorityAreaSubmission.id}}"
-          exact
-        />
-      </q-tabs>
-      <div class="col-auto fat-spacer bg-secondary"></div>
-      <router-view
-        class="col"
-        ref="pasComp"
-        :readonly="stateReadonly"
-      >
-      </router-view>
-    </q-card>
-    <div class="row justify-between col-auto">
-      <div class="row justify-start q-gutter-sm">
+      <q-card class="col column">
+        <q-tabs
+          align="left"
+          class="col-auto bg-secondary text-white"
+        >
+          <q-route-tab
+            name="registration"
+            label="Priority Area Registration"
+            :to="{name: 'priority-area-submission-registration', params: {id: activePriorityAreaSubmission.id}}"
+            exact
+          />
+          <q-route-tab
+            name="areas"
+            label="Priority Areas"
+            :to="{name: 'priority-area-submission-areas', params: {id: activePriorityAreaSubmission.id}}"
+            exact
+          />
+          <q-route-tab
+            name="confirmation"
+            label="Submission Confirmation"
+            :to="{name: 'priority-area-submission-confirmation', params: {id: activePriorityAreaSubmission.id}}"
+            exact
+          />
+        </q-tabs>
+        <div class="col-auto fat-spacer bg-secondary"></div>
+        <router-view
+          class="col"
+          ref="pasComp"
+          :readonly="stateReadonly"
+        >
+        </router-view>
+      </q-card>
+      <div class="row justify-between col-auto">
+        <div class="row justify-start q-gutter-sm">
+          <q-btn
+            color="primary"
+            label="Save"
+            icon="save"
+            @click="saveClicked(false, true)"
+          />
+          <q-btn
+            color="primary"
+            :label="dirty ? 'Exit without saving' : 'Exit'"
+            icon="close"
+            :to="'/'"
+          />
+        </div>
         <q-btn
           color="primary"
-          label="Save"
-          icon="save"
-          @click="saveClicked(false, true)"
-        />
-        <q-btn
-          color="primary"
-          :label="dirty ? 'Exit without saving' : 'Exit'"
-          icon="close"
-          :to="'/'"
+          label="Save and next"
+          icon-right="forward"
+          @click="saveClicked(true, true)"
         />
       </div>
-      <q-btn
-        color="primary"
-        label="Save and next"
-        icon-right="forward"
-        @click="saveClicked(true, true)"
-      />
     </div>
+
     <confirm-navigation id="confirmNavigation" ref="confirmNavigation"></confirm-navigation>
   </q-page>
 </template>

@@ -59,6 +59,8 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     "priority_area_submission.id",
     "priority_area_submission.contactPerson",
     "priority_area_submission.contactEmail",
+    "priority_area_submission.created",
+    "priority_area_submission.lastModified",
     "priority_area_submission.citation",
     "priority_area_submission.citedContactName",
     "priority_area_submission.citedContactEmail",
@@ -165,6 +167,11 @@ router.post(
 
   pas.lastModified = Date.now();
   pas.custodian = req.user.custodian;
+
+  // Remove the link between the upload processing task and this PAS. It is
+  // assumed that by saving the user has reviewed all processed priority areas
+  // and included/edited those they want linked to this PAS (and have been
+  // included in the post body).
   pas.uploadTaskId = null;
 
   await getConnection().transaction(async transactionalEntityManager => {

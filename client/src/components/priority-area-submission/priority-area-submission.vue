@@ -187,13 +187,19 @@ export default Vue.extend({
         let id = this.activePriorityAreaSubmission.id;
         this.$router.push({ name: routeName, params: { id: id } });
 
-      } else if (this.id == 'new' || this.priorityAreaSubmissions.length == 0) {
+      } else if (this.id == 'new') {
         let pas = {
           id: undefined,
           citation: false,
+          contactPerson: undefined,
+          contactEmail: undefined,
+          submittingOrganisation: undefined,
+          citedOrganisation: undefined,
+          citedContactName: undefined,
+          citedContactEmail: undefined,
         };
         this.setActivePriorityAreaSubmission(pas);
-        this.setDirty(true);
+        this.setDirty(false);
         this.stateReadonly = false;
       } else {
         // id has been included in url, so get and set this PAS

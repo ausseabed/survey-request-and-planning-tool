@@ -194,8 +194,78 @@
             </q-tab-panel>
 
             <q-tab-panel
+              v-if="hasPermission(['canViewAllPriorityAreaSubmissions', 'canViewCustodianPriorityAreaSubmissions'])"
               name="priority-areas"
+              class="column col-auto no-padding"
             >
+              <div class="col-auto q-py-sm q-mx-md app-big-heading">Submissions</div>
+              <q-separator style="height:1px;"/>
+              
+              <q-scroll-area class="col">
+                <q-list no-border padding
+                  @mouseleave.native="mouseleaveListItem"
+                  >
+
+                  <q-item clickable
+                    v-for="priorityAreaSubmission in priorityAreaSubmissions"
+                    :id="'list-item-' + priorityAreaSubmission.id"
+                    :key="priorityAreaSubmission.id"
+                    @mouseover="mouseoverListItem(priorityAreaSubmission, true)"
+                    class="column"
+                    :to="{name: 'priority-area-submission-registration', params: {id: priorityAreaSubmission.id}}"
+                    :manual-focus="true"
+                    :focused="activeId == priorityAreaSubmission.id"
+                    >
+                    <div class="row">
+                      <q-item-section top>
+                        <q-item-label>{{_.get(priorityAreaSubmission, 'submittingOrganisation.name', 'No submitting organisation specified')}}</q-item-label>
+                        <q-item-label caption> {{priorityAreaSubmission.custodian.name}} (custodian)</q-item-label>
+                      </q-item-section>
+
+                      <q-item-section side top>
+                        <q-item-label caption>{{priorityAreaSubmission.created | dateString }}</q-item-label>
+                      </q-item-section>
+                    </div>
+                    <q-item-section>
+                      <transition-expand>
+                        <div v-if="activeId == priorityAreaSubmission.id">
+                          <q-btn outline size="sm" color="primary" label="Registration"  class="q-mt-xs q-ml-xs"
+                            :to="{name: 'priority-area-submission-registration', params: {id: priorityAreaSubmission.id}}"
+                          >
+                          </q-btn>
+                          <q-btn outline size="sm" color="primary" label="Areas" class="q-mt-xs q-ml-xs"
+                            :to="{name: 'priority-area-submission-areas', params: {id: priorityAreaSubmission.id}}"
+                          >
+                          </q-btn>
+                          <q-btn outline size="sm" color="primary" label="Confirmation" class="q-mt-xs q-ml-xs"
+                            :to="{name: 'priority-area-submission-confirmation', params: {id: priorityAreaSubmission.id}}"
+                          >
+                          </q-btn>
+                        </div>
+                      </transition-expand>
+
+                    </q-item-section>
+                  </q-item>
+
+                </q-list>
+
+              </q-scroll-area>
+
+              <div
+                v-if="hasPermission('canAddPriorityAreaSubmission')"
+                class="full-width column"
+                >
+                <q-separator style="height:1px;"/>
+                <div class="row justify-end q-py-sm q-mx-md">
+                  <q-btn flat label="add submission"
+                    align="right" icon="add"
+                    :to="'/priority-area-submission/new'">
+                    <q-tooltip>
+                      Create new Priority Area Submission
+                    </q-tooltip>
+                  </q-btn>
+                </div>
+              </div>
 
             </q-tab-panel>
 
@@ -247,6 +317,7 @@ export default Vue.extend({
   beforeMount() {
     this.fetchSurveyPlans();
     this.getSurveyRequests({params:{includeGeometry:true}});
+    this.getPriorityAreaSubmissions();
   },
 
   mounted() {
@@ -268,6 +339,9 @@ export default Vue.extend({
     ]),
     ...mapActions('surveyRequest', [
       'getSurveyRequests',
+    ]),
+    ...mapActions('priorityAreaSubmission', [
+      'getPriorityAreaSubmissions',
     ]),
     heightTweak (offset) {
       return {
@@ -384,6 +458,9 @@ export default Vue.extend({
     ]),
     ...mapGetters('surveyRequest', [
       'surveyRequests',
+    ]),
+    ...mapGetters('priorityAreaSubmission', [
+      'priorityAreaSubmissions',
     ]),
   },
 

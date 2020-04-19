@@ -129,7 +129,7 @@
               class="self-center full-width"
               flat label="Add a Priority Area"
               icon="add"
-              :to="'/priority-area-submission/'">
+              :to="'/priority-area-submission/new'">
               <q-tooltip>
                 Add a Priority Area Submission
               </q-tooltip>

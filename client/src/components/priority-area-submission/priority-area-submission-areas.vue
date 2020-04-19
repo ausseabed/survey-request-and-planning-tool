@@ -190,8 +190,13 @@ export default Vue.extend({
     },
 
     isValid() {
+      // we perform map, then reduce, so that the `isValid` method
+      // is called on all priority area components. Doing the only the reduce
+      // will stop calling isValid after the first non-valid component.
       let allValid = this.$refs.priorityAreaComponents
-        .reduce((sum, next) => sum && next.isValid(), true);
+        .map((comp) => comp.isValid())
+        .reduce((sum, next) => sum && next, true);
+
       return allValid;
     },
 

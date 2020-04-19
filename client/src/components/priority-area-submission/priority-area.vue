@@ -3,70 +3,7 @@
     :validator="$v"
   >
     <q-card flat bordered class="full-width" >
-      <q-card-section class="row q-gutter-md">
-        <div class="col q-gutter-xs">
-
-          <form-field-validated-input
-            name="priorityArea.name"
-            label="Identified Area Name"
-            attribute="Identified Area Name"
-            :value="priorityArea.name"
-            @input="valueChanged('name', $event)"
-            type="text"
-            @blur="$v.priorityArea.name.$touch"
-            :readonly="readonly"
-            >
-          </form-field-validated-input>
-
-          <form-field-validated-option-group
-            inline
-            name="priorityArea.preferredTimeframe"
-            label="Preferred Timeframe"
-            :value="priorityArea.preferredTimeframe"
-            @input="valueChanged('preferredTimeframe',$event)"
-            :options="preferredTimeframeOptions"
-            @blur="$v.priorityArea.preferredTimeframe.$touch"
-            :readonly="readonly"
-            >
-          </form-field-validated-option-group>
-
-          <form-field-validated-option-group
-            inline
-            name="priorityArea.riskRating"
-            label="Risk Rating"
-            :value="priorityArea.riskRating"
-            @input="valueChanged('riskRating',$event)"
-            :options="riskRatingOptions"
-            @blur="$v.priorityArea.riskRating.$touch"
-            :readonly="readonly"
-            >
-          </form-field-validated-option-group>
-
-          <form-field-validated-option-group
-            inline
-            name="priorityArea.requiredDataQuality"
-            label="Required Data Quality"
-            :value="priorityArea.requiredDataQuality"
-            @input="valueChanged('requiredDataQuality',$event)"
-            :options="requiredDataQualityOptions"
-            @blur="$v.priorityArea.requiredDataQuality.$touch"
-            :readonly="readonly"
-            >
-          </form-field-validated-option-group>
-
-          <form-field-validated-option-group
-            inline
-            name="priorityArea.dataImportance"
-            label="Importance of the Data (Impact)"
-            :value="priorityArea.dataImportance"
-            @input="valueChanged('dataImportance',$event)"
-            :options="dataImportanceOptions"
-            @blur="$v.priorityArea.dataImportance.$touch"
-            :readonly="readonly"
-            >
-          </form-field-validated-option-group>
-
-        </div>
+      <q-card-section class="row q-col-gutter-md">
         <div class="column col-auto justify-between">
           <div class="column q-gutter-sm">
             <q-badge v-if="priorityArea.isNew" color="yellow-6" text-color="black">
@@ -87,6 +24,66 @@
             icon="delete"
             @click="deleteClicked"
           />
+        </div>
+
+        <div class="col column q-gutter-xs">
+
+          <form-field-validated-input
+            name="priorityArea.name"
+            label="Identified Area Name"
+            attribute="Identified Area Name"
+            :value="priorityArea.name"
+            @input="valueChanged('name', $event)"
+            type="text"
+            @blur="$v.priorityArea.name.$touch"
+            :readonly="readonly"
+            >
+          </form-field-validated-input>
+
+          <form-field-validated-button-toggle
+            inline
+            name="priorityArea.preferredTimeframe"
+            label="Preferred Timeframe"
+            :value="priorityArea.preferredTimeframe"
+            @input="valueChanged('preferredTimeframe',$event)"
+            :options="preferredTimeframeOptions"
+            @blur="$v.priorityArea.preferredTimeframe.$touch"
+            :readonly="readonly"
+          />
+
+          <form-field-validated-button-toggle
+            inline
+            name="priorityArea.riskRating"
+            label="Risk Rating"
+            :value="priorityArea.riskRating"
+            @input="valueChanged('riskRating',$event)"
+            :options="riskRatingOptions"
+            @blur="$v.priorityArea.riskRating.$touch"
+            :readonly="readonly"
+          />
+
+          <form-field-validated-button-toggle
+            inline
+            name="priorityArea.requiredDataQuality"
+            label="Required Data Quality"
+            :value="priorityArea.requiredDataQuality"
+            @input="valueChanged('requiredDataQuality',$event)"
+            :options="requiredDataQualityOptions"
+            @blur="$v.priorityArea.requiredDataQuality.$touch"
+            :readonly="readonly"
+          />
+
+          <form-field-validated-button-toggle
+            inline
+            name="priorityArea.dataImportance"
+            label="Importance of the Data (Impact)"
+            :value="priorityArea.dataImportance"
+            @input="valueChanged('dataImportance',$event)"
+            :options="dataImportanceOptions"
+            @blur="$v.priorityArea.dataImportance.$touch"
+            :readonly="readonly"
+          />
+
         </div>
       </q-card-section>
 

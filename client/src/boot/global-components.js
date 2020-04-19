@@ -4,6 +4,8 @@
 import ConfirmNavigation from '../components/dialogs/confirm-navigation';
 import FormFieldValidated from
   '../components/controls/form-field-validated';
+import FormFieldValidatedButtonToggle from
+  '../components/controls/form-field-validated-button-toggle';
 import FormFieldValidatedDate from
   '../components/controls/form-field-validated-date';
 import FormFieldValidatedInput from
@@ -19,6 +21,7 @@ import RecordState from '../components/controls/record-state';
 export default ({ Vue }) => {
   Vue.component('confirm-navigation', ConfirmNavigation)
   Vue.component('form-field-validated', FormFieldValidated)
+  Vue.component('form-field-validated-button-toggle', FormFieldValidatedButtonToggle)
   Vue.component('form-field-validated-date', FormFieldValidatedDate)
   Vue.component('form-field-validated-input', FormFieldValidatedInput)
   Vue.component('form-field-validated-option-group', FormFieldValidatedOptionGroup)

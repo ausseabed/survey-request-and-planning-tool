@@ -40,7 +40,7 @@
             >
           </form-field-validated-input>
 
-          <form-field-validated-option-group
+          <form-field-validated-button-toggle
             inline
             name="priorityArea.preferredTimeframe"
             label="Preferred Timeframe"
@@ -49,10 +49,9 @@
             :options="preferredTimeframeOptions"
             @blur="$v.priorityArea.preferredTimeframe.$touch"
             :readonly="readonly"
-            >
-          </form-field-validated-option-group>
+          />
 
-          <form-field-validated-option-group
+          <form-field-validated-button-toggle
             inline
             name="priorityArea.riskRating"
             label="Risk Rating"
@@ -61,10 +60,9 @@
             :options="riskRatingOptions"
             @blur="$v.priorityArea.riskRating.$touch"
             :readonly="readonly"
-            >
-          </form-field-validated-option-group>
+          />
 
-          <form-field-validated-option-group
+          <form-field-validated-button-toggle
             inline
             name="priorityArea.requiredDataQuality"
             label="Required Data Quality"
@@ -73,10 +71,9 @@
             :options="requiredDataQualityOptions"
             @blur="$v.priorityArea.requiredDataQuality.$touch"
             :readonly="readonly"
-            >
-          </form-field-validated-option-group>
+          />
 
-          <form-field-validated-option-group
+          <form-field-validated-button-toggle
             inline
             name="priorityArea.dataImportance"
             label="Importance of the Data (Impact)"
@@ -85,8 +82,7 @@
             :options="dataImportanceOptions"
             @blur="$v.priorityArea.dataImportance.$touch"
             :readonly="readonly"
-            >
-          </form-field-validated-option-group>
+          />
 
         </div>
       </q-card-section>

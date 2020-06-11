@@ -14,6 +14,7 @@ var referenceSystemRoutes = require('./api/reference-system');
 var reportTemplateRoutes = require('./api/report-template');
 var requestPurposeRoutes = require('./api/request-purpose');
 var roleRoutes = require('./api/role');
+var statusRoutes = require('./api/status');
 var surveyApplicationRoutes = require('./api/survey-application');
 var surveyPlanRoutes = require('./api/survey-plan');
 var surveyRequestRoutes = require('./api/survey-request');
@@ -38,6 +39,7 @@ router
 .use('/report-template', reportTemplateRoutes)
 .use('/request-purpose', requestPurposeRoutes)
 .use('/role', roleRoutes)
+.use('/status', statusRoutes)
 .use('/survey-application', surveyApplicationRoutes)
 .use('/survey-plan', surveyPlanRoutes)
 .use('/survey-request', surveyRequestRoutes)

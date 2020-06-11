@@ -28,7 +28,7 @@ With this in mind, the following banner should be used in any source code file t
 
 
 # Dependencies
-User authentication is by an external OAuth2 provider; the staging environment makes use of AWS cognito by other OAuth2 providers will also work. Configuration is set in the `server.conf` and `docker-compose-prod.yml` files. The `AUTH_HOST` (domain name of auth server), `AUTH_CLIENT_ID` and `AUTH_CLIENT_SECRET` variables must be set (latter two are provided by the auth system). The auth system will need to be configured to accept the request tools domain name as a login/logout callback (even `localhost`).
+User authentication is by an external OAuth2 provider; the staging environment makes use of AWS cognito by other OAuth2 providers will also work. Configuration is set in the `server.conf` and `docker-compose-prod.yml` files. The `AUTH_HOST` (domain name of auth server), `AUTH_CLIENT_ID` and `AUTH_CLIENT_SECRET` variables must be set (latter two are provided by the auth system). The auth system will need to be configured to accept the request tools domain name as a login/logout callback (even `localhost`). `ANALYTICS_CODE` is used by the analytics plugin.
 
 The development environment makes use of docker / docker-compose.
 

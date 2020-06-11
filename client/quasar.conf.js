@@ -13,6 +13,7 @@ module.exports = function (ctx) {
       'moment',
       'custom-filters',
       'lodash',
+      'vue-analytics',
     ],
 
     css: [

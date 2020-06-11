@@ -21,6 +21,7 @@
     "readable-timespan": "^1.2.0",
     "shpjs": "^3.4.3",
     "threads": "^0.12.1",
+    "vue-analytics": "^5.22.1",
     "vue-authenticate": "^1.4.1",
     "vue-lodash": "^2.1.2",
     "vue-moment": "^4.1.0",

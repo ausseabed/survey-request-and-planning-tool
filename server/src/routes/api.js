@@ -20,6 +20,7 @@ var surveyPlanRoutes = require('./api/survey-plan');
 var surveyRequestRoutes = require('./api/survey-request');
 var techSpecRoutes = require('./api/tech-spec');
 var userRoutes = require('./api/user');
+var utilRoutes = require('./api/util');
 
 import { isAuthenticated } from './utils';
 
@@ -45,5 +46,6 @@ router
 .use('/survey-request', surveyRequestRoutes)
 .use('/tech-spec', techSpecRoutes)
 .use('/user', userRoutes)
+.use('/util', utilRoutes)
 
 module.exports = router;

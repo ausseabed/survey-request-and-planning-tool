@@ -16,7 +16,7 @@ router.get('/api', async function (req, res) {
 router.get('/database', asyncMiddleware(async function (req, res) {
 
   let connection = await getConnection();
-  if (!connection.isConnected) {
+  if (connection.isConnected) {
     res.send("Database is running and connected");
   } else {
     throw Boom.serverUnavailable("Database not connected")

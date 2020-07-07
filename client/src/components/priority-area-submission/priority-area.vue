@@ -62,7 +62,8 @@
             :readonly="readonly"
           />
 
-          <form-field-validated-button-toggle
+          <form-field-validated-select
+            class="bg-grey-2 q-pa-sm rounded-borders"
             inline
             name="priorityArea.requiredDataQuality"
             label="Required Data Quality"

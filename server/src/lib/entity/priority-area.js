@@ -4,27 +4,31 @@ import { PriorityAreaSubmission } from './priority-area-submission';
 
 
 export const PREFERRED_TIMEFRAME_OPTIONS = [
-  "Short",
-  "Medium",
-  "Long",
+  "Urgent (1-2 years)",
+  "Mid-term (2-5 years)",
+  "Long-term (5-10 years)",
 ];
 
 export const RISK_RATING_OPTIONS = [
-  "Low",
-  "Medium",
   "High",
+  "Moderate",
+  "Low",
 ];
 
 export const REQUIRED_DATA_QUALITY_OPTIONS = [
-  "Low",
-  "Medium",
-  "High",
+  "HIPP - Precise",
+  "IHO - Special",
+  "IHO - 1a",
+  "IHO - 1b",
+  "HIPP - 2",
+  "IHO - 2",
+  "HIPP - Passage",
 ];
 
 export const DATA_IMPORTANCE_OPTIONS = [
-  "Low",
-  "Medium",
-  "High",
+  "1",
+  "2",
+  "3",
 ];
 
 

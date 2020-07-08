@@ -14,6 +14,7 @@ module.exports = function (ctx) {
       'custom-filters',
       'lodash',
       'vue-analytics',
+      'leaflet',
     ],
 
     css: [

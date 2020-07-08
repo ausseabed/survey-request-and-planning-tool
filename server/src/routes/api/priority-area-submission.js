@@ -106,7 +106,46 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   });
 }));
 
-// up to here
+
+// gets geospatial features as geojson associated with a specific priority
+// area suubmission
+router.get(
+  '/:id/geometry',
+  [
+    isAuthenticated,
+    permitCustodianBasedPermission({
+      entityType:PriorityAreaSubmission,
+      custodianAttributes: ['custodian'],
+      allowedPermissionAll: 'canViewAllPriorityAreaSubmissions',
+      allowedPermissionCustodian: 'canViewCustodianPriorityAreaSubmissions'})
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  let pas = await getConnection()
+  .getRepository(PriorityAreaSubmission)
+  .findOne(req.params.id);
+
+  if (!pas) {
+    let err = Boom.notFound(
+      `PriorityAreaSubmission ${req.params.id} does not exist`);
+    throw err;
+  }
+
+  const pas2 = await getConnection()
+  .createQueryBuilder()
+  .select([`ST_AsGeoJSON(ST_Collect("extent")) as geojson`])
+  .from(subQuery => {
+    return subQuery
+      .select(`geom`, 'extent')
+      .addSelect(`name`, 'name')
+      .from('priority_area')
+      .where(`"priorityAreaSubmissionSubmissionId" = :id`, { id: req.params.id });
+  }, "extent")
+  .getRawOne();
+
+  res.set('Content-Type', 'application/json');
+  return res.send(pas2.geojson);
+}));
 
 
 // gets a single Priority Area Submission

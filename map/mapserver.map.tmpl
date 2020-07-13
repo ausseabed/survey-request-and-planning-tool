@@ -7,6 +7,8 @@ MAP
 
   IMAGETYPE PNG24
 
+  EXTENT -180 -90 180 90
+
   PROJECTION
     "init=epsg:4326"
   END
@@ -58,7 +60,7 @@ MAP
 
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
     DATA "area_of_interest from (
-            select sp.id as spid, commorgs.orgname as \"commissioningOrganisations\" ,sp.status, sp.\"startDate\", sp.\"endDate\", sp.\"contactPerson\", sp.email as \"contactEmail\" ,sp.comment as comments ,sp.area_of_interest as area_of_interest, sp.\"surveyName\", sa.group as category, sa.name as purpose, instmerge.instname as \"instrumentTypes\", dctmerge.dctname as \"dataCaptureTypes\"
+            select sp.id as spid, commorgs.orgname as \"commissioningOrganisations\" ,sp.status, sp.\"startDate\", sp.\"endDate\", sp.\"contactPerson\", sp.email as \"contactEmail\" ,sp.comment as comments ,sp.area_of_interest as area_of_interest, sp.\"surveyName\", sa.group as category, sa.name as purpose, instmerge.instname as \"instrumentTypes\", dctmerge.dctname as \"dataCaptureTypes\", CASE WHEN (sp.status = 'Complete') THEN '#11A579' WHEN (sp.status = 'Scheduled') THEN '#E68310' WHEN (sp.status = 'Planning') THEN '#CF1C90' ELSE '#F2B701' END AS survey_color
             from survey_plan sp
             join survey_application sa on sp.\"surveyApplicationId\" = sa.id
             join record_state rs on sp.\"recordStateId\" = rs.id
@@ -78,11 +80,11 @@ MAP
           ) as subquery using unique spid"
     CLASS
       STYLE
-        OUTLINECOLOR "#FFFB0D"
+        OUTLINECOLOR [survey_color]
         WIDTH 2
       END
       STYLE
-        COLOR "#FFFB0D"
+        COLOR [survey_color]
         OPACITY 30
       END
     END

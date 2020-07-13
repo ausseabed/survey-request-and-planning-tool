@@ -180,6 +180,47 @@ router.get(
 }));
 
 
+// publishes a Priority Area Submission
+router.post(
+  '/publish',
+  [
+    isAuthenticated,
+    permitCustodianBasedPermission({
+      entityType: PriorityAreaSubmission,
+      custodianAttributes: ['custodian'],
+      allowedPermissionAll: 'canEditAllPriorityAreaSubmissions',
+      allowedPermissionCustodian: 'canEditCustodianPriorityAreaSubmission',
+      allowedPermissionNoEntityId: 'canAddPriorityAreaSubmission',
+    })
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  const pasId = req.body.id;
+
+  const pasRepo = getConnection().getRepository(PriorityAreaSubmission);
+  let pas = await pasRepo.findOne(pasId);
+  if (!pas) {
+    let err = Boom.notFound(
+      `PriorityAreaSubmission ${req.params.id} does not exist, cannot publish`);
+    throw err;
+  }
+
+  pas.published = true;
+  await getConnection()
+  .getRepository(PriorityAreaSubmission)
+  .save(pas);
+
+  pas = await pasRepo.findOne(
+    pas.id,
+    {
+      relations: PRIORITY_AREA_SUBMISSION_RELATIONS
+    }
+  );
+
+  return res.json(pas);
+}));
+
+
 // creates or updates a Priority Area Submission
 router.post(
   '/',
@@ -206,6 +247,10 @@ router.post(
 
   pas.lastModified = Date.now();
   pas.custodian = req.user.custodian;
+
+  // set the published flag to false on each save. User must republish after
+  // each modification.
+  pas.published = false;
 
   // Remove the link between the upload processing task and this PAS. It is
   // assumed that by saving the user has reviewed all processed priority areas
@@ -272,7 +317,7 @@ router.delete(
 
   const pasRepo = getConnection().getRepository(PriorityAreaSubmission);
 
-  let pas = await hrRepo.findOne(req.params.id);
+  let pas = await pasRepo.findOne(req.params.id);
 
   if (!pas) {
     let err = Boom.notFound(

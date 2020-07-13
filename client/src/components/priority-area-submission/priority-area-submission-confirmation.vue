@@ -41,7 +41,16 @@
     </div>
     <div class="checkbox-div rounded-borders">
       <div class="q-pa-md">
-        foo
+        <q-checkbox
+          v-if="priorityAreaSubmission && !priorityAreaSubmission.published"
+          v-model="acknowledged"
+          label="I acknowledge that I have the authority and delegation to publish these priorities on behalf of the submitting organisation."
+        />
+        <div
+          v-if="priorityAreaSubmission && priorityAreaSubmission.published"
+        >
+          Priority Area Submission has been published
+        </div>
       </div>
     </div>
   </div>
@@ -76,8 +85,9 @@ export default Vue.extend({
   methods: {
 
     isValid() {
-      this.$v.$touch();
-      return !this.$v.$error;
+      return this.acknowledged;
+      // this.$v.$touch();
+      // return !this.$v.$error;
     },
 
     geometrySet(info) {
@@ -123,6 +133,7 @@ export default Vue.extend({
 
   data() {
     return {
+      acknowledged: false,
       zoom: 4,
       mapStyle: { color: "red", weight: 3 },
       pasGeometry: undefined

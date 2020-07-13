@@ -3,6 +3,28 @@ import Vue from 'vue'
 import * as mutTypes from './priority-area-submission-mutation-types'
 import { RequestStatus } from '../request-status'
 
+export const publishPriorityAreaSubmission = ({ commit, state }, id) => {
+  const payload = {
+    id: id
+  };
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  return new Promise((resolve, reject) => {
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+    Vue.axios.post('/api/priority-area-submission/publish', payload)
+    .then((response) => {
+      commit(mutTypes.ADD_PRIORITY_AREA_SUBMISSION, response.data);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+      commit(mutTypes.SET_DIRTY, false);
+      resolve(response.data);
+    })
+    .catch((error) => {
+      commit(mutTypes.SET_REQUEST_ERROR, error);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+      reject(error);
+    });
+  });
+}
+
 export const savePriorityAreaSubmission = ({ commit, state }, payload) => {
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);

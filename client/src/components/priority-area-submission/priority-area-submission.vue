@@ -19,23 +19,24 @@
 
       <q-card class="col column">
         <q-tabs
+          v-model="tab"
           align="left"
           class="col-auto bg-secondary text-white"
         >
           <q-route-tab
-            name="registration"
+            name="priority-area-submission-registration"
             label="Priority Area Registration"
             :to="{name: 'priority-area-submission-registration', params: {id: activePriorityAreaSubmission.id}}"
             exact
           />
           <q-route-tab
-            name="areas"
+            name="priority-area-submission-areas"
             label="Priority Areas"
             :to="{name: 'priority-area-submission-areas', params: {id: activePriorityAreaSubmission.id}}"
             exact
           />
           <q-route-tab
-            name="confirmation"
+            name="priority-area-submission-confirmation"
             label="Submission Confirmation"
             :to="{name: 'priority-area-submission-confirmation', params: {id: activePriorityAreaSubmission.id}}"
             exact
@@ -65,6 +66,14 @@
           />
         </div>
         <q-btn
+          v-if="activePriorityAreaSubmission && $route.name === 'priority-area-submission-confirmation'"
+          :disable="activePriorityAreaSubmission && activePriorityAreaSubmission.published"
+          color="primary"
+          label="Publish"
+          @click="publishClicked()"
+        />
+        <q-btn
+          v-else
           color="primary"
           label="Save and next"
           icon-right="forward"
@@ -115,6 +124,7 @@ export default Vue.extend({
       'getPriorityAreaSubmissions',
       'getActivePriorityAreaSubmission',
       'savePriorityAreaSubmission',
+      'publishPriorityAreaSubmission',
     ]),
     ...mapMutations('priorityAreaSubmission', {
       'setActivePriorityAreaSubmission': pasMutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION,
@@ -132,6 +142,20 @@ export default Vue.extend({
         id: this.activePriorityAreaSubmission.id
       });
       this.restoreState();
+    },
+
+    publishClicked() {
+      let pasComp = this.$refs.pasComp;
+      if (!pasComp.isValid()) {
+        this.notifyError('Please confirm acknowledgement');
+        return;
+      }
+
+      this.publishPriorityAreaSubmission(this.activePriorityAreaSubmission.id).then(pas => {
+        this.notifySuccess('Priority Area Submission published');
+      }).catch((err) => {
+        this.notifyError(`Failed to publish Priority Area Submission`);
+      });
     },
 
     submit() {
@@ -232,7 +256,6 @@ export default Vue.extend({
       this.id = id;
     },
     'id': function (newId, oldId) {
-      console.log(`PAS id = ${newId}`);
       this.updateActivePriorityAreaSubmission();
     }
   },
@@ -255,6 +278,7 @@ export default Vue.extend({
 
   data() {
     return {
+      tab: undefined,
       id: undefined,
       stateReadonly: true,
     }

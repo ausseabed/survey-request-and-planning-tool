@@ -90,4 +90,46 @@ MAP
     END
   END
 
+
+
+  LAYER
+    NAME "Priority_Area_Submissions"
+    METADATA
+      "wfs_title"         "Priority Area Submissions" ##REQUIRED
+      "wfs_srs"           "EPSG:4326" ## REQUIRED
+      "gml_include_items" "all" ## Optional (serves all attributes for layer)
+      "gml_featureid"     "id" ## REQUIRED
+      "wfs_enable_request" "*"
+      wms_enable_request "*"
+      "ows_enable_request" "*"
+      wms_getfeature_formatlist "application/json, application/geojson"
+    END
+    STATUS ON
+    TEMPLATE "dummy.js"
+    TYPE POLYGON
+    CONNECTIONTYPE postgis
+
+    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
+
+    DATA "geom from (
+            select pa.id as paid ,pa.name as name ,pa.geom as geom
+            from priority_area pa
+            join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
+            where pas.published = true
+          ) as subquery using unique paid using srid=4326"
+
+    CLASS
+      STYLE
+        OUTLINECOLOR "#FFFB0D"
+        WIDTH 2
+      END
+      STYLE
+        COLOR "#FFFB0D"
+        OPACITY 30
+      END
+    END
+  END
+
+
+
 END

@@ -8,12 +8,14 @@
       style="max-width: 900px;"
     >
       <record-state
+        ref="recordState"
         v-if="activePriorityAreaSubmission.id"
-        :entity-type="`priority-area-submission`"
+        entity-type="priority-area-submission"
         :entity-id="activePriorityAreaSubmission.id"
         :disable="dirty"
         @updated-state="stateUpdated($event)"
         class="col-auto"
+        :validationCallback="recordStateValidationCallback"
         >
       </record-state>
 
@@ -67,7 +69,7 @@
         </div>
         <q-btn
           v-if="activePriorityAreaSubmission && $route.name === 'priority-area-submission-confirmation'"
-          :disable="activePriorityAreaSubmission && activePriorityAreaSubmission.published"
+          :disable="published"
           color="primary"
           label="Publish"
           @click="publishClicked()"
@@ -123,8 +125,7 @@ export default Vue.extend({
     ...mapActions('priorityAreaSubmission', [
       'getPriorityAreaSubmissions',
       'getActivePriorityAreaSubmission',
-      'savePriorityAreaSubmission',
-      'publishPriorityAreaSubmission',
+      'savePriorityAreaSubmission'
     ]),
     ...mapMutations('priorityAreaSubmission', {
       'setActivePriorityAreaSubmission': pasMutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION,
@@ -151,7 +152,7 @@ export default Vue.extend({
         return;
       }
 
-      this.publishPriorityAreaSubmission(this.activePriorityAreaSubmission.id).then(pas => {
+      this.$refs.recordState.transitionRecordState('PUBLISH').then(pas => {
         this.notifySuccess('Priority Area Submission published');
       }).catch((err) => {
         this.notifyError(`Failed to publish Priority Area Submission`);
@@ -235,8 +236,10 @@ export default Vue.extend({
     stateUpdated(state) {
       if (_.isNil(state)) {
         this.stateReadonly = true;
+        this.published = true;
       } else {
         this.stateReadonly = state.readonly;
+        this.published = state.state === 'published';
       }
     },
 
@@ -247,6 +250,17 @@ export default Vue.extend({
       };
     },
 
+    recordStateValidationCallback(evt) {
+      if (evt != 'PUBLISH') {
+        return true;
+      }
+      let pasComp = this.$refs.pasComp;
+      if (this.$route.name !== 'priority-area-submission-confirmation' || !pasComp.isValid()) {
+        this.notifyError('Please confirm acknowledgement on confirmation tab');
+        return false;
+      }
+      return true;
+    },
   },
 
   watch: {
@@ -281,6 +295,7 @@ export default Vue.extend({
       tab: undefined,
       id: undefined,
       stateReadonly: true,
+      published: true,
     }
   },
 

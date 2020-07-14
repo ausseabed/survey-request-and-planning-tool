@@ -128,6 +128,7 @@ export default Vue.extend({
       handler (newId, oldId) {
         this.update({path:'entityId', value:newId})
         if (!_.isNil(newId) && !_.isNil(this.entityType)) {
+          this.update({path:'entityType', value:this.entityType})
           this.doUpdate();
         }
       },
@@ -137,6 +138,7 @@ export default Vue.extend({
       handler (newType, oldType) {
         this.update({path:'entityType', value:newType})
         if (!_.isNil(newType) && !_.isNil(this.entityId)) {
+          this.update({path:'entityId', value:this.entityId})
           this.doUpdate();
         }
       },

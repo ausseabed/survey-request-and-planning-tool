@@ -115,7 +115,8 @@ MAP
             select pa.id as paid ,pa.name as name ,pa.geom as geom
             from priority_area pa
             join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
-            where pas.published = true
+            join record_state rs on pas.\"recordStateId\" = rs.id
+            where rs.state = 'published'
           ) as subquery using unique paid using srid=4326"
 
     CLASS

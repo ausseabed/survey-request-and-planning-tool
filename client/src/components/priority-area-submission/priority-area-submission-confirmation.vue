@@ -42,12 +42,12 @@
     <div class="checkbox-div rounded-borders">
       <div class="q-pa-md">
         <q-checkbox
-          v-if="priorityAreaSubmission && !priorityAreaSubmission.published"
+          v-if="recordState && !(recordState.state === 'published') "
           v-model="acknowledged"
           label="I acknowledge that I have the authority and delegation to publish these priorities on behalf of the submitting organisation."
         />
         <div
-          v-if="priorityAreaSubmission && priorityAreaSubmission.published"
+          v-if="recordState && recordState.state === 'published'"
         >
           Priority Area Submission has been published
         </div>
@@ -116,7 +116,9 @@ export default Vue.extend({
     ...mapGetters('priorityAreaSubmission',{
       'priorityAreaSubmission': 'activePriorityAreaSubmission',
     }),
-
+    ...mapGetters('recordState', [
+      'recordState',
+    ]),
     center() {
       var center = latLng(
         ((MapConstants.WMTS_DEFAULT_EXTENT[1] + MapConstants.WMTS_DEFAULT_EXTENT[3]) / 2),

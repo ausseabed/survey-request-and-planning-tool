@@ -101,14 +101,6 @@ export class PriorityAreaSubmission {
   )
   priorityAreas;
 
-
-  @Column({
-      type:"bool",
-      nullable: false,
-      default: false
-  })
-  published;
-
   @OneToOne(
     type => RecordState,
     {

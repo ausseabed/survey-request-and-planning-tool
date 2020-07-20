@@ -5,7 +5,7 @@
   >
     <div class="column q-pa-md q-gutter-y-sm">
 
-      <div>summary</div>
+      <div>areas of interest</div>
 
     </div>
   </form-wrapper>

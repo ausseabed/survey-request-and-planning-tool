@@ -16,8 +16,13 @@ import SurveyPlanDeliverables from 'components/survey-plan/survey-plan-deliverab
 import SurveyPlanMain from 'components/survey-plan/survey-plan-main.vue'
 import SurveyPlanSummary from 'components/survey-plan/survey-plan-summary.vue'
 import SurveyPlanTechnicalSpecification from 'components/survey-plan/survey-plan-technical-specification.vue'
-import SurveyRequestMain from 'components/survey-request/survey-request-main.vue'
-import SurveyRequestPlans from 'components/survey-request/survey-request-plans.vue'
+import SurveyRequest from 'components/survey-request/survey-request.vue'
+import SurveyRequestAreasOfInterest from 'components/survey-request/survey-request-areas-of-interest.vue'
+import SurveyRequestBusinessCase from 'components/survey-request/survey-request-business-case.vue'
+import SurveyRequestRegistration from 'components/survey-request/survey-request-registration.vue'
+import SurveyRequestSubAreaDataTypes from 'components/survey-request/survey-request-sub-area-data-types.vue'
+import SurveyRequestSubAreaDetails from 'components/survey-request/survey-request-sub-area-details.vue'
+import SurveyRequestSubmissionDetails from 'components/survey-request/survey-request-submission-details.vue'
 import SurveyRequestSummary from 'components/survey-request/survey-request-summary.vue'
 import Users from 'components/administration/users/users.vue'
 
@@ -110,24 +115,46 @@ const routes = [
 
     {
       path: '/survey-request/new',
-      component: SurveyRequestSummary,
+      component: SurveyRequestRegistration,
     },
     {
       path: '/survey-request/:id',
-      component: SurveyRequestMain,
+      component: SurveyRequest,
       children: [
         {
+          name: 'survey-request-registration',
+          path: 'registration',
+          component: SurveyRequestRegistration,
+        },
+        {
+          name: 'survey-request-business-case',
+          path: 'business-case',
+          component: SurveyRequestBusinessCase,
+        },
+        {
+          name: 'survey-request-areas-of-interest',
+          path: 'areas-of-interest',
+          component: SurveyRequestAreasOfInterest,
+        },
+        {
+          name: 'survey-request-sub-area-details',
+          path: 'sub-area-details',
+          component: SurveyRequestSubAreaDetails,
+        },
+        {
+          name: 'survey-request-sub-area-data-types',
+          path: 'sub-area-data-types',
+          component: SurveyRequestSubAreaDataTypes,
+        },
+        {
+          name: 'survey-request-summary',
           path: 'summary',
           component: SurveyRequestSummary,
         },
         {
-          path: 'attachments',
-          component: SurveyFile,
-          props: {attachesTo:"survey-request"}
-        },
-        {
-          path: 'survey-plans',
-          component: SurveyRequestPlans,
+          name: 'survey-request-submission-details',
+          path: 'submission-details',
+          component: SurveyRequestSubmissionDetails,
         },
       ]
     },

@@ -5,7 +5,7 @@
   >
     <div class="column q-pa-md q-gutter-y-sm">
 
-      <div>summary</div>
+      <div>business case</div>
 
     </div>
   </form-wrapper>
@@ -72,8 +72,8 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('surveyRequest',{
-      surveyRequest: 'surveyRequest',
-      dirty: 'dirty',
+      'surveyRequest': 'surveyRequest',
+      'dirty': 'dirty'
     }),
     ...mapGetters('organisation', {
       organisationsList: 'organisations',

@@ -7,17 +7,23 @@
       class="column q-px-sm q-pt-sm q-gutter-y-sm fit"
       style="max-width: 900px;"
     >
-      <record-state
-        ref="recordState"
-        v-if="surveyRequest.id"
-        entity-type="survey-request"
-        :entity-id="surveyRequest.id"
-        :disable="dirty"
-        @updated-state="stateUpdated($event)"
-        class="col-auto"
-        :validationCallback="recordStateValidationCallback"
-        >
-      </record-state>
+      <div class="row justify-between">
+        <record-state
+          ref="recordState"
+          v-if="surveyRequest.id"
+          entity-type="survey-request"
+          :entity-id="surveyRequest.id"
+          :disable="dirty"
+          @updated-state="stateUpdated($event)"
+          class="col-auto"
+          :validationCallback="recordStateValidationCallback"
+          >
+        </record-state>
+        <img height="48px" src="~/assets/aho-logo-small.png" />
+      </div>
+      <div>
+        The HydroScheme Industry Partnership Program (HIPP) is an enduring partnership, with a request timeframe domain of 5-10 years. It aims to boost Australia's hydrographic industry capability allowing partners to acquire maritime survey data for the production of digital maps of Australia's seas and coastal areas.
+      </div>
 
       <q-card class="col column">
         <q-tabs

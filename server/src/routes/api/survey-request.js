@@ -28,6 +28,13 @@ var ENTITY_GEOJSON_MAP = [
   ['comments', 'REQOR_COMM'],
 ];
 
+const surveyRequestRelations = [
+  "custodians",
+  "organisation",
+  "organisations",
+  "purposes",
+  "dataCaptureTypes",
+];
 
 var router = express.Router();
 
@@ -179,13 +186,7 @@ router.get(
   .findOne(
     req.params.id,
     {
-      relations: [
-        "custodians",
-        "organisations",
-        "purposes",
-        "dataCaptureTypes",
-        "recordState"
-      ]
+      relations: surveyRequestRelations
     }
   );
 
@@ -333,12 +334,7 @@ router.post(
   .findOne(
     surveyRequest.id,
     {
-      relations: [
-        "custodians",
-        "organisations",
-        "purposes",
-        "dataCaptureTypes",
-      ]
+      relations: surveyRequestRelations
     }
   )
   return res.json(surveyRequest)

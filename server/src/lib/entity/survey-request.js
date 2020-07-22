@@ -6,7 +6,6 @@ import { DateTransformer } from './utils';
 import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { SurveyRequestAttachment } from './survey-request-attachment';
-import { SurveyPlan } from './survey-plan';
 import { Organisation } from './organisation';
 import { RecordState } from './record-state';
 import { RequestPurpose } from './request-purpose';
@@ -115,6 +114,15 @@ export class SurveyRequest {
   @JoinTable()
   custodians;
 
+  @OneToOne(
+    type => Organisation,
+    {
+      nullable: true
+    }
+  )
+  @JoinColumn({ name: "organisation_id" })
+  organisation;
+
   @ManyToMany(
     type => Organisation,
     organisation => organisation.surveyRequests)
@@ -178,6 +186,19 @@ export class SurveyRequest {
       nullable: true,
   })
   businessJustification;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  costBenefit;
+
+  @Column({
+      type:"bool",
+      nullable: false,
+      default: false,
+  })
+  additionalFundingAvailable;
 
   @Column({
       type:"bool",
@@ -267,11 +288,6 @@ export class SurveyRequest {
     type => SurveyRequestAttachment,
     attachment => attachment.entity)
   attachments;
-
-  @OneToMany(
-    type => SurveyPlan,
-    surveyPlan => surveyPlan.surveyRequest)
-  surveyPlans;
 
   @OneToOne(type => RecordState, { cascade: true })
   @JoinColumn()

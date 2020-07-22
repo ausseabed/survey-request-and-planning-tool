@@ -114,10 +114,6 @@ const routes = [
     },
 
     {
-      path: '/survey-request/new',
-      component: SurveyRequestRegistration,
-    },
-    {
       path: '/survey-request/:id',
       component: SurveyRequest,
       children: [

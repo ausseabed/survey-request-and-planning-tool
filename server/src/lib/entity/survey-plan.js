@@ -10,7 +10,6 @@ import { RecordState } from './record-state';
 import { SurveyApplication } from './survey-application';
 import { SurveyAttachment } from './survey-attachment';
 import { SurveyDeliverable } from './survey-deliverable';
-import { SurveyRequest } from './survey-request';
 import { TechSpec } from './tech-spec';
 
 // valid values for the `status` attribute
@@ -170,14 +169,6 @@ export class SurveyPlan {
     type => SurveyDeliverable,
     sd => sd.surveyPlan)
   deliverables;
-
-  @ManyToOne(
-    type => SurveyRequest,
-    surveyRequest => surveyRequest.surveyPlans,
-    { nullable: true }
-  )
-  @JoinColumn({ name: "surveyRequestId" })
-  surveyRequest;
 
   @OneToOne(type => TechSpec, techSpec => techSpec.surveyPlan, { nullable: true })
   @JoinColumn({ name: "id" })

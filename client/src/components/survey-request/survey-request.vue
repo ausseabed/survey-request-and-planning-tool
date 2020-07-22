@@ -19,6 +19,9 @@
           :validationCallback="recordStateValidationCallback"
           >
         </record-state>
+        <!-- Empty div ensures the logo is right aligned even when no
+             record state is displayed -->
+        <div></div>
         <img height="48px" src="~/assets/aho-logo-small.png" />
       </div>
       <div>
@@ -33,7 +36,7 @@
         >
           <q-route-tab
             name="survey-request-registration"
-            :to="{name: 'survey-request-registration', params: {id: surveyRequest.id}}"
+            :to="{name: 'survey-request-registration', params: {id: $route.params.id}}"
             exact
             class="q-tab__label"
           >
@@ -41,7 +44,7 @@
           </q-route-tab>
           <q-route-tab
             name="survey-request-business-case"
-            :to="{name: 'survey-request-business-case', params: {id: surveyRequest.id}}"
+            :to="{name: 'survey-request-business-case', params: {id: $route.params.id}}"
             exact
             class="q-tab__label"
           >
@@ -49,7 +52,7 @@
           </q-route-tab>
           <q-route-tab
             name="survey-request-areas-of-interest"
-            :to="{name: 'survey-request-areas-of-interest', params: {id: surveyRequest.id}}"
+            :to="{name: 'survey-request-areas-of-interest', params: {id: $route.params.id}}"
             exact
             class="q-tab__label"
           >
@@ -57,7 +60,7 @@
           </q-route-tab>
           <q-route-tab
             name="survey-request-sub-area-details"
-            :to="{name: 'survey-request-sub-area-details', params: {id: surveyRequest.id}}"
+            :to="{name: 'survey-request-sub-area-details', params: {id: $route.params.id}}"
             exact
             class="q-tab__label"
           >
@@ -66,7 +69,7 @@
           <q-route-tab
             name="survey-request-sub-area-data-types"
             label=""
-            :to="{name: 'survey-request-sub-area-data-types', params: {id: surveyRequest.id}}"
+            :to="{name: 'survey-request-sub-area-data-types', params: {id: $route.params.id}}"
             exact
             class="q-tab__label"
           >
@@ -74,7 +77,7 @@
           </q-route-tab>
           <q-route-tab
             name="survey-request-summary"
-            :to="{name: 'survey-request-summary', params: {id: surveyRequest.id}}"
+            :to="{name: 'survey-request-summary', params: {id: $route.params.id}}"
             exact
             class="q-tab__label"
           >
@@ -83,7 +86,7 @@
           <q-route-tab
             name="survey-request-submission-details"
             label=""
-            :to="{name: 'survey-request-submission-details', params: {id: surveyRequest.id}}"
+            :to="{name: 'survey-request-submission-details', params: {id: $route.params.id}}"
             exact
             class="q-tab__label"
           >
@@ -95,6 +98,7 @@
           class="col"
           ref="srComp"
           :readonly="stateReadonly"
+          :validationIntent="validationIntent"
         >
         </router-view>
       </q-card>
@@ -143,7 +147,7 @@ import { errorHandler } from './../mixins/error-handling';
 import { permission } from './../mixins/permission';
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard';
 
-import * as pasMutTypes from '../../store/modules/priority-area-submission/priority-area-submission-mutation-types';
+import * as srMutTypes from '../../store/modules/survey-request/survey-request-mutation-types';
 
 // what the route gets changed to after save and continue is clicked
 const NEXT_ROUTES = {
@@ -186,11 +190,13 @@ export default Vue.extend({
     ...mapActions('dataCaptureType', [
       'getDataCaptureTypes',
     ]),
-    ...mapActions('organisation', [
-      'getOrganisations',
-    ]),
 
-
+    ...mapMutations('surveyRequest', {
+      'setDirty': srMutTypes.SET_DIRTY,
+      'update': srMutTypes.UPDATE,
+      'resetSurveyRequest': srMutTypes.RESET_HIPP_REQUEST,
+      'updateSurveyRequest': srMutTypes.UPDATE_HIPP_REQUEST,
+    }),
 
     publishClicked() {
       let srComp = this.$refs.srComp;
@@ -199,10 +205,10 @@ export default Vue.extend({
         return;
       }
 
-      this.$refs.recordState.transitionRecordState('PUBLISH').then(pas => {
-        this.notifySuccess('Priority Area Submission published');
+      this.$refs.recordState.transitionRecordState('PUBLISH').then(sr => {
+        this.notifySuccess('Survey Request published');
       }).catch((err) => {
-        this.notifyError(`Failed to publish Priority Area Submission`);
+        this.notifyError(`Failed to publish Survey Request`);
       });
     },
 
@@ -218,7 +224,7 @@ export default Vue.extend({
       }
 
       const isNew = _.isNil(this.surveyRequest.id);
-      this.savePriorityAreaSubmission(this.surveyRequest).then(srr => {
+      this.saveSurveyRequest(this.surveyRequest).then(sr => {
 
         const successMsg = isNew ?
           'Survey Request created' :
@@ -240,7 +246,7 @@ export default Vue.extend({
         if (isNew || moveNext) {
           // don't push a new route that could be the same as the current
           // route as it produces an error.
-          this.$router.push({ name: routeName, params: { id: pas.id } });
+          this.$router.push({ name: routeName, params: { id: sr.id } });
         }
       }).catch((err) => {
         this.notifyError(`Failed to save Survey Request`);
@@ -251,13 +257,13 @@ export default Vue.extend({
       if (this.id == 'new') {
         let sr = {
           id: undefined,
-          citation: false,
-          contactPerson: undefined,
-          contactEmail: undefined,
-          submittingOrganisation: undefined,
-          citedOrganisation: undefined,
-          citedContactName: undefined,
-          citedContactEmail: undefined,
+          name: undefined,
+          organisation: undefined,
+          organisations: [],
+          custodians: [],
+          requestorName: undefined,
+          requestorPosition: undefined,
+          pointOfContactEmail: undefined,
         };
         this.update({path: 'surveyRequest', value: sr})
         this.setDirty(false);
@@ -269,7 +275,10 @@ export default Vue.extend({
     },
 
     stateUpdated(state) {
-      if (_.isNil(state)) {
+      if (this.id !== 'new') {
+        this.stateReadonly = false;
+        this.published = false;
+      } else if (_.isNil(state)) {
         this.stateReadonly = true;
         this.published = true;
       } else {
@@ -334,6 +343,7 @@ export default Vue.extend({
       id: undefined,
       stateReadonly: true,
       published: true,
+      validationIntent: 'save',
     }
   },
 

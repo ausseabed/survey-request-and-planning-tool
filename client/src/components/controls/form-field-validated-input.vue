@@ -4,6 +4,7 @@
     v-on="$listeners"
     :label="label"
     bottom-slots
+    hide-bottom-space
     :error="hasErrors"
     :error-message="firstErrorMessage"
   >

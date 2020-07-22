@@ -3,9 +3,115 @@
     :validator="$v"
     class="scroll"
   >
-    <div class="column q-pa-md q-gutter-y-sm">
+    <div class="column">
 
-      <div>business case</div>
+      <q-card-section class="column q-gutter-y-sm">
+        <div>
+          The HIPP Request process requires entry of a business justification
+          and cost benefit analysis directly. If you would also like to
+          provide a more detailed response to these questions, please upload an
+          attached file for our consideration.
+        </div>
+
+        <form-field-validated-input
+          name="surveyRequest.businessJustification"
+          attribute="Survey Justification"
+          label="Survey Justification"
+          :value="surveyRequest.businessJustification"
+          @input="update({path:'surveyRequest.businessJustification', value:$event})"
+          @blur="$v.surveyRequest.businessJustification.$touch"
+          type="textarea"
+          autogrow
+          :readonly="readonly"
+          outlined
+          >
+        </form-field-validated-input>
+
+        <form-field-validated-input
+          name="surveyRequest.costBenefit"
+          attribute="Cost Benefit"
+          label="Cost Benefit"
+          :value="surveyRequest.costBenefit"
+          @input="update({path:'surveyRequest.costBenefit', value:$event})"
+          @blur="$v.surveyRequest.costBenefit.$touch"
+          type="textarea"
+          autogrow
+          :readonly="readonly"
+          outlined
+          >
+        </form-field-validated-input>
+
+        <q-field
+          borderless
+          :readonly="readonly"
+          class="row items-center content-center"
+          >
+          <q-checkbox
+            class="col-auto"
+            label="Additional Funding Available?"
+            left-label
+            :value="surveyRequest.additionalFundingAvailable"
+            @input="update({path:'surveyRequest.additionalFundingAvailable', value:$event})"
+            />
+          <div class="col row items-center q-pl-md">
+            <div class="hint-text">
+              Please select if partial funding has been identified and the
+              request represents an opportunity to partner with the HIPP.
+            </div>
+          </div>
+        </q-field>
+
+      </q-card-section>
+
+      <q-card-section class="column q-gutter-y-sm">
+        <div class="red-text">
+          The Australian hydrographic Office will release data publicly
+          unless there is an appropriate reason as to why a moratorium on data
+          release should be applied.
+        </div>
+
+        <q-field
+          borderless
+          :readonly="readonly"
+          >
+          <q-checkbox
+            class="col-auto"
+            label="Please select if data subject to a moratorium period?"
+            left-label
+            :value="surveyRequest.hasMoratorium"
+            @input="update({path:'surveyRequest.hasMoratorium', value:$event})"
+            />
+        </q-field>
+
+        <form-field-validated-date
+          v-if="surveyRequest.hasMoratorium"
+          name="surveyRequest.moratoriumDate"
+          attribute="Date moratorium ends"
+          label="Moratorium End Date"
+          :date="surveyRequest.moratoriumDate"
+          @updated-date="update({path:'surveyRequest.moratoriumDate', value:$event})"
+          @blur="$v.surveyRequest.moratoriumDate.$touch"
+          :readonly="readonly"
+          hint="(YYYY/MM/DD)"
+          >
+        </form-field-validated-date>
+
+        <form-field-validated-input
+          v-if="surveyRequest.hasMoratorium"
+          name="surveyRequest.moratoriumComment"
+          attribute="Moratorium Justification"
+          label="Moratorium Justification"
+          :value="surveyRequest.moratoriumComment"
+          @input="update({path:'surveyRequest.moratoriumComment', value:$event})"
+          @blur="$v.surveyRequest.moratoriumComment.$touch"
+          type="textarea"
+          autogrow
+          :readonly="readonly"
+          outlined
+          >
+        </form-field-validated-input>
+
+      </q-card-section>
 
     </div>
   </form-wrapper>
@@ -28,6 +134,7 @@ export default Vue.extend({
 
   props: [
     'readonly',
+    'validationIntent',
   ],
 
   mounted() {
@@ -67,16 +174,35 @@ export default Vue.extend({
   },
 
   validations() {
-    return {};
+    if (this.validationIntent == 'save') {
+      return {
+        surveyRequest: {
+          businessJustification: { },
+          costBenefit: { },
+          additionalFundingAvailable: { },
+          hasMoratorium: { },
+          moratoriumDate: {},
+          moratoriumComment: {},
+        }
+      }
+    } else if (this.validationIntent == 'final') {
+      return {
+        surveyRequest: {
+          businessJustification: { required },
+          costBenefit: { required },
+          additionalFundingAvailable: { },
+          hasMoratorium: { },
+          moratoriumDate: { },
+          moratoriumComment: { },
+        }
+      }
+    }
   },
 
   computed: {
     ...mapGetters('surveyRequest',{
       'surveyRequest': 'surveyRequest',
       'dirty': 'dirty'
-    }),
-    ...mapGetters('organisation', {
-      organisationsList: 'organisations',
     }),
   },
 
@@ -91,5 +217,15 @@ export default Vue.extend({
 
 
 <style scoped lang="stylus">
+
+.hint-text {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+}
+
+.red-text {
+  color: rgba(255, 0, 0, 1.0);
+  font-weight: bold;
+}
 
 </style>

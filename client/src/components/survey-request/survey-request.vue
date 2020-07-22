@@ -264,6 +264,12 @@ export default Vue.extend({
           requestorName: undefined,
           requestorPosition: undefined,
           pointOfContactEmail: undefined,
+          businessJustification: undefined,
+          costBenefit: undefined,
+          additionalFundingAvailable: false,
+          hasMoratorium: false,
+          moratoriumDate: undefined,
+          moratoriumComment: undefined,
         };
         this.update({path: 'surveyRequest', value: sr})
         this.setDirty(false);

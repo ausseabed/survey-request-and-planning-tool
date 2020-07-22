@@ -3,6 +3,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne,
 
 import { DateTransformer } from './utils';
 
+import { Attachment } from './attachment';
 import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { SurveyRequestAttachment } from './survey-request-attachment';
@@ -192,6 +193,15 @@ export class SurveyRequest {
       nullable: true,
   })
   costBenefit;
+
+  @OneToOne(
+    type => Attachment,
+    {
+      nullable: true
+    }
+  )
+  @JoinColumn()
+  businessCaseAttachment;
 
   @Column({
       type:"bool",

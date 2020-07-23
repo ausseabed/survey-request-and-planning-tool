@@ -34,8 +34,6 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   .select(["survey_plan.id", "survey_plan.surveyName",
     "survey_plan.startDate", "survey_plan.status"])
   .leftJoinAndSelect("survey_plan.recordState", "record_state")
-  .leftJoin("survey_plan.surveyRequest", "survey_request")
-  .addSelect("survey_request.id")
 
   if (includeGeometry) {
     projectsQuery = projectsQuery.addSelect("survey_plan.areaOfInterest")
@@ -47,10 +45,6 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     {deleted: false}
   )
   .orderBy("survey_plan.surveyName")
-  if (!_.isNil(req.query['survey-request'])) {
-    projectsQuery = projectsQuery.andWhere(`"survey_plan"."surveyRequestId" = :hrid`,
-      {hrid: req.query['survey-request']})
-  }
 
   if (hasPermission(req.user.role, 'canViewAllSurveyPlans')) {
     // then no additional where clauses
@@ -235,7 +229,6 @@ router.get(
         "instrumentTypes",
         "dataCaptureTypes",
         "surveyApplication",
-        "surveyRequest",
       ]
     }
   );
@@ -312,12 +305,6 @@ router.post(
 
   project.hasMoratorium = req.body.hasMoratorium;
   project.moratoriumDate = req.body.moratoriumDate;
-
-  if (_.isNil(project.id)) {
-    // only set hipp request if it is a new project. Otherwise
-    // it must be linked via the survey request plans form.
-    project.surveyRequest = req.body.surveyRequest;
-  }
 
   if (!_.isNil(req.body.areaOfInterest)) {
     let geojson = geojsonToMultiPolygon(req.body.areaOfInterest);

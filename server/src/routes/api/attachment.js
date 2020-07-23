@@ -242,6 +242,9 @@ async function saveFile(file, entity, attachRepo) {
   .getRepository(Attachment)
   .save(attachment);
 
+  // so the binary data isn't returned in the request response
+  delete attachment.blob;
+
   let entityAttachment = {}
   entityAttachment.entity = entity
   entityAttachment.attachment = attachment
@@ -279,8 +282,8 @@ router.put(
     console.log('Field', name, field)
   })
   .on('file', async (name, file) => {
-    await saveFile(file, entity, attachRepo);
-    res.end();
+    const dbFile = await saveFile(file, entity, attachRepo);
+    res.json(dbFile);
   })
   .on('aborted', () => {
     console.error('Request aborted by the user')

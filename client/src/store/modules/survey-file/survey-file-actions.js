@@ -9,24 +9,29 @@ export const getFiles = async ({ commit, state }) => {
   const urlEndpoint = `/api/attachment/${state.attachesTo}/${state.attachesToId}`;
 
   commit(mutTypes.SET_REQUEST_ERROR, undefined);
-  try {
+
+  return new Promise((resolve, reject) => {
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+    Vue.axios.get(urlEndpoint, state.surveyRequest)
+    .then((response) => {
+      let files = response.data;
+      files.forEach((f) => {
+        f.progress = 0;
+        f.downloading = false;
+      });
 
-    const response = await Vue.axios.get(urlEndpoint);
-    let files = response.data;
-    files.forEach((f) => {
-      f.progress = 0;
-      f.downloading = false;
+      commit(mutTypes.UPDATE, {path: 'files', value: files});
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+      resolve(files);
+    })
+    .catch((error) => {
+      commit(mutTypes.SET_REQUEST_ERROR, error);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+      reject(error);
     });
-
-    commit(mutTypes.UPDATE, {path: 'files', value: files});
-    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
-  } catch (error) {
-    commit(mutTypes.SET_REQUEST_ERROR, error);
-    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
-    console.log(error);
-  }
+  });
 }
+
 
 export const downloadFile = async ({commit, state}, payload) => {
   const urlEndpoint =

@@ -34,6 +34,7 @@ const surveyRequestRelations = [
   "organisations",
   "purposes",
   "dataCaptureTypes",
+  "businessCaseAttachment",
 ];
 
 var router = express.Router();

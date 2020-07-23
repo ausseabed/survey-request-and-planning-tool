@@ -61,6 +61,62 @@
           </div>
         </q-field>
 
+        <div class="row q-col-gutter-sm">
+          <div class="column col-auto">
+            <q-uploader
+              v-if="!readonly"
+              label="Additional Business Case File for Upload"
+              ref="uploader"
+              auto-upload
+              flat
+              bordered
+              :multiple="false"
+              :auto-expand="true"
+              :url="`/api/attachment/survey-request/${surveyRequest.id}/upload/`"
+              method="PUT"
+              @failed="uploadFailed"
+              @uploaded="uploaded"/>
+          </div>
+          <div class="column col" v-if="surveyRequest.businessCaseAttachment">
+            <div class="hint-text"> Attached file </div>
+            <div class="row justify-between">
+              <div class="column">
+                <div>{{surveyRequest.businessCaseAttachment.fileName}}</div>
+                <div class="q-pl-lg hint-text">
+                  Uploaded {{surveyRequest.businessCaseAttachment.created | dateValue | moment("from", "now")}}
+                </div>
+              </div>
+              <div class="row">
+                <q-btn
+                  type="a"
+                  size="md" flat dense
+                  :href="`/api/attachment/survey-request/${surveyRequest.id}/download/${surveyRequest.businessCaseAttachment.fileName}`"
+                  icon="cloud_download">
+                  <q-tooltip>
+                    Download attachment
+                  </q-tooltip>
+                </q-btn>
+                <q-btn
+                  v-if="!readonly"
+                  size="md" flat dense
+                  icon="delete"
+                  @click="deleteFile()"
+                >
+                  <q-tooltip>
+                    Delete attachment
+                  </q-tooltip>
+                </q-btn>
+              </div>
+
+            </div>
+
+          </div>
+          <div v-else>
+            <div class="hint-text"> No file attached </div>
+          </div>
+        </div>
+
+
       </q-card-section>
 
       <q-card-section class="column q-gutter-y-sm">
@@ -128,6 +184,7 @@ import { permission } from './../mixins/permission';
 
 import * as organisationMutTypes from '../../store/modules/organisation/organisation-mutation-types';
 import * as srMutTypes from '../../store/modules/survey-request/survey-request-mutation-types';
+import * as sfMutTypes from '../../store/modules/survey-file/survey-file-mutation-types';
 
 export default Vue.extend({
   mixins: [errorHandler, permission],
@@ -142,6 +199,9 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapActions('surveyFile', {
+      'deleteSurveyFile': 'deleteFile',
+    }),
     ...mapMutations('surveyRequest', {
       'setDirty': srMutTypes.SET_DIRTY,
       'update': srMutTypes.UPDATE,
@@ -150,6 +210,10 @@ export default Vue.extend({
     }),
     ...mapMutations('organisation', {
       'setOrganisationFilter': organisationMutTypes.SET_FILTER,
+    }),
+    ...mapMutations('surveyFile', {
+      'setFileAttachesTo': sfMutTypes.SET_ATTACHES_TO,
+      'setFileAttachesToId': sfMutTypes.SET_ATTACHES_TO_ID,
     }),
 
     fetchData() {
@@ -166,6 +230,41 @@ export default Vue.extend({
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
+    },
+
+    uploadFailed (file, xhr) {
+      this.notifyError(`Failed to upload`);
+      console.log(file);
+      console.log(xhr);
+    },
+
+    uploaded(info) {
+      const attachmentDetails = JSON.parse(info.xhr.response);
+
+      this.update({
+        path:'surveyRequest.businessCaseAttachment',
+        value:attachmentDetails.attachment}
+      );
+      this.notifySuccess("Uploaded file successfully");
+    },
+
+
+    deleteFile() {
+      this.$q.dialog({
+        title: 'Delete attachment',
+        message:
+          `File attachment ${this.surveyRequest.businessCaseAttachment.fileName} will be permanently deleted`,
+        ok: 'Delete',
+        cancel: 'Cancel'
+      }).onOk(() => {
+        this.setFileAttachesTo('survey-request');
+        this.setFileAttachesToId(this.surveyRequest.id);
+        this.deleteSurveyFile({id: this.surveyRequest.businessCaseAttachment.id});
+        this.update({
+          path:'surveyRequest.businessCaseAttachment',
+          value:undefined
+        });
+      });
     },
   },
 

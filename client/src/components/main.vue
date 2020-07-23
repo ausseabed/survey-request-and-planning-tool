@@ -140,7 +140,7 @@
                     :key="surveyRequest.id"
                     @mouseover="mouseoverListItem(surveyRequest, true)"
                     class="column"
-                    :to="`/survey-request/${surveyRequest.id}/summary`"
+                    :to="{name: 'survey-request-registration', params: {id: surveyRequest.id}}"
                     :manual-focus="true"
                     :focused="activeId == surveyRequest.id"
                     >
@@ -156,14 +156,9 @@
                     <q-item-section>
                       <transition-expand>
                         <div v-if="activeId == surveyRequest.id">
-                          <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
-                            :to="`/survey-request/${surveyRequest.id}/summary`">
-                          </q-btn>
-                          <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
-                            :to="`/survey-request/${surveyRequest.id}/attachments`">
-                          </q-btn>
-                          <q-btn outline size="sm" color="primary" label="Plans" class="q-mt-xs q-ml-xs"
-                            :to="`/survey-request/${surveyRequest.id}/survey-plans`">
+                          <q-btn outline size="sm" color="primary" label="Registration"  class="q-mt-xs q-ml-xs"
+                            :to="{name: 'survey-request-registration', params: {id: surveyRequest.id}}"
+                          >
                           </q-btn>
                         </div>
                       </transition-expand>
@@ -200,7 +195,7 @@
             >
               <div class="col-auto q-py-sm q-mx-md app-big-heading">Submissions</div>
               <q-separator style="height:1px;"/>
-              
+
               <q-scroll-area class="col">
                 <q-list no-border padding
                   @mouseleave.native="mouseleaveListItem"

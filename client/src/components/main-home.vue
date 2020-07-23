@@ -84,7 +84,7 @@
               class="self-center full-width"
               flat label="Add a HIPP Request"
               icon="add"
-              :to="'/survey-request/new'">
+              :to="'/survey-request/new/registration'">
               <q-tooltip>
                 Create a new HIPP Request
               </q-tooltip>

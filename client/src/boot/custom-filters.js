@@ -22,4 +22,15 @@ export default ({ Vue }) => {
     let formattedString = date.formatDate(ts, 'MMMM D, YYYY');
     return formattedString;
   })
+
+  Vue.filter('dateValue', function (value) {
+    // converts the millisecond based timestamp into human readable form
+    if (_.isNil(value)) {
+      return 'n/a'
+    }
+
+    const ts = new Date();
+    ts.setTime(value);
+    return ts;
+  })
 }

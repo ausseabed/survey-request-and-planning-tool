@@ -1,14 +1,9 @@
 <template>
-  <form-wrapper
-    :validator="$v"
-    class="scroll"
-  >
-    <div class="column q-pa-md q-gutter-y-sm">
+  <div class="column q-pa-md q-gutter-y-sm">
 
-      <div>areas of interest</div>
+    <div>areas of interest</div>
 
-    </div>
-  </form-wrapper>
+  </div>
 </template>
 
 <script>

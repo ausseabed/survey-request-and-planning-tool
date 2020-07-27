@@ -364,7 +364,7 @@ export default Vue.extend({
     },
 
     stateUpdated(state) {
-      if (this.id !== 'new') {
+      if (this.id === 'new') {
         this.stateReadonly = false;
         this.published = false;
       } else if (_.isNil(state)) {
@@ -391,12 +391,13 @@ export default Vue.extend({
 
       this.$v.$touch();
 
-      let srComp = this.$refs.srComp;
-      if (this.$route.name !== 'survey-request-submission' || !srComp.isValid()) {
-        this.notifyError('Please confirm acknowledgement on confirmation tab');
+      if (this.$v.$error) {
+        this.notifyError('Please review field errors on highlighted tabs');
         return false;
+      } else {
+        return true;
       }
-      return true;
+
     },
 
     tabValid(tabName) {

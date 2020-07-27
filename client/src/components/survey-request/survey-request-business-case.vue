@@ -44,6 +44,7 @@
         class="row items-center content-center"
         >
         <q-checkbox
+          :disable="readonly"
           class="col-auto"
           label="Additional Funding Available?"
           left-label
@@ -128,6 +129,7 @@
         :readonly="readonly"
         >
         <q-checkbox
+          :disable="readonly"
           class="col-auto"
           label="Please select if data subject to a moratorium period?"
           left-label

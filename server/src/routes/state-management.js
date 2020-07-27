@@ -63,11 +63,11 @@ const planStates = {
 
 // state machine definition for the HIPP Request
 const requestStates = {
-  draft: {
+  drafted: {
     on: {
-      SAVE: {target: 'draft'},
-      FINALISE: {
-        target: 'finalised',
+      SAVE: {target: 'drafted'},
+      SUBMIT: {
+        target: 'submitted',
         actions: ['incrementVersion'],
         cond: {
           type: 'userPermissionGuard',
@@ -79,52 +79,51 @@ const requestStates = {
     entry: ['makeWriteable'],
     exit: ['logAction'],
   },
-  finalised: {
+  submitted: {
     on: {
       REVISE: {
-        target: 'underReview',
+        target: 'returnedForReview',
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canReviseAllRecordState',
           custodianPermission: 'canReviseCustodianRecordState',
         },
       },
-      ACCEPT: {
-        target:'accepted',
+      ARCHIVE: {
+        target:'archived',
         cond: {
           type: 'userPermissionGuard',
-          allPermission: 'canAcceptAllRecordState',
-          custodianPermission: 'canAcceptCustodianRecordState',
+          allPermission: 'canReviseAllRecordState',
+          custodianPermission: 'canReviseCustodianRecordState',
         },
       }
     },
     entry: ['makeReadonly'],
     exit: ['logAction'],
   },
-  underReview: {
+  archived: {
     on: {
-      SAVE: 'underReview',
-      FINALISE: {
-        target:'finalised',
+      RESTORE: {
+        target:'drafted',
         cond: {
           type: 'userPermissionGuard',
-          allPermission: 'canFinaliseAllRecordState',
-          custodianPermission: 'canFinaliseCustodianRecordState',
+          allPermission: 'canReviseAllRecordState',
+          custodianPermission: 'canReviseCustodianRecordState',
         },
-        actions: ['incrementVersion'],
+        actions: [],
       }
     },
-    entry: ['makeWriteable'],
+    entry: ['makeReadonly'],
     exit: ['logAction'],
   },
-  accepted: {
+  returnedForReview: {
     on: {
-      REMOVE: {
-        target: 'finalised',
+      REVISE: {
+        target: 'drafted',
         cond: {
           type: 'userPermissionGuard',
-          allPermission: 'canRemoveAllRecordState',
-          custodianPermission: 'canRemoveCustodianRecordState',
+          allPermission: 'canReviseAllRecordState',
+          custodianPermission: 'canReviseCustodianRecordState',
         },
       }
     },
@@ -233,7 +232,7 @@ export const buildRecordMachine =
   let defaultStateName = undefined
   if (entityType == SurveyRequest) {
     states = requestStates
-    defaultStateName = 'draft'
+    defaultStateName = 'drafted'
   } else if (entityType == SurveyPlan) {
     states = planStates
     defaultStateName = 'draft'

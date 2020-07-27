@@ -52,6 +52,11 @@ export function recordStateDetails(recordState) {
       label: "Under Review",
       icon: 'restore_page',
     }
+  } else if (recordState == 'returnedForReview') {
+    return {
+      label: "Returned for Review",
+      icon: 'restore_page',
+    }
   } else if (recordState == 'accepted') {
     return {
       label: "Accepted",

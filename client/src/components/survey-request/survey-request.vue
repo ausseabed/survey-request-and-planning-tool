@@ -35,72 +35,41 @@
           class="col-auto bg-secondary text-white"
         >
           <q-route-tab
-            name="survey-request-registration"
-            :to="{name: 'survey-request-registration', params: {id: $route.params.id}}"
+            v-for="tabInfo in tabs"
+            :key="tabInfo.name"
+            :name="tabInfo.name"
+            :to="{name: tabInfo.route, params: {id: $route.params.id}}"
             exact
             class="q-tab__label"
           >
-            Request <br/> Registration
-          </q-route-tab>
-          <q-route-tab
-            name="survey-request-business-case"
-            :to="{name: 'survey-request-business-case', params: {id: $route.params.id}}"
-            exact
-            class="q-tab__label"
-          >
-            Request <br/> Business Case
-          </q-route-tab>
-          <q-route-tab
-            name="survey-request-areas-of-interest"
-            :to="{name: 'survey-request-areas-of-interest', params: {id: $route.params.id}}"
-            exact
-            class="q-tab__label"
-          >
-            Area(s) <br/> of Interest
-          </q-route-tab>
-          <q-route-tab
-            name="survey-request-sub-area-details"
-            :to="{name: 'survey-request-sub-area-details', params: {id: $route.params.id}}"
-            exact
-            class="q-tab__label"
-          >
-            Sub-Area <br/> details
-          </q-route-tab>
-          <q-route-tab
-            name="survey-request-sub-area-data-types"
-            label=""
-            :to="{name: 'survey-request-sub-area-data-types', params: {id: $route.params.id}}"
-            exact
-            class="q-tab__label"
-          >
-            Sub-Area <br/> data types
-          </q-route-tab>
-          <q-route-tab
-            name="survey-request-summary"
-            :to="{name: 'survey-request-summary', params: {id: $route.params.id}}"
-            exact
-            class="q-tab__label"
-          >
-            Request <br/> Summary
-          </q-route-tab>
-          <q-route-tab
-            name="survey-request-submission-details"
-            label=""
-            :to="{name: 'survey-request-submission-details', params: {id: $route.params.id}}"
-            exact
-            class="q-tab__label"
-          >
-            Request <br/> Submission details
+            <div v-bind:class="{ 'red-tab-label': !tabValid(tabInfo.name) , 'rounded-borders': !tabValid(tabInfo.name) }">
+              <template>
+                {{ tabInfo.label[0] }}
+              </template>
+              <template>
+              </br> {{ tabInfo.label[1] }}
+              </template>
+            </div>
           </q-route-tab>
         </q-tabs>
         <div class="col-auto fat-spacer bg-secondary"></div>
-        <router-view
-          class="col"
-          ref="srComp"
-          :readonly="stateReadonly"
-          :validationIntent="validationIntent"
+        <form-wrapper
+          :validator="$v"
+          class="column col"
         >
-        </router-view>
+          <q-scroll-area class="col column">
+            <router-view
+              class="col"
+              ref="srComp"
+              :readonly="stateReadonly"
+              :validationIntent="validationIntent"
+              :validator = "$v"
+            >
+            </router-view>
+          </q-scroll-area>
+        </form-wrapper>
+
+
       </q-card>
       <div class="row justify-between col-auto">
         <div class="row justify-start q-gutter-sm">
@@ -143,22 +112,131 @@ import Vue from 'vue';
 const _ = require('lodash');
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 
+import { required, minLength, email } from 'vuelidate/lib/validators';
 import { errorHandler } from './../mixins/error-handling';
 import { permission } from './../mixins/permission';
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard';
 
 import * as srMutTypes from '../../store/modules/survey-request/survey-request-mutation-types';
 
-// what the route gets changed to after save and continue is clicked
-const NEXT_ROUTES = {
-  'survey-request-registration': 'survey-request-business-case',
-  'survey-request-business-case': 'survey-request-areas-of-interest',
-  'survey-request-areas-of-interest': 'survey-request-sub-area-details',
-  'survey-request-sub-area-details': 'survey-request-sub-area-data-types',
-  'survey-request-sub-area-data-types': 'survey-request-summary',
-  'survey-request-summary': 'survey-request-submission-details',
-  'survey-request-submission-details': 'survey-request-submission-details',
-};
+
+const TABS_INFO = [
+  {
+    name: 'survey-request-registration',
+    label: ['Request', 'Registration'],
+    route: 'survey-request-registration',
+    nextRoute: 'survey-request-business-case',
+    saveValidations: {
+      surveyRequest: {
+        name: { required },
+        custodians: { required, minLength:minLength(1) },
+        organisation: { },
+        organisations: { },
+        requestorName: { },
+        requestorPosition: { },
+        pointOfContactEmail: { email },
+      }
+    },
+    submitValidations: {
+      surveyRequest: {
+        name: { required },
+        custodians: { required, minLength:minLength(1) },
+        organisation: { required },
+        organisations: { required, minLength:minLength(1) },
+        requestorName: { required },
+        requestorPosition: { required },
+        pointOfContactEmail: { required, email },
+      }
+    },
+  },
+  {
+    name: 'survey-request-business-case',
+    label: ['Request', 'Business Case'],
+    route: 'survey-request-business-case',
+    nextRoute: 'survey-request-areas-of-interest',
+    saveValidations: {
+      surveyRequest: {
+        businessJustification: { },
+        costBenefit: { },
+        additionalFundingAvailable: { },
+        hasMoratorium: { },
+        moratoriumDate: {},
+        moratoriumComment: {},
+      }
+    },
+    submitValidations: {
+      surveyRequest: {
+        businessJustification: { required },
+        costBenefit: { required },
+        additionalFundingAvailable: { },
+        hasMoratorium: { },
+        moratoriumDate: { },
+        moratoriumComment: { },
+      }
+    },
+  },
+  {
+    name: 'survey-request-areas-of-interest',
+    label: ['Area(s)', 'of Interest'],
+    route: 'survey-request-areas-of-interest',
+    nextRoute: 'survey-request-sub-area-details',
+    saveValidations: {
+
+    },
+    submitValidations: {
+
+    },
+  },
+  {
+    name: 'survey-request-sub-area-details',
+    label: ['Sub-Area', 'details'],
+    route: 'survey-request-sub-area-details',
+    nextRoute: 'survey-request-sub-area-data-types',
+    saveValidations: {
+
+    },
+    submitValidations: {
+
+    },
+  },
+  {
+    name: 'survey-request-sub-area-data-types',
+    label: ['Sub-Area', 'data types'],
+    route: 'survey-request-sub-area-data-types',
+    nextRoute: 'survey-request-summary',
+    saveValidations: {
+
+    },
+    submitValidations: {
+
+    },
+  },
+  {
+    name: 'survey-request-summary',
+    label: ['Request', 'Summary'],
+    route: 'survey-request-summary',
+    nextRoute: 'survey-request-submission-details',
+    saveValidations: {
+
+    },
+    submitValidations: {
+
+    },
+  },
+  {
+    name: 'survey-request-submission-details',
+    label: ['Request', 'Submission details'],
+    route: 'survey-request-submission-details',
+    nextRoute: 'survey-request-submission-details',
+    saveValidations: {
+
+    },
+    submitValidations: {
+
+    },
+  }
+]
+
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
@@ -217,6 +295,9 @@ export default Vue.extend({
     },
 
     saveClicked(moveNext, changeRoute) {
+      this.validationIntent = 'save';
+      this.$v.$touch();
+
       let srComp = this.$refs.srComp;
       if (!srComp.isValid()) {
         this.notifyError('Please review fields');
@@ -241,7 +322,9 @@ export default Vue.extend({
         let routeName = this.$route.name;
         routeName = _.isNil(routeName) ? 'survey-request-registration' : routeName;
         if (moveNext) {
-          routeName = NEXT_ROUTES[routeName];
+          routeName = this.tabs.find((tabInfo) => {
+            return routeName == tabInfo.route;
+          }).nextRoute;
         }
         if (isNew || moveNext) {
           // don't push a new route that could be the same as the current
@@ -301,15 +384,47 @@ export default Vue.extend({
     },
 
     recordStateValidationCallback(evt) {
-      if (evt != 'PUBLISH') {
+      if (evt != 'SUBMIT') {
         return true;
       }
+      this.validationIntent = 'submit';
+
+      this.$v.$touch();
+
       let srComp = this.$refs.srComp;
       if (this.$route.name !== 'survey-request-submission' || !srComp.isValid()) {
         this.notifyError('Please confirm acknowledgement on confirmation tab');
         return false;
       }
       return true;
+    },
+
+    tabValid(tabName) {
+      const tabInfo = this.tabs.find((tabInfo) => {
+        return tabName == tabInfo.name;
+      });
+      let tabValidations = undefined;
+      if (this.validationIntent == 'save') {
+        tabValidations = tabInfo.saveValidations;
+      } else if (this.validationIntent == 'submit') {
+        tabValidations = tabInfo.submitValidations;
+      }
+      if (!tabValidations.surveyRequest) {
+        return true;
+      }
+
+      const validationNames = Object.keys(tabValidations.surveyRequest)
+      let allValid = validationNames
+        .map((validationName) => {
+          const val = _.get(this.$v.surveyRequest, validationName);
+          if (!val) {
+            return true;
+          }
+          return !val.$error;
+        })
+        .reduce((sum, next) => sum && next, true);
+
+      return allValid;
     },
   },
 
@@ -321,7 +436,10 @@ export default Vue.extend({
     },
     'id': function (newId, oldId) {
       this.updateActiveSurveyrequest();
-    }
+    },
+    'tab': function (newTab, oldTab) {
+      console.log(`new tab = ${newTab}    old = ${oldTab}`);
+    },
   },
 
   computed: {
@@ -333,19 +451,28 @@ export default Vue.extend({
       'surveyQualityRequirements',
       'geojsonAttributeMap',
     ]),
-    $v() {
-      // the dirty route guard wants to call the validation method (touch) to
-      // determin if the form is in a valid state. However in this case the
-      // form lives in the current child component. This exists solely for the
-      // DRG to hook onto.
-      let srComp = this.$refs.srComp;
-      return srComp.$v;
+  },
+
+  validations() {
+    if (this.validationIntent == 'save') {
+      let routeName = this.$route.name;
+      const tabInfo = this.tabs.find((tabInfo) => {
+        return routeName == tabInfo.route;
+      });
+      return tabInfo.saveValidations;
+    } else if (this.validationIntent == 'submit') {
+      const allValidations = {}
+      this.tabs.forEach((tab, i) => {
+        _.merge(allValidations, tab.submitValidations)
+      });
+      return allValidations;
     }
   },
 
   data() {
     return {
       tab: undefined,
+      tabs: TABS_INFO,
       id: undefined,
       stateReadonly: true,
       published: true,
@@ -358,5 +485,12 @@ export default Vue.extend({
 
 
 <style scoped lang="stylus">
+
+.red-tab-label {
+  color: rgba(255, 0, 0, 1.0);
+  padding-left: 4px;
+  padding-right: 4px;
+  background-color: rgba(255,210,210,1.0);
+}
 
 </style>

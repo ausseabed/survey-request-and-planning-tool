@@ -178,7 +178,7 @@
                 <div class="row justify-end q-py-sm q-mx-md">
                   <q-btn flat label="add request"
                     align="right" icon="add"
-                    :to="'/survey-request/new'">
+                    :to="'/survey-request/new/registration'">
                     <q-tooltip>
                       Create new HIPP request
                     </q-tooltip>

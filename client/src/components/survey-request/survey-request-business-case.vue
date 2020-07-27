@@ -1,176 +1,172 @@
 <template>
-  <form-wrapper
-    :validator="$v"
-    class="scroll"
-  >
-    <div class="column">
 
-      <q-card-section class="column q-gutter-y-sm">
-        <div>
-          The HIPP Request process requires entry of a business justification
-          and cost benefit analysis directly. If you would also like to
-          provide a more detailed response to these questions, please upload an
-          attached file for our consideration.
+  <div class="column">
+
+    <q-card-section class="column q-gutter-y-sm">
+      <div>
+        The HIPP Request process requires entry of a business justification
+        and cost benefit analysis directly. If you would also like to
+        provide a more detailed response to these questions, please upload an
+        attached file for our consideration.
+      </div>
+
+      <form-field-validated-input
+        name="surveyRequest.businessJustification"
+        attribute="Survey Justification"
+        label="Survey Justification"
+        :value="surveyRequest.businessJustification"
+        @input="update({path:'surveyRequest.businessJustification', value:$event})"
+        @blur="$v.surveyRequest.businessJustification.$touch"
+        type="textarea"
+        autogrow
+        :readonly="readonly"
+        outlined
+        >
+      </form-field-validated-input>
+
+      <form-field-validated-input
+        name="surveyRequest.costBenefit"
+        attribute="Cost Benefit"
+        label="Cost Benefit"
+        :value="surveyRequest.costBenefit"
+        @input="update({path:'surveyRequest.costBenefit', value:$event})"
+        @blur="$v.surveyRequest.costBenefit.$touch"
+        type="textarea"
+        autogrow
+        :readonly="readonly"
+        outlined
+        >
+      </form-field-validated-input>
+
+      <q-field
+        borderless
+        :readonly="readonly"
+        class="row items-center content-center"
+        >
+        <q-checkbox
+          class="col-auto"
+          label="Additional Funding Available?"
+          left-label
+          :value="surveyRequest.additionalFundingAvailable"
+          @input="update({path:'surveyRequest.additionalFundingAvailable', value:$event})"
+          />
+        <div class="col row items-center q-pl-md">
+          <div class="hint-text">
+            Please select if partial funding has been identified and the
+            request represents an opportunity to partner with the HIPP.
+          </div>
         </div>
+      </q-field>
 
-        <form-field-validated-input
-          name="surveyRequest.businessJustification"
-          attribute="Survey Justification"
-          label="Survey Justification"
-          :value="surveyRequest.businessJustification"
-          @input="update({path:'surveyRequest.businessJustification', value:$event})"
-          @blur="$v.surveyRequest.businessJustification.$touch"
-          type="textarea"
-          autogrow
-          :readonly="readonly"
-          outlined
-          >
-        </form-field-validated-input>
-
-        <form-field-validated-input
-          name="surveyRequest.costBenefit"
-          attribute="Cost Benefit"
-          label="Cost Benefit"
-          :value="surveyRequest.costBenefit"
-          @input="update({path:'surveyRequest.costBenefit', value:$event})"
-          @blur="$v.surveyRequest.costBenefit.$touch"
-          type="textarea"
-          autogrow
-          :readonly="readonly"
-          outlined
-          >
-        </form-field-validated-input>
-
-        <q-field
-          borderless
-          :readonly="readonly"
-          class="row items-center content-center"
-          >
-          <q-checkbox
-            class="col-auto"
-            label="Additional Funding Available?"
-            left-label
-            :value="surveyRequest.additionalFundingAvailable"
-            @input="update({path:'surveyRequest.additionalFundingAvailable', value:$event})"
-            />
-          <div class="col row items-center q-pl-md">
-            <div class="hint-text">
-              Please select if partial funding has been identified and the
-              request represents an opportunity to partner with the HIPP.
+      <div class="row q-col-gutter-sm">
+        <div class="column col-auto">
+          <q-uploader
+            v-if="!readonly"
+            label="Additional Business Case File for Upload"
+            ref="uploader"
+            auto-upload
+            flat
+            bordered
+            :multiple="false"
+            :auto-expand="true"
+            :url="`/api/attachment/survey-request/${surveyRequest.id}/upload/`"
+            method="PUT"
+            @failed="uploadFailed"
+            @uploaded="uploaded"/>
+        </div>
+        <div class="column col" v-if="surveyRequest.businessCaseAttachment">
+          <div class="hint-text"> Attached file </div>
+          <div class="row justify-between">
+            <div class="column">
+              <div>{{surveyRequest.businessCaseAttachment.fileName}}</div>
+              <div class="q-pl-lg hint-text">
+                Uploaded {{surveyRequest.businessCaseAttachment.created | dateValue | moment("from", "now")}}
+              </div>
             </div>
-          </div>
-        </q-field>
-
-        <div class="row q-col-gutter-sm">
-          <div class="column col-auto">
-            <q-uploader
-              v-if="!readonly"
-              label="Additional Business Case File for Upload"
-              ref="uploader"
-              auto-upload
-              flat
-              bordered
-              :multiple="false"
-              :auto-expand="true"
-              :url="`/api/attachment/survey-request/${surveyRequest.id}/upload/`"
-              method="PUT"
-              @failed="uploadFailed"
-              @uploaded="uploaded"/>
-          </div>
-          <div class="column col" v-if="surveyRequest.businessCaseAttachment">
-            <div class="hint-text"> Attached file </div>
-            <div class="row justify-between">
-              <div class="column">
-                <div>{{surveyRequest.businessCaseAttachment.fileName}}</div>
-                <div class="q-pl-lg hint-text">
-                  Uploaded {{surveyRequest.businessCaseAttachment.created | dateValue | moment("from", "now")}}
-                </div>
-              </div>
-              <div class="row">
-                <q-btn
-                  type="a"
-                  size="md" flat dense
-                  :href="`/api/attachment/survey-request/${surveyRequest.id}/download/${surveyRequest.businessCaseAttachment.fileName}`"
-                  icon="cloud_download">
-                  <q-tooltip>
-                    Download attachment
-                  </q-tooltip>
-                </q-btn>
-                <q-btn
-                  v-if="!readonly"
-                  size="md" flat dense
-                  icon="delete"
-                  @click="deleteFile()"
-                >
-                  <q-tooltip>
-                    Delete attachment
-                  </q-tooltip>
-                </q-btn>
-              </div>
-
+            <div class="row">
+              <q-btn
+                type="a"
+                size="md" flat dense
+                :href="`/api/attachment/survey-request/${surveyRequest.id}/download/${surveyRequest.businessCaseAttachment.fileName}`"
+                icon="cloud_download">
+                <q-tooltip>
+                  Download attachment
+                </q-tooltip>
+              </q-btn>
+              <q-btn
+                v-if="!readonly"
+                size="md" flat dense
+                icon="delete"
+                @click="deleteFile()"
+              >
+                <q-tooltip>
+                  Delete attachment
+                </q-tooltip>
+              </q-btn>
             </div>
 
           </div>
-          <div v-else>
-            <div class="hint-text"> No file attached </div>
-          </div>
+
         </div>
-
-
-      </q-card-section>
-
-      <q-card-section class="column q-gutter-y-sm">
-        <div class="red-text">
-          The Australian hydrographic Office will release data publicly
-          unless there is an appropriate reason as to why a moratorium on data
-          release should be applied.
+        <div v-else>
+          <div class="hint-text"> No file attached </div>
         </div>
+      </div>
 
-        <q-field
-          borderless
-          :readonly="readonly"
-          >
-          <q-checkbox
-            class="col-auto"
-            label="Please select if data subject to a moratorium period?"
-            left-label
-            :value="surveyRequest.hasMoratorium"
-            @input="update({path:'surveyRequest.hasMoratorium', value:$event})"
-            />
-        </q-field>
 
-        <form-field-validated-date
-          v-if="surveyRequest.hasMoratorium"
-          name="surveyRequest.moratoriumDate"
-          attribute="Date moratorium ends"
-          label="Moratorium End Date"
-          :date="surveyRequest.moratoriumDate"
-          @updated-date="update({path:'surveyRequest.moratoriumDate', value:$event})"
-          @blur="$v.surveyRequest.moratoriumDate.$touch"
-          :readonly="readonly"
-          hint="(YYYY/MM/DD)"
-          >
-        </form-field-validated-date>
+    </q-card-section>
 
-        <form-field-validated-input
-          v-if="surveyRequest.hasMoratorium"
-          name="surveyRequest.moratoriumComment"
-          attribute="Moratorium Justification"
-          label="Moratorium Justification"
-          :value="surveyRequest.moratoriumComment"
-          @input="update({path:'surveyRequest.moratoriumComment', value:$event})"
-          @blur="$v.surveyRequest.moratoriumComment.$touch"
-          type="textarea"
-          autogrow
-          :readonly="readonly"
-          outlined
-          >
-        </form-field-validated-input>
+    <q-card-section class="column q-gutter-y-sm">
+      <div class="red-text">
+        The Australian hydrographic Office will release data publicly
+        unless there is an appropriate reason as to why a moratorium on data
+        release should be applied.
+      </div>
 
-      </q-card-section>
+      <q-field
+        borderless
+        :readonly="readonly"
+        >
+        <q-checkbox
+          class="col-auto"
+          label="Please select if data subject to a moratorium period?"
+          left-label
+          :value="surveyRequest.hasMoratorium"
+          @input="update({path:'surveyRequest.hasMoratorium', value:$event})"
+          />
+      </q-field>
 
-    </div>
-  </form-wrapper>
+      <form-field-validated-date
+        v-if="surveyRequest.hasMoratorium"
+        name="surveyRequest.moratoriumDate"
+        attribute="Date moratorium ends"
+        label="Moratorium End Date"
+        :date="surveyRequest.moratoriumDate"
+        @updated-date="update({path:'surveyRequest.moratoriumDate', value:$event})"
+        @blur="$v.surveyRequest.moratoriumDate.$touch"
+        :readonly="readonly"
+        hint="(YYYY/MM/DD)"
+        >
+      </form-field-validated-date>
+
+      <form-field-validated-input
+        v-if="surveyRequest.hasMoratorium"
+        name="surveyRequest.moratoriumComment"
+        attribute="Moratorium Justification"
+        label="Moratorium Justification"
+        :value="surveyRequest.moratoriumComment"
+        @input="update({path:'surveyRequest.moratoriumComment', value:$event})"
+        @blur="$v.surveyRequest.moratoriumComment.$touch"
+        type="textarea"
+        autogrow
+        :readonly="readonly"
+        outlined
+        >
+      </form-field-validated-input>
+
+    </q-card-section>
+
+  </div>
 </template>
 
 <script>
@@ -192,6 +188,7 @@ export default Vue.extend({
   props: [
     'readonly',
     'validationIntent',
+    'validator'
   ],
 
   mounted() {
@@ -272,37 +269,14 @@ export default Vue.extend({
 
   },
 
-  validations() {
-    if (this.validationIntent == 'save') {
-      return {
-        surveyRequest: {
-          businessJustification: { },
-          costBenefit: { },
-          additionalFundingAvailable: { },
-          hasMoratorium: { },
-          moratoriumDate: {},
-          moratoriumComment: {},
-        }
-      }
-    } else if (this.validationIntent == 'final') {
-      return {
-        surveyRequest: {
-          businessJustification: { required },
-          costBenefit: { required },
-          additionalFundingAvailable: { },
-          hasMoratorium: { },
-          moratoriumDate: { },
-          moratoriumComment: { },
-        }
-      }
-    }
-  },
-
   computed: {
     ...mapGetters('surveyRequest',{
       'surveyRequest': 'surveyRequest',
       'dirty': 'dirty'
     }),
+    $v () {
+      return this.validator;
+    }
   },
 
   data() {

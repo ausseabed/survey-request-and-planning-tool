@@ -12,6 +12,7 @@ import { SurveyRequest, SURVEY_QUALITY_REQUIREMENTS,
   from '../../lib/entity/survey-request';
 import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { updateRecordState } from '../state-management';
+import { RecordState } from '../../lib/entity/record-state';
 
 // mapping of the entity attribute names to what they should be in the
 // exported geojson
@@ -315,19 +316,32 @@ router.post(
     surveyRequest.areaOfInterest = geojson
   }
 
-  // TODO fix below, would be nice to add record state when creating new record
-  // But it is not required.
-  // const changeDesc = _.isNil(req.body.id) ? "New record" : "Updated record"
-  // const recordState = await updateRecordState(
-  //   SurveyRequest, req.body.id, req.user, 'request', changeDesc);
-  //
-  // surveyRequest.recordState = recordState
-
   surveyRequest.deleted = false
 
-  surveyRequest = await getConnection()
-  .getRepository(SurveyRequest)
-  .save(surveyRequest)
+  await getConnection().transaction(async transactionalEntityManager => {
+    const isNew = _.isNil(surveyRequest.id);
+    if (isNew) {
+      surveyRequest = await getConnection()
+      .getRepository(SurveyRequest)
+      .save(surveyRequest)
+
+      const message = `Created new Survey Request`;
+      const recordState = new RecordState();
+      recordState.changeDescription = message;
+      recordState.state = 'drafted';
+      recordState.previous = undefined;
+      recordState.user = req.user;
+      recordState.created = Date.now();
+      recordState.recordType = 'survey request';
+      recordState.version = 1;
+      recordState.recordId = surveyRequest.id;
+      surveyRequest.recordState = recordState;
+    }
+
+    surveyRequest = await getConnection()
+    .getRepository(SurveyRequest)
+    .save(surveyRequest)
+  });
 
   // because the saved version of custodian doesn't include all attribs
   surveyRequest = await getConnection()

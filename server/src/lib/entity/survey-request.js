@@ -7,9 +7,11 @@ import { Attachment } from './attachment';
 import { Custodian } from './custodian';
 import { DataCaptureType } from './data-capture-type';
 import { SurveyRequestAttachment } from './survey-request-attachment';
+import { SurveyRequestAoi } from './survey-request-aoi';
 import { Organisation } from './organisation';
 import { RecordState } from './record-state';
 import { RequestPurpose } from './request-purpose';
+import { Task } from './task';
 
 export const SURVEY_QUALITY_REQUIREMENTS = [
   {
@@ -309,6 +311,30 @@ export class SurveyRequest {
       default: false,
   })
   public = false;
+
+  @OneToMany(
+    type => SurveyRequestAoi,
+    surveyRequestAoi => surveyRequestAoi.surveyRequest,
+    { cascade: true }
+  )
+  aois;
+
+  @Column({
+      type:"uuid",
+      name:"upload_task_id",
+      nullable: true,
+  })
+  uploadTaskId;
+
+  @OneToOne(
+    type => Task,
+    {
+      cascade: true,
+      nullable: true
+    }
+  )
+  @JoinColumn({ name: "upload_task_id" })
+  uploadTask;
 
   @Column({
       type:"bool",

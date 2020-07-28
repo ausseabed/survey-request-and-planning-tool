@@ -36,6 +36,7 @@ const surveyRequestRelations = [
   "purposes",
   "dataCaptureTypes",
   "businessCaseAttachment",
+  "aois",
 ];
 
 var router = express.Router();
@@ -317,6 +318,12 @@ router.post(
   }
 
   surveyRequest.deleted = false
+
+  // Remove the link between the upload processing task and this SR. It is
+  // assumed that by saving the user has reviewed all processed survey requests
+  // and included/edited those they want linked to this sr (and have been
+  // included in the post body).
+  surveyRequest.uploadTaskId = null;
 
   await getConnection().transaction(async transactionalEntityManager => {
     const isNew = _.isNil(surveyRequest.id);

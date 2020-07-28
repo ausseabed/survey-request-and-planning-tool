@@ -77,33 +77,6 @@ export const saveSurveyRequest = async ({ commit, state }) => {
 }
 
 
-export const updatePlanLinks = async ({ commit, state }, payload) => {
-  const urlEndpoint = `/api/survey-request/${payload.id}/linked-plans`;
-  const linkedPlans = payload.linkedPlans
-
-  commit(mutTypes.SET_REQUEST_ERROR, undefined);
-
-  return new Promise((resolve, reject) => {
-    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
-    Vue.axios.post(urlEndpoint, linkedPlans)
-    .then((response) => {
-      const surveyRequest = response.data;
-
-      // commit(mutTypes.UPDATE, {path: 'surveyRequest', value: surveyRequest});
-      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
-      commit(mutTypes.SET_DIRTY, false);
-      resolve(response.data);
-    })
-    .catch((error) => {
-      commit(mutTypes.SET_REQUEST_ERROR, error);
-      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
-      reject(error);
-    });
-  });
-
-}
-
-
 export const deleteSurveyRequest = ({ commit, state }, payload) => {
   var url_endpoint = '/api/survey-request/' + payload.id;
   return new Promise((resolve, reject) => {

@@ -56,7 +56,40 @@ const mutations = {
 
   [types.UPDATE_HIPP_REQUEST] (state, { path, value }) {
     state.dirty = true;
-    Vue.set(state.surveyRequest, path, value)
+    _.set(state.surveyRequest, path, value)
+  },
+
+  [types.ADD_AOIS] (state, aois) {
+    const pas = state.surveyRequest.aois;
+    const filteredPas = aois.filter((pa) => {
+      var index = pas.findIndex(paInner => paInner.id == pa.id);
+      return index == -1;
+    });
+    if (filteredPas.length == 0) {
+      return;
+    }
+    state.dirty = true;
+    state.surveyRequest.aois.unshift(...filteredPas);
+  },
+
+  [types.REMOVE_AOI] (state, aoiId) {
+    const pas = state.surveyRequest.aois;
+    var index = pas.findIndex(pa => pa.id == aoiId);
+    if (index == -1) {
+      return;
+    }
+    state.dirty = true;
+    // use unshift, new PAs go at start of list
+    state.surveyRequest.aois.splice(index, 1);
+  },
+
+  [types.SET_RESTORE_SURVEY_REQUEST] (state, surveyRequest) {
+    state.restoreSurveyRequest = _.cloneDeep(surveyRequest);
+  },
+
+  [types.RESTORE] (state) {
+    state.surveyRequest = _.cloneDeep(state.restoreSurveyRequest);
+    state.dirty = false;
   },
 }
 

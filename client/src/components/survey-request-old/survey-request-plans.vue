@@ -231,18 +231,18 @@ export default Vue.extend({
     async clickPlan(plan) {
       if (this.linking) {
         if (this.isLinked(plan)) {
-          const updateResp = await this.updatePlanLink(plan, false)
-          this.linkedPlans = this.linkedPlans.filter((p) => {
-            return p.id != plan.id
-          })
-          this.notifySuccess("Plan successfully unlinked")
+          // const updateResp = await this.updatePlanLink(plan, false)
+          // this.linkedPlans = this.linkedPlans.filter((p) => {
+          //   return p.id != plan.id
+          // })
+          // this.notifySuccess("Plan successfully unlinked")
         } else {
-          const updateResp = await this.updatePlanLink(plan, true)
-          this.linkedPlans.push(plan);
-          const msg = updateResp.reLinkedCount != 0 ?
-            "Plan relinked" :
-            "Plan linked"
-          this.notifySuccess(msg)
+          // const updateResp = await this.updatePlanLink(plan, true)
+          // this.linkedPlans.push(plan);
+          // const msg = updateResp.reLinkedCount != 0 ?
+          //   "Plan relinked" :
+          //   "Plan linked"
+          // this.notifySuccess(msg)
         }
       } else {
         const planUrl = `/survey-plan/${plan.id}/summary/`
@@ -258,7 +258,7 @@ export default Vue.extend({
           linked: linked,
         }],
       }
-      return this.updatePlanLinks(payload)
+      return undefined; //this.updatePlanLinks(payload)
     },
 
     isLinked(plan) {

@@ -7,36 +7,8 @@ import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
-    surveyRequest: {
-      id: undefined,
-      name: undefined,
-      public: false,
-      custodians: [],
-      organisations: [],
-      requestorName: undefined,
-      requestorPosition: undefined,
-      pointOfContactEmail: undefined,
-      pointOfContactPhone: undefined,
-      requestDateStart: undefined,
-      requestDateEnd: undefined,
-      area: undefined,
-      businessJustification: undefined,
-      areaOfInterest: undefined,
-      comments: undefined,
-      hasMoratorium: false,
-      moratoriumDate: undefined,
-      moratoriumComment: undefined,
-      purposes: undefined,
-      dataCaptureTypes: [],
-
-      surveyQualityRequirements: undefined,
-      surveyQualityRequirementsComments: undefined,
-      chartProductQualityImpactRequirements: undefined,
-      chartProductQualityImpactRequirementsComments: undefined,
-
-      riskData: {},
-      riskIssues: undefined,
-    },
+    surveyRequest: {},
+    restoreSurveyRequest: {},
     surveyRequests:[],  // list of hipp requests, minimal detail
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,

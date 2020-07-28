@@ -20,6 +20,7 @@ var statusRoutes = require('./api/status');
 var surveyApplicationRoutes = require('./api/survey-application');
 var surveyPlanRoutes = require('./api/survey-plan');
 var surveyRequestRoutes = require('./api/survey-request');
+var surveyRequestAoiRoutes = require('./api/survey-request-aoi');
 var taskRoutes = require('./api/task');
 var techSpecRoutes = require('./api/tech-spec');
 var userRoutes = require('./api/user');
@@ -49,6 +50,7 @@ router
 .use('/survey-application', surveyApplicationRoutes)
 .use('/survey-plan', surveyPlanRoutes)
 .use('/survey-request', surveyRequestRoutes)
+.use('/survey-request-aoi', surveyRequestAoiRoutes)
 .use('/task', taskRoutes)
 .use('/tech-spec', techSpecRoutes)
 .use('/user', userRoutes)

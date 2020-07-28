@@ -1,14 +1,12 @@
 <template>
-  <form-wrapper
-    :validator="$v"
-    class="scroll"
-  >
-    <div class="column q-pa-md q-gutter-y-sm">
+  <div class="column">
+
+    <q-card-section class="column q-gutter-y-sm">
 
       <div>sub area details</div>
 
-    </div>
-  </form-wrapper>
+    </q-card-section>
+  </div>
 </template>
 
 <script>
@@ -28,6 +26,8 @@ export default Vue.extend({
 
   props: [
     'readonly',
+    'validationIntent',
+    'validator'
   ],
 
   mounted() {
@@ -41,19 +41,9 @@ export default Vue.extend({
       'resetSurveyRequest': srMutTypes.RESET_HIPP_REQUEST,
       'updateSurveyRequest': srMutTypes.UPDATE_HIPP_REQUEST,
     }),
-    ...mapMutations('organisation', {
-      'setOrganisationFilter': organisationMutTypes.SET_FILTER,
-    }),
 
     fetchData() {
 
-    },
-
-    filterOrganisationFunction(val, update, abort) {
-      this.setOrganisationFilter(val);
-      this.getOrganisations().then((orgs) => {
-        update();
-      });
     },
 
     isValid() {
@@ -66,18 +56,14 @@ export default Vue.extend({
 
   },
 
-  validations() {
-    return {};
-  },
-
   computed: {
     ...mapGetters('surveyRequest',{
       surveyRequest: 'surveyRequest',
       dirty: 'dirty',
     }),
-    ...mapGetters('organisation', {
-      organisationsList: 'organisations',
-    }),
+    $v () {
+      return this.validator;
+    }
   },
 
   data() {

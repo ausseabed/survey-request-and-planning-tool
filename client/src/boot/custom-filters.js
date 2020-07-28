@@ -33,4 +33,8 @@ export default ({ Vue }) => {
     ts.setTime(value);
     return ts;
   })
+
+  Vue.filter('formatNumber', function (value) {
+    return new Intl.NumberFormat(undefined,{maximumFractionDigits:1}).format(value)
+  })
 }

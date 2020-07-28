@@ -293,11 +293,6 @@ export default Vue.extend({
 
 <style scoped lang="stylus">
 
-.hint-text {
-  color: rgba(0, 0, 0, 0.54);
-  font-size: 12px;
-}
-
 .red-text {
   color: rgba(255, 0, 0, 1.0);
   font-weight: bold;

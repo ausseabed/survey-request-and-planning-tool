@@ -38,6 +38,19 @@
           >
         </form-field-validated-input>
 
+        <q-field
+          stack-label borderless
+          label="Calculated Area"
+          class="bg-grey-2 q-px-sm rounded-borders"
+          inline
+        >
+          <template v-slot:control>
+            <div class="self-center full-width no-outline">
+              {{aoi.calculatedArea / (1000*1000) | formatNumber}} km²
+            </div>
+          </template>
+        </q-field>
+
       </div>
     </q-card-section>
 
@@ -114,5 +127,9 @@ export default Vue.extend({
 
 
 <style scoped lang="stylus">
+
+.calculated-area-div {
+  border: 1px solid light-grey;
+}
 
 </style>

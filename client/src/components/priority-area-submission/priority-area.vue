@@ -37,6 +37,7 @@
             type="text"
             @blur="$v.priorityArea.name.$touch"
             :readonly="readonly"
+            outlined
             >
           </form-field-validated-input>
 

@@ -181,7 +181,13 @@ const TABS_INFO = [
     route: 'survey-request-areas-of-interest',
     nextRoute: 'survey-request-sub-area-details',
     saveValidations: {
-      surveyRequest: {}
+      surveyRequest: {
+        aois: {
+          $each: {
+            name: { required }
+          }
+        }
+      }
     },
     submitValidations: {
       surveyRequest: {}

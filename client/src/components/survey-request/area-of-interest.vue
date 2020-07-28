@@ -1,51 +1,47 @@
 <template>
-  <form-wrapper
-    :validator="$v"
-  >
-    <q-card flat bordered class="full-width" >
-      <q-card-section class="row q-col-gutter-md">
-        <div class="column col-auto justify-between">
-          <div class="column q-gutter-sm">
-            <q-badge v-if="aoi.isNew" color="yellow-6" text-color="black">
-              New Area of Interest
-            </q-badge>
-            <q-img
-              class="rounded-borders"
-              style="width:250px; max-height:250px; "
-              :src="`api/survey-request-aoi/${aoi.id}/thumbnail`"
-              :ratio="1"
-              contain
-            />
-          </div>
-          <q-btn
-            v-if="!readonly"
-            flat
-            label="Remove"
-            icon="delete"
-            @click="deleteClicked"
+
+  <q-card flat bordered class="full-width" >
+    <q-card-section class="row q-col-gutter-md">
+      <div class="column col-auto justify-between">
+        <div class="column q-gutter-sm">
+          <q-badge v-if="aoi.isNew" color="yellow-6" text-color="black">
+            New Area of Interest
+          </q-badge>
+          <q-img
+            class="rounded-borders"
+            style="width:250px; max-height:250px; "
+            :src="`api/survey-request-aoi/${aoi.id}/thumbnail`"
+            :ratio="1"
+            contain
           />
         </div>
+        <q-btn
+          v-if="!readonly"
+          flat
+          label="Remove"
+          icon="delete"
+          @click="deleteClicked"
+        />
+      </div>
 
-        <div class="col column q-gutter-xs">
+      <div class="col column q-gutter-xs">
+        <form-field-validated-input
+          :name="`surveyRequest.aois.$each.${index}.name`"
+          label="Area Name"
+          attribute="Area Name"
+          :value="aoi.name"
+          @input="valueChanged('name', $event)"
+          type="text"
+          @blur="onNameBlur"
+          :readonly="readonly"
+          outlined
+          >
+        </form-field-validated-input>
 
-          <form-field-validated-input
-            name="aoi.name"
-            label="Area Name"
-            attribute="Area Name"
-            :value="aoi.name"
-            @input="valueChanged('name', $event)"
-            type="text"
-            @blur="$v.aoi.name.$touch"
-            :readonly="readonly"
-            outlined
-            >
-          </form-field-validated-input>
+      </div>
+    </q-card-section>
 
-        </div>
-      </q-card-section>
-
-    </q-card>
-  </form-wrapper>
+  </q-card>
 
 </template>
 
@@ -65,12 +61,18 @@ export default Vue.extend({
 
   },
 
-  props: {
-    aoi: {},
-    readonly: true
-  },
+  props: [
+    'aoi',
+    'index',
+    'readonly',
+    'validator'
+  ],
 
   methods: {
+    onNameBlur() {
+      this.$v.surveyRequest.aois.$each[this.index].name.$touch();
+    },
+
     valueChanged(propertyName, value) {
       this.$emit(
         'aoi-value-changed',
@@ -89,26 +91,16 @@ export default Vue.extend({
         }
       );
     },
-    isValid() {
-      this.$v.$touch();
-      return !this.$v.$error;
-    },
   },
 
   watch: {
 
   },
 
-  validations() {
-    return {
-      aoi: {
-        name: { required },
-      }
-    }
-  },
-
   computed: {
-
+    $v () {
+      return this.validator;
+    },
   },
 
   data() {

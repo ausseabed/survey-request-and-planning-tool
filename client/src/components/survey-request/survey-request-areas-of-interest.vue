@@ -122,12 +122,14 @@
         <div v-else class="column q-gutter-y-sm">
           <area-of-interest
             ref="aoiComponents"
-            v-for="aoi of surveyRequest.aois"
+            v-for="(aoi, index) of surveyRequest.aois"
             :key="aoi.id"
             :aoi="aoi"
+            :index="index"
             @aoi-value-changed="aoiValueChanged"
             @aoi-deleted="aoiDeleted"
             :readonly="readonly"
+            :validator="validator"
           >
           </area-of-interest>
         </div>
@@ -186,12 +188,8 @@ export default Vue.extend({
     },
 
     isValid() {
-      return true;
-      // let allValid = this.$refs.aoiComponents
-      //   .map((comp) => comp.isValid())
-      //   .reduce((sum, next) => sum && next, true);
-      //
-      // return allValid;
+      this.$v.$touch();
+      return !this.$v.$error;
     },
 
     aoiValueChanged({aoi, propertyName, value}) {

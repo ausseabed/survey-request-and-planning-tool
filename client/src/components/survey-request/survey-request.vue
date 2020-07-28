@@ -181,10 +181,10 @@ const TABS_INFO = [
     route: 'survey-request-areas-of-interest',
     nextRoute: 'survey-request-sub-area-details',
     saveValidations: {
-
+      surveyRequest: {}
     },
     submitValidations: {
-
+      surveyRequest: {}
     },
   },
   {
@@ -193,10 +193,10 @@ const TABS_INFO = [
     route: 'survey-request-sub-area-details',
     nextRoute: 'survey-request-sub-area-data-types',
     saveValidations: {
-
+      surveyRequest: {}
     },
     submitValidations: {
-
+      surveyRequest: {}
     },
   },
   {
@@ -205,10 +205,10 @@ const TABS_INFO = [
     route: 'survey-request-sub-area-data-types',
     nextRoute: 'survey-request-summary',
     saveValidations: {
-
+      surveyRequest: {}
     },
     submitValidations: {
-
+      surveyRequest: {}
     },
   },
   {
@@ -217,10 +217,10 @@ const TABS_INFO = [
     route: 'survey-request-summary',
     nextRoute: 'survey-request-submission-details',
     saveValidations: {
-
+      surveyRequest: {}
     },
     submitValidations: {
-
+      surveyRequest: {}
     },
   },
   {
@@ -229,10 +229,10 @@ const TABS_INFO = [
     route: 'survey-request-submission-details',
     nextRoute: 'survey-request-submission-details',
     saveValidations: {
-
+      surveyRequest: {}
     },
     submitValidations: {
-
+      surveyRequest: {}
     },
   }
 ]

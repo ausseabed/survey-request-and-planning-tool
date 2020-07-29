@@ -1,5 +1,6 @@
 ﻿'use strict';
 import express from 'express' //var express = require('express');
+const nocache = require('nocache');
 var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -22,11 +23,7 @@ var app = express();
 // don't cache the API requests
 // All requests made to node are api requests. Some could be cached, but it's
 // probably better this way.
-app.use((req, res, next) => {
-    res.setHeader('Expires', '-1');
-    res.setHeader('Cache-Control', 'no-cache');
-    next();
-});
+app.use(nocache());
 
 app.use(cors())
 

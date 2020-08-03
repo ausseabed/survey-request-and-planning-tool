@@ -13,7 +13,7 @@ import { SurveyRequestAoi } from '../../lib/entity/survey-request-aoi';
 import { SurveyRequest } from '../../lib/entity/survey-request';
 import { Task } from '../../lib/entity/task';
 
-import { SURVEY_REQUEST_AOI_SURVEY_STANDARD,
+import { SURVEY_REQUEST_AOI_SURVEY_STANDARD, SURVEY_REQUEST_AOI_DATA_TYPES,
   SURVEY_REQUEST_AOI_OVERALL_RISK, SURVEY_REQUEST_AOI_PREFERRED_TIMEFRAME}
   from '../../lib/entity/survey-request-aoi';
 
@@ -29,6 +29,10 @@ router.get('/preferred-timeframe', async function (req, res) {
 
 router.get('/overall-risk', async function (req, res) {
   return res.json(SURVEY_REQUEST_AOI_OVERALL_RISK);
+});
+
+router.get('/data-type', async function (req, res) {
+  return res.json(SURVEY_REQUEST_AOI_DATA_TYPES);
 });
 
 router.get(

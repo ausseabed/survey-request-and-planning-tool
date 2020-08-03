@@ -38,6 +38,10 @@ const mutations = {
     state.dirty = dirty;
   },
 
+  [types.SET_DATA_TYPES] (state, reqs) {
+    state.dataTypes = reqs
+  },
+
   [types.SET_SURVEY_STANDARDS] (state, reqs) {
     state.surveyStandards = reqs
   },

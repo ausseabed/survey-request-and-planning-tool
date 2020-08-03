@@ -55,6 +55,19 @@
           :readonly="readonly"
         />
 
+        <form-field-validated-select-multiple-check
+          class="bg-grey-2 q-pa-sm rounded-borders"
+          inline
+          multiple
+          :name="`surveyRequest.aois.$each.${index}.dataTypesToCapture`"
+          label="Data Types to Capture"
+          :value="aoi.dataTypesToCapture"
+          @input="valueChanged('dataTypesToCapture',$event)"
+          :options="dataTypes"
+          @blur="`$v.surveyRequest.aois.$each.${index}.dataTypesToCapture.$touch`"
+          :readonly="readonly"
+        />
+
       </div>
     </q-card-section>
 
@@ -116,6 +129,7 @@ export default Vue.extend({
 
   computed: {
     ...mapState('surveyRequest',[
+      'dataTypes',
       'surveyStandards',
       'overallRisks',
       'preferredTimeframes',

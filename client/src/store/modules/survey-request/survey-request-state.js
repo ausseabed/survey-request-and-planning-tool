@@ -18,6 +18,7 @@ function initialState() {
     overallRisks: [],
     preferredTimeframes: [],
     geojsonAttributeMap: [],
+    dataTypes: [],
   }
 }
 

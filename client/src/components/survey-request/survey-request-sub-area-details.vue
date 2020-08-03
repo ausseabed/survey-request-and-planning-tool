@@ -93,6 +93,7 @@ export default Vue.extend({
       'getSurveyStandard',
       'getPreferredTimeframe',
       'getOverallRisk',
+      'getDataTypes',
     ]),
     ...mapMutations('surveyRequest', {
       'setDirty': srMutTypes.SET_DIRTY,
@@ -105,6 +106,7 @@ export default Vue.extend({
       this.getSurveyStandard();
       this.getPreferredTimeframe();
       this.getOverallRisk();
+      this.getDataTypes();
     },
 
     isValid() {

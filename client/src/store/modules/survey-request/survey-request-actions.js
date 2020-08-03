@@ -92,6 +92,15 @@ export const deleteSurveyRequest = ({ commit, state }, payload) => {
 }
 
 
+export const getDataTypes = ({ commit, state }) => {
+  var url_endpoint = '/api/survey-request-aoi/data-type';
+
+  return Vue.axios.get(url_endpoint)
+  .then((response) => {
+    commit(mutTypes.SET_DATA_TYPES, response.data);
+  })
+}
+
 export const getSurveyStandard = ({ commit, state }) => {
   var url_endpoint = '/api/survey-request-aoi/survey-standard';
 

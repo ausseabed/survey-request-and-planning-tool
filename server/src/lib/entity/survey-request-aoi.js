@@ -26,6 +26,17 @@ export const SURVEY_REQUEST_AOI_PREFERRED_TIMEFRAME = [
   'Long-term (5-10 years)',
 ];
 
+export const SURVEY_REQUEST_AOI_DATA_TYPES = [
+  'Bathymetry',
+  'Imagery',
+  'Seabed Backscatter',
+  'Seabed Sample',
+  'Sound Velocity Profile (SVP)',
+  'Sub-bottom Profile',
+  'Water Column Backscatter (multibeam only)',
+];
+
+
 @Entity()
 export class SurveyRequestAoi {
 
@@ -55,6 +66,13 @@ export class SurveyRequestAoi {
       nullable: true,
   })
   preferredTimeframe;
+
+  @Column({
+    type:"simple-array",
+    nullable: true,
+    default: ""
+  })
+  dataTypesToCapture = [];
 
   @Column("geometry", {
     name: "geom",

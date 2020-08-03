@@ -213,6 +213,7 @@ const TABS_INFO = [
             surveyStandard: { required },
             overallRisk: { required },
             preferredTimeframe: { required },
+            dataTypesToCapture: {required },
           }
         }
       }

@@ -88,7 +88,7 @@
                             <q-btn outline size="sm" color="primary" label="Summary"  class="q-mt-xs q-ml-xs"
                               :to="`/survey-plan/${surveyPlan.id}/summary`">
                             </q-btn>
-                            <q-btn outline size="sm" color="primary" label="Specs" class="q-mt-xs q-ml-xs"
+                            <!-- <q-btn outline size="sm" color="primary" label="Specs" class="q-mt-xs q-ml-xs"
                               :to="`/survey-plan/${surveyPlan.id}/specifications`">
                             </q-btn>
                             <q-btn outline size="sm" color="primary" label="Deliverables" class="q-mt-xs q-ml-xs"
@@ -96,7 +96,7 @@
                             </q-btn>
                             <q-btn outline size="sm" color="primary" icon="attach_file" class="q-mt-xs q-ml-xs"
                               :to="`/survey-plan/${surveyPlan.id}/attachments`">
-                            </q-btn>
+                            </q-btn> -->
                           </div>
                         </transition-expand>
 

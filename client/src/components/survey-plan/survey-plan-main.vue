@@ -20,7 +20,7 @@
               :to="`/survey-plan/${id}/summary`"
               exact
             />
-            <q-route-tab
+            <!-- <q-route-tab
               icon="assignment"
               label="Specifications"
               :to="`/survey-plan/${id}/specifications`"
@@ -38,7 +38,7 @@
               :to="`/survey-plan/${id}/attachments`"
               exact
               v-if="canViewAttachments"
-            />
+            /> -->
           </q-tabs>
 
           <q-tabs class="lt-sm" align="right">

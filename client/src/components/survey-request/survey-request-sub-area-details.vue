@@ -3,7 +3,55 @@
 
     <q-card-section class="column q-gutter-y-sm">
 
-      <div>sub area details</div>
+      <div>
+        Please provide further information relating to all sub-areas that
+        have been uploaded.
+      </div>
+
+      <form-field-validated-input
+        name="surveyRequest.riskIssues"
+        attribute="Risk Issues"
+        label="Risk Issues/Caveats or Constraints"
+        :value="surveyRequest.riskIssues"
+        @input="update({path:'surveyRequest.riskIssues', value:$event})"
+        @blur="$v.surveyRequest.riskIssues.$touch"
+        type="textarea"
+        autogrow
+        :readonly="readonly"
+        outlined
+        >
+      </form-field-validated-input>
+
+      <form-field-validated-input
+        name="surveyRequest.furtherInformation"
+        attribute="Further Information"
+        label="Further Information"
+        :value="surveyRequest.furtherInformation"
+        @input="update({path:'surveyRequest.furtherInformation', value:$event})"
+        @blur="$v.surveyRequest.furtherInformation.$touch"
+        type="textarea"
+        autogrow
+        :readonly="readonly"
+        outlined
+        >
+      </form-field-validated-input>
+
+      <q-card-section>
+        <div class="column q-gutter-y-xs">
+          <div class="main-page-sub-title">Area(s) of Interest</div>
+          <area-of-interest-detail
+            ref="aoiComponents"
+            v-for="(aoi, index) of surveyRequest.aois"
+            :key="aoi.id"
+            :aoi="aoi"
+            :index="index"
+            :readonly="readonly"
+            :validator="validator"
+            @aoi-value-changed="aoiValueChanged"
+          >
+        </area-of-interest-detail>
+        </div>
+      </q-card-section>
 
     </q-card-section>
   </div>
@@ -21,6 +69,8 @@ import { permission } from './../mixins/permission';
 import * as organisationMutTypes from '../../store/modules/organisation/organisation-mutation-types';
 import * as srMutTypes from '../../store/modules/survey-request/survey-request-mutation-types';
 
+import AreaOfInterestDetail from './area-of-interest-detail';
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
@@ -30,11 +80,20 @@ export default Vue.extend({
     'validator'
   ],
 
+  components: {
+    'area-of-interest-detail': AreaOfInterestDetail,
+  },
+
   mounted() {
     this.fetchData();
   },
 
   methods: {
+    ...mapActions('surveyRequest', [
+      'getSurveyStandard',
+      'getPreferredTimeframe',
+      'getOverallRisk',
+    ]),
     ...mapMutations('surveyRequest', {
       'setDirty': srMutTypes.SET_DIRTY,
       'update': srMutTypes.UPDATE,
@@ -43,12 +102,20 @@ export default Vue.extend({
     }),
 
     fetchData() {
-
+      this.getSurveyStandard();
+      this.getPreferredTimeframe();
+      this.getOverallRisk();
     },
 
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
+    },
+
+    aoiValueChanged({aoi, propertyName, value}) {
+      const aoiIndex = this.surveyRequest.aois.indexOf(aoi);
+      const path = `aois[${aoiIndex}].${propertyName}`;
+      this.updateSurveyRequest({path:path, value:value});
     },
   },
 

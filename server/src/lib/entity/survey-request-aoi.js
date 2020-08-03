@@ -4,6 +4,27 @@ import { getConnection } from 'typeorm';
 
 import { SurveyRequest } from './survey-request';
 
+export const SURVEY_REQUEST_AOI_SURVEY_STANDARD = [
+  'HIPP - Precise',
+  'IHO - Special',
+  'IHO - 1a',
+  'IHO - 1b',
+  'HIPP - 2',
+  'IHO - 2',
+  'HIPP - Passage',
+];
+
+export const SURVEY_REQUEST_AOI_OVERALL_RISK = [
+  'High',
+  'Moderate',
+  'Low',
+];
+
+export const SURVEY_REQUEST_AOI_PREFERRED_TIMEFRAME = [
+  'Urgent (1-2 years)',
+  'Mid-term (2-5 years)',
+  'Long-term (5-10 years)',
+];
 
 @Entity()
 export class SurveyRequestAoi {
@@ -16,6 +37,24 @@ export class SurveyRequestAoi {
       nullable: true,
   })
   name;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  surveyStandard;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  overallRisk;
+
+  @Column({
+      type:"varchar",
+      nullable: true,
+  })
+  preferredTimeframe;
 
   @Column("geometry", {
     name: "geom",

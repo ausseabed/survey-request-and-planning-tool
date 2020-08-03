@@ -7,9 +7,7 @@ import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
   permitCustodianBasedPermission } from '../utils';
-import { SurveyRequest, SURVEY_QUALITY_REQUIREMENTS,
-  CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS, RISK_MATRIX}
-  from '../../lib/entity/survey-request';
+import { SurveyRequest } from '../../lib/entity/survey-request';
 import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { updateRecordState } from '../state-management';
 import { RecordState } from '../../lib/entity/record-state';
@@ -40,21 +38,6 @@ const surveyRequestRelations = [
 ];
 
 var router = express.Router();
-
-router.get('/survey-quality-requirements', async function (req, res) {
-  return res.json(SURVEY_QUALITY_REQUIREMENTS);
-});
-
-router.get(
-  '/chart-product-quality-impact-requirements',
-  async function (req, res) {
-
-  return res.json(CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS);
-});
-
-router.get('/risk-matrix', async function (req, res) {
-  return res.json(RISK_MATRIX);
-});
 
 router.get('/geojson-attribute-map', async function (req, res) {
   return res.json(ENTITY_GEOJSON_MAP);

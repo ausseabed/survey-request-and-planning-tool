@@ -14,9 +14,9 @@ function initialState() {
     requestError: undefined,
     dirty: false,
 
-    riskMatrix: {},
-    chartProductQualityImpactRequirements: [],
-    surveyQualityRequirements: [],
+    surveyStandards: [],
+    overallRisks: [],
+    preferredTimeframes: [],
     geojsonAttributeMap: [],
   }
 }

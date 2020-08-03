@@ -92,12 +92,33 @@ export const deleteSurveyRequest = ({ commit, state }, payload) => {
 }
 
 
-export const getRiskMatrix = ({ commit, state }) => {
-  var url_endpoint = '/api/survey-request/risk-matrix';
+export const getSurveyStandard = ({ commit, state }) => {
+  var url_endpoint = '/api/survey-request-aoi/survey-standard';
 
   return Vue.axios.get(url_endpoint)
   .then((response) => {
-    commit(mutTypes.SET_RISK_MATRIX, response.data);
+    commit(mutTypes.SET_SURVEY_STANDARDS, response.data);
+  })
+}
+
+export const getPreferredTimeframe = ({ commit, state }) => {
+  var url_endpoint = '/api/survey-request-aoi/preferred-timeframe';
+
+  return Vue.axios.get(url_endpoint)
+  .then((response) => {
+    commit(
+      mutTypes.SET_PREFERRED_TIMEFRAMES,
+      response.data
+    );
+  })
+}
+
+export const getOverallRisk = ({ commit, state }) => {
+  var url_endpoint = '/api/survey-request-aoi/overall-risk';
+
+  return Vue.axios.get(url_endpoint)
+  .then((response) => {
+    commit(mutTypes.SET_OVERALL_RISKS, response.data);
   })
 }
 
@@ -107,26 +128,5 @@ export const getGeojsonAttributeMap = ({ commit, state }) => {
   return Vue.axios.get(url_endpoint)
   .then((response) => {
     commit(mutTypes.SET_GEOJSON_ATTRIBUTE_MAP, response.data);
-  })
-}
-
-export const getChartProductQualityImpactRequirements = ({ commit, state }) => {
-  var url_endpoint = '/api/survey-request/chart-product-quality-impact-requirements';
-
-  return Vue.axios.get(url_endpoint)
-  .then((response) => {
-    commit(
-      mutTypes.SET_CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS,
-      response.data
-    );
-  })
-}
-
-export const getSurveyQualityRequirements = ({ commit, state }) => {
-  var url_endpoint = '/api/survey-request/survey-quality-requirements';
-
-  return Vue.axios.get(url_endpoint)
-  .then((response) => {
-    commit(mutTypes.SET_SURVEY_QUALITY_REQUIREMENTS, response.data);
   })
 }

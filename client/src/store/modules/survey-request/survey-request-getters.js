@@ -21,15 +21,3 @@ export const dirty = state => {
 export const riskMatrix = state => {
   return state.riskMatrix;
 }
-
-export const chartProductQualityImpactRequirements = state => {
-  return state.chartProductQualityImpactRequirements;
-}
-
-export const surveyQualityRequirements = state => {
-  return state.surveyQualityRequirements;
-}
-
-export const geojsonAttributeMap = state => {
-  return state.geojsonAttributeMap;
-}

@@ -38,21 +38,23 @@ const mutations = {
     state.dirty = dirty;
   },
 
-  [types.SET_CHART_PRODUCT_QUALITY_IMPACT_REQUIREMENTS] (state, reqs) {
-    state.chartProductQualityImpactRequirements = reqs
+  [types.SET_SURVEY_STANDARDS] (state, reqs) {
+    state.surveyStandards = reqs
   },
 
-  [types.SET_SURVEY_QUALITY_REQUIREMENTS] (state, reqs) {
-    state.surveyQualityRequirements = reqs
+  [types.SET_OVERALL_RISKS] (state, reqs) {
+    state.overallRisks = reqs
+  },
+
+  [types.SET_PREFERRED_TIMEFRAMES] (state, pt) {
+    state.preferredTimeframes = pt
   },
 
   [types.SET_GEOJSON_ATTRIBUTE_MAP] (state, map) {
     state.geojsonAttributeMap = map
   },
 
-  [types.SET_RISK_MATRIX] (state, riskMatrix) {
-    state.riskMatrix = riskMatrix
-  },
+
 
   [types.UPDATE_HIPP_REQUEST] (state, { path, value }) {
     state.dirty = true;

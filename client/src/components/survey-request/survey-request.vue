@@ -199,10 +199,23 @@ const TABS_INFO = [
     route: 'survey-request-sub-area-details',
     nextRoute: 'survey-request-sub-area-data-types',
     saveValidations: {
-      surveyRequest: {}
+      surveyRequest: {
+        furtherInformation: {},
+        riskIssues: {},
+      }
     },
     submitValidations: {
-      surveyRequest: {}
+      surveyRequest: {
+        furtherInformation: {},
+        riskIssues: {},
+        aois: {
+          $each: {
+            surveyStandard: { required },
+            overallRisk: { required },
+            preferredTimeframe: { required },
+          }
+        }
+      }
     },
   },
   {
@@ -256,9 +269,6 @@ export default Vue.extend({
     ...mapActions('surveyRequest', [
       'getSurveyRequest',
       'saveSurveyRequest',
-      'getRiskMatrix',
-      'getChartProductQualityImpactRequirements',
-      'getSurveyQualityRequirements',
       'deleteSurveyRequest',
       'getGeojsonAttributeMap',
     ]),
@@ -453,10 +463,6 @@ export default Vue.extend({
     ...mapGetters('surveyRequest', [
       'surveyRequest',
       'dirty',
-      'riskMatrix',
-      'chartProductQualityImpactRequirements',
-      'surveyQualityRequirements',
-      'geojsonAttributeMap',
     ]),
   },
 

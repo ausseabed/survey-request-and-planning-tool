@@ -14,6 +14,7 @@ export const getSurveyRequest = async ({ commit, state }, payload) => {
     const surveyRequest = response.data;
     surveyRequest.areaOfInterest = Object.freeze(surveyRequest.areaOfInterest);
     commit(mutTypes.UPDATE, {path: 'surveyRequest', value: surveyRequest});
+    commit(mutTypes.SET_RESTORE_SURVEY_REQUEST, surveyRequest);
     commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
     commit(mutTypes.SET_DIRTY, false);
   } catch (error) {
@@ -63,6 +64,7 @@ export const saveSurveyRequest = async ({ commit, state }) => {
       const surveyRequest = response.data;
 
       commit(mutTypes.UPDATE, {path: 'surveyRequest', value: surveyRequest});
+      commit(mutTypes.SET_RESTORE_SURVEY_REQUEST, surveyRequest);
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
       commit(mutTypes.SET_DIRTY, false);
       resolve(response.data);

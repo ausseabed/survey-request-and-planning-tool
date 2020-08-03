@@ -291,7 +291,12 @@ export default Vue.extend({
       'update': srMutTypes.UPDATE,
       'resetSurveyRequest': srMutTypes.RESET_HIPP_REQUEST,
       'updateSurveyRequest': srMutTypes.UPDATE_HIPP_REQUEST,
+      'restoreState': srMutTypes.RESTORE,
     }),
+
+    restore() {
+      this.restoreState();
+    },
 
     beforeDirtyCheck() {
       this.validationIntent = 'save';

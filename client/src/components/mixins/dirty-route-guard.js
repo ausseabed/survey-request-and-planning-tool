@@ -18,6 +18,14 @@ const DirtyRouteGuard = {
         return;
       }
 
+      // callback type function that can be implemented to do something
+      // before running the dirt check.
+      // This was added to support changing the validation context (from
+      // submit to save for survey requests)
+      if (_.isFunction(this.beforeDirtyCheck)) {
+        this.beforeDirtyCheck();
+      }
+
       // show dialog, wait for user to select what action
       const confirmResult = await this.$refs.confirmNavigation.pop();
       if (confirmResult == 'save') {

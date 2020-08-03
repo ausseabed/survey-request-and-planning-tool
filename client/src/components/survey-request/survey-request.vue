@@ -293,6 +293,10 @@ export default Vue.extend({
       'updateSurveyRequest': srMutTypes.UPDATE_HIPP_REQUEST,
     }),
 
+    beforeDirtyCheck() {
+      this.validationIntent = 'save';
+    },
+
     publishClicked() {
       let srComp = this.$refs.srComp;
       if (!srComp.isValid()) {

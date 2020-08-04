@@ -8,12 +8,14 @@
     :error-message="firstErrorMessage"
     filled
     :value="formattedDate"
+    :readonly="readonly"
     @input="setFormattedDate($event)"
   >
     <template v-slot:append>
       <q-icon name="event" class="cursor-pointer">
         <q-popup-proxy>
           <q-date
+            :readonly="readonly"
             :value="formattedDate"
             @input="setFormattedDate($event)"
             @blur="doBlur()"
@@ -38,6 +40,7 @@ export default Vue.extend({
   inheritAttrs: false,
   props: [
     'date',
+    'readonly',
   ],
   mounted() {
     this.tmpDateEntry = undefined;

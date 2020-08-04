@@ -297,8 +297,18 @@ const doProcessing = async (taskId) => {
       .png()
       .toBuffer();
 
+    const result = await connection.getRepository(SurveyRequestAoi)
+      .createQueryBuilder('survey_request_aoi')
+      .select([`ST_Area(geom::geography)`])
+      .where('survey_request_aoi.id = :id', { id: paId })
+      .getRawOne();
+    const calculatedArea = result.st_area;
+
     await connection.getRepository(SurveyRequestAoi)
-      .update(paId, {thumbnail: mergedImg});
+      .update(paId, {
+        thumbnail: mergedImg,
+        calculatedArea: calculatedArea
+      });
 
     count += 1;
     let percentageComplete = Math.round(

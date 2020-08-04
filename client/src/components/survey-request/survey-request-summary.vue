@@ -25,7 +25,7 @@
 
         <div class="column">
           <div class="hint-text">Requesting Organisation</div>
-          <div> {{ surveyRequest.organisation.name }} </div>
+          <div v-if="surveyRequest.organisation"> {{ surveyRequest.organisation.name }} </div>
         </div>
 
         <div class="column">

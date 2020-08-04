@@ -32,7 +32,7 @@ export class SurveyRequest {
   @JoinTable()
   custodians;
 
-  @OneToOne(
+  @ManyToOne(
     type => Organisation,
     {
       nullable: true

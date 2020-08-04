@@ -293,9 +293,6 @@ export default Vue.extend({
 
 <style scoped lang="stylus">
 
-.red-text {
-  color: rgba(255, 0, 0, 1.0);
-  font-weight: bold;
-}
+
 
 </style>

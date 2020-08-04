@@ -78,6 +78,7 @@
             label="Save"
             icon="save"
             @click="saveClicked(false, true)"
+            :disable="stateReadonly"
           />
           <q-btn
             color="primary"
@@ -88,17 +89,18 @@
         </div>
         <q-btn
           v-if="surveyRequest && $route.name === 'survey-request-summary'"
-          :disable="published"
+          :disable="submitted"
           color="primary"
-          label="Publish"
-          @click="publishClicked()"
+          label="Submit"
+          @click="submitClicked()"
         />
         <q-btn
-          v-else
+          v-else-if="$route.name !== 'survey-request-submission-details'"
           color="primary"
           label="Save and next"
           icon-right="forward"
           @click="saveClicked(true, true)"
+          :disable="stateReadonly"
         />
       </div>
     </div>
@@ -240,7 +242,11 @@ const TABS_INFO = [
       surveyRequest: {}
     },
     submitValidations: {
-      surveyRequest: {}
+      surveyRequest: {
+        acknowledged: {
+          checked: value => value === true
+        }
+      }
     },
   },
   {
@@ -292,6 +298,7 @@ export default Vue.extend({
       'resetSurveyRequest': srMutTypes.RESET_HIPP_REQUEST,
       'updateSurveyRequest': srMutTypes.UPDATE_HIPP_REQUEST,
       'restoreState': srMutTypes.RESTORE,
+      'setAcknowledged': srMutTypes.SET_ACKNOWLEDGED,
     }),
 
     restore() {
@@ -302,17 +309,19 @@ export default Vue.extend({
       this.validationIntent = 'save';
     },
 
-    publishClicked() {
-      let srComp = this.$refs.srComp;
-      if (!srComp.isValid()) {
-        this.notifyError('Please confirm acknowledgement');
+    submitClicked() {
+      this.validationIntent = 'submit';
+      this.$v.$touch();
+
+      if (this.$v.$error) {
+        this.notifyError('Please review field errors on highlighted tabs');
         return;
       }
 
-      this.$refs.recordState.transitionRecordState('PUBLISH').then(sr => {
-        this.notifySuccess('Survey Request published');
+      this.$refs.recordState.transitionRecordState('SUBMIT').then(sr => {
+        this.notifySuccess('Survey Request submitted');
       }).catch((err) => {
-        this.notifyError(`Failed to publish Survey Request`);
+        this.notifyError(`Failed to submit Survey Request`);
       });
     },
 
@@ -324,8 +333,7 @@ export default Vue.extend({
       this.validationIntent = 'save';
       this.$v.$touch();
 
-      let srComp = this.$refs.srComp;
-      if (!srComp.isValid()) {
+      if (this.$v.$error) {
         this.notifyError('Please review fields');
         return;
       }
@@ -379,6 +387,7 @@ export default Vue.extend({
           hasMoratorium: false,
           moratoriumDate: undefined,
           moratoriumComment: undefined,
+          acknowledged: false,
         };
         this.update({path: 'surveyRequest', value: sr})
         this.setDirty(false);
@@ -392,13 +401,18 @@ export default Vue.extend({
     stateUpdated(state) {
       if (this.id === 'new') {
         this.stateReadonly = false;
-        this.published = false;
+        this.submitted = false;
       } else if (_.isNil(state)) {
         this.stateReadonly = true;
-        this.published = true;
+        this.submitted = true;
       } else {
         this.stateReadonly = state.readonly;
-        this.published = state.state === 'published';
+        this.submitted = state.state === 'submitted';
+        if (!this.submitted) {
+          // to force re acknowledgement after submitted to revised and back to
+          // submitted
+          this.setAcknowledged(false);
+        }
       }
     },
 
@@ -498,7 +512,7 @@ export default Vue.extend({
       tabs: TABS_INFO,
       id: undefined,
       stateReadonly: true,
-      published: true,
+      submitted: true,
       validationIntent: 'save',
     }
   },

@@ -1,14 +1,200 @@
 <template>
-  <form-wrapper
-    :validator="$v"
-    class="scroll"
-  >
-    <div class="column q-pa-md q-gutter-y-sm">
+  <div class="column col">
 
-      <div>summary</div>
+    <q-card-section class="column q-gutter-y-sm col-auto">
 
-    </div>
-  </form-wrapper>
+      <div class="red-text">
+        Please review this information carefully. The information detailed
+        below forms the complete submission to the Australian Hydrographic
+        Office and will only be made available to change at the AHO's
+        direction.
+      </div>
+    </q-card-section>
+
+    <q-card-section class="column q-gutter-y-sm col-auto">
+      <div class="checkbox-div rounded-borders">
+        <div class="q-pa-md">
+          <q-checkbox
+            v-if="recordState && !(recordState.state === 'submitted') "
+            :value="surveyRequest.acknowledged"
+            @input="setAcknowledged($event)"
+            label="I acknowledge that I have the authority and delegation to submit this request to the Hydroscheme Industry Partnership Program on behalf of my organisation and representatives named in this submission."
+          />
+          <div
+            v-if="recordState && recordState.state === 'submitted'"
+          >
+            HIPP Request has been submitted
+          </div>
+        </div>
+      </div>
+    </q-card-section>
+
+    <q-card-section class="column q-gutter-y-sm col">
+      <!-- <div class="text-h6">Registration Details</div> -->
+      <div class="text-subtitle1">Registration Details</div>
+
+      <div class="column">
+        <!-- <div class="text-subtitle1">Title</div> -->
+        <div class="hint-text">Title</div>
+        <div> {{ surveyRequest.name }} </div>
+      </div>
+
+      <div class="column">
+        <div class="hint-text">Requesting Organisation</div>
+        <div> {{ surveyRequest.organisation.name }} </div>
+      </div>
+
+      <div class="column">
+        <div class="hint-text">Collaborating {{ surveyRequest.organisations.length > 1 ? 'Organisations' : 'Organisation'}}</div>
+        <div> {{ surveyRequest.organisations.map((sc) => sc.name).join(', ') }} </div>
+      </div>
+
+      <div class="column">
+        <div class="hint-text">Contact Person</div>
+        <div> {{ surveyRequest.requestorName }} </div>
+      </div>
+
+      <div class="column">
+        <div class="hint-text">Contact Persons Role (title)</div>
+        <div> {{ surveyRequest.requestorPosition }} </div>
+      </div>
+
+      <div class="column">
+        <div class="hint-text">Contact email</div>
+        <div> {{ surveyRequest.pointOfContactEmail }} </div>
+      </div>
+
+      <div class="column">
+        <div class="hint-text">System Record {{ surveyRequest.custodians.length > 1 ? 'Custodians' : 'Custodian'}}</div>
+        <div> {{ surveyRequest.custodians.map((sc) => sc.name).join(', ') }} </div>
+      </div>
+    </q-card-section>
+
+    <q-card-section class="column q-gutter-y-sm col">
+      <div class="text-subtitle1">Business Case</div>
+
+      <div class="column">
+        <div class="hint-text">Survey Justification</div>
+        <div class="long-text"> {{ surveyRequest.businessJustification }} </div>
+      </div>
+
+      <div class="column">
+        <div class="hint-text">Cost Benefit</div>
+        <div class="long-text"> {{ surveyRequest.costBenefit }} </div>
+      </div>
+
+      <div class="column">
+        <div class="hint-text">Additional Funding Available</div>
+        <div> {{ surveyRequest.additionalFundingAvailable ? 'yes' : 'no' }} </div>
+      </div>
+
+      <div class="row q-gutter-x-lg">
+        <div class="column">
+          <div class="hint-text"> Attachment </div>
+          <div> {{ surveyRequest.businessCaseAttachment ? surveyRequest.businessCaseAttachment.fileName : 'none' }} </div>
+        </div>
+        <q-btn
+          v-if="surveyRequest.businessCaseAttachment"
+          type="a"
+          size="md" flat dense
+          :href="`/api/attachment/survey-request/${surveyRequest.id}/download/${surveyRequest.businessCaseAttachment.fileName}`"
+          icon="cloud_download">
+          <q-tooltip>
+            Download attachment
+          </q-tooltip>
+        </q-btn>
+      </div>
+
+      <div class="row q-gutter-x-lg">
+        <div class="column col-auto">
+          <div class="hint-text">Moratorium</div>
+          <div> {{ surveyRequest.hasMoratorium ? 'yes' : 'no' }} </div>
+        </div>
+
+        <div class="column col-auto" v-if="surveyRequest.hasMoratorium">
+          <div class="hint-text">Moratorium End Date</div>
+          <div> {{ surveyRequest.moratoriumDate   | dateValue | moment("D MMMM YYYY") }} </div>
+        </div>
+
+        <div class="column col" v-if="surveyRequest.hasMoratorium">
+          <div class="hint-text">Moratorium Justification</div>
+          <div class="long-text"> {{ surveyRequest.moratoriumComment }} </div>
+        </div>
+      </div>
+    </q-card-section>
+
+    <q-card-section class="column q-gutter-y-sm col">
+      <div class="text-subtitle1"> {{surveyRequest.aois.length > 1 ? 'Areas' : 'Area' }} of Interest</div>
+
+      <div class="column col">
+        <div class="hint-text">Risk Issues/Caveats or Constraints</div>
+        <div class="long-text"> {{ surveyRequest.riskIssues }} </div>
+      </div>
+
+      <div class="column col">
+        <div class="hint-text">Further Information</div>
+        <div class="long-text"> {{ surveyRequest.furtherInformation }} </div>
+      </div>
+
+      <div v-if="surveyRequest.aois.length == 0">
+        <div> No area of interest provided </div>
+      </div>
+      <div v-else class="q-gutter-y-lg">
+        <div
+          v-for="aoi of surveyRequest.aois"
+          class="row q-gutter-x-lg"
+        >
+          <q-img
+            class="rounded-borders"
+            style="width:330px; max-height:330px; "
+            :src="`api/survey-request-aoi/${aoi.id}/thumbnail`"
+            :ratio="1"
+            contain
+          />
+          <div class="column q-gutter-y-sm col">
+            <div class="column">
+              <div class="hint-text">Area Name</div>
+              <div> {{ aoi.name }} </div>
+            </div>
+
+            <div class="column">
+              <div class="hint-text">Calculated Area</div>
+              <div> {{ aoi.calculatedArea / (1000*1000) | formatNumber }} km²</div>
+            </div>
+
+            <div class="column">
+              <div class="hint-text">Survey Standard</div>
+              <div> {{ aoi.surveyStandard }} </div>
+            </div>
+
+            <div class="column">
+              <div class="hint-text">Overall Risk</div>
+              <div> {{ aoi.overallRisk }} </div>
+            </div>
+
+            <div class="column">
+              <div class="hint-text">Overall Risk</div>
+              <div> {{ aoi.overallRisk }} </div>
+            </div>
+
+            <div class="column">
+              <div class="hint-text">Preferred Timeframe</div>
+              <div> {{ aoi.preferredTimeframe }} </div>
+            </div>
+
+            <div class="column">
+              <div class="hint-text">Data Types to Capture</div>
+              <div> {{ aoi.dataTypesToCapture.join(', ') }} </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </q-card-section>
+
+  </div>
+
+
 </template>
 
 <script>
@@ -36,38 +222,17 @@ export default Vue.extend({
 
   methods: {
     ...mapMutations('surveyRequest', {
-      'setDirty': srMutTypes.SET_DIRTY,
-      'update': srMutTypes.UPDATE,
-      'resetSurveyRequest': srMutTypes.RESET_HIPP_REQUEST,
-      'updateSurveyRequest': srMutTypes.UPDATE_HIPP_REQUEST,
-    }),
-    ...mapMutations('organisation', {
-      'setOrganisationFilter': organisationMutTypes.SET_FILTER,
+      'setAcknowledged': srMutTypes.SET_ACKNOWLEDGED,
     }),
 
     fetchData() {
 
     },
 
-    filterOrganisationFunction(val, update, abort) {
-      this.setOrganisationFilter(val);
-      this.getOrganisations().then((orgs) => {
-        update();
-      });
-    },
-
-    isValid() {
-      this.$v.$touch();
-      return !this.$v.$error;
-    },
   },
 
   watch: {
 
-  },
-
-  validations() {
-    return {};
   },
 
   computed: {
@@ -75,15 +240,13 @@ export default Vue.extend({
       surveyRequest: 'surveyRequest',
       dirty: 'dirty',
     }),
-    ...mapGetters('organisation', {
-      organisationsList: 'organisations',
-    }),
+    ...mapGetters('recordState', [
+      'recordState',
+    ]),
   },
 
   data() {
-    return {
-
-    }
+    return {}
   },
 
 });
@@ -91,5 +254,14 @@ export default Vue.extend({
 
 
 <style scoped lang="stylus">
+
+.checkbox-div {
+  border: 1px solid red;
+}
+
+
+.long-text {
+  white-space: pre-wrap;
+}
 
 </style>

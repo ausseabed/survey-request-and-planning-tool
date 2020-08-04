@@ -12,6 +12,7 @@ export const getSurveyRequest = async ({ commit, state }, payload) => {
 
     const response = await Vue.axios.get(urlEndpoint);
     const surveyRequest = response.data;
+    surveyRequest.acknowledged = false;
     surveyRequest.areaOfInterest = Object.freeze(surveyRequest.areaOfInterest);
     commit(mutTypes.UPDATE, {path: 'surveyRequest', value: surveyRequest});
     commit(mutTypes.SET_RESTORE_SURVEY_REQUEST, surveyRequest);
@@ -62,7 +63,7 @@ export const saveSurveyRequest = async ({ commit, state }) => {
     Vue.axios.post(urlEndpoint, state.surveyRequest)
     .then((response) => {
       const surveyRequest = response.data;
-
+      surveyRequest.acknowledged = false;
       commit(mutTypes.UPDATE, {path: 'surveyRequest', value: surveyRequest});
       commit(mutTypes.SET_RESTORE_SURVEY_REQUEST, surveyRequest);
       commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);

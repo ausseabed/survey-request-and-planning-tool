@@ -97,6 +97,12 @@ const mutations = {
     state.surveyRequest = _.cloneDeep(state.restoreSurveyRequest);
     state.dirty = false;
   },
+
+  [types.SET_ACKNOWLEDGED] (state, acknowledged) {
+    // Special mutation, doesn't set dirty flag as we are not changing any
+    // data that gets persisted to the DB
+    state.surveyRequest.acknowledged = acknowledged;
+  },
 }
 
 export default {

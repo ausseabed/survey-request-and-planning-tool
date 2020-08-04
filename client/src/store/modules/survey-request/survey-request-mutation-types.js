@@ -20,3 +20,5 @@ export const RESTORE = 'RESTORE';
 export const ADD_AOIS = 'ADD_AOIS';
 export const REMOVE_AOI = 'REMOVE_AOI';
 export const SET_RESTORE_SURVEY_REQUEST = 'SET_RESTORE_SURVEY_REQUEST';
+
+export const SET_ACKNOWLEDGED = 'SET_ACKNOWLEDGED';

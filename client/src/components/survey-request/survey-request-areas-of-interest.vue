@@ -1,5 +1,5 @@
 <template>
-  <div class="column">
+  <q-scroll-area class="col column">
     <q-card-section class="column q-pa-md q-gutter-y-sm">
       <div>
         The HIPP Request form will allow you to add and define as many survey
@@ -136,7 +136,7 @@
       </div>
     </q-card-section>
 
-  </div>
+  </q-scroll-area>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="column col">
+  <q-scroll-area class="col column">
 
     <template v-if="recordState.state == 'submitted'">
       <q-card-section class="column q-gutter-y-sm col-auto">
@@ -25,7 +25,7 @@
       </q-card-section>
     </template>
 
-  </div>
+  </q-scroll-area>
 </template>
 
 <script>

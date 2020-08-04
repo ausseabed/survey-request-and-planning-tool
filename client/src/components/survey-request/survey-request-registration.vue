@@ -1,6 +1,6 @@
 <template>
 
-  <div class="column">
+  <q-scroll-area class="col column">
 
     <q-card-section class="column q-gutter-y-sm">
       <div>
@@ -124,7 +124,7 @@
 
     </q-card-section>
 
-  </div>
+  </q-scroll-area>
 
 </template>
 

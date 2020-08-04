@@ -57,7 +57,7 @@
           :validator="$v"
           class="column col"
         >
-          <q-scroll-area class="col column">
+          <!-- <q-scroll-area class="col column"> -->
             <router-view
               class="col"
               ref="srComp"
@@ -66,7 +66,7 @@
               :validator = "$v"
             >
             </router-view>
-          </q-scroll-area>
+          <!-- </q-scroll-area> -->
         </form-wrapper>
 
 
@@ -412,6 +412,7 @@ export default Vue.extend({
           // to force re acknowledgement after submitted to revised and back to
           // submitted
           this.setAcknowledged(false);
+          this.validationIntent = 'save';
         }
       }
     },

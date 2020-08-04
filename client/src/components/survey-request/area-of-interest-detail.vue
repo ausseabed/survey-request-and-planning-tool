@@ -15,6 +15,13 @@
             contain
           />
         </div>
+        <q-btn
+          v-if="!readonly"
+          flat
+          label="Apply to All"
+          icon="format_line_spacing"
+          @click="applyToAllClicked"
+        />
       </div>
 
       <div class="col column q-gutter-xs">
@@ -113,13 +120,36 @@ export default Vue.extend({
         }
       );
     },
-    deleteClicked() {
+    applyToAllClicked() {
       this.$emit(
-        'aoi-deleted',
+        'aoi-apply-to-all',
         {
-          'aoi': this.aoi,
+          'propertyName': 'surveyStandard',
+          'value': this.aoi.surveyStandard,
         }
       );
+      this.$emit(
+        'aoi-apply-to-all',
+        {
+          'propertyName': 'overallRisk',
+          'value': this.aoi.overallRisk,
+        }
+      );
+      this.$emit(
+        'aoi-apply-to-all',
+        {
+          'propertyName': 'preferredTimeframe',
+          'value': this.aoi.preferredTimeframe,
+        }
+      );
+      this.$emit(
+        'aoi-apply-to-all',
+        {
+          'propertyName': 'dataTypesToCapture',
+          'value': this.aoi.dataTypesToCapture,
+        }
+      );
+
     },
   },
 

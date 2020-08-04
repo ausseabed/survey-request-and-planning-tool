@@ -48,6 +48,7 @@
             :readonly="readonly"
             :validator="validator"
             @aoi-value-changed="aoiValueChanged"
+            @aoi-apply-to-all="aoiApplytoAll"
           >
         </area-of-interest-detail>
         </div>
@@ -119,6 +120,14 @@ export default Vue.extend({
       const path = `aois[${aoiIndex}].${propertyName}`;
       this.updateSurveyRequest({path:path, value:value});
     },
+
+    aoiApplytoAll({propertyName, value}) {
+      for (const [aoiIndex, aoi] of this.surveyRequest.aois.entries()) {
+        const path = `aois[${aoiIndex}].${propertyName}`;
+        this.updateSurveyRequest({path:path, value:value});
+      }
+    },
+
   },
 
   watch: {

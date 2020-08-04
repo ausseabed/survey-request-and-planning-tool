@@ -197,7 +197,7 @@ const TABS_INFO = [
     name: 'survey-request-sub-area-details',
     label: ['Sub-Area', 'details'],
     route: 'survey-request-sub-area-details',
-    nextRoute: 'survey-request-sub-area-data-types',
+    nextRoute: 'survey-request-summary',
     saveValidations: {
       surveyRequest: {
         furtherInformation: {},
@@ -219,18 +219,18 @@ const TABS_INFO = [
       }
     },
   },
-  {
-    name: 'survey-request-sub-area-data-types',
-    label: ['Sub-Area', 'data types'],
-    route: 'survey-request-sub-area-data-types',
-    nextRoute: 'survey-request-summary',
-    saveValidations: {
-      surveyRequest: {}
-    },
-    submitValidations: {
-      surveyRequest: {}
-    },
-  },
+  // {
+  //   name: 'survey-request-sub-area-data-types',
+  //   label: ['Sub-Area', 'data types'],
+  //   route: 'survey-request-sub-area-data-types',
+  //   nextRoute: 'survey-request-summary',
+  //   saveValidations: {
+  //     surveyRequest: {}
+  //   },
+  //   submitValidations: {
+  //     surveyRequest: {}
+  //   },
+  // },
   {
     name: 'survey-request-summary',
     label: ['Request', 'Summary'],

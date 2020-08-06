@@ -17,13 +17,22 @@
               contain
             />
           </div>
-          <q-btn
-            v-if="!readonly"
-            flat
-            label="Remove"
-            icon="delete"
-            @click="deleteClicked"
-          />
+          <div class="column q-gutter-xs">
+            <q-btn
+              v-if="!readonly"
+              flat
+              label="Apply to All"
+              icon="format_line_spacing"
+              @click="applyToAllClicked"
+            />
+            <q-btn
+              v-if="!readonly"
+              flat
+              label="Remove"
+              icon="delete"
+              @click="deleteClicked"
+            />
+          </div>
         </div>
 
         <div class="col column q-gutter-xs">
@@ -134,6 +143,39 @@ export default Vue.extend({
         }
       );
     },
+
+    applyToAllClicked() {
+      this.$emit(
+        'priority-area-apply-to-all',
+        {
+          'propertyName': 'preferredTimeframe',
+          'value': this.priorityArea.preferredTimeframe,
+        }
+      );
+      this.$emit(
+        'priority-area-apply-to-all',
+        {
+          'propertyName': 'riskRating',
+          'value': this.priorityArea.riskRating,
+        }
+      );
+      this.$emit(
+        'priority-area-apply-to-all',
+        {
+          'propertyName': 'requiredDataQuality',
+          'value': this.priorityArea.requiredDataQuality,
+        }
+      );
+      this.$emit(
+        'priority-area-apply-to-all',
+        {
+          'propertyName': 'dataImportance',
+          'value': this.priorityArea.dataImportance,
+        }
+      );
+
+    },
+
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;

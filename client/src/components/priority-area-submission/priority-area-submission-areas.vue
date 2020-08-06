@@ -123,6 +123,7 @@
               @priority-area-value-changed="priorityAreaValueChanged"
               @priority-area-deleted="priorityAreaDeleted"
               :readonly="readonly"
+              @priority-area-apply-to-all="priorityAreaApplytoAll"
             >
             </priority-area>
           </div>
@@ -250,7 +251,14 @@ export default Vue.extend({
       }
       this.addPriorityAreas(pasWithData);
       this.loadingPriorityAreaData = false;
-    }
+    },
+
+    priorityAreaApplytoAll({propertyName, value}) {
+      for (const [paIndex, pa] of this.priorityAreaSubmission.priorityAreas.entries()) {
+        const path = `priorityAreas[${paIndex}].${propertyName}`;
+        this.updatePriorityAreaSubmissionValue({path:path, value:value});
+      }
+    },
   },
 
   watch: {

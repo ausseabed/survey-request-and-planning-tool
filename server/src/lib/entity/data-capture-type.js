@@ -42,8 +42,4 @@ export class DataCaptureType {
     surveyPlan => surveyPlan.dataCaptureTypes)
   surveyPlans;
 
-  @ManyToMany(
-    type => SurveyRequest,
-    surveyRequest => surveyRequest.dataCaptureTypes)
-  surveyRequests;
 }

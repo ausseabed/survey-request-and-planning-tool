@@ -285,12 +285,6 @@ export default Vue.extend({
     ...mapActions('reportTemplate', [
       'generateReport',
     ]),
-    ...mapActions('requestPurpose', [
-      'getRequestPurposes',
-    ]),
-    ...mapActions('dataCaptureType', [
-      'getDataCaptureTypes',
-    ]),
 
     ...mapMutations('surveyRequest', {
       'setDirty': srMutTypes.SET_DIRTY,

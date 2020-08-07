@@ -5,12 +5,10 @@ import { DateTransformer } from './utils';
 
 import { Attachment } from './attachment';
 import { Custodian } from './custodian';
-import { DataCaptureType } from './data-capture-type';
 import { SurveyRequestAttachment } from './survey-request-attachment';
 import { SurveyRequestAoi } from './survey-request-aoi';
 import { Organisation } from './organisation';
 import { RecordState } from './record-state';
-import { RequestPurpose } from './request-purpose';
 import { Task } from './task';
 
 
@@ -46,12 +44,6 @@ export class SurveyRequest {
     organisation => organisation.surveyRequests)
   @JoinTable()
   organisations;
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  otherOrganisations = undefined;
 
   @Column({
       type:"varchar",
@@ -204,18 +196,6 @@ export class SurveyRequest {
       nullable: true,
   })
   furtherInformation;
-
-  @ManyToMany(
-    type => RequestPurpose,
-    requestPurpose => requestPurpose.requests)
-  @JoinTable()
-  purposes;
-
-  @ManyToMany(
-    type => DataCaptureType,
-    dataCaptureType => dataCaptureType.surveyRequests)
-  @JoinTable()
-  dataCaptureTypes;
 
   @OneToMany(
     type => SurveyRequestAttachment,

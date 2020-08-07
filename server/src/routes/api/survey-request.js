@@ -31,8 +31,6 @@ const surveyRequestRelations = [
   "custodians",
   "organisation",
   "organisations",
-  "purposes",
-  "dataCaptureTypes",
   "businessCaseAttachment",
   "aois",
 ];

@@ -1,7 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany } from "typeorm";
 
-import { SurveyRequest } from './survey-request';
-
 @Entity()
 export class RequestPurpose {
 
@@ -25,10 +23,5 @@ export class RequestPurpose {
       nullable: false,
   })
   groupOrder;
-
-  @ManyToMany(
-    type => SurveyRequest,
-    surveyRequest => surveyRequest.purposes)
-  requests;
 
 }

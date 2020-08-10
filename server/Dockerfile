@@ -1,5 +1,11 @@
 FROM node:11.6.0 as builder
 
+# postgis command line tools (pgsql2shp) are used by the web server
+RUN \
+    apt-get update \
+    && apt-get install -y --no-install-recommends \
+        postgis
+
 ENV APPDIR=/code
 WORKDIR $APPDIR
 

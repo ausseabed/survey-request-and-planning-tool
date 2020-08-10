@@ -3,6 +3,10 @@ var _ = require('lodash');
 import * as Boom from '@hapi/boom';
 import { feature, featureCollection } from "@turf/helpers";
 
+var archiver = require('archiver')
+var p = require('path')
+const fs = require('fs')
+
 import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
@@ -11,6 +15,7 @@ import { SurveyRequest } from '../../lib/entity/survey-request';
 import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { updateRecordState } from '../state-management';
 import { RecordState } from '../../lib/entity/record-state';
+import { shpBuilderFactory } from '../../lib/shp-builder';
 
 // mapping of the entity attribute names to what they should be in the
 // exported geojson
@@ -149,6 +154,76 @@ router.get(
     'Content-disposition', `attachment; filename=${filename}`);
   return res.json(collection);
 }));
+
+
+// gets a single HIPP Request
+router.get(
+  '/:id/shp',
+  [
+    isAuthenticated,
+    permitCustodianBasedPermission({
+      overrideFlag:'public',
+      entityType:SurveyRequest,
+      custodianAttributes: ['custodians'],
+      allowedPermissionAll: 'canViewAllSurveyRequests',
+      allowedPermissionCustodian: 'canViewCustodianSurveyRequests'})
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  let surveyRequest = await getConnection()
+  .getRepository(SurveyRequest)
+  .findOne(
+    req.params.id,
+    {
+      relations: [
+        "custodians",
+      ]
+    }
+  );
+
+  if (!surveyRequest || surveyRequest.deleted) {
+    let err = Boom.notFound(
+      `SurveyRequest ${req.params.id} does not exist`);
+    throw err;
+  }
+
+  const shpBuilder = shpBuilderFactory('request')
+  const tmpDir = shpBuilder.build(surveyRequest.id, surveyRequest.name)
+
+  res.on('finish', () => {
+    // delete the contents of the temp direstory now that the data has been
+    // downloaded
+    tmpDir.removeCallback()
+  });
+
+  // from https://github.com/archiverjs/node-archiver/blob/master/examples/express.js
+  var archive = archiver('zip');
+
+  archive.on('error', function(err) {
+    res.status(500).send({error: err.message});
+  });
+
+  //on stream closed we can end the request
+  archive.on('end', function() {
+    console.log('Zipped %d bytes', archive.pointer());
+  });
+
+  //set the archive name
+  res.attachment(`${surveyRequest.name}.zip`);
+
+  //this is the streaming magic
+  archive.pipe(res);
+
+  var files = fs.readdirSync(tmpDir.name).map((fn) => { return `${tmpDir.name}/${fn}`})
+  console.log(files)
+
+  for(var i in files) {
+    archive.file(files[i], { name: p.basename(files[i]) });
+  }
+
+  archive.finalize();
+}));
+
 
 
 // gets a single HIPP Request

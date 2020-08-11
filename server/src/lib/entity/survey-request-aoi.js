@@ -50,24 +50,28 @@ export class SurveyRequestAoi {
   name;
 
   @Column({
+      name: "survey_standard",
       type:"varchar",
       nullable: true,
   })
   surveyStandard;
 
   @Column({
+      name: "overall_risk",
       type:"varchar",
       nullable: true,
   })
   overallRisk;
 
   @Column({
+      name: "preferred_timeframe",
       type:"varchar",
       nullable: true,
   })
   preferredTimeframe;
 
   @Column({
+    name: "data_types_to_capture",
     type:"simple-array",
     nullable: true,
     default: ""
@@ -97,6 +101,7 @@ export class SurveyRequestAoi {
   surveyRequest;
 
   @Column({
+      name: "calculated_area",
       type:"decimal",
       nullable: true,
   })

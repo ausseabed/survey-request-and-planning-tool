@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn
   } from "typeorm";
 import { getConnection } from 'typeorm';
 
@@ -93,6 +93,7 @@ export class SurveyRequestAoi {
     type => SurveyRequest,
     surveyRequest => surveyRequest.aois
   )
+  @JoinColumn({ name: "survey_request_id" })
   surveyRequest;
 
   @Column({

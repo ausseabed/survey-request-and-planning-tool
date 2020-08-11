@@ -106,7 +106,19 @@
 
     <q-card-section>
       <div class="column q-gutter-y-xs">
-        <div class="main-page-sub-title">Area(s) of Interest</div>
+        <div class="row justify-between items-center">
+          <div class="main-page-sub-title">Area(s) of Interest</div>
+          <q-btn
+            v-if="_.get(surveyRequest, 'aois.length') > 0"
+            type="a"
+            :href="`/api/survey-request/${surveyRequest.id}/shp`"
+            round flat icon="cloud_download">
+            <q-tooltip>
+              Download all areas of interest
+            </q-tooltip>
+          </q-btn>
+        </div>
+
         <div v-if="loadingAreaOfInterestData" class="column">
           <div style="color:#616161">Loading Areas of Interest</div>
           <q-linear-progress size="25px" :value="loadingAreaOfInterestProgress" color="grey-5">

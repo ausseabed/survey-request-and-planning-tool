@@ -63,6 +63,8 @@ export class ShpBuilder {
     const cmdArgs = this.getCmdLineArgs(filename, query)
 
     const cmdOutput = spawnSync(cmd, cmdArgs)
+    console.log( `stderr: ${cmdOutput.stderr.toString()}` );
+    console.log( `stdout: ${cmdOutput.stdout.toString()}` );
     return tmpDir
   }
 
@@ -72,8 +74,35 @@ export class ShpBuilder {
 export class RequestShpBuilder extends ShpBuilder {
 
   getQuery(id) {
-    // TODO - include proper query here
-    return "SELECT * FROM survey_request_aoi"
+    const selects = [
+      'sr.name as SR_NAME',
+      'rorg.name as SR_REQ_ORG',
+      'collab_orgs.orgname as SR_COL_ORG',
+      'custs.custname as SR_CUSTOD',
+      'sr.\"requestorName\" as SR_PER_NAM',
+      'sr.\"requestorPosition\" as SR_PER_TLE',
+      'sr.\"pointOfContactEmail\" as SR_EMAIL',
+      'sr.\"businessJustification\" as SR_BUS_JUS',
+      'sr.\"costBenefit\" as SR_COST_B',
+      'sr.\"additionalFundingAvailable\" as SR_ADD_FUN',
+      'sr.\"riskIssues\" as SR_RISK',
+      'sr.\"furtherInformation\" as SR_F_INFO',
+      'sra.name as SRA_NAME',
+      'sra.survey_standard as SRA_STD',
+      'sra.overall_risk as SRA_RISK',
+      'sra.preferred_timeframe as SRA_TIME',
+      'sra.data_types_to_capture as SRA_DATA',
+      'sra.calculated_area as SRA_AREA',
+      'sra.geom as GEOM',
+    ]
+    let q = '' +
+      `SELECT ${selects.join(', ')} FROM survey_request_aoi sra ` +
+      'JOIN survey_request sr ON sr.id = sra.survey_request_id ' +
+      'LEFT OUTER JOIN organisation rorg ON rorg.id = sr.organisation_id ' +
+      `full outer join (SELECT survey_request.id as id, string_agg(DISTINCT organisation.name, ', ') as orgname FROM survey_request LEFT JOIN survey_request_organisations_organisation ON survey_request.id = survey_request_organisations_organisation.\"surveyRequestId\" INNER JOIN organisation ON survey_request_organisations_organisation.\"organisationId\" = organisation.id GROUP BY survey_request.id) collab_orgs on collab_orgs.id = sr.id ` +
+      `full outer join (SELECT survey_request.id as id, string_agg(DISTINCT custodian.name, ', ') as custname FROM survey_request LEFT JOIN survey_request_custodians_custodian ON survey_request.id = survey_request_custodians_custodian.\"surveyRequestId\" INNER JOIN custodian ON survey_request_custodians_custodian.\"custodianId\" = custodian.id GROUP BY survey_request.id) custs on custs.id = sr.id ` +
+      `WHERE sr.id = '${id}'`
+    return q
   }
 
 

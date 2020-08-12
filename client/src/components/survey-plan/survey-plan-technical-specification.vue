@@ -942,11 +942,11 @@ export default Vue.extend({
       this.mapTidalGauge.addFile(event.target.files[0]);
     },
 
-    stateUpdated(state) {
+    stateUpdated({newState, oldState}) {
       if (_.isNil(state)) {
         this.stateReadonly = true
       } else {
-        this.stateReadonly = state.readonly
+        this.stateReadonly = newState.readonly
       }
     },
 

@@ -1196,11 +1196,11 @@ export default Vue.extend({
       this.map.highlightFeatureId(matchingProjMeta.id);
     },
 
-    stateUpdated(state) {
+    stateUpdated({newState, oldState}) {
       if (_.isNil(state)) {
         this.stateReadonly = true
       } else {
-        this.stateReadonly = state.readonly
+        this.stateReadonly = newState.readonly
       }
     },
     recordStateValidationCallback(recordStateEvent) {

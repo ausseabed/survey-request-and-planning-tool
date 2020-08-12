@@ -414,16 +414,16 @@ export default Vue.extend({
       }
     },
 
-    stateUpdated(state) {
+    stateUpdated({newState, oldState}) {
       if (this.id === 'new') {
         this.stateReadonly = false;
         this.submitted = false;
-      } else if (_.isNil(state)) {
+      } else if (_.isNil(newState)) {
         this.stateReadonly = true;
         this.submitted = true;
       } else {
-        this.stateReadonly = state.readonly;
-        this.submitted = state.state === 'submitted';
+        this.stateReadonly = newState.readonly;
+        this.submitted = newState.state === 'submitted';
         if (!this.submitted) {
           // to force re acknowledgement after submitted to revised and back to
           // submitted

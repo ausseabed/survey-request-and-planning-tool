@@ -353,11 +353,11 @@ export default Vue.extend({
       }
     },
 
-    stateUpdated(state) {
+    stateUpdated({newState, oldState}) {
       if (_.isNil(state)) {
         this.stateReadonly = true
       } else {
-        this.stateReadonly = state.readonly
+        this.stateReadonly = newState.readonly
       }
     },
 

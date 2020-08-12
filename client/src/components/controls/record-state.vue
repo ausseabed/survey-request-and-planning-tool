@@ -145,7 +145,7 @@ export default Vue.extend({
     },
     'recordState': {
       handler (newState, oldState) {
-        this.$emit(UPDATED_STATE, newState);
+        this.$emit(UPDATED_STATE, {newState: newState, oldState: oldState});
       }
     },
   }

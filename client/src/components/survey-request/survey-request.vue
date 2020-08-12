@@ -314,6 +314,13 @@ export default Vue.extend({
 
       this.$refs.recordState.transitionRecordState('SUBMIT').then(sr => {
         this.notifySuccess('Survey Request submitted');
+
+        let routeName = this.$route.name;
+        routeName = _.isNil(routeName) ? 'survey-request-registration' : routeName;
+        const nextRouteName = this.tabs.find((tabInfo) => {
+          return routeName == tabInfo.route;
+        }).nextRoute;
+        this.$router.push({ name: nextRouteName, params: { id: sr.id } });
       }).catch((err) => {
         this.notifyError(`Failed to submit Survey Request`);
       });

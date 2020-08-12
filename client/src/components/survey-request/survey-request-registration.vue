@@ -37,7 +37,7 @@
         @blur="$v.surveyRequest.organisation.$touch"
         clearable
         :readonly="readonly"
-        hint="Organisation submitting the request"
+        hint="Primary organisation submitting the request"
         outlined
         >
       </form-field-validated-select>

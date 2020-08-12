@@ -46,7 +46,7 @@
         <q-checkbox
           :disable="readonly"
           class="col-auto"
-          label="Additional Funding Available?"
+          label="Additional funding available?"
           left-label
           :value="surveyRequest.additionalFundingAvailable"
           @input="update({path:'surveyRequest.additionalFundingAvailable', value:$event})"

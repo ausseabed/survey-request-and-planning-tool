@@ -270,6 +270,8 @@ export default Vue.extend({
   async mounted() {
     const id = this.$route.params.id;
     this.id = id;
+
+    this.fetchData();
   },
 
   methods: {
@@ -281,11 +283,11 @@ export default Vue.extend({
     ]),
     ...mapActions('custodian', [
       'getCustodians',
+      'getUserCustodian',
     ]),
     ...mapActions('reportTemplate', [
       'generateReport',
     ]),
-
     ...mapMutations('surveyRequest', {
       'setDirty': srMutTypes.SET_DIRTY,
       'update': srMutTypes.UPDATE,
@@ -294,6 +296,11 @@ export default Vue.extend({
       'restoreState': srMutTypes.RESTORE,
       'setAcknowledged': srMutTypes.SET_ACKNOWLEDGED,
     }),
+
+    fetchData() {
+      this.getCustodians();
+      this.getUserCustodian();
+    },
 
     restore() {
       this.restoreState();
@@ -373,12 +380,20 @@ export default Vue.extend({
 
     updateActiveSurveyrequest () {
       if (this.id == 'new') {
+
+        // Assume the user wants to assign their own custodian to any new
+        // request they create. New users may not have a custodian.
+        let defaultCustodians = [];
+        if (this.userCustodian) {
+          defaultCustodians.push(this.userCustodian)
+        }
+
         let sr = {
           id: undefined,
           name: undefined,
           organisation: undefined,
           organisations: [],
-          custodians: [],
+          custodians: defaultCustodians,
           requestorName: undefined,
           requestorPosition: undefined,
           pointOfContactEmail: undefined,
@@ -489,6 +504,10 @@ export default Vue.extend({
     ...mapGetters('surveyRequest', [
       'surveyRequest',
       'dirty',
+    ]),
+    ...mapGetters('custodian', [
+      'custodians',
+      'userCustodian',
     ]),
   },
 

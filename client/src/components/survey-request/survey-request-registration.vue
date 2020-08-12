@@ -154,9 +154,6 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions('custodian', [
-      'getCustodians',
-    ]),
     ...mapActions('organisation', [
       'getOrganisations',
     ]),
@@ -171,7 +168,7 @@ export default Vue.extend({
     }),
 
     fetchData() {
-      this.getCustodians();
+      this.getOrganisations();
     },
 
     filterOrganisationFunction(val, update, abort) {

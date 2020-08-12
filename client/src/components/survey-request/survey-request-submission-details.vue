@@ -4,9 +4,10 @@
     <template v-if="recordState.state == 'submitted'">
       <q-card-section class="column q-gutter-y-sm col-auto">
         <div>
-          Thankyou for your submission. A member of the assessment team will
-          be in touch with you throughout the assessment period to provide
-          updates.
+          Thank you for your submission. A member of the National Hydrography
+          Program will be in touch once this request has been assessed. For
+          any queries or amendments after submission please email
+          <a href="mailto:hydro.plans@defence.gov.au">hydro.plans@defence.gov.au</a> .
         </div>
       </q-card-section>
 

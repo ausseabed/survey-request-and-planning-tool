@@ -144,7 +144,7 @@ const TABS_INFO = [
         name: { required },
         custodians: { required, minLength:minLength(1) },
         organisation: { required },
-        organisations: { required, minLength:minLength(1) },
+        organisations: { },
         requestorName: { required },
         requestorPosition: { required },
         pointOfContactEmail: { required, email },

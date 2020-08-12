@@ -29,8 +29,8 @@
         </div>
 
         <div class="column">
-          <div class="hint-text">Collaborating {{ surveyRequest.organisations.length > 1 ? 'Organisations' : 'Organisation'}}</div>
-          <div> {{ surveyRequest.organisations.map((sc) => sc.name).join(', ') }} </div>
+          <div class="hint-text">Collaborating {{ (surveyRequest.organisations && surveyRequest.organisations.length > 1) ? 'Organisations' : 'Organisation'}}</div>
+          <div v-if="surveyRequest.organisation"> {{ surveyRequest.organisations.map((sc) => sc.name).join(', ') }} </div>
         </div>
 
         <div class="column">
@@ -49,8 +49,8 @@
         </div>
 
         <div class="column">
-          <div class="hint-text">System Record {{ surveyRequest.custodians.length > 1 ? 'Custodians' : 'Custodian'}}</div>
-          <div> {{ surveyRequest.custodians.map((sc) => sc.name).join(', ') }} </div>
+          <div class="hint-text">System Record {{ (surveyRequest.custodians && surveyRequest.custodians.length) > 1 ? 'Custodians' : 'Custodian'}}</div>
+          <div v-if="surveyRequest.custodians"> {{ surveyRequest.custodians.map((sc) => sc.name).join(', ') }} </div>
         </div>
       </q-card-section>
 
@@ -107,7 +107,10 @@
         </div>
       </q-card-section>
 
-      <q-card-section class="column q-gutter-y-sm col">
+      <q-card-section
+        v-if="surveyRequest.aois"
+        class="column q-gutter-y-sm col"
+      >
         <div class="text-subtitle1"> {{surveyRequest.aois.length > 1 ? 'Areas' : 'Area' }} of Interest</div>
 
         <div class="column col">

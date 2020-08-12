@@ -72,7 +72,7 @@ export class priorityAreasPermissions1585522307442 implements MigrationInterface
         aRole.canEditCustodianSurveyPlans = true
 
         aRole.canAddSurveyRequest = true
-        aRole.canViewAllSurveyRequests = true
+        aRole.canViewAllSurveyRequests = false
         aRole.canViewCustodianSurveyRequests = true
         aRole.canEditAllSurveyRequests = false
         aRole.canEditCustodianSurveyRequests = true

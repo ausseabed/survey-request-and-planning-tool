@@ -5,7 +5,7 @@
       <q-card-section class="column q-gutter-y-sm col-auto">
         <div>
           Thankyou for your submission. A member of the assessment team will
-          be in touch with you throughout the assessment peroid to provide
+          be in touch with you throughout the assessment period to provide
           updates.
         </div>
       </q-card-section>

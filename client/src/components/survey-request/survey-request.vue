@@ -322,11 +322,7 @@ export default Vue.extend({
       this.$refs.recordState.transitionRecordState('SUBMIT').then(sr => {
         this.notifySuccess('Survey Request submitted');
 
-        let routeName = this.$route.name;
-        routeName = _.isNil(routeName) ? 'survey-request-registration' : routeName;
-        const nextRouteName = this.tabs.find((tabInfo) => {
-          return routeName == tabInfo.route;
-        }).nextRoute;
+        let nextRouteName = this.getNextRouteName(this.$route.name);
         this.$router.push({ name: nextRouteName, params: { id: sr.id } });
       }).catch((err) => {
         this.notifyError(`Failed to submit Survey Request`);
@@ -362,11 +358,10 @@ export default Vue.extend({
         // else via "save and continue".
         const currentId = this.$route.params.id;
         let routeName = this.$route.name;
+        let nextRouteName = this.getNextRouteName(routeName);
         routeName = _.isNil(routeName) ? 'survey-request-registration' : routeName;
         if (moveNext) {
-          routeName = this.tabs.find((tabInfo) => {
-            return routeName == tabInfo.route;
-          }).nextRoute;
+          routeName = nextRouteName;
         }
         if (isNew || moveNext) {
           // don't push a new route that could be the same as the current
@@ -415,6 +410,7 @@ export default Vue.extend({
     },
 
     stateUpdated({newState, oldState}) {
+      console.log(`old ${oldState ? oldState.state : 'undef'}   new ${newState.state}`)
       if (this.id === 'new') {
         this.stateReadonly = false;
         this.submitted = false;
@@ -430,7 +426,20 @@ export default Vue.extend({
           this.setAcknowledged(false);
           this.validationIntent = 'save';
         }
+
+        if (oldState && oldState.state !== 'submitted' && newState.state === 'submitted') {
+          let nextRouteName = this.getNextRouteName(this.$route.name);
+          this.$router.push({ name: nextRouteName, params: { id: this.surveyRequest.id } });
+        }
       }
+    },
+
+    getNextRouteName(oldRouteName) {
+      let routeName = _.isNil(oldRouteName) ? 'survey-request-registration' : oldRouteName;
+      const nextRouteName = this.tabs.find((tabInfo) => {
+        return routeName == tabInfo.route;
+      }).nextRoute;
+      return nextRouteName
     },
 
     heightTweak (offset) {

@@ -27,8 +27,8 @@
       <div class="col column q-gutter-xs">
 
         <form-field-validated-select
-          class="bg-grey-2 q-pa-sm rounded-borders"
           inline
+          outlined
           :name="`surveyRequest.aois.$each.${index}.surveyStandard`"
           label="Survey Standard"
           :value="aoi.surveyStandard"
@@ -36,6 +36,7 @@
           :options="surveyStandards"
           @blur="`$v.surveyRequest.aois.$each.${index}.surveyStandard.$touch`"
           :readonly="readonly"
+          :hide-bottom-space="true"
         />
 
         <form-field-validated-button-toggle
@@ -63,7 +64,7 @@
         />
 
         <form-field-validated-select-multiple-check
-          class="bg-grey-2 q-pa-sm rounded-borders"
+          outlined
           inline
           multiple
           :name="`surveyRequest.aois.$each.${index}.dataTypesToCapture`"
@@ -73,6 +74,7 @@
           :options="dataTypes"
           @blur="`$v.surveyRequest.aois.$each.${index}.dataTypesToCapture.$touch`"
           :readonly="readonly"
+          :hide-bottom-space="true"
         />
 
       </div>

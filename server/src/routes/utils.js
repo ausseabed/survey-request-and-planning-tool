@@ -218,6 +218,11 @@ export function permitCustodianBasedPermission(params) {
         }
       );
 
+      if (_.isNil(entity)) {
+        response.status(404).json({message: "Entity not found for permission check"});
+        return
+      }
+
       if (!_.isNil(overrideFlag) && entity[overrideFlag]) {
         next();
         return

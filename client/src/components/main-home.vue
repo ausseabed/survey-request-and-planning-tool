@@ -14,16 +14,16 @@
         >
           <div class="q-px-md q-pb-sm column q-gutter-y-sm">
             <div>
-              The ASB SCT was designed through consultation with the AusSeabed community. It was developed in partnership with FrontierSI and represents the first of a suite of technology solutions that are intended to support the marine community in developing a consistent approach to the capture of seabed mapping data. The initial release caters to the capture of bathymetric surveys and provides for both an inexperienced user and an expert user.
-            </div>
-            <div>
-              The ASB SCT captures two record types, a survey plan and a survey request.
+              The ASB SCT was developed by FrontierSI on behalf of AusSeabed and captures three record types, a survey plan, a survey request and a priority area profile.
             </div>
             <div>
               The survey plans records the survey’s intended area of interest, its specifications and intended deliverable.
             </div>
             <div>
               The survey request record the information required for submission to the Hydroscheme Industry Partnership Program (HIPP) review panel.
+            </div>
+            <div>
+              The priority area profile enables an organisation to highlight the areas of our marine jurisdiction that are of high, medium and low priority for surveying.
             </div>
           </div>
         </q-expansion-item>

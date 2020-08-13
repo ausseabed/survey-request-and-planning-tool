@@ -1,5 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn
-  } from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn,
+  Generated } from "typeorm";
 import { getConnection } from 'typeorm';
 
 import { SurveyRequest } from './survey-request';
@@ -42,6 +42,10 @@ export class SurveyRequestAoi {
 
   @PrimaryGeneratedColumn('uuid')
   id;
+
+  @Column({type:"int"})
+  @Generated('increment')
+  counter;
 
   @Column({
       type:"varchar",

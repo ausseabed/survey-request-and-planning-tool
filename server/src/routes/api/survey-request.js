@@ -12,6 +12,7 @@ import { getConnection } from 'typeorm';
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
   permitCustodianBasedPermission } from '../utils';
 import { SurveyRequest } from '../../lib/entity/survey-request';
+import { SurveyRequestAoi } from '../../lib/entity/survey-request-aoi';
 import { SurveyPlan } from '../../lib/entity/survey-plan';
 import { updateRecordState } from '../state-management';
 import { RecordState } from '../../lib/entity/record-state';
@@ -32,13 +33,27 @@ var ENTITY_GEOJSON_MAP = [
   ['comments', 'REQOR_COMM'],
 ];
 
-const surveyRequestRelations = [
-  "custodians",
-  "organisation",
-  "organisations",
-  "businessCaseAttachment",
-  "aois",
-];
+async function getSurveyRequest(id) {
+  // function a little more complicated that a simple `.findOne` as we
+  // need to support ordering of the area of interests
+  let surveyRequest = await getConnection()
+  .getRepository(SurveyRequest)
+  .createQueryBuilder("survey_request")
+  .leftJoinAndSelect("survey_request.custodians", "custodian")
+  .leftJoinAndSelect("survey_request.organisation", "organisation")
+  .leftJoinAndSelect("survey_request.organisations", "organisations")
+  .leftJoinAndSelect("survey_request.businessCaseAttachment", "attachment")
+  .leftJoinAndSelect("survey_request.aois", "survey_request_aoi")
+  .where("survey_request.id = :id", { id: id })
+  .orderBy({
+      // 'survey_request_aoi.name': 'ASC',
+      'survey_request_aoi.counter': 'ASC'
+  })
+  .getOne();
+
+  return surveyRequest;
+}
+
 
 var router = express.Router();
 
@@ -240,14 +255,7 @@ router.get(
   ],
   asyncMiddleware(async function (req, res) {
 
-  let surveyRequest = await getConnection()
-  .getRepository(SurveyRequest)
-  .findOne(
-    req.params.id,
-    {
-      relations: surveyRequestRelations
-    }
-  );
+  let surveyRequest = await getSurveyRequest(req.params.id);
 
   if (!surveyRequest || surveyRequest.deleted) {
     let err = Boom.notFound(
@@ -323,14 +331,7 @@ router.post(
   });
 
   // because the saved version of custodian doesn't include all attribs
-  surveyRequest = await getConnection()
-  .getRepository(SurveyRequest)
-  .findOne(
-    surveyRequest.id,
-    {
-      relations: surveyRequestRelations
-    }
-  )
+  surveyRequest = await getSurveyRequest(surveyRequest.id);
   return res.json(surveyRequest)
 }));
 

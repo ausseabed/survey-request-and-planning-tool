@@ -1,3 +1,14 @@
+function generateNotifyCaptionMessage(err) {
+  if (!err) {
+    return undefined
+  }
+  let caption = `${err.statusText} (${err.response.status})`
+  if (err.response.data && err.response.data.message) {
+    caption = `${err.response.data.message} (${err.response.status})`
+  }
+  return caption
+};
+
 export const errorHandler = {
   methods: {
     handleApiError(e) {
@@ -10,9 +21,10 @@ export const errorHandler = {
         position: 'bottom-left'
       })
     },
-    notifyError(message) {
+    notifyError(message, err) {
       return this.$q.notify({
         message: message,
+        caption: generateNotifyCaptionMessage(err),
         type: 'negative',
         color: 'negative',
         actions: [{ icon: 'close', color: 'white' }],

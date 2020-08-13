@@ -1078,7 +1078,7 @@ export default Vue.extend({
         this.notifySuccess('Saved plan');
       })
       .catch(err => {
-        this.notifyError(`Failed to save plan (${err.message})`);
+        this.notifyError(`Failed to save plan (${err.message})`, err);
       });
     },
 

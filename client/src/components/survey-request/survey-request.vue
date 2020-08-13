@@ -369,7 +369,7 @@ export default Vue.extend({
           this.$router.push({ name: routeName, params: { id: sr.id } });
         }
       }).catch((err) => {
-        this.notifyError(`Failed to save Survey Request`);
+        this.notifyError(`Failed to save Survey Request`, err);
       });
     },
 

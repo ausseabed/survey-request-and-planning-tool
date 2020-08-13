@@ -155,7 +155,7 @@ export default Vue.extend({
       this.$refs.recordState.transitionRecordState('PUBLISH').then(pas => {
         this.notifySuccess('Priority Area Submission published');
       }).catch((err) => {
-        this.notifyError(`Failed to publish Priority Area Submission`);
+        this.notifyError(`Failed to publish Priority Area Submission`, err);
       });
     },
 
@@ -196,7 +196,7 @@ export default Vue.extend({
           this.$router.push({ name: routeName, params: { id: pas.id } });
         }
       }).catch((err) => {
-        this.notifyError(`Failed to save Priority Area Submission`);
+        this.notifyError(`Failed to save Priority Area Submission`, err);
       });
     },
 

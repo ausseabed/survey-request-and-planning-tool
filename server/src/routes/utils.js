@@ -8,13 +8,21 @@ import { User } from '../lib/entity/user';
 import { multiPolygon, multiLineString, multiPoint } from "@turf/helpers";
 import truncate from "@turf/truncate";
 
+function formatBoomPayload(error) {
+  return {
+    ...error.output.payload,
+    ...(_.isNil(error.data) ? {} : { data: error.data }),
+  }
+}
+
 export const asyncMiddleware = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch((err) => {
     if (!err.isBoom) {
-      return next(Boom.badImplementation(err));
+      err = Boom.badImplementation(err);
     }
     err.statusCode = err.output.statusCode;
-    next(err);
+    res.status(err.output.statusCode).send(formatBoomPayload(err));
+    next();
   });
 };
 

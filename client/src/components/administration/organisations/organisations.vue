@@ -390,7 +390,7 @@ export default Vue.extend({
           this.$router.replace({ path: `/admin/organisations/${organisation.id}` });
         }
       }).catch((err) => {
-        this.notifyError(`Failed to save organisation`);
+        this.notifyError(`Failed to save organisation`, err);
       });
     },
 
@@ -410,8 +410,8 @@ export default Vue.extend({
             //delete org handler sets active org to undefined, so no need here
             this.notifySuccess('Organisation deleted');
             this.$router.replace({ path: `/admin/organisations/` });
-          }).catch(() => {
-            this.notifyError('Failed to delete organisation');
+          }).catch((err) => {
+            this.notifyError('Failed to delete organisation', err);
           });
         }).onCancel(() => {
           //do nothing
@@ -478,7 +478,7 @@ export default Vue.extend({
       })
       .catch(err => {
         this.uploadingCsvList = false;
-        this.notifyError("Failed to process organisation list")
+        this.notifyError("Failed to process organisation list", err)
       });
 
     },

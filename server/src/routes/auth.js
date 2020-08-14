@@ -8,7 +8,6 @@ var fs = require('fs');
 var crypto = require('crypto');
 var _ = require('lodash');
 const url = require('url');
-var base64url = require("base64url");
 var resolve = require('path').resolve;
 
 import { getConnection } from 'typeorm';

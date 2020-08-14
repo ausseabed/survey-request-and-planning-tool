@@ -1,4 +1,4 @@
-FROM node:11.6.0 as builder
+FROM node:14.8.0 as builder
 
 # postgis command line tools (pgsql2shp) are used by the web server
 RUN \
@@ -14,7 +14,7 @@ ARG AUTH_HOST
 ARG AUTH_CLIENT_ID
 
 # And npm bits
-ADD package.json .babelrc $APPDIR/
+ADD package.json yarn.lock .babelrc $APPDIR/
 ADD ormconfig.js $APPDIR/ormconfig.js
 
 RUN yarn global add mocha typeorm @babel/core @babel/cli

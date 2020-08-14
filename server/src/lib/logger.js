@@ -1,8 +1,8 @@
 ﻿var winston = require('winston');
-var uuid5 = require('uuid/v5');
-var uuid4 = require('uuid/v4');
+import { v4 as uuidv4 } from 'uuid';
+import { v5 as uuidv5 } from 'uuid';
 
-var logger = new (winston.Logger)({
+const logger = winston.createLogger({
     transports: [
         new (winston.transports.Console)({
             level: 'debug'
@@ -13,6 +13,6 @@ var logger = new (winston.Logger)({
 module.exports = {
     logger: logger,
     logId: function () {
-        return uuid5("logs", uuid4());
+        return uuidv5("logs", uuidv4());
     }
 }

@@ -102,7 +102,7 @@
 
           <div class="column col" v-if="surveyRequest.hasMoratorium">
             <div class="hint-text">Moratorium Justification</div>
-            <div class="long-text"> {{ surveyRequest.moratoriumComment }} </div>
+            <div class="long-text full-width"> {{ surveyRequest.moratoriumComment }} </div>
           </div>
         </div>
       </q-card-section>
@@ -113,12 +113,12 @@
       >
         <div class="text-subtitle1"> {{surveyRequest.aois.length > 1 ? 'Areas' : 'Area' }} of Interest</div>
 
-        <div class="column col">
+        <div class="column full-width">
           <div class="hint-text">Risk Issues/Caveats or Constraints</div>
           <div class="long-text"> {{ surveyRequest.riskIssues }} </div>
         </div>
 
-        <div class="column col">
+        <div class="column full-width">
           <div class="hint-text">Further Information</div>
           <div class="long-text"> {{ surveyRequest.furtherInformation }} </div>
         </div>

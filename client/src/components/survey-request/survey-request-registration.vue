@@ -23,6 +23,7 @@
       </form-field-validated-input>
 
       <form-field-validated-select
+        ref="organisation"
         name="surveyRequest.organisation"
         label="Requesting Organisation"
         use-input
@@ -39,10 +40,13 @@
         :readonly="readonly"
         hint="Primary organisation submitting the request"
         outlined
+        @virtual-scroll="organisationScroll"
+        :loading="loadingOrgs"
         >
       </form-field-validated-select>
 
       <form-field-validated-select
+        ref="collaboratingOrganisations"
         name="surveyRequest.organisations"
         label="Collaborating Organisation(s)"
         multiple
@@ -61,6 +65,8 @@
         :readonly="readonly"
         hint="Organisations that are submitting the request"
         outlined
+        @virtual-scroll="organisationScroll"
+        :loading="loadingOrgs"
         >
       </form-field-validated-select>
 
@@ -168,14 +174,34 @@ export default Vue.extend({
     }),
 
     fetchData() {
-      this.getOrganisations();
+      this.loadingOrgs = true;
+      this.getOrganisations().then(() => {
+        this.loadingOrgs = false;
+      });
     },
 
     filterOrganisationFunction(val, update, abort) {
       this.setOrganisationFilter(val);
+      this.loadingOrgs = true;
       this.getOrganisations().then((orgs) => {
         update();
+        this.loadingOrgs = false;
       });
+    },
+
+    organisationScroll(details) {
+      const loadedAll = _.isNil(this.orgCount) ?
+        false :
+        this.organisationsList.length >= this.orgCount;
+
+      if (details.index == details.to && !this.loadingOrgs && !loadedAll) {
+        this.loadingOrgs = true;
+        this.getOrganisations().then(() => {
+          this.loadingOrgs = false;
+          this.$refs.organisation.refresh();
+          this.$refs.collaboratingOrganisations.refresh();
+        });
+      }
     },
 
     isValid() {
@@ -198,6 +224,7 @@ export default Vue.extend({
     ]),
     ...mapGetters('organisation', {
       organisationsList: 'organisations',
+      orgCount: 'count'
     }),
     $v () {
       return this.validator;
@@ -206,7 +233,7 @@ export default Vue.extend({
 
   data() {
     return {
-
+      loadingOrgs: false
     }
   },
 

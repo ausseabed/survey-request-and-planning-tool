@@ -234,7 +234,7 @@ export default Vue.extend({
     },
 
     stateUpdated({newState, oldState}) {
-      if (_.isNil(state)) {
+      if (_.isNil(newState)) {
         this.stateReadonly = true;
         this.published = true;
       } else {

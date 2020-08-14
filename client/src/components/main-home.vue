@@ -52,15 +52,15 @@
                 </li>
               </ol>
             </div>
-            <q-btn
+            <sct-btn
               class="self-center full-width"
-              flat label="Add Basic Survey Plan"
+              label="Add Basic Survey Plan"
               icon="add"
               :to="'/survey-plan/new'">
               <q-tooltip>
                 Create new basic survey plan
               </q-tooltip>
-            </q-btn>
+            </sct-btn>
           </div>
         </q-expansion-item>
 
@@ -80,15 +80,15 @@
                 To submit a survey program for consideration to the HIPP please click on “Requests” at the top of this window and either “+ ADD HIPP REQUEST” or select an already existing record in your list to modify.
               </div>
             </div>
-            <q-btn
+            <sct-btn
               class="self-center full-width"
-              flat label="Add a HIPP Request"
+              label="Add a HIPP Request"
               icon="add"
               :to="'/survey-request/new/registration'">
               <q-tooltip>
                 Create a new HIPP Request
               </q-tooltip>
-            </q-btn>
+            </sct-btn>
           </div>
         </q-expansion-item>
 
@@ -125,15 +125,15 @@
                 These priority areas are provided to a variety of decision makers, and form part of the incoming information for the Australian Hydrographic Office (AHO) for consideration as supplementary material for the annual preparation of Hydroscheme.
               </div>
             </div>
-            <q-btn
+            <sct-btn
               class="self-center full-width"
-              flat label="Add a Priority Area"
+              label="Add a Priority Area"
               icon="add"
               :to="'/priority-area-submission/new'">
               <q-tooltip>
                 Add a Priority Area Submission
               </q-tooltip>
-            </q-btn>
+            </sct-btn>
           </div>
         </q-expansion-item>
 

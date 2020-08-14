@@ -17,6 +17,7 @@ import FormFieldValidatedSelect from
 import FormFieldValidatedSelectMultipleCheck from
   '../components/controls/form-field-validated-select-multiple-check';
 import RecordState from '../components/controls/record-state';
+import SctButton from '../components/controls/sct-btn';
 
 export default ({ Vue }) => {
   Vue.component('confirm-navigation', ConfirmNavigation)
@@ -29,4 +30,5 @@ export default ({ Vue }) => {
   Vue.component('form-field-validated-select-multiple-check',
     FormFieldValidatedSelectMultipleCheck)
   Vue.component('record-state', RecordState)
+  Vue.component('sct-btn', SctButton)
 }

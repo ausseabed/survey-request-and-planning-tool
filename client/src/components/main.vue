@@ -113,13 +113,13 @@
                   >
                   <q-separator style="height:1px;"/>
                   <div class="row justify-end q-py-sm q-mx-md">
-                    <q-btn flat label="add plan"
+                    <sct-btn label="add plan"
                       icon="add"
                       :to="'/survey-plan/new'">
                       <q-tooltip>
                         Create new survey plan
                       </q-tooltip>
-                    </q-btn>
+                    </sct-btn>
                   </div>
 
                 </div>
@@ -176,13 +176,14 @@
                 >
                 <q-separator style="height:1px;"/>
                 <div class="row justify-end q-py-sm q-mx-md">
-                  <q-btn flat label="add request"
+                  <sct-btn
+                    label="add request"
                     align="right" icon="add"
                     :to="'/survey-request/new/registration'">
                     <q-tooltip>
                       Create new HIPP request
                     </q-tooltip>
-                  </q-btn>
+                  </sct-btn>
                 </div>
               </div>
 
@@ -252,13 +253,13 @@
                 >
                 <q-separator style="height:1px;"/>
                 <div class="row justify-end q-py-sm q-mx-md">
-                  <q-btn flat label="add submission"
+                  <sct-btn label="add submission"
                     align="right" icon="add"
                     :to="'/priority-area-submission/new'">
                     <q-tooltip>
                       Create new Priority Area Submission
                     </q-tooltip>
-                  </q-btn>
+                  </sct-btn>
                 </div>
               </div>
 

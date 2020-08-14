@@ -20,7 +20,7 @@ import SurveyRequest from 'components/survey-request/survey-request.vue'
 import SurveyRequestAreasOfInterest from 'components/survey-request/survey-request-areas-of-interest.vue'
 import SurveyRequestBusinessCase from 'components/survey-request/survey-request-business-case.vue'
 import SurveyRequestRegistration from 'components/survey-request/survey-request-registration.vue'
-import SurveyRequestSubAreaDataTypes from 'components/survey-request/survey-request-sub-area-data-types.vue'
+import SurveyRequestSubAreaInfo from 'components/survey-request/survey-request-sub-area-info.vue'
 import SurveyRequestSubAreaDetails from 'components/survey-request/survey-request-sub-area-details.vue'
 import SurveyRequestSubmissionDetails from 'components/survey-request/survey-request-submission-details.vue'
 import SurveyRequestSummary from 'components/survey-request/survey-request-summary.vue'
@@ -138,9 +138,9 @@ const routes = [
           component: SurveyRequestSubAreaDetails,
         },
         {
-          name: 'survey-request-sub-area-data-types',
-          path: 'sub-area-data-types',
-          component: SurveyRequestSubAreaDataTypes,
+          name: 'survey-request-sub-area-info',
+          path: 'sub-area-info',
+          component: SurveyRequestSubAreaInfo,
         },
         {
           name: 'survey-request-summary',

@@ -3,39 +3,6 @@
 
     <q-card-section class="column q-gutter-y-sm">
 
-      <div>
-        Please provide further information relating to all sub-areas that
-        have been uploaded.
-      </div>
-
-      <form-field-validated-input
-        name="surveyRequest.riskIssues"
-        attribute="Risk Issues"
-        label="Risk Issues/Caveats or Constraints"
-        :value="surveyRequest.riskIssues"
-        @input="update({path:'surveyRequest.riskIssues', value:$event})"
-        @blur="$v.surveyRequest.riskIssues.$touch"
-        type="textarea"
-        autogrow
-        :readonly="readonly"
-        outlined
-        >
-      </form-field-validated-input>
-
-      <form-field-validated-input
-        name="surveyRequest.furtherInformation"
-        attribute="Further Information"
-        label="Further Information"
-        :value="surveyRequest.furtherInformation"
-        @input="update({path:'surveyRequest.furtherInformation', value:$event})"
-        @blur="$v.surveyRequest.furtherInformation.$touch"
-        type="textarea"
-        autogrow
-        :readonly="readonly"
-        outlined
-        >
-      </form-field-validated-input>
-
       <q-card-section>
         <div class="column q-gutter-y-xs">
 

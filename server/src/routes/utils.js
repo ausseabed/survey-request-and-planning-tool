@@ -3,6 +3,7 @@ import * as Boom from '@hapi/boom';
 import { getConnection } from 'typeorm';
 
 var auth = require('../lib/auth')();
+var logger = require('../lib/logger').logger;
 import { User } from '../lib/entity/user';
 
 import { multiPolygon, multiLineString, multiPoint } from "@turf/helpers";
@@ -17,6 +18,7 @@ function formatBoomPayload(error) {
 
 export const asyncMiddleware = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch((err) => {
+    logger.error(err);
     if (!err.isBoom) {
       err = Boom.badImplementation(err);
     }

@@ -71,17 +71,12 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   let surveyRequestQuery = getConnection()
   .getRepository(SurveyRequest)
   .createQueryBuilder("survey_request")
-  .select(["survey_request.id", "survey_request.name",
-    "survey_request.requestDateStart", "survey_request.requestDateEnd"])
+  .select(["survey_request.id", "survey_request.name"])
+  .leftJoinAndSelect("survey_request.recordState", "recordState")
   .where(
     `survey_request.deleted = :deleted`,
     {deleted: false}
   )
-
-  if (includeGeometry) {
-    surveyRequestQuery = surveyRequestQuery
-    .addSelect("survey_request.areaOfInterest")
-  }
 
   if (hasPermission(req.user.role, 'canViewAllSurveyRequests')) {
     // then no additional where clauses
@@ -101,11 +96,45 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     // throw err;
   }
 
-  surveyRequestQuery = surveyRequestQuery.orderBy("survey_request.name")
+  surveyRequestQuery = surveyRequestQuery
+  .orderBy("survey_request.name")
 
   const surveyRequests = await surveyRequestQuery.getMany()
   return res.json(surveyRequests);
 }));
+
+
+// // gets geojson for all requests
+// router.get('/geometry-old', isAuthenticated, asyncMiddleware(async function (req, res) {
+//
+//   // WARNING: This will only work when connected up to postgis v3.0
+//   // and this is currently not the case
+//
+//   const pas2 = await getConnection()
+//   .createQueryBuilder()
+//   .select([`ST_AsGeoJSON(geom_query, 'sra_geom') as geojson`])
+//   .from(subQuery => {
+//     return subQuery
+//     .select([
+//       "survey_request.id as sr_id",
+//       "survey_request.name as sr_name",
+//       "survey_request_aoi.id as sra_id",
+//       "survey_request_aoi.name as sra_name",
+//       "survey_request_aoi.geom as sra_geom"
+//     ])
+//     .from("survey_request_aoi")
+//     .innerJoin("survey_request_aoi.surveyRequest", "survey_request")
+//     .where(
+//       `survey_request.deleted = :deleted`,
+//       {deleted: false}
+//     );
+//   }, "geom_query")
+//   .getRawOne();
+//
+//   res.set('Content-Type', 'application/json');
+//   return res.send(pas2.geojson);
+//
+// }));
 
 
 // gets a single HIPP Request
@@ -122,52 +151,31 @@ router.get(
   ],
   asyncMiddleware(async function (req, res) {
 
-  let surveyRequest = await getConnection()
+  let sr = await getConnection()
   .getRepository(SurveyRequest)
-  .findOne(
-    req.params.id,
-    {
-      relations: [
-        "custodians",
-      ]
-    }
-  );
+  .findOne(req.params.id);
 
-  if (!surveyRequest || surveyRequest.deleted) {
+  if (!sr) {
     let err = Boom.notFound(
       `SurveyRequest ${req.params.id} does not exist`);
     throw err;
   }
 
-  // feature prop dict based on entity values to be returned in the geojson.
-  const properties = {}
+  const sr2 = await getConnection()
+  .createQueryBuilder()
+  .select([`ST_AsGeoJSON(ST_Collect("extent")) as geojson`])
+  .from(subQuery => {
+    return subQuery
+      .select(`geom`, 'extent')
+      .addSelect(`name`, 'name')
+      .from('survey_request_aoi')
+      .where(`"survey_request_id" = :id`, { id: req.params.id });
+  }, "extent")
+  .getRawOne();
 
-  // Translate the entity attribute names to the AHO db names using the mapping
-  // array.
-  for (const etj of ENTITY_GEOJSON_MAP) {
-    const entityAttribName = etj[0];
-    const gjAttribName = etj[1];
-    let attribValue = undefined;
-    if (_.has(surveyRequest, entityAttribName)) {
-      attribValue = _.get(surveyRequest, entityAttribName)
-    }
-    properties[gjAttribName] = attribValue
-  }
+  res.set('Content-Type', 'application/json');
+  return res.send(sr2.geojson);
 
-  const aoiMultipolygon = surveyRequest.areaOfInterest;
-  const aoiFeature = feature(aoiMultipolygon, properties);
-
-  const collection = featureCollection([
-    aoiFeature,
-  ]);
-
-  let areaName = _.isNil(surveyRequest.name) ? 'request' : surveyRequest.name
-  areaName = areaName.replace(/[^a-zA-Z0-9 ]*/g, "")   // remove special chars
-  areaName = areaName.replace(/ /g, "-")   // replace spaces with dash
-  const filename = `${areaName}-asb-rapt-download.json`;
-  res.set(
-    'Content-disposition', `attachment; filename=${filename}`);
-  return res.json(collection);
 }));
 
 

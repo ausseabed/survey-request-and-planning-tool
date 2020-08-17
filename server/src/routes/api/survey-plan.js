@@ -1,7 +1,7 @@
 var express = require('express');
 var _ = require('lodash');
 import * as Boom from '@hapi/boom';
-import { feature, featureCollection } from "@turf/helpers";
+import { feature, featureCollection, geometryCollection } from "@turf/helpers";
 
 import { getConnection } from 'typeorm';
 
@@ -189,19 +189,18 @@ router.get(
   }
 
   const aoiMultipolygon = plan.areaOfInterest;
-  const aoiFeature = feature(aoiMultipolygon);
 
-  const collection = featureCollection([
-    aoiFeature,
+  const collection = geometryCollection([
+    aoiMultipolygon,
   ]);
 
   let filename = _.isNil(plan.surveyName) ? 'plan' : plan.surveyName
   filename = filename.replace(/[^a-zA-Z0-9 ]*/g, "")   // remove special chars
   filename = filename.replace(/ /g, "-")   // replace spaces with dash
   filename = `${filename}-asb-rapt-download.json`;
-  res.set(
-    'Content-disposition', `attachment; filename=${filename}`);
-  return res.json(collection);
+  // res.set(
+  //   'Content-disposition', `attachment; filename=${filename}`);
+  return res.json(collection.geometry);
 }));
 
 

@@ -145,13 +145,21 @@
                     :focused="activeId == surveyRequest.id"
                     >
                     <div class="row">
-                      <q-item-section>
+                      <q-item-section top>
                         <q-item-label>{{surveyRequest.name}}</q-item-label>
                       </q-item-section>
 
                       <q-item-section side top>
-                        <q-item-label caption>{{surveyRequest.requestDateStart | dateString }}</q-item-label>
+                        <q-item-label caption>{{(surveyRequest.recordState ? surveyRequest.recordState.created : undefined) | dateString }}</q-item-label>
+                        <q-icon
+                          :name="recordStateDetails(surveyRequest.recordState).icon"
+                        >
+                          <q-tooltip>
+                            {{ recordStateDetails(surveyRequest.recordState).label }}
+                          </q-tooltip>
+                        </q-icon>
                       </q-item-section>
+
                     </div>
                     <q-item-section>
                       <transition-expand>
@@ -272,9 +280,95 @@
       </div>
       <div class="gt-xs col full-height">
         <q-card class="fit">
-          <div ref="mapDiv" id="mapDiv" class="full-height">
-            <q-resize-observer @resize="onResize" />
-          </div>
+          <l-map
+            class="col rounded-borders"
+            ref="map"
+            :zoom="zoom"
+            :center="center"
+            :bounds="bounds"
+          >
+            <l-control-scale
+              position="topright"
+              :imperial="false"
+              :metric="true">
+            </l-control-scale>
+            <l-control
+              :position="'bottomleft'">
+              <div class="rounded-borders q-px-sm" style="background-color: #ffffff4f">
+                <q-checkbox v-model="showPriorityAreas" label="Priority Areas"/>
+              </div>
+            </l-control>
+
+            <l-control position="topleft" >
+              <q-btn
+                class="map-btn"
+                padding="none"
+                icon="zoom_out_map"
+                @click="zoomToDefault()"
+              >
+              </q-btn>
+            </l-control>
+
+            <l-wms-tile-layer
+              :base-url="mapBaseUrl"
+              layers="World_Bathymetry_Image"
+              name="WorldBathymetry Image"
+              :attribution="baseLayerAttribution"
+              layer-type="base"
+              format="image/png"
+              :zIndex="3"
+            >
+            </l-wms-tile-layer>
+
+            <l-wms-tile-layer
+              :visible="showPriorityAreas"
+              :base-url="priorityAreaLayerDetails.url"
+              :layers="priorityAreaLayerDetails.layer"
+              name="Priority Areas"
+              layer-type="base"
+              :transparent="true"
+              format="image/png"
+              :zIndex="5"
+              :opacity="0.5"
+            >
+            </l-wms-tile-layer>
+
+            <template v-if="tab === 'survey-plans'">
+              <l-geo-json
+                v-for="sp in surveyPlanFeatures"
+                :key="sp.id"
+                :geojson="sp.geojson"
+                :options="options"
+                :options-style="styleFunction(sp)"
+              >
+              </l-geo-json>
+            </template>
+
+            <template v-if="tab === 'survey-requests'">
+              <l-geo-json
+                v-for="sr in surveyRequestFeatures"
+                :key="sr.id"
+                :geojson="sr.geojson"
+                :options="options"
+                :options-style="styleFunction(sr)"
+              >
+              </l-geo-json>
+            </template>
+
+            <template v-if="tab === 'priority-areas'">
+              <l-geo-json
+                v-for="pas in priorityAreaSubmissionFeatures"
+                :key="pas.id"
+                :geojson="pas.geojson"
+                :options="options"
+                :options-style="styleFunction(pas)"
+              >
+              </l-geo-json>
+            </template>
+
+            <!-- <l-rectangle :bounds="boundsRectangle" ></l-rectangle> -->
+
+          </l-map>
         </q-card>
 
       </div>
@@ -296,33 +390,58 @@ import TransitionExpand from './transition-expand.vue';
 import { errorHandler } from './mixins/error-handling';
 import { permission } from './mixins/permission';
 import { surveyPlanStatusIconDetails, recordStateDetails } from './utils'
-import OlMap from './olmap/olmap';
+
+import * as MapConstants from './olmap/map-constants';
+import { latLng, latLngBounds } from 'leaflet';
+import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup,
+  LControlScale, LRectangle } from 'vue2-leaflet';
+
 
 import * as pmMutTypes
   from '../store/modules/survey-plan/survey-plan-mutation-types'
 
 import MainHome from './main-home';
 
+
+const defaultCenter = latLng(
+  ((MapConstants.WMTS_DEFAULT_EXTENT[1] + MapConstants.WMTS_DEFAULT_EXTENT[3]) / 2),
+  ((MapConstants.WMTS_DEFAULT_EXTENT[0] + MapConstants.WMTS_DEFAULT_EXTENT[2]) / 2)
+);
+
+const defaultBounds = latLngBounds(
+  latLng(
+    MapConstants.WMTS_DEFAULT_EXTENT[1],
+    MapConstants.WMTS_DEFAULT_EXTENT[0]
+  ),
+  latLng(
+    MapConstants.WMTS_DEFAULT_EXTENT[3],
+    MapConstants.WMTS_DEFAULT_EXTENT[2]
+  )
+);
+
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
   components: {
     TransitionExpand,
     MainHome,
+    LMap,
+    LControlLayers,
+    LLayerGroup,
+    LControlScale,
+    LRectangle,
+    'l-wms-tile-layer': LWMSTileLayer
   },
 
   beforeMount() {
     this.fetchSurveyPlans();
-    this.getSurveyRequests({params:{includeGeometry:true}});
+    this.getSurveyRequests();
     this.getPriorityAreaSubmissions();
   },
 
   mounted() {
-    var olmap = OlMap(this.$refs.mapDiv, {
-      basemap: "osm"
-    })
-    olmap.initMap(false);
-    this.map = olmap;
-    this.map.onFeaturesSelected = this.mapFeaturesSelected;
+    // hides the "Leaflet" attribution in the map widget
+    this.$refs.map.mapObject.attributionControl.setPrefix('');
   },
 
   methods: {
@@ -348,7 +467,7 @@ export default Vue.extend({
 
     fetchSurveyPlans () {
       this.SET_SURVEY_PLAN_LIST_FILTER(undefined);
-      this.getSurveyPlans({params:{includeGeometry:true}})
+      this.getSurveyPlans()
     },
 
     debounceExtents: _.debounce(function(extents) {
@@ -375,7 +494,6 @@ export default Vue.extend({
 
         // sets the active plan set in the plan list
         this.activeId = spid;
-        this.map.highlightFeatureId(spid);
 
         // set the list scroll position to the survey clicked on in the map
         const surveyPlanId = `list-item-${this.activeId}`;
@@ -390,62 +508,87 @@ export default Vue.extend({
 
     mouseoverListItem(matchingProjMeta, updateMap) {
       this.activeId = matchingProjMeta.id;
-      if (_.isNil(matchingProjMeta.areaOfInterest)) {
-        this.map.highlightFeatureId(undefined);
-      } else if (updateMap) {
-        this.map.highlightFeatureId(matchingProjMeta.id);
-      }
     },
     mouseleaveListItem() {
-      //clears selection in map
       this.activeId = undefined;
-      this.map.highlightFeatureId(undefined);
     },
     surveyPlanStatusIconDetails: surveyPlanStatusIconDetails,
     recordStateDetails: recordStateDetails,
 
-    onResize (size) {
-      if (this.map) {
-        this.map.setSize(size);
+    fetchMapFeatures(tabName) {
+      let featureUrlName = undefined;
+      let featureList = undefined;
+      let entityList = undefined;
+      // different entities use different name attributes, this controls what
+      // wil be shown in the feature mouseover tooltip
+      let nameProp = undefined;
+
+      if (tabName === 'survey-plans') {
+        featureUrlName = 'survey-plan';
+        featureList = this.surveyPlanFeatures;
+        entityList = this.surveyPlans;
+        nameProp = 'surveyName';
+      } else if (tabName === 'survey-requests') {
+        featureUrlName = 'survey-request';
+        featureList = this.surveyRequestFeatures;
+        entityList = this.surveyRequests;
+        nameProp = 'name';
+      } else if (tabName === 'priority-areas') {
+        featureUrlName = 'priority-area-submission';
+        featureList = this.priorityAreaSubmissionFeatures;
+        entityList = this.priorityAreaSubmissions;
+        nameProp = 'submittingOrganisation.name';
       }
+
+      // we keep the 3 different entity types in 3 different lists
+      // but the process of getting the geometry is pretty much the same
+      // for each one; differences being the url and what property holds
+      // the name value
+      if (!_.isNil(featureUrlName) && !_.isNil(featureList)) {
+        entityList.forEach(sr => {
+          Vue.axios.get(`api/${featureUrlName}/${sr.id}/geometry`).then(res => {
+            const geojson = res.data;
+            if (!_.isNil(geojson) && geojson.length != 0) {
+              geojson.properties = {
+                id: sr.id,
+                name: _.get(sr, nameProp)
+              };
+              const existingIndex = featureList.findIndex(esr => {
+                return esr.sr.id === sr.id;
+              });
+              const nf = {
+                geojson: geojson,
+                sr: sr
+              };
+              if (existingIndex == -1) {
+                featureList.push(nf);
+              } else {
+                this.$set(featureList, existingIndex, nf);
+              }
+            }
+          });
+        });
+      }
+
     },
 
-    updateMapFeatures() {
-      if (_.isNil(this.tab)) {
-        return;
-      }
-      if (this.tab == 'home') {
-        console.log("Home tab selected");
-      } else if (this.tab == 'survey-plans') {
-        const mapableSurveyPlans = this.surveyPlans.filter(sp => {
-          return !_.isNil(sp.areaOfInterest);
-        })
-        const areaOfInterests = mapableSurveyPlans.map(mpm => {
-          let f = mpm.areaOfInterest;
-          f.id = mpm.id;
-          return f;
-        });
-        if (!_.isNil(this.map)) {
-          this.map.setGeojsonFeatureIntersecting(areaOfInterests);
-        }
-      } else if (this.tab == 'survey-requests') {
-        const mapableSurveyRequests = this.surveyRequests.filter(sp => {
-          return !_.isNil(sp.areaOfInterest);
-        });
-        let areaOfInterests = mapableSurveyRequests.map(mpm => {
-          let f = mpm.areaOfInterest;
-          f.id = mpm.id;
-          return f;
-        });
-        if (!_.isNil(this.map)) {
-          this.map.setGeojsonFeatureIntersecting(areaOfInterests);
-        }
-      } else if (this.tab == 'priority-areas') {
-        console.log("Priority Areas tab selected");
-      } else {
-        console.error("Bad tab specified");
-      }
-    }
+    styleFunction(sr) {
+      return (f) => {
+        const srid = f.geometry.properties.id;
+        return {
+          weight: 2,
+          color: srid === this.activeId ? 'rgba(255, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.3)',
+          opacity: 1,
+          fillColor: srid === this.activeId ? 'rgba(255, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)',
+          fillOpacity: 1
+        };
+      };
+    },
+
+    zoomToDefault() {
+      const map = this.$refs.map;
+      map.mapObject.flyToBounds(defaultBounds, {duration: 0.2});
+    },
   },
 
   computed: {
@@ -458,14 +601,64 @@ export default Vue.extend({
     ...mapGetters('priorityAreaSubmission', [
       'priorityAreaSubmissions',
     ]),
+
+    mapBaseUrl() {
+      return MapConstants.LEAFLET_BASE_LAYER;
+    },
+    baseLayerAttribution() {
+      return MapConstants.MAP_ATTRIBUTION_HTML;
+    },
+    priorityAreaLayerDetails() {
+      return {
+        url: MapConstants.WMS_PRIORITY_AREAS,
+        layer: MapConstants.WMS_PRIORITY_AREAS_LAYER
+      }
+    },
+    options() {
+      return {
+        onEachFeature: this.onEachFeatureFunction
+      };
+    },
+    onEachFeatureFunction() {
+      return (feature, layer) => {
+        layer.bindTooltip(
+          `<div class="rounded-borders">` +
+            feature.properties.name +
+          `</div>`,
+          { permanent: false, sticky: false }
+        );
+        layer.on('mouseover', (e) => {
+          this.activeId = feature.properties.id;
+        });
+        layer.on('click', (e) => {
+          this.activeId = feature.properties.id;
+          const layerBounds = layer.getBounds().pad(0.2);
+          const map = this.$refs.map;
+          map.mapObject.flyToBounds(layerBounds, {duration: 0.2});
+        });
+      };
+    },
+
+    boundsRectangle() {
+      return [
+        [MapConstants.WMTS_DEFAULT_EXTENT[1], MapConstants.WMTS_DEFAULT_EXTENT[0]],
+        [MapConstants.WMTS_DEFAULT_EXTENT[3], MapConstants.WMTS_DEFAULT_EXTENT[2]]
+      ]
+    }
   },
 
   data() {
     return {
-      map: null,
       tab: undefined,
       activeId: undefined,
       lastSelectedFeatureIds: [],
+      zoom: 4,
+      center: defaultCenter,
+      bounds: defaultBounds,
+      showPriorityAreas: true,
+      surveyPlanFeatures: [],
+      surveyRequestFeatures: [],
+      priorityAreaSubmissionFeatures: [],
     }
   },
 
@@ -476,15 +669,9 @@ export default Vue.extend({
         this.tab = 'home';
       },
     },
-    'surveyPlans': {
-      immediate: true,
-      handler(newList, oldList) {
-        this.updateMapFeatures();
-      },
-    },
     'tab': {
       handler(newTab, oldTab) {
-        this.updateMapFeatures();
+        this.fetchMapFeatures(newTab);
       }
     },
   }
@@ -494,5 +681,11 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus">
+
+.map-btn .q-btn__wrapper {
+    background-color: white;
+    padding: 1px !important;
+    min-height: 1em !important;
+}
 
 </style>

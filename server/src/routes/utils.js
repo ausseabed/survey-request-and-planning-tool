@@ -19,6 +19,7 @@ function formatBoomPayload(error) {
 export const asyncMiddleware = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch((err) => {
     logger.error(err);
+    console.log(err);
     if (!err.isBoom) {
       err = Boom.badImplementation(err);
     }

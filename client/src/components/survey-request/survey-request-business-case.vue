@@ -63,9 +63,10 @@
         <div class="column col-auto">
           <q-uploader
             v-if="!readonly"
-            label="Additional Business Case File for Upload"
+            label="Additional Business Case File for Upload (pdf)"
             ref="uploader"
             auto-upload
+            accept=".pdf"
             flat
             bordered
             :multiple="false"

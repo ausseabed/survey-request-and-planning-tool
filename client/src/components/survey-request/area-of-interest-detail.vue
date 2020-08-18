@@ -14,14 +14,13 @@
             :ratio="1"
             contain
           />
+          <sct-btn
+            v-if="!readonly"
+            label="Apply to All"
+            icon="format_line_spacing"
+            @click="applyToAllClicked"
+          />
         </div>
-        <q-btn
-          v-if="!readonly"
-          flat
-          label="Apply to All"
-          icon="format_line_spacing"
-          @click="applyToAllClicked"
-        />
       </div>
 
       <div class="col column q-gutter-xs">

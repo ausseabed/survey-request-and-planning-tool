@@ -2,7 +2,7 @@
 
   <q-card flat bordered class="full-width" >
     <q-card-section class="row q-col-gutter-md">
-      <div class="column col-auto justify-between">
+      <div class="column col-auto">
         <div class="column q-gutter-sm">
           <q-badge v-if="aoi.isNew" color="yellow-6" text-color="black">
             New Area of Interest
@@ -14,14 +14,14 @@
             :ratio="1"
             contain
           />
+          <sct-btn
+            v-if="!readonly"
+            label="Remove"
+            icon="delete"
+            @click="deleteClicked"
+          />
         </div>
-        <q-btn
-          v-if="!readonly"
-          flat
-          label="Remove"
-          icon="delete"
-          @click="deleteClicked"
-        />
+
       </div>
 
       <div class="col column q-gutter-xs">

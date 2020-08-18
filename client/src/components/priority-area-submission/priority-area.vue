@@ -18,16 +18,14 @@
             />
           </div>
           <div class="column q-gutter-xs">
-            <q-btn
+            <sct-btn
               v-if="!readonly"
-              flat
               label="Apply to All"
               icon="format_line_spacing"
               @click="applyToAllClicked"
             />
-            <q-btn
+            <sct-btn
               v-if="!readonly"
-              flat
               label="Remove"
               icon="delete"
               @click="deleteClicked"

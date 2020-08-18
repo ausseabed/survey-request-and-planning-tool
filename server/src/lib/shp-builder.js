@@ -120,6 +120,7 @@ export class PriorityAreaShpBuilder extends ShpBuilder {
       'pas.\"contactEmail\" as PAS_EMAIL',
       'pas.\"citedContactName\" as PAS_CNAME',
       'pas.\"citedContactEmail\" as PAS_CEMAIL',
+      'cust.name as PAS_CUSTOD',
       'pa.name as PA_NAME',
       'pa.\"preferredTimeframe\" as PA_TIME',
       'pa.\"riskRating\" as PA_RISK',
@@ -132,6 +133,7 @@ export class PriorityAreaShpBuilder extends ShpBuilder {
       'JOIN priority_area_submission pas ON pas.id = pa.\"priorityAreaSubmissionSubmissionId\" ' +
       'LEFT OUTER JOIN organisation sorg ON sorg.id = pas.\"submittingOrganisationId\" ' +
       'LEFT OUTER JOIN organisation corg ON corg.id = pas.\"citedOrganisationId\" ' +
+      'LEFT OUTER JOIN custodian cust ON cust.id = pas.\"custodianId\" ' +
       `WHERE pas.id = '${id}'`
     return q
   }

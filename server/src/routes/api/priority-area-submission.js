@@ -1,6 +1,9 @@
 var express = require('express');
 var _ = require('lodash');
 import * as Boom from '@hapi/boom';
+var archiver = require('archiver');
+var p = require('path');
+const fs = require('fs');
 import { feature, featureCollection } from "@turf/helpers";
 
 import { getConnection } from 'typeorm';
@@ -13,7 +16,7 @@ import { PREFERRED_TIMEFRAME_OPTIONS, RISK_RATING_OPTIONS,
   REQUIRED_DATA_QUALITY_OPTIONS, DATA_IMPORTANCE_OPTIONS }
   from '../../lib/entity/priority-area';
 import { RecordState } from '../../lib/entity/record-state';
-
+import { shpBuilderFactory } from '../../lib/shp-builder';
 
 import { updateRecordState } from '../state-management';
 
@@ -145,6 +148,79 @@ router.get(
 
   res.set('Content-Type', 'application/json');
   return res.send(pas2.geojson);
+}));
+
+
+// gets a shapefile including the geometry and metadata for this priority
+// area submission. Multiple features will be included, one per priority
+// area included in this submission
+router.get(
+  '/:id/shp',
+  [
+    isAuthenticated,
+    permitCustodianBasedPermission({
+      entityType:PriorityAreaSubmission,
+      custodianAttributes: ['custodian'],
+      allowedPermissionAll: 'canViewAllPriorityAreaSubmissions',
+      allowedPermissionCustodian: 'canViewCustodianPriorityAreaSubmissions'})
+  ],
+  asyncMiddleware(async function (req, res) {
+
+  let priorityAreaSubmission = await getConnection()
+  .getRepository(PriorityAreaSubmission)
+  .findOne(
+    req.params.id,
+    {
+      relations: [
+        "submittingOrganisation",
+      ]
+    }
+  );
+
+  if (!priorityAreaSubmission) {
+    let err = Boom.notFound(
+      `Priority Area Submission ${req.params.id} does not exist`);
+    throw err;
+  }
+
+  const fname = _.isNil(priorityAreaSubmission.submittingOrganisation) ?
+    priorityAreaSubmission.id :
+    priorityAreaSubmission.submittingOrganisation.name.replace(' ', '-');
+
+  const shpBuilder = shpBuilderFactory('priority-area-submission')
+  const tmpDir = shpBuilder.build(priorityAreaSubmission.id, fname)
+
+  res.on('finish', () => {
+    // delete the contents of the temp direstory now that the data has been
+    // downloaded
+    tmpDir.removeCallback()
+  });
+
+  // from https://github.com/archiverjs/node-archiver/blob/master/examples/express.js
+  var archive = archiver('zip');
+
+  archive.on('error', function(err) {
+    res.status(500).send({error: err.message});
+  });
+
+  //on stream closed we can end the request
+  archive.on('end', function() {
+    console.log('Zipped %d bytes', archive.pointer());
+  });
+
+  //set the archive name
+  res.attachment(`${fname}.zip`);
+
+  //this is the streaming magic
+  archive.pipe(res);
+
+  var files = fs.readdirSync(tmpDir.name).map((fn) => { return `${tmpDir.name}/${fn}`})
+
+  for(var i in files) {
+    archive.file(files[i], { name: p.basename(files[i]) });
+  }
+
+  archive.finalize();
 }));
 
 

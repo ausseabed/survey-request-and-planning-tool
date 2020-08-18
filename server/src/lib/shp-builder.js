@@ -11,6 +11,8 @@ export function shpBuilderFactory(entityName) {
   ]
   if (entityName === 'request') {
     return new RequestShpBuilder(...props)
+  } else if (entityName === 'priority-area-submission') {
+    return new PriorityAreaShpBuilder(...props)
   } else {
     throw 'Unknown entityName passed to shpBuilder factory'
   }
@@ -105,5 +107,33 @@ export class RequestShpBuilder extends ShpBuilder {
     return q
   }
 
+}
+
+
+export class PriorityAreaShpBuilder extends ShpBuilder {
+
+  getQuery(id) {
+    const selects = [
+      'sorg.name as PAS_SU_ORG',
+      'corg.name as PAS_CI_ORG',
+      'pas.\"contactPerson\" as PAS_NAME',
+      'pas.\"contactEmail\" as PAS_EMAIL',
+      'pas.\"citedContactName\" as PAS_CNAME',
+      'pas.\"citedContactEmail\" as PAS_CEMAIL',
+      'pa.name as PA_NAME',
+      'pa.\"preferredTimeframe\" as PA_TIME',
+      'pa.\"riskRating\" as PA_RISK',
+      'pa.\"requiredDataQuality\" as PA_DATA_Q',
+      'pa.\"dataImportance\" as PA_DATA_I',
+      'pa.geom as GEOM',
+    ]
+    let q = '' +
+      `SELECT ${selects.join(', ')} FROM priority_area pa ` +
+      'JOIN priority_area_submission pas ON pas.id = pa.\"priorityAreaSubmissionSubmissionId\" ' +
+      'LEFT OUTER JOIN organisation sorg ON sorg.id = pas.\"submittingOrganisationId\" ' +
+      'LEFT OUTER JOIN organisation corg ON corg.id = pas.\"citedOrganisationId\" ' +
+      `WHERE pas.id = '${id}'`
+    return q
+  }
 
 }

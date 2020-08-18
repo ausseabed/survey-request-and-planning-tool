@@ -37,6 +37,20 @@
           :readonly="readonly"
           :hide-bottom-space="true"
         />
+        <div
+          v-if="aoi.surveyStandard === 'HIPP Precise'"
+          class="q-pl-sm hint-text"
+        >
+          Selection of HIPP Precise must be clearly supported in your survey
+          justification or business case.
+        </div>
+        <div
+          v-if="aoi.surveyStandard === 'IHO Special Order'"
+          class="q-pl-sm hint-text"
+        >
+          Selection of IHO Special Order must be clearly supported in your
+          survey justification or business case.
+        </div>
 
         <form-field-validated-button-toggle
           class="bg-grey-2 q-pa-sm rounded-borders"

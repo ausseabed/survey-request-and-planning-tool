@@ -179,7 +179,18 @@ function getParameterCaseInsensitive(object, key) {
 
 const featureToPriorityArea = async (feature) => {
   let pa = new SurveyRequestAoi();
-  pa.name = getParameterCaseInsensitive(feature.properties, 'name');
+
+  // this is where we support ingesting the same data that is exported
+  // from the `shp-builder.js`
+  pa.name = getParameterCaseInsensitive(feature.properties, 'SRA_NAME');
+  if (_.isNil(pa.name)) {
+    pa.name = getParameterCaseInsensitive(feature.properties, 'name');
+  }
+  pa.surveyStandard = getParameterCaseInsensitive(feature.properties, 'SRA_STD');
+  pa.overallRisk = getParameterCaseInsensitive(feature.properties, 'SRA_RISK');
+  pa.preferredTimeframe = getParameterCaseInsensitive(feature.properties, 'SRA_TIME');
+  pa.dataTypesToCapture = getParameterCaseInsensitive(feature.properties, 'SRA_DATA');
+
   pa.geom = feature.geometry;
 
   const { id } = await getConnection()

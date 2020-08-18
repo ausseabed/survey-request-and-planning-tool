@@ -179,7 +179,17 @@ function getParameterCaseInsensitive(object, key) {
 
 const featureToPriorityArea = async (feature) => {
   let pa = new PriorityArea();
-  pa.name = getParameterCaseInsensitive(feature.properties, 'name');
+
+  // this is where we support ingesting the same data that is exported
+  // from the `shp-builder.js`
+  pa.name = getParameterCaseInsensitive(feature.properties, 'PA_NAME');
+  if (_.isNil(pa.name)) {
+    pa.name = getParameterCaseInsensitive(feature.properties, 'name');
+  }
+  pa.preferredTimeframe = getParameterCaseInsensitive(feature.properties, 'PA_TIME');
+  pa.riskRating = getParameterCaseInsensitive(feature.properties, 'PA_RISK');
+  pa.requiredDataQuality = getParameterCaseInsensitive(feature.properties, 'PA_DATA_Q');
+  pa.dataImportance = getParameterCaseInsensitive(feature.properties, 'PA_DATA_I');
   pa.geom = feature.geometry;
 
   const { id } = await getConnection()

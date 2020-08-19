@@ -6,7 +6,7 @@ var Docxtemplater = require('docxtemplater')
 import { getConnection } from 'typeorm';
 var ImageModule = require('docxtemplater-image-module-free')
 var InspectModule = require("docxtemplater/js/inspect-module")
-var JSZip = require('jszip')
+var PizZip = require('pizzip')
 var moment = require('moment')
 const { Parser } = require('json2csv')
 var sharp = require('sharp')
@@ -19,6 +19,18 @@ expressions.filters.lower = function(input) {
   return input.toLowerCase();
 }
 
+expressions.filters.formatNumber = function(input) {
+    // In our example precision is the integer 2
+    // This condition should be used to make sure that if your input is
+    // undefined, your output will be undefined as well and will not
+    // throw an error
+    if(!input) return input;
+    return new Intl.NumberFormat(
+      undefined,
+      {maximumFractionDigits:1}
+    )
+    .format(input)
+}
 
 export class ReportGenerator {
   constructor(entity, entityType, reportTemplate) {
@@ -268,55 +280,19 @@ export class ReportGenerator {
     imgOpts.getImage =  (tagValue, tagName) => {
       return new Promise(async (resolve, reject) => { // <--- this line
         try {
-          // TODO fix this. Caused by mismatch between column and attr name of entity
-          const attrName = tagValue
-          if (_.isNil(this.entity["areaOfInterest"])) {
-            console.log("no region")
-            const noRegionImg =
-              await sharp('src/lib/report-generator-noregion.png')
-              .png()
-              .toBuffer()
-            return resolve(noRegionImg);
-          }
-          const extents = await this.getExtents(attrName)
-          const dbImg = await this.getDbImage(attrName, extents)
-          const bmImg = await this.getBaseMapImage(extents)
-
-          const mergedImg = await sharp(bmImg)
-          .modulate({saturation: 0.7})
-          .composite([{ input: dbImg}])
-          .png()
-          .toBuffer()
-
-          return resolve(mergedImg);
+          return resolve(tagValue);
         } catch(error) {
           return reject(error);
         }
       })
     }
     imgOpts.getSize = function(img, tagValue, tagName) {
-      //tagValue is what is included in word doc template
-      //tagName is the value in the data dict
-      const tagValueBits = tagName.split('_')
-      let sizeStr = 'md'
-      if (tagValueBits.length > 1) {
-        sizeStr = tagValueBits[tagValueBits.length - 1].toLowerCase()
-      }
-      let size = [400, 400]
-      if (sizeStr == 'sm' || sizeStr == 'small') {
-        size = [200, 200]
-      } else if (sizeStr == 'md' || sizeStr == 'medium') {
-        size = [400, 400]
-      } else if (sizeStr == 'lg' || sizeStr == 'large') {
-        size = [800, 800]
-      } else if (sizeStr == 'xl' || sizeStr == 'extralarge') {
-        size = [1000, 1000]
-      }
+      let size = [300, 300]
       return size
     }
     var imageModule = new ImageModule(imgOpts)
 
-    var zip = new JSZip(this.getTemplate())
+    var zip = new PizZip(this.getTemplate())
 
     var angularParser = function(tag) {
       return {
@@ -403,51 +379,25 @@ export class HippRequestReportGenerator extends ReportGenerator {
       id: this.entityAttributeValue('id'),
       name: this.entityAttributeValue('name'),
       custodians: this.entityAttributeValue('custodians'),
+      organisation: this.entityAttributeValue('organisation'),
       organisations: this.entityAttributeValue('organisations'),
       requestorName: this.entityAttributeValue('requestorName'),
+      requestorPosition: this.entityAttributeValue('requestorPosition'),
       pointOfContactEmail: this.entityAttributeValue('pointOfContactEmail'),
-      pointOfContactPhone: this.entityAttributeValue('pointOfContactPhone'),
-      requestDateStart:
-        this.getDateString(
-          this.entityAttributeValue('requestDateStart'),
-          'DD/MM/YYYY'),
-      requestDateStartLong:
-        this.getDateString(
-          this.entityAttributeValue('requestDateStart'),
-          'MMMM Do YYYY'),
-      requestDateEnd:
-        this.getDateString(
-          this.entityAttributeValue('requestDateEnd'),
-          'DD/MM/YYYY'),
-      requestDateEndLong:
-        this.getDateString(
-          this.entityAttributeValue('requestDateEnd'),
-          'MMMM Do YYYY'),
-      areaName: this.entityAttributeValue('name'),
-      areaValue: this.entityAttributeValue('area'),
       businessJustification: this.entityAttributeValue('businessJustification'),
       costBenefit: this.entityAttributeValue('costBenefit'),
+      riskIssues: this.entityAttributeValue('riskIssues'),
+      furtherInformation: this.entityAttributeValue('furtherInformation'),
+      costBenefit: this.entityAttributeValue('costBenefit'),
+      additionalFundingAvailable: this.entityAttributeValue('additionalFundingAvailable'),
       hasMoratorium: this.entityAttributeValue('hasMoratorium'),
       moratoriumDate:
         this.getDateString(
           this.entityAttributeValue('moratoriumDate'),
           'DD/MM/YYYY'),
       moratoriumComment: this.entityAttributeValue('moratoriumComment'),
-      comments: this.entityAttributeValue('comments'),
-      surveyQualityRequirements:
-        this.entityAttributeValue('surveyQualityRequirements'),
-      surveyQualityRequirementsComments:
-        this.entityAttributeValue('surveyQualityRequirementsComments'),
-      chartProductQualityImpactRequirements:
-        this.entityAttributeValue('chartProductQualityImpactRequirements'),
-      chartProductQualityImpactRequirementsComments:
-        this.entityAttributeValue('chartProductQualityImpactRequirementsComments'),
-      riskIssues: this.entityAttributeValue('riskIssues'),
-      attachments: this.entityAttributeValue('attachments'),
-      hasAreaOfInterest: !_.isNil(this.entity.areaOfInterest),
+      areasOfInterest: this.entityAttributeValue('aois'),
     }
-
-    this.mergeImageKeys('area_of_interest', data)
 
     this.mergeRecordState(data)
 
@@ -459,23 +409,17 @@ export class HippRequestReportGenerator extends ReportGenerator {
       'id',
       'name',
       'custodians.name',
+      'organisation.name',
       'organisations.name',
       'organisations.abn',
       'requestorName',
+      'requestorPosition',
       'pointOfContactEmail',
-      'pointOfContactPhone',
-      'requestDateStart',
-      'requestDateEnd',
-      'areaName',
-      'areaValue',
       'businessJustification',
       'costBenefit',
       'hasMoratorium',
       'moratoriumDate',
       'moratoriumComment',
-      'comments',
-      'surveyQualityRequirementsComments',
-      'chartProductQualityImpactRequirementsComments',
       'recordState.state',
       'recordState.version',
     ]

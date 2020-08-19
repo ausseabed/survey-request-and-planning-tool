@@ -5,7 +5,7 @@ import express from 'express'
 import formidable from 'formidable'
 import fs from 'fs'
 var InspectModule = require("docxtemplater/js/inspect-module")
-var JSZip = require('jszip')
+var PizZip = require('pizzip')
 import stream from 'stream'
 
 
@@ -37,9 +37,13 @@ const TEMPLATE_TYPE_MAP = {
     reportGenerator: HippRequestReportGenerator,
     relations: [
       'custodians',
-      'attachments',
-      'attachments.attachment'
+      'organisation',
+      'organisations',
+      'aois',
     ],
+    additionalSelects: [
+      'aois.thumbnail'
+    ]
   },
   'Plan': {
     entityType: SurveyPlan,
@@ -124,10 +128,33 @@ router.get(
   const templateDetails = TEMPLATE_TYPE_MAP[templateType]
   const entityRepo = getConnection().getRepository(templateDetails.entityType)
 
+  const columns = getConnection()
+  .getMetadata(templateDetails.entityType)
+  .ownColumns
+  .map(column => templateDetails.entityType.name + '.' + column.propertyName)
+
   // get the entity (eg; SurveyRequest, SurveyPlan), the values from this
   // will be fed into the generated report
-  let entity = await entityRepo
-  .findOne(entityId, {relations: templateDetails.relations})
+  // let entity = await entityRepo
+  // .findOne(entityId, {select: columns,relations: templateDetails.relations})
+
+  let q = await entityRepo
+  .createQueryBuilder()
+  .select(columns)
+  .where(`"${templateDetails.entityType.name}".id = :id`, { id: entityId })
+
+  for (const relation of templateDetails.relations) {
+    q = q.leftJoinAndSelect(
+      templateDetails.entityType.name + '.' + relation,
+      relation
+    )
+  }
+
+  for (const additionalSelect of templateDetails.additionalSelects) {
+    q = q.addSelect(additionalSelect)
+  }
+
+  let entity = await q.getOne()
 
   if (_.isNil(entity) || entity.deleted) {
     let err = Boom.notFound(
@@ -276,7 +303,7 @@ async function saveAndUpdateReportType(reportTemplate) {
 }
 
 function validateData(data, reportTemplate) {
-  var zip = new JSZip(data)
+  var zip = new PizZip(data)
 
   var doc = new Docxtemplater()
   doc.loadZip(zip)

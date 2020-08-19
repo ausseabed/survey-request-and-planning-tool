@@ -22,7 +22,7 @@
             <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 4]">Save summary</q-tooltip>
           </q-btn>
 
-          <q-btn
+          <!-- <q-btn
             @click="generateReport({id: surveyPlan.id, templateType: 'Plan'})"
             :disable="!surveyPlan.id"
             :loading="reportDownloading"
@@ -46,7 +46,7 @@
             <q-tooltip>
               Download as CSV
             </q-tooltip>
-          </q-btn>
+          </q-btn> -->
 
           <q-btn :disable="!id"
             v-if="!readonly"

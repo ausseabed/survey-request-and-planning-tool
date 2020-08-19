@@ -14,8 +14,19 @@
       </q-card-section>
 
       <q-card-section class="column q-gutter-y-sm col">
-        <!-- <div class="text-h6">Registration Details</div> -->
-        <div class="text-subtitle1">Registration Details</div>
+        <div class="row justify-between">
+          <div class="text-subtitle1">Registration Details</div>
+          <q-btn
+            type="a"
+            size="md" flat dense
+            :href="`/api/report-template/generate/HIPP Request/${surveyRequest.id}`"
+            icon="cloud_download"
+          >
+            <q-tooltip>
+              Download summary
+            </q-tooltip>
+          </q-btn>
+        </div>
 
         <div class="column">
           <!-- <div class="text-subtitle1">Title</div> -->

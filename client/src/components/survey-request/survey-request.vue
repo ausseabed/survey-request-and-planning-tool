@@ -280,7 +280,6 @@ export default Vue.extend({
       'getSurveyRequest',
       'saveSurveyRequest',
       'deleteSurveyRequest',
-      'getGeojsonAttributeMap',
     ]),
     ...mapActions('custodian', [
       'getCustodians',

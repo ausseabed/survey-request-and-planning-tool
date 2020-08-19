@@ -18,20 +18,6 @@ import { updateRecordState } from '../state-management';
 import { RecordState } from '../../lib/entity/record-state';
 import { shpBuilderFactory } from '../../lib/shp-builder';
 
-// mapping of the entity attribute names to what they should be in the
-// exported geojson
-var ENTITY_GEOJSON_MAP = [
-  ['custodians[0].name', 'ORGANISATN'],
-  ['requestorName', 'NAME'],
-  ['requestorPosition', 'POSITION'],
-  ['pointOfContactPhone', 'PHONE'],
-  ['pointOfContactEmail', 'EMAIL'],
-  ['recordState.created', 'REQ_DATE'],
-  ['pointOfContactEmail', 'EMAIL'],
-  ['name', 'TITLE'],
-  ['businessJustification', 'COMMNT_TXT'],
-  ['comments', 'REQOR_COMM'],
-];
 
 async function getSurveyRequest(id) {
   // function a little more complicated that a simple `.findOne` as we
@@ -56,10 +42,6 @@ async function getSurveyRequest(id) {
 
 
 var router = express.Router();
-
-router.get('/geojson-attribute-map', async function (req, res) {
-  return res.json(ENTITY_GEOJSON_MAP);
-});
 
 // Gets a list of Survey Requests
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {

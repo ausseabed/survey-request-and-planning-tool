@@ -16,13 +16,13 @@ export const RISK_RATING_OPTIONS = [
 ];
 
 export const REQUIRED_DATA_QUALITY_OPTIONS = [
-  "HIPP - Precise",
-  "IHO - Special",
-  "IHO - 1a",
-  "IHO - 1b",
-  "HIPP - 2",
-  "IHO - 2",
-  "HIPP - Passage",
+  'HIPP Precise',
+  'IHO Special Order',
+  'IHO Order 1a',
+  'IHO Order 1b',
+  'IHO Order 2',
+  'HIPP Passage',
+  'To be defined',
 ];
 
 export const DATA_IMPORTANCE_OPTIONS = [

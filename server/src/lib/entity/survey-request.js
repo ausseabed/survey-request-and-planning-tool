@@ -67,34 +67,6 @@ export class SurveyRequest {
       type:"varchar",
       nullable: true,
   })
-  pointOfContactPhone;
-
-  //stored as date type in the database, but transformer handles marshalling
-  // to/from the database and the UTC millisecond ints used by the web services
-  @Column({
-      type:"timestamp with time zone",
-      transformer: new DateTransformer(),
-      nullable: true,
-  })
-  requestDateStart;
-
-  @Column({
-      type:"timestamp with time zone",
-      transformer: new DateTransformer(),
-      nullable: true,
-  })
-  requestDateEnd;
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  area;
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
   businessJustification;
 
   @Column({
@@ -138,52 +110,6 @@ export class SurveyRequest {
       nullable: true,
   })
   moratoriumComment;
-
-  @Column("geometry", {
-    name: "area_of_interest",
-    spatialFeatureType: "MultiPolygon",
-    srid: 4326,
-    nullable: true,
-  })
-  areaOfInterest;
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  comments;
-
-  @Column({
-    type:"simple-array",
-    nullable: true,
-    default: ""
-  })
-  surveyQualityRequirements = [];
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  surveyQualityRequirementsComments;
-
-  @Column({
-    type:"simple-array",
-    nullable: true,
-    default: ""
-  })
-  chartProductQualityImpactRequirements = [];
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  chartProductQualityImpactRequirementsComments;
-
-  @Column({
-    type: "json",
-    nullable: true
-  })
-  riskData = undefined;
 
   @Column({
       type:"varchar",

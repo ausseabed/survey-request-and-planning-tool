@@ -133,12 +133,3 @@ export const getOverallRisk = ({ commit, state }) => {
     commit(mutTypes.SET_OVERALL_RISKS, response.data);
   })
 }
-
-export const getGeojsonAttributeMap = ({ commit, state }) => {
-  var url_endpoint = '/api/survey-request/geojson-attribute-map';
-
-  return Vue.axios.get(url_endpoint)
-  .then((response) => {
-    commit(mutTypes.SET_GEOJSON_ATTRIBUTE_MAP, response.data);
-  })
-}

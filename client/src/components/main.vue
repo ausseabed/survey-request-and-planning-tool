@@ -39,8 +39,11 @@
 
               <!-- <q-card-section class="column col" style="padding:0px"> -->
                 <q-scroll-area class="col">
-                  <q-list no-border padding
-                    @mouseleave.native="mouseleaveListItem">
+                  <q-list
+                    v-if="surveyPlans && surveyPlans.length > 0"
+                    no-border padding
+                    @mouseleave.native="mouseleaveListItem"
+                  >
 
                     <q-item clickable
                       v-for="surveyPlan in surveyPlans"
@@ -104,6 +107,10 @@
                     </q-item>
 
                   </q-list>
+                  <div v-else class="hint-text q-pa-lg">
+                    There are currently no entries for your custodian, please add
+                    a survey plan using the button below.
+                  </div>
 
                 </q-scroll-area>
 
@@ -130,9 +137,11 @@
               name="survey-requests" class="column col-auto no-padding">
 
               <q-scroll-area class="col">
-                <q-list no-border padding
+                <q-list
+                  v-if="surveyRequests && surveyRequests.length > 0"
+                  no-border padding
                   @mouseleave.native="mouseleaveListItem"
-                  >
+                >
 
                   <q-item clickable
                     v-for="surveyRequest in surveyRequests"
@@ -175,7 +184,10 @@
                   </q-item>
 
                 </q-list>
-
+                <div v-else class="hint-text q-pa-lg">
+                  There are currently no entries for your custodian, please add
+                  a survey request using the button below.
+                </div>
               </q-scroll-area>
 
               <div
@@ -206,7 +218,9 @@
               <q-separator style="height:1px;"/>
 
               <q-scroll-area class="col">
-                <q-list no-border padding
+                <q-list
+                  v-if="priorityAreaSubmissions && priorityAreaSubmissions.length > 0"
+                  no-border padding
                   @mouseleave.native="mouseleaveListItem"
                   >
 
@@ -252,7 +266,10 @@
                   </q-item>
 
                 </q-list>
-
+                <div v-else class="hint-text q-pa-lg">
+                  There are currently no entries for your custodian, please add
+                  a priority area submission using the button below.
+                </div>
               </q-scroll-area>
 
               <div

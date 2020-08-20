@@ -16,9 +16,7 @@ import { asyncMiddleware, isAuthenticated, permitPermission,
   permitCustodianBasedPermission } from '../utils'
 import { SurveyRequest } from '../../lib/entity/survey-request'
 import { SurveyPlan } from '../../lib/entity/survey-plan'
-import { ReportGenerator, HippRequestReportGenerator,
-  SurveyPlanReportGenerator }
-  from '../../lib/report-generator'
+import { reportGeneratorFactory } from '../../lib/report-generator'
 import { ReportTemplate, REPORT_TEMPLATE_TYPES }
   from '../../lib/entity/report-template'
 
@@ -34,35 +32,12 @@ const TEMPLATE_TYPE_MAP = {
     allowedPermissionAll: 'canViewAllSurveyRequests',
     allowedPermissionCustodian: 'canViewCustodianSurveyRequests',
     custodianAttributes: ['custodians'],
-    reportGenerator: HippRequestReportGenerator,
-    relations: [
-      'custodians',
-      'organisation',
-      'organisations',
-      'aois',
-    ],
-    additionalSelects: [
-      'aois.thumbnail'
-    ]
   },
   'Plan': {
     entityType: SurveyPlan,
     allowedPermissionAll: 'canViewAllSurveyPlans',
     allowedPermissionCustodian: 'canViewCustodianSurveyPlans',
     custodianAttributes: ['custodians'],
-    reportGenerator: SurveyPlanReportGenerator,
-    relations: [
-      'custodians',
-      'dataCaptureTypes',
-      'instrumentTypes',
-      'surveyApplication',
-      'attachments',
-      'attachments.attachment',
-      'deliverables',
-      'surveyRequest',
-      'recordState',
-      'techSpec',
-    ],
   },
 }
 
@@ -126,68 +101,8 @@ router.get(
   }
 
   const templateDetails = TEMPLATE_TYPE_MAP[templateType]
-  const entityRepo = getConnection().getRepository(templateDetails.entityType)
 
-  const columns = getConnection()
-  .getMetadata(templateDetails.entityType)
-  .ownColumns
-  .map(column => templateDetails.entityType.name + '.' + column.propertyName)
-
-  // get the entity (eg; SurveyRequest, SurveyPlan), the values from this
-  // will be fed into the generated report
-  // let entity = await entityRepo
-  // .findOne(entityId, {select: columns,relations: templateDetails.relations})
-
-  let q = await entityRepo
-  .createQueryBuilder()
-  .select(columns)
-  .where(`"${templateDetails.entityType.name}".id = :id`, { id: entityId })
-
-  for (const relation of templateDetails.relations) {
-    q = q.leftJoinAndSelect(
-      templateDetails.entityType.name + '.' + relation,
-      relation
-    )
-  }
-
-  for (const additionalSelect of templateDetails.additionalSelects) {
-    q = q.addSelect(additionalSelect)
-  }
-
-  let entity = await q.getOne()
-
-  if (_.isNil(entity) || entity.deleted) {
-    let err = Boom.notFound(
-      `Entity ${templateDetails.entityType} ${entityId} does not exist`);
-    throw err;
-  }
-
-  // get the active report template for this type, making sure to select the
-  // attribs needed.
-  const reportTemplate = await getConnection().getRepository(ReportTemplate)
-  .createQueryBuilder("report_template")
-  .select([
-    "report_template.id",
-    "report_template.templateType",
-    "report_template.fileName",
-    "report_template.active",
-    "report_template.mimeType",
-    "report_template.storage",
-    "report_template.blob"
-  ])
-  .where(
-    `"templateType" = :templateType`,
-    {templateType: templateType}
-  ).andWhere(
-    `"active" = :active`,
-    {active: true}
-  )
-  .getOne();
-
-  // create a new instance of the report generator class defined in the
-  // TEMPLATE_TYPE_MAP
-  const reportGen = new templateDetails.reportGenerator(
-    entity, templateDetails.entityType, reportTemplate)
+  const reportGen = await reportGeneratorFactory(templateType, entityId)
 
   if (format == 'docx') {
     reportGen.generate(writeData, res)

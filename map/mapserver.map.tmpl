@@ -112,7 +112,7 @@ MAP
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
 
     DATA "geom from (
-            select pa.id as paid ,pa.name as name ,pa.geom as geom
+            select pa.id as paid ,pa.name as \"Name\", pa.\"dataImportance\" as \"Data Importance\", pa.\"riskRating\" as \"Risk Rating\", pa.\"preferredTimeframe\" as \"Preferred Timeframe\", pa.\"requiredDataQuality\" as \"Required Data Quality\", CASE WHEN (pa.\"dataImportance\" = '1') THEN '#ff0000' WHEN (pa.\"dataImportance\" = '2') THEN '#008400' WHEN (pa.\"dataImportance\" = '3') THEN '#2000ff' ELSE '#744ccb' END AS pa_color, pa.geom as geom
             from priority_area pa
             join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
             join record_state rs on pas.\"recordStateId\" = rs.id
@@ -121,11 +121,11 @@ MAP
 
     CLASS
       STYLE
-        OUTLINECOLOR "#FFFB0D"
+        OUTLINECOLOR [pa_color]
         WIDTH 2
       END
       STYLE
-        COLOR "#FFFB0D"
+        COLOR [pa_color]
         OPACITY 30
       END
     END

@@ -4,7 +4,7 @@
       Thankyou for providing your priority areas to the AusSeabed community.
       Below is a mapped view of your areas as they have been provided today.
       If you have any questions, please contact us on
-      <a href="mailto:contact@ausseabed.gov.au">contact@ausseabed.gov.au</a>.
+      <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>.
       These areas will be incorporated in the national priorities layer on the
       AusSeabed data portal. Please be aware that the priorities assigned
       during upload, may not be the same priorities assigned within the entire

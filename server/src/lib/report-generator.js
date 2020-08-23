@@ -12,6 +12,124 @@ const { Parser } = require('json2csv')
 var sharp = require('sharp')
 
 import * as ReferenceSystems from './reference-system'
+import { SurveyRequest } from './entity/survey-request'
+import { SurveyPlan } from './entity/survey-plan'
+import { ReportTemplate } from './entity/report-template'
+
+
+// similar to TEMPLATE_TYPE_MAP found in the report-template.js request
+// handler, but here we define some other information that is needed to gather
+// the information related to a specific entity required for report generation
+const TEMPLATE_ENTITY_DEPENDENCIES_MAP = {
+  'HIPP Request': {
+    entityType: SurveyRequest,
+    relations: [
+      'custodians',
+      'organisation',
+      'organisations',
+      'aois',
+    ],
+    additionalSelects: [
+      'aois.thumbnail'
+    ]
+  },
+  'Plan': {
+    entityType: SurveyPlan,
+    relations: [
+      'custodians',
+      'dataCaptureTypes',
+      'instrumentTypes',
+      'surveyApplication',
+      'attachments',
+      'attachments.attachment',
+      'deliverables',
+      'surveyRequest',
+      'recordState',
+      'techSpec',
+    ],
+  },
+}
+
+
+export async function reportGeneratorFactory(templateType, entityId) {
+  const entityDeps = TEMPLATE_ENTITY_DEPENDENCIES_MAP[templateType]
+  const entityRepo = getConnection()
+  .getRepository(entityDeps.entityType)
+
+  // here we build a rather complex query instead of a simple typeorm .findOne
+  // call. Reason for this is that all the needed columns are not necessarily
+  // included in findOne results as some columns are defined as being selected
+  // as default. Main example here being the thumbnail images saved in
+  // the database; we embed these in the report but generally they are not
+  // needed and should not automatically be selected.
+  const columns = getConnection()
+  .getMetadata(entityDeps.entityType)
+  .ownColumns
+  .map(column => entityDeps.entityType.name + '.' + column.propertyName)
+
+  let q = await entityRepo
+  .createQueryBuilder()
+  .select(columns)
+  .where(`"${entityDeps.entityType.name}".id = :id`, { id: entityId })
+
+  for (const relation of entityDeps.relations) {
+    q = q.leftJoinAndSelect(
+      entityDeps.entityType.name + '.' + relation,
+      relation
+    )
+  }
+
+  for (const additionalSelect of entityDeps.additionalSelects) {
+    q = q.addSelect(additionalSelect)
+  }
+
+  // and finally we get the entity (survey plan or request) with all the
+  // relations and selects defined in TEMPLATE_ENTITY_DEPENDENCIES_MAP
+  let entity = await q.getOne()
+
+  if (_.isNil(entity) || entity.deleted) {
+    let err = Boom.notFound(
+      `Entity ${entityDeps.entityType} ${entityId} does not exist`);
+    throw err;
+  }
+
+  // get the active report template for this type, making sure to select the
+  // attribs needed.
+  const reportTemplate = await getConnection().getRepository(ReportTemplate)
+  .createQueryBuilder("report_template")
+  .select([
+    "report_template.id",
+    "report_template.templateType",
+    "report_template.fileName",
+    "report_template.active",
+    "report_template.mimeType",
+    "report_template.storage",
+    "report_template.blob"
+  ])
+  .where(
+    `"templateType" = :templateType`,
+    {templateType: templateType}
+  ).andWhere(
+    `"active" = :active`,
+    {active: true}
+  )
+  .getOne();
+
+  if (templateType == 'HIPP Request') {
+    return new HippRequestReportGenerator(
+      entity, entityDeps.entityType, reportTemplate)
+  } else if (templateType == 'Plan') {
+    return new SurveyPlanReportGenerator(
+      entity, entityDeps.entityType, reportTemplate)
+  }
+  else {
+    // we check this earlier so shouldn't end up here
+    let err = Boom.notFound(
+      `Unknown template type ${templateType}`);
+    throw err;
+  }
+}
+
 
 expressions.filters.lower = function(input) {
   // This condition should be used to make sure that if your input is undefined, your output will be undefined as well and will not throw an error

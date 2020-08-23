@@ -27,7 +27,7 @@ const getDbImage = async (connection, paId, attrName, extents, imageSize) => {
 
   let nrq = `ST_MakeEmptyRaster(${rasterSize},${rasterSize},${extents.minX}, ${extents.maxY}, ${scale}, ${-1*scale}, 0,0,4326)`;
   let aoiRaster = `ST_AsRaster("${attrName}",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[255, 0, 0, 55], ARRAY[255,255,255, 0])`;
-  let aoiRasterBoundary = `ST_AsRaster(ST_Buffer(ST_Boundary("${attrName}"), ${bufferWidth},\'join=round\'),${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[255, 0, 0, 255], ARRAY[255,255,255, 0])`;
+  let aoiRasterBoundary = `ST_AsRaster(ST_Boundary("${attrName}"),${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[255, 0, 0, 255], ARRAY[255,255,255, 0])`;
 
   const innSel = `SELECT ${aoiRasterBoundary} as rast from ${tableName} where "id" = '${paId}' UNION ALL SELECT ${aoiRaster} as rast from ${tableName} where "id" = '${paId}' UNION ALL SELECT ${nrq}`;
 
@@ -145,7 +145,7 @@ function geojsonToFeatureList(geojson) {
 
 const getFeaturesFromZip = async (data) => {
   let geojson = shp.parseZip(data);
-  let simplifyOptions = {tolerance: 0.0005, highQuality: false};
+  let simplifyOptions = {tolerance: 0.0005, highQuality: false, mutate: true};
   let simpleGeojson = simplify(geojson, simplifyOptions);
   let features = geojsonToFeatureList(simpleGeojson);
   return features;
@@ -153,14 +153,14 @@ const getFeaturesFromZip = async (data) => {
 
 const getFeaturesFromJson = async (data) => {
   let geojson = JSON.parse(data);
-  let simplifyOptions = {tolerance: 0.0005, highQuality: false};
+  let simplifyOptions = {tolerance: 0.0005, highQuality: false, mutate: true};
   let simpleGeojson = simplify(geojson, simplifyOptions);
   let features = geojsonToFeatureList(simpleGeojson);
   return features;
 };
 
 const setErrorState = async (connection, taskId, errorMessage) => {
-  await connection.getRepository(Task)
+  await getConnection().getRepository(Task)
     .update(
       taskId,
       {
@@ -202,13 +202,13 @@ const doProcessing = async (taskId) => {
   const imageSize = 300;
   const connection = await createConnection();
 
-  await connection.getRepository(Task)
+  await getConnection().getRepository(Task)
     .update(taskId, {
       state: 'STARTED',
       statusMessage: "Loading task data"
     });
 
-  const task = await connection.getRepository(Task)
+  const task = await getConnection().getRepository(Task)
     .findOne(
       taskId,
       {
@@ -217,7 +217,7 @@ const doProcessing = async (taskId) => {
     );
   const data = task.blob;
 
-  await connection.getRepository(Task)
+  await getConnection().getRepository(Task)
     .update(taskId, {statusMessage: "Extracting geometry"});
 
   let features = undefined;
@@ -243,7 +243,7 @@ const doProcessing = async (taskId) => {
   }
 
   const progressType = features.length > 1 ? 'PERCENT' : 'INDETERMINATE';
-  await connection.getRepository(Task)
+  await getConnection().getRepository(Task)
     .update(taskId, {
       progressType: progressType,
       progress: 0,
@@ -258,14 +258,14 @@ const doProcessing = async (taskId) => {
     count += 1;
     let percentageComplete = Math.round(count / features.length * 0.2 * 100);
 
-    await connection.getRepository(Task)
+    await getConnection().getRepository(Task)
       .update(taskId, {
         progress: percentageComplete
       });
 
   };
 
-  await connection.getRepository(Task)
+  await getConnection().getRepository(Task)
     .update(taskId, {
       statusMessage: "Generating thumbnails"
     });
@@ -273,9 +273,10 @@ const doProcessing = async (taskId) => {
   count = 0;
   let completedPriorityAreaIds = [];
   for (const paId of priorityAreaIds) {
+
     let extents = undefined;
     try {
-      extents = await getExtents(connection, paId);
+      extents = await getExtents(getConnection(), paId);
     } catch (e) {
       await setErrorState(
         connection, taskId, `Unable to generate extents (${e})`);
@@ -283,7 +284,7 @@ const doProcessing = async (taskId) => {
     }
 
     let [dbImg, bmImg] = await Promise.all([
-      getDbImage(connection, paId, 'geom', extents, imageSize),
+      getDbImage(getConnection(), paId, 'geom', extents, imageSize),
       getBaseMapImage(extents, imageSize)
     ]);
 
@@ -307,7 +308,7 @@ const doProcessing = async (taskId) => {
       .png()
       .toBuffer();
 
-    await connection.getRepository(PriorityArea)
+    await getConnection().getRepository(PriorityArea)
       .update(paId, {thumbnail: mergedImg});
 
     count += 1;
@@ -317,13 +318,13 @@ const doProcessing = async (taskId) => {
 
     completedPriorityAreaIds.push(paId);
 
-    await connection.getRepository(Task)
+    await getConnection().getRepository(Task)
       .update(taskId, {
         progress: percentageComplete
       });
   };
 
-  await connection.getRepository(Task)
+  await getConnection().getRepository(Task)
     .update(taskId, {
       progress: 100,
       state: 'COMPLETED',
@@ -331,9 +332,18 @@ const doProcessing = async (taskId) => {
     });
 };
 
-
 module.exports = function (taskId, callback) {
-  doProcessing(taskId).then(res => {
+  doProcessing(taskId)
+  .then(res => {
     callback(null, res);
+  })
+  .catch(error => {
+    getConnection().getRepository(Task)
+    .update(taskId, {
+        state: 'FAILED',
+        errorMessage: error.message
+    }).then(() => {
+      callback(error, null);
+    })
   });
 };

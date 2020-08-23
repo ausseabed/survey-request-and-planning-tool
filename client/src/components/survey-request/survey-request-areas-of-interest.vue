@@ -18,10 +18,11 @@
       >
         <q-uploader
           class="col"
-          label="Upload Area of Interest spatial data files"
+          label="Upload Area of Interest spatial data files (max 30MB)"
           flat bordered
           :multiple="false"
           accept=".zip,.json"
+          max-total-size="30000000"
           :auto-expand="true"
           :auto-upload="true"
           url="/api/survey-request-aoi/upload/"
@@ -195,6 +196,7 @@ export default Vue.extend({
 
     fetchData() {
       if (!_.isNil(this.surveyRequest.uploadTaskId)) {
+        this.taskTickCount = 0;
         this.updateTaskStatus(this.surveyRequest.uploadTaskId);
       }
     },
@@ -216,7 +218,7 @@ export default Vue.extend({
 
     uploadedAreas(info) {
       const res = JSON.parse(info.xhr.response);
-      console.log(res);
+      this.taskTickCount = 0;
       this.updateTaskStatus(res.taskId);
     },
 
@@ -226,9 +228,14 @@ export default Vue.extend({
         .get(`api/task/${taskId}`)
         .then(res => {
           this.task = res.data;
+          this.taskTickCount += 1;
 
-          if (!finishedStates.includes(this.task.state)) {
-            setTimeout(() => this.updateTaskStatus(taskId), 750);
+          // dont keep getting task status if the task has finished
+          // OR if we've already got the task status 600 times. If this happens
+          // and the task didn't finish prior, it's likely the task has failed
+          // but the status is not reflecting this.
+          if (!finishedStates.includes(this.task.state) && this.taskTickCount < 600) {
+            this.taskTimeout = setTimeout(() => this.updateTaskStatus(taskId), 1000);
           }
         }).catch((err) => {
           if (err.response.status == 404) {
@@ -298,9 +305,18 @@ export default Vue.extend({
   data() {
     return {
       task: undefined,
+      taskTickCount: 0,
+      taskTimeout: undefined,
       loadingAreaOfInterestData: false,
       loadingAreaOfInterestProgress: 0,
     }
+  },
+
+  beforeRouteLeave (to, from, next) {
+    if (!_.isNil(this.taskTimeout)) {
+      clearTimeout(this.taskTimeout)
+    }
+    next()
   },
 
 });

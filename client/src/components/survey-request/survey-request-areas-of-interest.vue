@@ -18,10 +18,11 @@
       >
         <q-uploader
           class="col"
-          label="Upload Area of Interest spatial data files"
+          label="Upload Area of Interest spatial data files (max 30MB)"
           flat bordered
           :multiple="false"
           accept=".zip,.json"
+          max-total-size="30000000"
           :auto-expand="true"
           :auto-upload="true"
           url="/api/survey-request-aoi/upload/"

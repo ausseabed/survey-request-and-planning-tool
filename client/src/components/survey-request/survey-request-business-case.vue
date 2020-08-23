@@ -63,10 +63,11 @@
         <div class="column col-auto">
           <q-uploader
             v-if="!readonly"
-            label="Additional Business Case File for Upload (pdf)"
+            label="Additional Business Case File for Upload (pdf, max 30MB)"
             ref="uploader"
             auto-upload
             accept=".pdf"
+            max-total-size="30000000"
             flat
             bordered
             :multiple="false"

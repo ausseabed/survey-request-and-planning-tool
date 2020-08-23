@@ -14,10 +14,11 @@
         >
           <q-uploader
             class="col"
-            label="Upload Priority Area spatial data files"
+            label="Upload Priority Area spatial data files (max 30MB)"
             flat bordered
             :multiple="false"
             accept=".zip,.json"
+            max-total-size="30000000"
             :auto-expand="true"
             :auto-upload="true"
             url="/api/priority-area/upload/"
@@ -208,6 +209,10 @@ export default Vue.extend({
       // we perform map, then reduce, so that the `isValid` method
       // is called on all priority area components. Doing the only the reduce
       // will stop calling isValid after the first non-valid component.
+      if (_.isNil(this.$refs.priorityAreaComponents)) {
+        // if there are no priority areas, then its valid
+        return true;
+      }
       let allValid = this.$refs.priorityAreaComponents
         .map((comp) => comp.isValid())
         .reduce((sum, next) => sum && next, true);

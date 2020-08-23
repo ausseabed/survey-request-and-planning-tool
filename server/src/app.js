@@ -16,6 +16,9 @@ var cors = require('cors');
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 
+import { PostgresDriver } from 'typeorm/driver/postgres/PostgresDriver';
+import { PostgresQueryRunner } from 'typeorm/driver/postgres/PostgresQueryRunner';
+import { EventEmitter } from 'events';
 
 var app = express();
 
@@ -41,10 +44,65 @@ app.use('/', routes);
 app.use('/api', api);
 app.use('/users', users);
 
-
 app.set('port', process.env.PORT || 3000);
 
+
+
+class ErrorHandlingPostgresQueryRunner extends PostgresQueryRunner {
+  constructor(driver, mode) {
+    super(driver, mode);
+  }
+
+  query(query, parameters) {
+    return super.query(query, parameters).catch(err => {
+      if (this.releaseCallback) {
+        const originalReleaseCallback = this.releaseCallback;
+        this.releaseCallback = () => {
+          originalReleaseCallback(err); // pass the error back to 'pg' connection
+        };
+      }
+      throw err;
+    });
+  }
+}
+
+function errorHandler(err) {
+  console.log(`Error on postgres connection: ${err.message}`);
+}
+const addErrorHandler = (client) => client.on('error', errorHandler);
+const removeErrorHandler = (client) => client.removeListener('error', errorHandler);
+
+export function configureErrorHandling(driver) {
+  const connectionPool = driver.master;
+  // Add error handlers to all new database connections
+  connectionPool.on('connect', addErrorHandler);
+  connectionPool.on('remove', removeErrorHandler);
+  // TypeORM creates a connection on startup to verify connection parameters. Add an error handler to that too.
+  // eslint-disable-next-line no-underscore-dangle
+  connectionPool._clients.forEach(addErrorHandler);
+
+  /* When a connection is killed during db failover, it starts throwing errors for all consecutive queries.
+   * TypeORM doesn't pass those errors back to underlying connection pool, which is in general the right thing
+   * to do. But in this case, the connection remains broken indefinitely.
+   *
+   * Monkey-patch the TypeORM query runner to pass any connection-level errors back to the pool.
+   * This has the unfortunate side effect of closing the connection when a technical error occurs during query
+   * (eg typo in query, duplicate unique value etc), but that is deemed a smaller evil compared to breaking down
+   * during maintenance fail-overs.
+   */
+  // eslint-disable-next-line no-param-reassign
+  driver.createQueryRunner = mode => {
+    return new ErrorHandlingPostgresQueryRunner(driver, mode);
+  };
+}
+
+
+
+
+
 createConnection().then(connection => {
+  configureErrorHandling(connection.driver);
+
   let connOpts = connection.options;
   console.log(`Connected to database ${connOpts.host}:${connOpts.port} ` +
     `(${connOpts.type})`);

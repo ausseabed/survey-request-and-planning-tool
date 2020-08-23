@@ -27,7 +27,7 @@ const getDbImage = async (connection, paId, attrName, extents, imageSize) => {
 
   let nrq = `ST_MakeEmptyRaster(${rasterSize},${rasterSize},${extents.minX}, ${extents.maxY}, ${scale}, ${-1*scale}, 0,0,4326)`;
   let aoiRaster = `ST_AsRaster("${attrName}",${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[255, 0, 0, 55], ARRAY[255,255,255, 0])`;
-  let aoiRasterBoundary = `ST_AsRaster(ST_Buffer(ST_Boundary("${attrName}"), ${bufferWidth},\'join=round\'),${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[255, 0, 0, 255], ARRAY[255,255,255, 0])`;
+  let aoiRasterBoundary = `ST_AsRaster(ST_Boundary("${attrName}"),${nrq},ARRAY[\'8BUI\', \'8BUI\', \'8BUI\', \'8BUI\'], ARRAY[255, 0, 0, 255], ARRAY[255,255,255, 0])`;
 
   const innSel = `SELECT ${aoiRasterBoundary} as rast from ${tableName} where "id" = '${paId}' UNION ALL SELECT ${aoiRaster} as rast from ${tableName} where "id" = '${paId}' UNION ALL SELECT ${nrq}`;
 
@@ -344,7 +344,17 @@ const doProcessing = async (taskId) => {
 
 
 module.exports = function (taskId, callback) {
-  doProcessing(taskId).then(res => {
+  doProcessing(taskId)
+  .then(res => {
     callback(null, res);
+  })
+  .catch(error => {
+    getConnection().getRepository(Task)
+    .update(taskId, {
+        state: 'FAILED',
+        errorMessage: error.message
+    }).then(() => {
+      callback(error, null);
+    })
   });
 };

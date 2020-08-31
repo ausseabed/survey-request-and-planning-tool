@@ -127,8 +127,14 @@ function crcsiAuth(req, res) {
     //Get private key from env var
     //This key needs some tweaks to get in usable form due to its
     //specification as an env var (and limitations on new lines, etc)
-    var cert_priv = process.env.JWT_TOKEN_KEY_PRIVATE.replace(/\\n/g, '\n');
-    cert_priv = cert_priv.substring(1, cert_priv.length-1);
+    var cert_priv = process.env.JWT_TOKEN_KEY_PRIVATE.replace(/\\n/gm, '\n');
+
+    // // The env var is specified with quotation marks ("") around it
+    // // previously these needed to be stripped off but for some reason they
+    // // are now no longer included when read from th env var
+    // // hence the following line is commented out
+    // cert_priv = cert_priv.substring(1, cert_priv.length-1);
+
     var signed_jwt = jwt.sign({
       id: user.id,
       avatar: user.avatar,

@@ -39,7 +39,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build << parameters.image-name >> Docker image
-          command: docker build -t << parameters.image-name >>:$(echo "$CIRCLE_SHA1" | cut -c -7)<< parameters.image-tag-suffix >> --build-arg AUTH_HOST=<< parameters.auth-host >> --build-arg AUTH_CLIENT_ID=<< parameters.auth-client-id >> << parameters.docker-file-path >>
+          command: docker build -t << parameters.image-name >>:$(echo "$CIRCLE_SHA1" | cut -c -7)<< parameters.image-tag-suffix >>  << parameters.docker-file-path >>
       - run:
           name: Tagging << parameters.image-name >> Docker image
           command: docker tag << parameters.image-name >>:$(echo "$CIRCLE_SHA1" | cut -c -7)<< parameters.image-tag-suffix >> << parameters.image-name >>:latest<< parameters.image-tag-suffix >>
@@ -105,8 +105,6 @@ workflows:
           image-tag-suffix: '-beta'
           image-file: image-api.tar
           docker-file-path: server
-          auth-host: https://ausseabed-staging.auth.ap-southeast-2.amazoncognito.com
-          auth-client-id: 63r1aleijsut3g9tq9hkr0p424
           <<: *develop_only
       - publish:
           name: publish-api-develop
@@ -122,8 +120,6 @@ workflows:
           image-tag-suffix: '-beta'
           image-file: image-www.tar
           docker-file-path: client
-          auth-host: https://ausseabed-staging.auth.ap-southeast-2.amazoncognito.com
-          auth-client-id: 63r1aleijsut3g9tq9hkr0p424
           <<: *develop_only
       - publish:
           name: publish-www-develop
@@ -162,8 +158,6 @@ workflows:
           image-name: ausseabed/spt-api
           image-file: image-api.tar
           docker-file-path: server
-          auth-host: https://ausseabed.auth.ap-southeast-2.amazoncognito.com
-          auth-client-id: 38e4qejtpcl27uog98fif9ikgc
           <<: *master_only
       - publish:
           name: publish-api-master
@@ -177,8 +171,6 @@ workflows:
           image-name: ausseabed/spt-www
           image-file: image-www.tar
           docker-file-path: client
-          auth-host: https://ausseabed.auth.ap-southeast-2.amazoncognito.com
-          auth-client-id: 38e4qejtpcl27uog98fif9ikgc
           <<: *master_only
       - publish:
           name: publish-www-master

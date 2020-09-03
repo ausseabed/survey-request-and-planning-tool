@@ -145,9 +145,11 @@ MAP
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
 
     DATA "geom from (
-            select pa.id as paid ,pa.name as \"Name\", pa.priority as \"Priority\", pa.\"riskRating\" as \"Risk_Rating\", pa.\"preferredTimeframe\" as \"Preferred_Timeframe\", pa.\"requiredDataQuality\" as \"Required_Data_Quality\", pa.geom as geom
+            select pa.id as paid ,pa.name as \"Name\", pa.priority as \"Priority\", pa.\"riskRating\" as \"Risk_Rating\", pa.\"preferredTimeframe\" as \"Preferred_Timeframe\", pa.\"requiredDataQuality\" as \"Required_Data_Quality\", pa.geom as geom, pas.\"contactPerson\" as \"Contact_Person\", pas.\"contactEmail\" as \"Contact_email\", sorg.name as \"Submitting_Organisation\", CASE WHEN pas.citation THEN pas.\"contactPerson\" ELSE pas.\"citedContactName\" END as \"Cited_Contact_Person\", CASE WHEN pas.citation THEN pas.\"contactEmail\" ELSE pas.\"citedContactEmail\" END as \"Cited_Contact_email\", CASE WHEN pas.citation THEN sorg.name ELSE corg.name END as \"Cited_Organisation\"
             from priority_area pa
             join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
+            left outer join organisation sorg on sorg.id = pas.\"submittingOrganisationId\"
+            left outer join organisation corg on corg.id = pas.\"citedOrganisationId\"
             join record_state rs on pas.\"recordStateId\" = rs.id
             where rs.state = 'published'
           ) as subquery using unique paid using srid=4326"

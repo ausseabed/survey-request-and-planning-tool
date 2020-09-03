@@ -13,7 +13,7 @@ import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
 import { PriorityAreaSubmission}
   from '../../lib/entity/priority-area-submission';
 import { PREFERRED_TIMEFRAME_OPTIONS, RISK_RATING_OPTIONS,
-  REQUIRED_DATA_QUALITY_OPTIONS, DATA_IMPORTANCE_OPTIONS }
+  REQUIRED_DATA_QUALITY_OPTIONS, PRIORITY_OPTIONS }
   from '../../lib/entity/priority-area';
 import { RecordState } from '../../lib/entity/record-state';
 import { shpBuilderFactory } from '../../lib/shp-builder';
@@ -35,8 +35,8 @@ router.get('/required-data-quality-options', async function (req, res) {
   return res.json(REQUIRED_DATA_QUALITY_OPTIONS);
 });
 
-router.get('/data-importance-options', async function (req, res) {
-  return res.json(DATA_IMPORTANCE_OPTIONS);
+router.get('/priority-options', async function (req, res) {
+  return res.json(PRIORITY_OPTIONS);
 });
 
 const PRIORITY_AREA_SUBMISSION_RELATIONS = [

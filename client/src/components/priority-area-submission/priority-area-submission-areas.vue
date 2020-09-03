@@ -181,7 +181,7 @@ export default Vue.extend({
   methods: {
     ...mapActions('priorityAreaSubmission', [
       'getPreferredTimeframeOptions',
-      'getDataImportanceOptions',
+      'getPriorityOptions',
       'getRequiredDataQualityOptions',
       'getRiskRatingOptions',
     ]),
@@ -195,7 +195,7 @@ export default Vue.extend({
 
     fetchData() {
       this.getPreferredTimeframeOptions();
-      this.getDataImportanceOptions();
+      this.getPriorityOptions();
       this.getRequiredDataQualityOptions();
       this.getRiskRatingOptions();
 

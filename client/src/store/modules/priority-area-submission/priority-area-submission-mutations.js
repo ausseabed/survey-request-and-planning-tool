@@ -117,8 +117,8 @@ const mutations = {
     state.preferredTimeframeOptions = options;
   },
 
-  [types.SET_DATA_IMPORTANCE_OPTIONS] (state, options) {
-    state.dataImportanceOptions = options;
+  [types.SET_PRIORITY_OPTIONS] (state, options) {
+    state.priorityOptions = options;
   },
 
   [types.SET_REQUIRED_DATA_QUALITY_OPTIONS] (state, options) {

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import auth from './modules/auth/auth-state';
 import custodian from './modules/custodian/custodian-state';
 import dataCaptureType from './modules/data-capture-type/data-capture-type-state';
 import deliverable from './modules/deliverable/deliverable-state';
@@ -25,6 +26,7 @@ const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
   modules: {
+    auth,
     custodian,
     dataCaptureType,
     deliverable,

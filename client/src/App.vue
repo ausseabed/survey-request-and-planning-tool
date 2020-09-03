@@ -34,6 +34,7 @@ export default {
       // part of the login process, don't request role & custodian as these will
       // fail and that causes issues in Safari
     } else {
+      this.checkAuthentication();
       try {
         this.getUserRole();
         this.getUserCustodian();
@@ -53,6 +54,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions('auth', [
+      'checkAuthentication',
+    ]),
     ...mapActions('role', [
       'getUserRole',
     ]),

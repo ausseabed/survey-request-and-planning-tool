@@ -19,7 +19,7 @@
         <q-card-section class="row justify-center">
           <sct-btn @click="signup" no-caps label="Sign in or Sign up to SCT">
             <q-tooltip>
-              Signup to AusSeabed SCT
+              Sign up to AusSeabed SCT
             </q-tooltip>
           </sct-btn>
         </q-card-section>

@@ -64,7 +64,7 @@ MAP
 
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
     DATA "area_of_interest from (
-            select sp.id as spid, commorgs.orgname as \"Commissioning Organisations\" ,sp.status, sp.\"startDate\" as \"Start Date\", sp.\"endDate\" as \"End Date\", sp.\"contactPerson\" as \"Contact Person\", sp.email as \"Contact email\",sp.comment as \"Comments\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\" as \"Survey Name\", sa.group as \"Category\", sa.name as \"Purpose\", instmerge.instname as \"Instrument Types\", dctmerge.dctname as \"Data Capture Types\"
+            select sp.id as spid, commorgs.orgname as \"Commissioning_Organisations\" ,sp.status, sp.\"startDate\" as \"Start_Date\", sp.\"endDate\" as \"End_Date\", sp.\"contactPerson\" as \"Contact_Person\", sp.email as \"Contact_email\",sp.comment as \"Comments\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\" as \"Survey_Name\", sa.group as \"Category\", sa.name as \"Purpose\", instmerge.instname as \"Instrument_Types\", dctmerge.dctname as \"Data_Capture_Types\"
             from survey_plan sp
             join survey_application sa on sp.\"surveyApplicationId\" = sa.id
             join record_state rs on sp.\"recordStateId\" = rs.id
@@ -145,7 +145,7 @@ MAP
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
 
     DATA "geom from (
-            select pa.id as paid ,pa.name as \"Name\", pa.\"dataImportance\" as \"Data Importance\", pa.\"riskRating\" as \"Risk Rating\", pa.\"preferredTimeframe\" as \"Preferred Timeframe\", pa.\"requiredDataQuality\" as \"Required Data Quality\", pa.geom as geom
+            select pa.id as paid ,pa.name as \"Name\", pa.priority as \"Priority\", pa.\"riskRating\" as \"Risk_Rating\", pa.\"preferredTimeframe\" as \"Preferred_Timeframe\", pa.\"requiredDataQuality\" as \"Required_Data_Quality\", pa.geom as geom
             from priority_area pa
             join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
             join record_state rs on pas.\"recordStateId\" = rs.id
@@ -154,7 +154,7 @@ MAP
 
     CLASS
       NAME "Priority 1"
-      EXPRESSION ('[Data Importance]' = "1")
+      EXPRESSION ('[Priority]' = "1")
       STYLE
         OUTLINECOLOR '#ff0000'
         WIDTH 2
@@ -167,7 +167,7 @@ MAP
 
     CLASS
       NAME "Priority 2"
-      EXPRESSION ('[Data Importance]' = "2")
+      EXPRESSION ('[Priority]' = "2")
       STYLE
         OUTLINECOLOR '#2000ff'
         WIDTH 2
@@ -180,7 +180,7 @@ MAP
 
     CLASS
       NAME "Priority 3"
-      EXPRESSION ('[Data Importance]' = "3")
+      EXPRESSION ('[Priority]' = "3")
       STYLE
         OUTLINECOLOR '#008400'
         WIDTH 2

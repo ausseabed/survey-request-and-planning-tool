@@ -3,8 +3,8 @@ export const WMTS_MAPSERVER_URL = 'http://gaservices.ga.gov.au/gis/rest/services
 
 export const MAP_ATTRIBUTION_HTML = '© Geoscience Australia - <a target="_blank" href="http://gaservices.ga.gov.au/site_7/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer">details<a>'
 
-export const WMS_PRIORITY_AREAS = 'http://marine.ga.gov.au/geoserver/marine/wms';
-export const WMS_PRIORITY_AREAS_LAYER = 'marine:national_priorities';
+export const WMS_PRIORITY_AREAS = 'map/wms';
+export const WMS_PRIORITY_AREAS_LAYER = 'Priority_Area_Submissions';
 
 export const LEAFLET_BASE_LAYER = 'http://gaservices.ga.gov.au/site_7/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer/WMSServer?';
 

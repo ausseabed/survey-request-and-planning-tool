@@ -1,9 +1,12 @@
 FROM node:14.8.0 as builder
 
+# libreoffice is used to convert word documents to pdf (required by
+# libreoffice-convert package)
 # postgis command line tools (pgsql2shp) are used by the web server
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
+        libreoffice \
         postgis
 
 ENV APPDIR=/code

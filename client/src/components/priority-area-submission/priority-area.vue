@@ -84,12 +84,12 @@
 
           <form-field-validated-button-toggle
             inline
-            name="priorityArea.dataImportance"
-            label="Importance of the Data (Impact)"
-            :value="priorityArea.dataImportance"
-            @input="valueChanged('dataImportance',$event)"
-            :options="dataImportanceOptions"
-            @blur="$v.priorityArea.dataImportance.$touch"
+            name="priorityArea.priority"
+            label="Priority"
+            :value="priorityArea.priority"
+            @input="valueChanged('priority',$event)"
+            :options="priorityOptions"
+            @blur="$v.priorityArea.priority.$touch"
             :readonly="readonly"
           />
 
@@ -167,8 +167,8 @@ export default Vue.extend({
       this.$emit(
         'priority-area-apply-to-all',
         {
-          'propertyName': 'dataImportance',
-          'value': this.priorityArea.dataImportance,
+          'propertyName': 'priority',
+          'value': this.priorityArea.priority,
         }
       );
 
@@ -191,7 +191,7 @@ export default Vue.extend({
         preferredTimeframe: { required },
         riskRating: { required },
         requiredDataQuality: { required },
-        dataImportance: { required },
+        priority: { required },
       }
     }
   },
@@ -202,7 +202,7 @@ export default Vue.extend({
       'preferredTimeframeOptions',
       'riskRatingOptions',
       'requiredDataQualityOptions',
-      'dataImportanceOptions',
+      'priorityOptions',
     ]),
   },
 

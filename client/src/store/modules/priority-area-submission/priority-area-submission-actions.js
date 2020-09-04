@@ -119,11 +119,11 @@ export const getPreferredTimeframeOptions = async ({ commit, state }) => {
   );
 }
 
-export const getDataImportanceOptions = async ({ commit, state }) => {
+export const getPriorityOptions = async ({ commit, state }) => {
   getOptions(
     commit,
-    'data-importance-options',
-    mutTypes.SET_DATA_IMPORTANCE_OPTIONS
+    'priority-options',
+    mutTypes.SET_PRIORITY_OPTIONS
   );
 }
 

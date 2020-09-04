@@ -108,14 +108,10 @@ module.exports = function (ctx) {
 
     build: {
       env: ctx.dev ? {
-        AUTH_HOST: JSON.stringify(process.env.AUTH_HOST),
-        AUTH_CLIENT_ID: JSON.stringify(process.env.AUTH_CLIENT_ID),
         NODE_ENV: JSON.stringify('development'),
         PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
         DESCRIPTION: JSON.stringify(require('./package.json').description)
       } : {
-        AUTH_HOST: JSON.stringify(process.env.AUTH_HOST),
-        AUTH_CLIENT_ID: JSON.stringify(process.env.AUTH_CLIENT_ID),
         NODE_ENV: JSON.stringify('production'),
         PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
         DESCRIPTION: JSON.stringify(require('./package.json').description)

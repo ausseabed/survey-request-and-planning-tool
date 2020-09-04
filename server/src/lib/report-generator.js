@@ -303,23 +303,19 @@ export class ReportGenerator {
 
     const params = this.getData()
 
-    doc.resolveData(params).then(() =>  {
-      try {
-        doc.render()
-      }
-      catch (error) {
-        var e = {
-            message: error.message,
-            name: error.name,
-            stack: error.stack,
-            properties: error.properties,
-        }
-        throw error
-      }
+    doc.resolveData(params)
+    .then(() => {
+      doc.render()
 
       var buf = doc.getZip().generate({type: 'nodebuffer'})
       // return buf
       writeData(res, buf, this, this.reportTemplate)
+    })
+    .catch((err) => {
+      res
+      .status(500)
+      .json(err)
+      console.error(err)
     })
   }
 

@@ -189,7 +189,7 @@ const featureToPriorityArea = async (feature) => {
   pa.preferredTimeframe = getParameterCaseInsensitive(feature.properties, 'PA_TIME');
   pa.riskRating = getParameterCaseInsensitive(feature.properties, 'PA_RISK');
   pa.requiredDataQuality = getParameterCaseInsensitive(feature.properties, 'PA_DATA_Q');
-  pa.dataImportance = getParameterCaseInsensitive(feature.properties, 'PA_DATA_I');
+  pa.priority = getParameterCaseInsensitive(feature.properties, 'PA_PRIORIT');
   pa.geom = feature.geometry;
 
   const { id } = await getConnection()

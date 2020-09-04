@@ -125,7 +125,7 @@ export class PriorityAreaShpBuilder extends ShpBuilder {
       'pa.\"preferredTimeframe\" as PA_TIME',
       'pa.\"riskRating\" as PA_RISK',
       'pa.\"requiredDataQuality\" as PA_DATA_Q',
-      'pa.\"dataImportance\" as PA_DATA_I',
+      'pa.priority as PA_PRIORIT',
       'pa.geom as GEOM',
     ]
     let q = '' +

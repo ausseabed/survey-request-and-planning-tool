@@ -4,6 +4,8 @@ var Docxtemplater = require('docxtemplater')
 import express from 'express'
 import formidable from 'formidable'
 import fs from 'fs'
+const tmp = require('tmp')
+const libre = require('libreoffice-convert')
 var InspectModule = require("docxtemplater/js/inspect-module")
 var PizZip = require('pizzip')
 import stream from 'stream'
@@ -54,6 +56,27 @@ function writeData(res, reportData, reportGen, reportTemplate) {
 }
 
 
+function writePdfData(res, reportData, reportGen, reportTemplate) {
+  // callback function that get called by the report generator when done
+  const pdf_filename = `${reportGen.getFilename()}.pdf`
+
+  libre.convert(reportData, '.pdf', undefined, (err, done) => {
+      if (err) {
+        console.log(`Error converting file: ${err}`);
+      }
+
+      const readStream = new stream.PassThrough()
+      readStream.end(done)
+      res.set(
+        'Content-disposition',
+        `attachment; filename=${pdf_filename}`)
+      res.set('Content-length', done.length)
+      res.set('Content-Type', 'application/pdf')
+      readStream.pipe(res)
+  });
+}
+
+
 function reportGenPermit() {
   return permitCustodianBasedPermission({
     overrideFlag:'public',
@@ -81,11 +104,12 @@ router.get(
   const entityId = req.params.id;
   const templateType = req.params.templateType;
   const format = _.isNil(req.query['format']) ?
-    'docx' :
+    'pdf' :
     req.query['format']
 
-  if (!(format == 'docx' || format == 'csv')) {
-    let err = Boom.badRequest(`format must be 'docx' or 'csv' not '${format}'`)
+  if (!(format == 'docx' || format == 'csv' || format == 'pdf')) {
+    let err = Boom.badRequest(
+      `format must be 'docx', 'pdf', or 'csv' not '${format}'`)
     throw err
   }
 
@@ -106,6 +130,8 @@ router.get(
 
   if (format == 'docx') {
     reportGen.generate(writeData, res)
+  } else if (format == 'pdf') {
+    reportGen.generate(writePdfData, res)
   } else {
     const csv = reportGen.getCsvData()
 

@@ -25,7 +25,7 @@ export const REQUIRED_DATA_QUALITY_OPTIONS = [
   'To be defined',
 ];
 
-export const DATA_IMPORTANCE_OPTIONS = [
+export const PRIORITY_OPTIONS = [
   "1",
   "2",
   "3",
@@ -66,7 +66,7 @@ export class PriorityArea {
       type:"varchar",
       nullable: true,
   })
-  dataImportance;
+  priority;
 
   @Column("geometry", {
     name: "geom",

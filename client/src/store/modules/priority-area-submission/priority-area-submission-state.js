@@ -23,7 +23,7 @@ function initialState() {
     preferredTimeframeOptions: [],
     riskRatingOptions: [],
     requiredDataQualityOptions: [],
-    dataImportanceOptions: [],
+    priorityOptions: [],
   }
 };
 

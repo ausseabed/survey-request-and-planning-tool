@@ -33,6 +33,14 @@ export class User {
   })
   department;
 
+  // string to support admins in assigning a new user to a specific custodian
+  @Column({
+    name: "requested_custodian",
+    type:"varchar",
+    nullable: true,
+  })
+  requestedCustodian;
+
   // last time user did something within the application
   @Column({
       type:"timestamp with time zone",

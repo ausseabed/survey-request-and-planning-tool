@@ -19,12 +19,46 @@ router.get(
   let users = await getConnection()
   .getRepository(User)
   .find({
-    select: ['id', 'name', 'email', 'lastSeen', 'department'],
+    select: ['id', 'name', 'email', 'lastSeen', 'department', 'requestedCustodian'],
     relations: ['role', 'custodian'],
     order: {name: 'ASC'}
   });
   return res.json(users);
 }));
+
+
+//
+router.get(
+  '/current',
+  isAuthenticated,
+  asyncMiddleware(async function (req, res) {
+
+  let user = req.user
+
+  if (!user) {
+    let err = Boom.notFound(`No current user`);
+    throw err;
+  }
+
+  const userDetails = {
+    name: user.name,
+    email: user.email,
+    requestedCustodian: user.requestedCustodian,
+    role: user.role,
+    custodian: user.custodian
+  }
+
+  // don't return the deleted flag
+  if (userDetails.role) {
+    userDetails.role.deleted = undefined;
+  }
+  if (userDetails.custodian) {
+    userDetails.custodian.deleted = undefined;
+  }
+
+  return res.json(userDetails);
+}));
+
 
 // updates a user
 router.post(
@@ -56,6 +90,7 @@ router.post(
   user.custodian = req.body.custodian;
   user.name = req.body.name;
   user.department = req.body.department;
+  user.requestedCustodian = req.body.requestedCustodian;
 
   user = await getConnection()
   .getRepository(User)
@@ -65,7 +100,7 @@ router.post(
   user = await getConnection()
   .getRepository(User)
   .findOne(user.id, {
-    select: ['id', 'name', 'email', 'department'],
+    select: ['id', 'name', 'email', 'department', 'requestedCustodian'],
     relations: ['role', 'custodian'],
   })
 

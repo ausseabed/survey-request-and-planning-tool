@@ -98,18 +98,6 @@
         'authenticate',
         'logout',
       ]),
-      ...mapActions('role', [
-        'getUserRole',
-      ]),
-      ...mapActions('custodian', [
-        'getUserCustodian',
-      ]),
-      ...mapMutations('role', {
-        'setUserRole': mutRoleTypes.SET_USER_ROLE,
-      }),
-      ...mapMutations('custodian', {
-        'setUserCustodian': mutCustodianTypes.SET_USER_CUSTODIAN,
-      }),
       show_settings() {
         console.log("Show settings here");
       },

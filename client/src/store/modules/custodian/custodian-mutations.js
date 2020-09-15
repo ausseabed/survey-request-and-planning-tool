@@ -55,9 +55,6 @@ const mutations = {
     _.set(state.activeCustodian, path, _.cloneDeep(value))
   },
 
-  [types.SET_USER_CUSTODIAN] (state, custodian) {
-    state.userCustodian = custodian;
-  },
 }
 
 export default {

@@ -36,8 +36,7 @@ export default {
     } else {
       this.checkAuthentication();
       try {
-        this.getUserRole();
-        this.getUserCustodian();
+        this.getCurrentUser();
       } catch (error) {
         console.log(error)
       }
@@ -57,11 +56,8 @@ export default {
     ...mapActions('auth', [
       'checkAuthentication',
     ]),
-    ...mapActions('role', [
-      'getUserRole',
-    ]),
-    ...mapActions('custodian', [
-      'getUserCustodian',
+    ...mapActions('user', [
+      'getCurrentUser',
     ]),
     resetScroll(el, done) {
       document.documentElement.scrollTop = 0

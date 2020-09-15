@@ -17,3 +17,7 @@ export const requestError = state => {
 export const requestStatus = state => {
   return state.requestStatus;
 }
+
+export const currentUser = state => {
+  return state.currentUser;
+}

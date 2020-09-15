@@ -8,7 +8,6 @@ import { RequestStatus } from '../request-status'
 function initialState() {
   return {
     activeCustodian:undefined,
-    userCustodian: undefined,
     dirty: false,
     custodians:[],
     requestStatus: RequestStatus.NOT_REQUESTED,

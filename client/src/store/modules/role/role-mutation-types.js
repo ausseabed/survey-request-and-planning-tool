@@ -10,4 +10,3 @@ export const ADD_ROLE = 'ADD_ROLE';
 export const REMOVE_ROLE = 'REMOVE_ROLE';
 export const UPDATE_ROLE = 'UPDATE_ROLE';
 export const UPDATE_ACTIVE_ROLE_VALUE = 'UPDATE_ACTIVE_ROLE_VALUE';
-export const SET_USER_ROLE = 'SET_USER_ROLE';

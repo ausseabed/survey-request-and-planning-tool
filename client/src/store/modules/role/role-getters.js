@@ -2,10 +2,6 @@ export const activeRole = state => {
   return state.activeRole;
 }
 
-export const userRole = state => {
-  return state.userRole;
-}
-
 export const dirty = state => {
   return state.dirty;
 }

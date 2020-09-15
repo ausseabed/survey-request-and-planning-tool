@@ -3,6 +3,7 @@ import Vue from 'vue'
 import * as mutTypes from './auth-mutation-types';
 import * as custodianMutTypes from '../custodian/custodian-mutation-types';
 import * as roleMutTypes from '../role/role-mutation-types';
+import * as userMutTypes from '../user/user-mutation-types';
 
 
 export const authenticate = ({ commit, dispatch }) => {
@@ -15,8 +16,7 @@ export const authenticate = ({ commit, dispatch }) => {
       commit(mutTypes.SET_AUTHENTICATED, isAuthenticated);
 
       if (isAuthenticated) {
-        dispatch('role/getUserRole', null, { root: true });
-        dispatch('custodian/getUserCustodian', null, { root: true });
+        dispatch('user/getCurrentUser', null, { root: true });
       }
 
       resolve(isAuthenticated);
@@ -40,12 +40,7 @@ export const logout = ({ commit, dispatch }) => {
 
   auth.logout();
   commit(
-    'role/' + roleMutTypes.SET_USER_ROLE,
-    undefined,
-    { root: true }
-  );
-  commit(
-    'custodian/' + custodianMutTypes.SET_USER_CUSTODIAN,
+    'user/' + userMutTypes.SET_CURRENT_USER,
     undefined,
     { root: true }
   );

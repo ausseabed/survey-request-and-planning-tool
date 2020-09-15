@@ -2,10 +2,6 @@ export const activeCustodian = state => {
   return state.activeCustodian;
 }
 
-export const userCustodian = state => {
-  return state.userCustodian;
-}
-
 export const deletedCustodians = state => {
   return state.deletedCustodians;
 }

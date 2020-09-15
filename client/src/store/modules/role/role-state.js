@@ -8,7 +8,6 @@ import { RequestStatus } from '../request-status'
 function initialState() {
   return {
     activeRole:undefined, // role a user has selected in the admin ui
-    userRole: undefined, // role of the currenly logged in user
     dirty: false,
     roles:[],
     permissions:[],

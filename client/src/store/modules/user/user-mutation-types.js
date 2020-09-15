@@ -1,6 +1,7 @@
 export const CLEAR_USER_LIST = 'CLEAR_USER_LIST';
 export const RESET = 'RESET';
 export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const SET_DIRTY = 'SET_DIRTY';
 export const SET_USERS = 'SET_USERS';
 export const SET_REQUEST_ERROR = 'SET_REQUEST_ERROR';

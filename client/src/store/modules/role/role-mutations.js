@@ -57,10 +57,6 @@ const mutations = {
     _.set(state.activeRole, path, _.cloneDeep(value))
   },
 
-  [types.SET_USER_ROLE] (state, role) {
-    state.userRole = role;
-  },
-
   [types.SET_PERMISSIONS] (state, permissions) {
     state.permissions = permissions;
   },

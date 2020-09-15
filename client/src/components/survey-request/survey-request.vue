@@ -283,7 +283,6 @@ export default Vue.extend({
     ]),
     ...mapActions('custodian', [
       'getCustodians',
-      'getUserCustodian',
     ]),
     ...mapActions('reportTemplate', [
       'generateReport',
@@ -299,7 +298,6 @@ export default Vue.extend({
 
     fetchData() {
       this.getCustodians();
-      this.getUserCustodian();
     },
 
     restore() {
@@ -516,7 +514,6 @@ export default Vue.extend({
     ]),
     ...mapGetters('custodian', [
       'custodians',
-      'userCustodian',
     ]),
   },
 

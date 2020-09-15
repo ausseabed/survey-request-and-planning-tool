@@ -2,12 +2,21 @@ import { mapGetters } from 'vuex'
 
 export const permission = {
   computed: {
-    ...mapGetters('role',[
-      'userRole',
+    ...mapGetters('user',[
+      'currentUser'
     ]),
-    ...mapGetters('custodian',[
-      'userCustodian',
-    ]),
+    userRole() {
+      if (!this.currentUser) {
+        return undefined;
+      }
+      return this.currentUser.role;
+    },
+    userCustodian() {
+      if (!this.currentUser) {
+        return undefined;
+      }
+      return this.currentUser.custodian;
+    }
   },
   methods: {
     hasPermission(permission) {

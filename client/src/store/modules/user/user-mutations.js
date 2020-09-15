@@ -51,6 +51,10 @@ const mutations = {
     state.dirty = true;
     Vue.set(state.activeUser, path, _.cloneDeep(value))
   },
+
+  [types.SET_CURRENT_USER] (state, user) {
+    state.currentUser = user;
+  },
 }
 
 export default {

@@ -7,11 +7,14 @@ import { RequestStatus } from '../request-status'
 
 function initialState() {
   return {
+    // active user is one selected by user in admin UI
     activeUser:undefined,
     dirty: false,
     users:[],
     requestStatus: RequestStatus.NOT_REQUESTED,
     requestError: undefined,
+    // current user is the details of the currently logged in user
+    currentUser: undefined
   }
 }
 

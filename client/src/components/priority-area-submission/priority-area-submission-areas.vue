@@ -18,7 +18,7 @@
             flat bordered
             :multiple="false"
             accept=".zip,.json"
-            max-total-size="30000000"
+            :max-total-size="30000000"
             :auto-expand="true"
             :auto-upload="true"
             url="/api/priority-area/upload/"

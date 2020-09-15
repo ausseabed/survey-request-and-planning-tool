@@ -67,7 +67,7 @@
             ref="uploader"
             auto-upload
             accept=".pdf"
-            max-total-size="30000000"
+            :max-total-size="30000000"
             flat
             bordered
             :multiple="false"

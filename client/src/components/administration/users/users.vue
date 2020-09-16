@@ -77,6 +77,17 @@
                     >
                   </form-field-validated-input>
 
+                  <form-field-validated-input
+                    name="activeUser.requestedCustodian"
+                    label="Custodian requested by user on sign up"
+                    attribute="Requested Custodian"
+                    :value="activeUser.requestedCustodian"
+                    @input="updateActiveUserValue({path:'requestedCustodian', value:$event})"
+                    @blur="$v.activeUser.requestedCustodian.$touch"
+                    :readonly="!hasPermission('canEditUser')"
+                    >
+                  </form-field-validated-input>
+
                   <form-field-validated-select
                     name="activeUser.custodian"
                     label="Custodian"
@@ -256,6 +267,7 @@ export default Vue.extend({
       department: { },
       role: { required },
       custodian: { },
+      requestedCustodian: { },
     }
   },
 

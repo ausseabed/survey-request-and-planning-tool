@@ -27,7 +27,7 @@ router.get(
 }));
 
 
-//
+// gets details of the currently logged in user
 router.get(
   '/current',
   isAuthenticated,
@@ -41,6 +41,7 @@ router.get(
   }
 
   const userDetails = {
+    id: user.id,
     name: user.name,
     email: user.email,
     requestedCustodian: user.requestedCustodian,
@@ -57,6 +58,54 @@ router.get(
   }
 
   return res.json(userDetails);
+}));
+
+
+// updates details of currently logged in user
+// only the logged in user can access this
+router.post(
+  '/current',
+  [isAuthenticated],
+  asyncMiddleware(async function (req, res) {
+
+  // new users are never created here, they get made on first authentication
+  // as they need a valida OAuth based set of credentials
+  if (_.isNil(req.body.id)) {
+    let err = Boom.badRequest(`request body does not include 'id' for user`)
+    throw err
+  }
+
+  if (req.user.id !== req.body.id) {
+    let err = Boom.badRequest(`Submitted user id does not match logged in user`)
+    throw err
+  }
+
+  let user = await getConnection()
+  .getRepository(User)
+  .findOne(req.user.id)
+
+  if (_.isNil(user)) {
+    let err = Boom.notFound(
+      `User '${req.body.id}' does not exist, cannot update`);
+    throw err;
+  }
+
+  // for now users can only change their requested custodian
+  user.requestedCustodian = req.body.requestedCustodian;
+
+  user = await getConnection()
+  .getRepository(User)
+  .save(user)
+
+  // be selective in what gets returned, auth tokens aren't needed here
+  user = await getConnection()
+  .getRepository(User)
+  .findOne(user.id, {
+    select: ['id', 'name', 'email', 'department', 'requestedCustodian'],
+    relations: ['role', 'custodian'],
+  })
+
+  return res.json(user)
 }));
 
 

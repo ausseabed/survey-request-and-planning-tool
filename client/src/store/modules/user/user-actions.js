@@ -46,6 +46,25 @@ export const getUsers = ({ commit, state }) => {
   });
 }
 
+export const saveCurrentUser = ({ commit, state }) => {
+
+  commit(mutTypes.SET_REQUEST_ERROR, undefined);
+  return new Promise((resolve, reject) => {
+    commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.REQUESTED);
+
+    Vue.axios.post('/api/user/current', state.currentUser)
+    .then((response) => {
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.SUCCESS);
+      resolve(response.data);
+    })
+    .catch((error) => {
+      commit(mutTypes.SET_REQUEST_ERROR, error);
+      commit(mutTypes.SET_REQUEST_STATUS, RequestStatus.ERROR);
+      reject(error);
+    });
+  });
+}
+
 export const getCurrentUser = ({ commit, state }) => {
   var url_endpoint = '/api/user/current';
 

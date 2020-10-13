@@ -6,7 +6,7 @@ export const MAP_ATTRIBUTION_HTML = '© Geoscience Australia - <a target="_blank
 export const WMS_PRIORITY_AREAS = 'map/wms';
 export const WMS_PRIORITY_AREAS_LAYER = 'Priority_Area_Submissions';
 
-export const LEAFLET_BASE_LAYER = 'http://gaservices.ga.gov.au/site_7/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer/WMSServer?';
+export const LEAFLET_BASE_LAYER = 'https://services.ga.gov.au/site_7/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer/tile/{z}/{y}/{x}'
 
 // Max Latitude -4.6 decimal degrees
 // Max Longitude 174.89 decimal degrees

@@ -326,16 +326,12 @@
               </q-btn>
             </l-control>
 
-            <l-wms-tile-layer
-              :base-url="mapBaseUrl"
-              layers="World_Bathymetry_Image"
-              name="WorldBathymetry Image"
+            <l-tile-layer
+              :url="mapBaseUrl"
               :attribution="baseLayerAttribution"
-              layer-type="base"
-              format="image/png"
               :zIndex="3"
             >
-            </l-wms-tile-layer>
+            </l-tile-layer>
 
             <l-wms-tile-layer
               :visible="showPriorityAreas"

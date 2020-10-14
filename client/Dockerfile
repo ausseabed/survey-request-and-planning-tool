@@ -18,10 +18,11 @@ ADD src $APPDIR/src
 RUN whoami
 
 RUN mkdir /code/node_modules
+RUN chown node:node /code/node_modules -R
 
 RUN ls -al /code/node_modules
 
-RUN yarn install && yarn run build
+RUN npm install && npm run build
 
 FROM nginx:1.13.9 as nginx
 

@@ -54,9 +54,15 @@ const getBaseMapImage = async(extents, imageSize) => {
   const baseMapUrl = `${wmsBase}?F=image&FORMAT=PNG32&TRANSPARENT=true&SIZE=${sizeX}%2C${sizeY}&${wmsBB}&BBOXSR=4326&IMAGESR=4326&DPI=180`;
   try {
     let res = await Axios.get(baseMapUrl, {responseType: 'arraybuffer'});
+    // try to create an image from this data. Sometimes the server will be down
+    // but not returning error codes (eg; Esri web servers)
+    const testImage = await sharp(res.data)
+      .modulate({saturation: 0.7})
+      .png()
+      .toBuffer();
     return res.data;
   } catch(error) {
-    console.log("HERE");
+    console.log("Error obtaining base layer");
     console.log(error);
     const noBaseMapImg =
       await sharp('src/lib/workers/no-base-layer.png')

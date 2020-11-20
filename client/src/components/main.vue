@@ -328,6 +328,7 @@
 
             <l-tile-layer
               :url="mapBaseUrl"
+              :opacity="0.6"
               :attribution="baseLayerAttribution"
               :zIndex="3"
             >

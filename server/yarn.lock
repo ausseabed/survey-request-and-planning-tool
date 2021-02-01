@@ -1139,10 +1139,10 @@ ajv@^6.12.3:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-angular-expressions@^1.0.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/angular-expressions/-/angular-expressions-1.1.1.tgz#45fb8a5da8dc0fb854e717f71e8251c9d6bdae31"
-  integrity sha512-gH9UO5r0HTmQWOfet9dC6ekWZ0hnOzCy62OUcV79XuUh0wqaLzVHcv7STWfIA5hxn39TA4mYs1EKukCsgGIvwg==
+angular-expressions@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/angular-expressions/-/angular-expressions-1.1.2.tgz#9115a9f36c252ac83246bc49cb26802f84bf622f"
+  integrity sha512-nTu8idKKtQeUGSY+Wk0x/jhM+m0fnqK7XlYdLmfKLqcrn3TRbkGqxID4pfste3qPJq7zQeliGIlIY3VivC/rpQ==
 
 ansi-align@^2.0.0:
   version "2.0.0"

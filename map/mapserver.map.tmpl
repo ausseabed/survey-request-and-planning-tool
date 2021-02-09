@@ -55,7 +55,8 @@ MAP
       "wfs_enable_request" "*"
       wms_enable_request "*"
       "ows_enable_request" "*"
-      wms_getfeature_formatlist "application/json, application/geojson"
+      wms_getfeature_formatlist "application/json,application/geojson"
+      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml"
     END
     STATUS ON
     TEMPLATE "dummy.js"
@@ -135,7 +136,8 @@ MAP
       "wfs_enable_request" "*"
       wms_enable_request "*"
       "ows_enable_request" "*"
-      wms_getfeature_formatlist "application/json, application/geojson"
+      wms_getfeature_formatlist "application/json,application/geojson"
+      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml"
     END
     STATUS ON
     TEMPLATE "dummy.js"

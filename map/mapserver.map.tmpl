@@ -39,6 +39,49 @@ MAP
     DRIVER "OGR/GEOJSON"
     FORMATOPTION "STORAGE=stream"
     FORMATOPTION "FORM=SIMPLE"
+    FORMATOPTION "FILENAME=sct.json"
+  END
+
+  OUTPUTFORMAT
+    NAME "csv"
+    DRIVER "OGR/CSV"
+    MIMETYPE "text/csv"
+    # Don't include geom in csv exports
+    # FORMATOPTION "LCO:GEOMETRY=AS_WKT"
+    FORMATOPTION "STORAGE=memory"
+    FORMATOPTION "FORM=simple"
+    FORMATOPTION "FILENAME=sct.csv"
+  END
+
+  OUTPUTFORMAT
+    NAME "SHAPE-ZIP"
+    DRIVER "OGR/ESRI Shapefile"
+    FORMATOPTION "STORAGE=memory"
+    FORMATOPTION "FORM=zip"
+    FORMATOPTION "FILENAME=sct.zip"
+  END
+
+  OUTPUTFORMAT
+    NAME "kml"
+    DRIVER "OGR/KML"
+    MIMETYPE "application/vnd.google-earth.kml+xml"
+    IMAGEMODE RGB
+    IMAGEMODE FEATURE
+    EXTENSION "kml"
+    FORMATOPTION 'ATTACHMENT=sct.kml'
+  END
+
+  # the outputFormat query string arg is not escaped in an external tool
+  # accessing this mapserver, as a result the "+" character is interpreted
+  # as a space in the name (and not a plus). This outputformat caters for this
+  OUTPUTFORMAT
+    NAME "application/vnd.google-earth.kml xml"
+    DRIVER "OGR/KML"
+    MIMETYPE "application/vnd.google-earth.kml+xml"
+    IMAGEMODE RGB
+    IMAGEMODE FEATURE
+    EXTENSION "kml"
+    FORMATOPTION 'ATTACHMENT=sct.kml'
   END
 
   LEGEND
@@ -56,7 +99,7 @@ MAP
       wms_enable_request "*"
       "ows_enable_request" "*"
       wms_getfeature_formatlist "application/json,application/geojson"
-      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml"
+      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml,csv,SHAPE-ZIP,kml,application/vnd.google-earth.kml xml"
     END
     STATUS ON
     TEMPLATE "dummy.js"
@@ -137,7 +180,7 @@ MAP
       wms_enable_request "*"
       "ows_enable_request" "*"
       wms_getfeature_formatlist "application/json,application/geojson"
-      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml"
+      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml,csv,SHAPE-ZIP,kml,application/vnd.google-earth.kml xml"
     END
     STATUS ON
     TEMPLATE "dummy.js"

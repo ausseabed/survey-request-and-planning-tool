@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 
 import { PriorityAreaSubmission } from './priority-area-submission';
 
@@ -39,32 +39,32 @@ export class PriorityArea {
   id;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   name;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   preferredTimeframe;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   riskRating;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   requiredDataQuality;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   priority;
 

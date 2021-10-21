@@ -1,5 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany,
-  ManyToOne, OneToOne, JoinColumn} from "typeorm";
+import {
+  Entity, PrimaryGeneratedColumn, Column, OneToMany,
+  ManyToOne, OneToOne, JoinColumn
+} from "typeorm";
 
 import { DateTransformer } from './utils';
 
@@ -23,20 +25,20 @@ export class PriorityAreaSubmission {
   submittingOrganisation;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   contactPerson;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   contactEmail;
 
   @Column({
-      type:"bool",
-      nullable: true,
+    type: "bool",
+    nullable: true,
   })
   citation;
 
@@ -48,42 +50,42 @@ export class PriorityAreaSubmission {
   citedOrganisation;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   citedContactName;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   citedContactEmail;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   riskIssues;
 
   @Column({
-      type:"varchar",
-      nullable: true,
+    type: "varchar",
+    nullable: true,
   })
   furtherInformation;
 
   @Column({
-      type:"timestamp with time zone",
-      default: () => 'CURRENT_TIMESTAMP',
-      transformer: new DateTransformer(),
-      nullable: false,
+    type: "timestamp with time zone",
+    default: () => 'CURRENT_TIMESTAMP',
+    transformer: new DateTransformer(),
+    nullable: false,
   })
   created;
 
   @Column({
-      type:"timestamp with time zone",
-      default: () => 'CURRENT_TIMESTAMP',
-      transformer: new DateTransformer(),
-      nullable: true,
+    type: "timestamp with time zone",
+    default: () => 'CURRENT_TIMESTAMP',
+    transformer: new DateTransformer(),
+    nullable: true,
   })
   lastModified;
 
@@ -112,9 +114,9 @@ export class PriorityAreaSubmission {
   recordState;
 
   @Column({
-      type:"uuid",
-      name:"upload_task_id",
-      nullable: true,
+    type: "uuid",
+    name: "upload_task_id",
+    nullable: true,
   })
   uploadTaskId;
 

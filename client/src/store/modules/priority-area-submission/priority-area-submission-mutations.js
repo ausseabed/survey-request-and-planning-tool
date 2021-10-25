@@ -4,7 +4,7 @@ import Vue from 'vue';
 import * as types from './priority-area-submission-mutation-types';
 
 const mutations = {
-  [types.ADD_PRIORITY_AREA_SUBMISSION] (state, priorityAreaSubmission) {
+  [types.ADD_PRIORITY_AREA_SUBMISSION](state, priorityAreaSubmission) {
     const existingIndex = state.priorityAreaSubmissions.findIndex(existingPriorityAreaSubmission => {
       return existingPriorityAreaSubmission.id == priorityAreaSubmission.id;
     });
@@ -16,13 +16,12 @@ const mutations = {
 
     // update the active priorityAreaSubmission too is this is the priorityAreaSubmission we are adding
     if (!_.isNil(state.activePriorityAreaSubmission) &&
-      priorityAreaSubmission.id == state.activePriorityAreaSubmission.id)
-    {
+      priorityAreaSubmission.id == state.activePriorityAreaSubmission.id) {
       state.activePriorityAreaSubmission = priorityAreaSubmission;
     }
   },
 
-  [types.REMOVE_PRIORITY_AREA_SUBMISSION] (state, id) {
+  [types.REMOVE_PRIORITY_AREA_SUBMISSION](state, id) {
     const oldLength = state.priorityAreaSubmissions.length
     state.priorityAreaSubmissions = state.priorityAreaSubmissions.filter(pas => {
       return pas.id != id
@@ -33,60 +32,60 @@ const mutations = {
     //state.count = state.count - deltaLength
   },
 
-  [types.CLEAR_PRIORITY_AREA_SUBMISSION_LIST] (state, priorityAreaSubmissions) {
+  [types.CLEAR_PRIORITY_AREA_SUBMISSION_LIST](state, priorityAreaSubmissions) {
     state.count = undefined;
     state.priorityAreaSubmissions.splice(0, state.priorityAreaSubmissions.length);
   },
 
-  [types.SET_ACTIVE_PRIORITY_AREA_SUBMISSION] (state, priorityAreaSubmission) {
+  [types.SET_ACTIVE_PRIORITY_AREA_SUBMISSION](state, priorityAreaSubmission) {
     state.activePriorityAreaSubmission = _.cloneDeep(priorityAreaSubmission);
     state.dirty = false;
   },
 
-  [types.SET_RESTORE_PRIORITY_AREA_SUBMISSION] (state, priorityAreaSubmission) {
+  [types.SET_RESTORE_PRIORITY_AREA_SUBMISSION](state, priorityAreaSubmission) {
     state.restorePriorityAreaSubmission = _.cloneDeep(priorityAreaSubmission);
   },
 
-  [types.SET_DIRTY] (state, dirty) {
+  [types.SET_DIRTY](state, dirty) {
     state.dirty = dirty;
   },
 
-  [types.RESTORE] (state) {
+  [types.RESTORE](state) {
     state.activePriorityAreaSubmission = _.cloneDeep(state.restorePriorityAreaSubmission);
     state.dirty = false;
   },
 
-  [types.SET_PRIORITY_AREA_SUBMISSIONS] (state, priorityAreaSubmissions) {
+  [types.SET_PRIORITY_AREA_SUBMISSIONS](state, priorityAreaSubmissions) {
     state.priorityAreaSubmissions = priorityAreaSubmissions;
   },
 
-  [types.SET_FILTER] (state, filter) {
+  [types.SET_FILTER](state, filter) {
     state.filter = filter;
     state.priorityAreaSubmissions.splice(0, state.priorityAreaSubmissions.length);
     state.count = undefined;
   },
 
-  [types.SET_PAGE_DATA] (state, pasPageData) {
+  [types.SET_PAGE_DATA](state, pasPageData) {
     // the pas page data contains a count of the total number of pas, and
     // the list of the pass returned for this page
     state.count = pasPageData.count
     state.priorityAreaSubmissions.push(...pasPageData.data)
   },
 
-  [types.SET_REQUEST_ERROR] (state, error) {
+  [types.SET_REQUEST_ERROR](state, error) {
     state.requestError = error;
   },
 
-  [types.SET_REQUEST_STATUS] (state, status) {
+  [types.SET_REQUEST_STATUS](state, status) {
     state.requestStatus = status;
   },
 
-  [types.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE] (state, { path, value }) {
+  [types.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE](state, { path, value }) {
     state.dirty = true;
     _.set(state.activePriorityAreaSubmission, path, value)
   },
 
-  [types.ADD_PRIORITY_AREAS] (state, priorityAreas) {
+  [types.ADD_PRIORITY_AREAS](state, priorityAreas) {
     const pas = state.activePriorityAreaSubmission.priorityAreas;
     // filter the given list of priority area so that no duplicates are
     // added (based on id)
@@ -102,7 +101,7 @@ const mutations = {
     state.activePriorityAreaSubmission.priorityAreas.unshift(...filteredPas);
   },
 
-  [types.REMOVE_PRIORITY_AREA] (state, priorityAreaId) {
+  [types.REMOVE_PRIORITY_AREA](state, priorityAreaId) {
     const pas = state.activePriorityAreaSubmission.priorityAreas;
     var index = pas.findIndex(pa => pa.id == priorityAreaId);
     if (index == -1) {
@@ -113,20 +112,24 @@ const mutations = {
     state.activePriorityAreaSubmission.priorityAreas.splice(index, 1);
   },
 
-  [types.SET_PREFERRED_TIMEFRAME_OPTIONS] (state, options) {
+  [types.SET_PREFERRED_TIMEFRAME_OPTIONS](state, options) {
     state.preferredTimeframeOptions = options;
   },
 
-  [types.SET_PRIORITY_OPTIONS] (state, options) {
+  [types.SET_PRIORITY_OPTIONS](state, options) {
     state.priorityOptions = options;
   },
 
-  [types.SET_REQUIRED_DATA_QUALITY_OPTIONS] (state, options) {
+  [types.SET_REQUIRED_DATA_QUALITY_OPTIONS](state, options) {
     state.requiredDataQualityOptions = options;
   },
 
-  [types.SET_RISK_RATING_OPTIONS] (state, options) {
+  [types.SET_RISK_RATING_OPTIONS](state, options) {
     state.riskRatingOptions = options;
+  },
+
+  [types.SET_IDENTIFIED_AREA_OPTIONS](state, options) {
+    state.identifiedAreaOptions = options;
   },
 
 }

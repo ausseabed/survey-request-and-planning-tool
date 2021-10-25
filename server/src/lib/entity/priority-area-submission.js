@@ -11,6 +11,15 @@ import { PriorityArea } from './priority-area';
 import { RecordState } from './record-state';
 import { Task } from './task';
 
+
+export const IDENTIFIED_AREA_NAME_SUGGESTIONS = [
+  'Perth Canyon',
+  'Joe\'s Reef',
+  'placeholder name 1',
+  'placeholder name 2',
+];
+
+
 @Entity()
 export class PriorityAreaSubmission {
 
@@ -35,6 +44,12 @@ export class PriorityAreaSubmission {
     nullable: true,
   })
   contactEmail;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
+  })
+  identifiedAreaName;
 
   @Column({
     type: "bool",

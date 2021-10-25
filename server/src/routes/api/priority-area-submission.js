@@ -19,6 +19,10 @@ import {
   REQUIRED_DATA_QUALITY_OPTIONS, PRIORITY_OPTIONS
 }
   from '../../lib/entity/priority-area';
+import {
+  IDENTIFIED_AREA_NAME_SUGGESTIONS
+}
+  from '../../lib/entity/priority-area-submission';
 import { RecordState } from '../../lib/entity/record-state';
 import { shpBuilderFactory } from '../../lib/shp-builder';
 
@@ -41,6 +45,10 @@ router.get('/required-data-quality-options', async function (req, res) {
 
 router.get('/priority-options', async function (req, res) {
   return res.json(PRIORITY_OPTIONS);
+});
+
+router.get('/identified-area-options', async function (req, res) {
+  return res.json(IDENTIFIED_AREA_NAME_SUGGESTIONS);
 });
 
 const PRIORITY_AREA_SUBMISSION_RELATIONS = [

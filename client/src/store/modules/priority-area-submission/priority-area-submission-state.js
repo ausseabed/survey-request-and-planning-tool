@@ -7,10 +7,10 @@ import { RequestStatus } from '../request-status';
 
 function initialState() {
   return {
-    activePriorityAreaSubmission:{},
-    restorePriorityAreaSubmission:{},
+    activePriorityAreaSubmission: {},
+    restorePriorityAreaSubmission: {},
     dirty: false,
-    priorityAreaSubmissions:[],
+    priorityAreaSubmissions: [],
     // total number of orgs irrespective of pagination, don't request more than
     // this
     count: undefined,
@@ -24,6 +24,7 @@ function initialState() {
     riskRatingOptions: [],
     requiredDataQualityOptions: [],
     priorityOptions: [],
+    identifiedAreaOptions: [],
   }
 };
 

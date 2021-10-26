@@ -60,23 +60,32 @@
       >
       </form-field-validated-input>
 
-      <form-field-validated-input
+      <form-field-validated-select
+        use-input
+        hide-selected
+        fill-input
+        clearable
         name="priorityAreaSubmission.identifiedAreaName"
         label="Identified Area name"
         attribute="Identified Area name"
         hint="The agreed name of the area that is provided by the submitting organisation."
         :value="priorityAreaSubmission.identifiedAreaName"
-        @input="
+        @input-value="
           updatePriorityAreaSubmissionValue({
             path: 'identifiedAreaName',
             value: $event,
           })
         "
-        type="text"
+        @clear="
+          updatePriorityAreaSubmissionValue({
+            path: 'identifiedAreaName',
+            value: undefined,
+          })
+        "
+        :options="identifiedAreaOptionsFiltered"
         @blur="$v.priorityAreaSubmission.identifiedAreaName.$touch"
-        :readonly="readonly"
       >
-      </form-field-validated-input>
+      </form-field-validated-select>
 
       <div class="q-pt-sm">
         <q-separator class="q-my-md" style="min-height: 1px" />
@@ -176,7 +185,7 @@
 <script>
 import Vue from "vue";
 const _ = require("lodash");
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { required, minLength, email } from "vuelidate/lib/validators";
 
 import { errorHandler } from "./../mixins/error-handling";
@@ -263,7 +272,27 @@ export default Vue.extend({
     }),
     ...mapGetters("organisation", {
       organisationsList: "organisations"
-    })
+    }),
+    ...mapState("priorityAreaSubmission", {
+      identifiedAreaOptions: "identifiedAreaOptions"
+    }),
+
+    identifiedAreaOptionsFiltered() {
+      if (
+        _.isNil(this.priorityAreaSubmission.identifiedAreaName) ||
+        this.priorityAreaSubmission.identifiedAreaName.length == 0
+      ) {
+        return this.identifiedAreaOptions;
+      }
+      let opts = this.identifiedAreaOptions.filter(areaNameOpt => {
+        return areaNameOpt
+          .toLowerCase()
+          .includes(
+            this.priorityAreaSubmission.identifiedAreaName.toLowerCase()
+          );
+      });
+      return opts;
+    }
   },
 
   data() {

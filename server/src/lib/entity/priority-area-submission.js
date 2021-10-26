@@ -63,31 +63,6 @@ export class PriorityAreaSubmission {
   geographicalAreaName;
 
   @Column({
-    type: "bool",
-    nullable: true,
-  })
-  citation;
-
-  @ManyToOne(
-    type => Organisation,
-    organisation => organisation.priorityAreaCitations,
-    { nullable: true }
-  )
-  citedOrganisation;
-
-  @Column({
-    type: "varchar",
-    nullable: true,
-  })
-  citedContactName;
-
-  @Column({
-    type: "varchar",
-    nullable: true,
-  })
-  citedContactEmail;
-
-  @Column({
     type: "varchar",
     nullable: true,
   })

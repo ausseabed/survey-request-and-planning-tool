@@ -1,5 +1,5 @@
 const tmp = require('tmp')
-const { spawnSync } = require( 'child_process' )
+const { spawnSync } = require('child_process')
 
 export function shpBuilderFactory(entityName) {
   const props = [
@@ -65,8 +65,8 @@ export class ShpBuilder {
     const cmdArgs = this.getCmdLineArgs(filename, query)
 
     const cmdOutput = spawnSync(cmd, cmdArgs)
-    console.log( `stderr: ${cmdOutput.stderr.toString()}` );
-    console.log( `stdout: ${cmdOutput.stdout.toString()}` );
+    console.log(`stderr: ${cmdOutput.stderr.toString()}`);
+    console.log(`stdout: ${cmdOutput.stdout.toString()}`);
     return tmpDir
   }
 
@@ -118,8 +118,6 @@ export class PriorityAreaShpBuilder extends ShpBuilder {
       'corg.name as PAS_CI_ORG',
       'pas.\"contactPerson\" as PAS_NAME',
       'pas.\"contactEmail\" as PAS_EMAIL',
-      'pas.\"citedContactName\" as PAS_CNAME',
-      'pas.\"citedContactEmail\" as PAS_CEMAIL',
       'cust.name as PAS_CUSTOD',
       'pa.name as PA_NAME',
       'pa.\"preferredTimeframe\" as PA_TIME',
@@ -132,7 +130,6 @@ export class PriorityAreaShpBuilder extends ShpBuilder {
       `SELECT ${selects.join(', ')} FROM priority_area pa ` +
       'JOIN priority_area_submission pas ON pas.id = pa.\"priorityAreaSubmissionSubmissionId\" ' +
       'LEFT OUTER JOIN organisation sorg ON sorg.id = pas.\"submittingOrganisationId\" ' +
-      'LEFT OUTER JOIN organisation corg ON corg.id = pas.\"citedOrganisationId\" ' +
       'LEFT OUTER JOIN custodian cust ON cust.id = pas.\"custodianId\" ' +
       `WHERE pas.id = '${id}'`
     return q

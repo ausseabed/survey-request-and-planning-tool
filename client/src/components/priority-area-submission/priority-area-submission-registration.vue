@@ -112,98 +112,6 @@
         @blur="$v.priorityAreaSubmission.geographicalAreaName.$touch"
       >
       </form-field-validated-select>
-
-      <div class="q-pt-sm">
-        <q-separator class="q-my-md" style="min-height: 1px" />
-      </div>
-
-      <q-field stack-label label="Citation" bottom-slots :readonly="readonly">
-        <q-checkbox
-          :value="priorityAreaSubmission.citation"
-          label="Use above details for public citation"
-          @input="
-            updatePriorityAreaSubmissionValue({
-              path: 'citation',
-              value: $event,
-            })
-          "
-          :disable="readonly"
-        />
-      </q-field>
-
-      <form-field-validated-select
-        name="priorityAreaSubmission.citedOrganisation"
-        label="Cited Organisation"
-        hint="Organisation cited in the public records"
-        use-input
-        clearable
-        input-debounce="200"
-        @filter="filterOrganisationFunction"
-        :value="
-          priorityAreaSubmission.citation
-            ? priorityAreaSubmission.submittingOrganisation
-            : priorityAreaSubmission.citedOrganisation
-        "
-        @input="
-          updatePriorityAreaSubmissionValue({
-            path: 'citedOrganisation',
-            value: $event,
-          })
-        "
-        :options="organisationsList"
-        option-label="name"
-        option-value="id"
-        @blur="$v.priorityAreaSubmission.citedOrganisation.$touch"
-        :readonly="readonly"
-        :disable="priorityAreaSubmission.citation"
-      >
-      </form-field-validated-select>
-
-      <form-field-validated-input
-        name="priorityAreaSubmission.citedContactName"
-        label="Cited Contact Name"
-        attribute="Cited Contact Name"
-        hint="Contact person from the commissioning organisation"
-        :value="
-          priorityAreaSubmission.citation
-            ? priorityAreaSubmission.contactPerson
-            : priorityAreaSubmission.citedContactName
-        "
-        @input="
-          updatePriorityAreaSubmissionValue({
-            path: 'citedContactName',
-            value: $event,
-          })
-        "
-        type="text"
-        @blur="$v.priorityAreaSubmission.citedContactName.$touch"
-        :readonly="readonly"
-        :disable="priorityAreaSubmission.citation"
-      >
-      </form-field-validated-input>
-
-      <form-field-validated-input
-        name="priorityAreaSubmission.citedContactEmail"
-        label="Cited Contact Email"
-        attribute="Contact Email"
-        hint="email that will appear in the public records"
-        :value="
-          priorityAreaSubmission.citation
-            ? priorityAreaSubmission.contactEmail
-            : priorityAreaSubmission.citedContactEmail
-        "
-        @input="
-          updatePriorityAreaSubmissionValue({
-            path: 'citedContactEmail',
-            value: $event,
-          })
-        "
-        type="email"
-        @blur="$v.priorityAreaSubmission.citedContactEmail.$touch"
-        :readonly="readonly"
-        :disable="priorityAreaSubmission.citation"
-      >
-      </form-field-validated-input>
     </div>
   </form-wrapper>
 </template>
@@ -277,35 +185,15 @@ export default Vue.extend({
   watch: {},
 
   validations() {
-    if (this.priorityAreaSubmission.citation) {
-      return {
-        priorityAreaSubmission: {
-          submittingOrganisation: { required },
-          contactPerson: { required },
-          contactEmail: { required, email },
-          identifiedAreaName: { required },
-          geographicalAreaName: {},
-          citation: {},
-          citedOrganisation: {},
-          citedContactName: {},
-          citedContactEmail: {}
-        }
-      };
-    } else {
-      return {
-        priorityAreaSubmission: {
-          submittingOrganisation: { required },
-          contactPerson: { required },
-          contactEmail: { required, email },
-          identifiedAreaName: { required },
-          geographicalAreaName: {},
-          citation: {},
-          citedOrganisation: { required },
-          citedContactName: { required },
-          citedContactEmail: { required, email }
-        }
-      };
-    }
+    return {
+      priorityAreaSubmission: {
+        submittingOrganisation: { required },
+        contactPerson: { required },
+        contactEmail: { required, email },
+        identifiedAreaName: { required },
+        geographicalAreaName: {}
+      }
+    };
   },
 
   computed: {

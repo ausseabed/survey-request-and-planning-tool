@@ -65,11 +65,4 @@ export class Organisation {
   )
   priorityAreaSubmissions;
 
-  @OneToMany(
-    type => PriorityAreaSubmission,
-    priorityAreaSubmission => priorityAreaSubmission.citedOrganisation
-  )
-  priorityAreaCitations;
-
-
 }

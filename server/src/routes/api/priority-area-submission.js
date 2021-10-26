@@ -58,7 +58,6 @@ router.get('/geographical-area-options', async function (req, res) {
 
 const PRIORITY_AREA_SUBMISSION_RELATIONS = [
   'submittingOrganisation',
-  'citedOrganisation',
   'custodian',
   'recordState',
   'priorityAreas',
@@ -81,16 +80,11 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       "priority_area_submission.contactEmail",
       "priority_area_submission.created",
       "priority_area_submission.lastModified",
-      "priority_area_submission.citation",
-      "priority_area_submission.citedContactName",
-      "priority_area_submission.citedContactEmail",
       "priority_area_submission.riskIssues",
       "priority_area_submission.furtherInformation",
     ])
     .leftJoinAndSelect(
       "priority_area_submission.submittingOrganisation", "submittingOrganisation")
-    .leftJoinAndSelect(
-      "priority_area_submission.citedOrganisation", "citedOrganisation")
     .leftJoinAndSelect(
       "priority_area_submission.custodian", "custodian")
     .leftJoinAndSelect(

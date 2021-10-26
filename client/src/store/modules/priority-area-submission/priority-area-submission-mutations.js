@@ -132,6 +132,10 @@ const mutations = {
     state.identifiedAreaOptions = options;
   },
 
+  [types.SET_GEOGRAPHICAL_AREA_OPTIONS](state, options) {
+    state.geographicalAreaOptions = options;
+  },
+
 }
 
 export default {

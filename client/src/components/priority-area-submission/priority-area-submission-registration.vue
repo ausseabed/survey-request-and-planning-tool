@@ -87,6 +87,32 @@
       >
       </form-field-validated-select>
 
+      <form-field-validated-select
+        use-input
+        hide-selected
+        fill-input
+        clearable
+        name="priorityAreaSubmission.geographicalAreaName"
+        label="Geographical Area name"
+        attribute="Geographical Area name"
+        :value="priorityAreaSubmission.geographicalAreaName"
+        @input-value="
+          updatePriorityAreaSubmissionValue({
+            path: 'geographicalAreaName',
+            value: $event,
+          })
+        "
+        @clear="
+          updatePriorityAreaSubmissionValue({
+            path: 'geographicalAreaName',
+            value: undefined,
+          })
+        "
+        :options="geographicalAreaOptionsFiltered"
+        @blur="$v.priorityAreaSubmission.geographicalAreaName.$touch"
+      >
+      </form-field-validated-select>
+
       <div class="q-pt-sm">
         <q-separator class="q-my-md" style="min-height: 1px" />
       </div>
@@ -205,7 +231,10 @@ export default Vue.extend({
 
   methods: {
     ...mapActions("organisation", ["getOrganisations"]),
-    ...mapActions("priorityAreaSubmission", ["getIdentifiedAreaOptions"]),
+    ...mapActions("priorityAreaSubmission", [
+      "getIdentifiedAreaOptions",
+      "getGeographicalAreaOptions"
+    ]),
 
     ...mapMutations("priorityAreaSubmission", {
       updatePriorityAreaSubmissionValue:
@@ -219,6 +248,7 @@ export default Vue.extend({
     fetchData() {
       this.getOrganisations();
       this.getIdentifiedAreaOptions();
+      this.getGeographicalAreaOptions();
     },
 
     filterOrganisationFunction(val, update, abort) {
@@ -226,6 +256,16 @@ export default Vue.extend({
       this.getOrganisations().then(orgs => {
         update();
       });
+    },
+
+    getFilteredOptions(current, allOpts) {
+      if (_.isNil(current) || current.length == 0) {
+        return allOpts;
+      }
+      let opts = allOpts.filter(areaNameOpt => {
+        return areaNameOpt.toLowerCase().includes(current.toLowerCase());
+      });
+      return opts;
     },
 
     isValid() {
@@ -244,6 +284,7 @@ export default Vue.extend({
           contactPerson: { required },
           contactEmail: { required, email },
           identifiedAreaName: { required },
+          geographicalAreaName: {},
           citation: {},
           citedOrganisation: {},
           citedContactName: {},
@@ -257,6 +298,7 @@ export default Vue.extend({
           contactPerson: { required },
           contactEmail: { required, email },
           identifiedAreaName: { required },
+          geographicalAreaName: {},
           citation: {},
           citedOrganisation: { required },
           citedContactName: { required },
@@ -274,24 +316,22 @@ export default Vue.extend({
       organisationsList: "organisations"
     }),
     ...mapState("priorityAreaSubmission", {
-      identifiedAreaOptions: "identifiedAreaOptions"
+      identifiedAreaOptions: "identifiedAreaOptions",
+      geographicalAreaOptions: "geographicalAreaOptions"
     }),
 
     identifiedAreaOptionsFiltered() {
-      if (
-        _.isNil(this.priorityAreaSubmission.identifiedAreaName) ||
-        this.priorityAreaSubmission.identifiedAreaName.length == 0
-      ) {
-        return this.identifiedAreaOptions;
-      }
-      let opts = this.identifiedAreaOptions.filter(areaNameOpt => {
-        return areaNameOpt
-          .toLowerCase()
-          .includes(
-            this.priorityAreaSubmission.identifiedAreaName.toLowerCase()
-          );
-      });
-      return opts;
+      return this.getFilteredOptions(
+        this.priorityAreaSubmission.identifiedAreaName,
+        this.identifiedAreaOptions
+      );
+    },
+
+    geographicalAreaOptionsFiltered() {
+      return this.getFilteredOptions(
+        this.priorityAreaSubmission.geographicalAreaName,
+        this.geographicalAreaOptions
+      );
     }
   },
 

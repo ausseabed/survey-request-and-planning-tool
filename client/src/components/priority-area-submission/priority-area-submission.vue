@@ -234,6 +234,7 @@ export default Vue.extend({
           contactPerson: undefined,
           contactEmail: undefined,
           identifiedAreaName: undefined,
+          geographicalAreaName: undefined,
           submittingOrganisation: undefined,
           citedOrganisation: undefined,
           citedContactName: undefined,

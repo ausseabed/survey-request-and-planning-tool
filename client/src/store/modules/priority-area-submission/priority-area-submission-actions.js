@@ -150,3 +150,11 @@ export const getIdentifiedAreaOptions = async ({ commit, state }) => {
     mutTypes.SET_IDENTIFIED_AREA_OPTIONS
   );
 }
+
+export const getGeographicalAreaOptions = async ({ commit, state }) => {
+  getOptions(
+    commit,
+    'geographical-area-options',
+    mutTypes.SET_GEOGRAPHICAL_AREA_OPTIONS
+  );
+}

@@ -15,8 +15,13 @@ import { Task } from './task';
 export const IDENTIFIED_AREA_NAME_SUGGESTIONS = [
   'Perth Canyon',
   'Joe\'s Reef',
-  'placeholder name 1',
-  'placeholder name 2',
+  'ident placeholder name 1',
+  'ident placeholder name 2',
+];
+
+export const GEOGRAPHICAL_AREA_NAME_SUGGESTIONS = [
+  'geo placeholder name 1',
+  'geo placeholder name 2',
 ];
 
 
@@ -50,6 +55,12 @@ export class PriorityAreaSubmission {
     nullable: true,
   })
   identifiedAreaName;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
+  })
+  geographicalAreaName;
 
   @Column({
     type: "bool",

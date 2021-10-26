@@ -25,6 +25,7 @@ function initialState() {
     requiredDataQualityOptions: [],
     priorityOptions: [],
     identifiedAreaOptions: [],
+    geographicalAreaOptions: [],
   }
 };
 

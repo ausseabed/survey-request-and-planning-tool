@@ -115,7 +115,6 @@ export class PriorityAreaShpBuilder extends ShpBuilder {
   getQuery(id) {
     const selects = [
       'sorg.name as PAS_SU_ORG',
-      'corg.name as PAS_CI_ORG',
       'pas.\"contactPerson\" as PAS_NAME',
       'pas.\"contactEmail\" as PAS_EMAIL',
       'cust.name as PAS_CUSTOD',

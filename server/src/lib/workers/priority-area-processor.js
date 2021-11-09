@@ -49,7 +49,7 @@ const getDbImage = async (connection, paId, attrName, extents, imageSize) => {
 const getBaseMapImage = async (extents, imageSize) => {
   const sizeX = imageSize;
   const sizeY = imageSize;
-  const wmsBase = `http://gaservices.ga.gov.au/site_7/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer/export`;
+  const wmsBase = `https://services.ga.gov.au/gis/rest/services/NationalBaseMap/MapServer/export`;
   const wmsBB = `BBOX=${extents.minX}%2C${extents.minY}%2C${extents.maxX}%2C${extents.maxY}`;
   const baseMapUrl = `${wmsBase}?F=image&FORMAT=PNG32&TRANSPARENT=true&SIZE=${sizeX}%2C${sizeY}&${wmsBB}&BBOXSR=4326&IMAGESR=4326&DPI=180`;
   try {

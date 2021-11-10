@@ -27,167 +27,167 @@ import SurveyRequestSummary from 'components/survey-request/survey-request-summa
 import Users from 'components/administration/users/users.vue'
 
 const routes = [
-    { path: '/', component: Main },
-    {
-      path: '/admin',
-      component: Administration,
-      children: [
-        {
-            path: '',
-            component: Custodians
-        },
-        {
-          path: 'users',
-          component: Users,
-        },
-        {
-          path: 'users/:id',
-          component: Users,
-        },
-        {
-          path: 'custodians',
-          component: Custodians,
-        },
-        {
-          path: 'custodians/:id',
-          component: Custodians,
-        },
-        {
-          path: 'organisations',
-          component: Organisations,
-        },
-        {
-          path: 'organisations/:id',
-          component: Organisations,
-        },
-        {
-          path: 'roles',
-          component: Roles,
-        },
-        {
-          path: 'roles/:id',
-          component: Roles,
-        },
-        {
-          path: 'report-templates',
-          component: ReportTemplates
-        },
-        {
-          path: 'documents',
-          component: Documents
-        },
-        {
-          path: 'record-state-log',
-          component: RecordStateLog
-        },
-      ]
-    },
+  { path: '/', component: Main },
+  {
+    path: '/admin',
+    component: Administration,
+    children: [
+      {
+        path: '',
+        component: Custodians
+      },
+      {
+        path: 'users',
+        component: Users,
+      },
+      {
+        path: 'users/:id',
+        component: Users,
+      },
+      {
+        path: 'custodians',
+        component: Custodians,
+      },
+      {
+        path: 'custodians/:id',
+        component: Custodians,
+      },
+      {
+        path: 'organisations',
+        component: Organisations,
+      },
+      {
+        path: 'organisations/:id',
+        component: Organisations,
+      },
+      {
+        path: 'roles',
+        component: Roles,
+      },
+      {
+        path: 'roles/:id',
+        component: Roles,
+      },
+      {
+        path: 'report-templates',
+        component: ReportTemplates
+      },
+      {
+        path: 'documents',
+        component: Documents
+      },
+      {
+        path: 'record-state-log',
+        component: RecordStateLog
+      },
+    ]
+  },
 
-    { path: '/login', component: Login },
+  { path: '/login', component: Login },
 
-    {
-      path: '/survey-plan/new',
-      component: SurveyPlanSummary,
-    },
-    {
-      path: '/survey-plan/:id',
-      component: SurveyPlanMain,
-      children: [
-        {
-          path: 'summary',
-          component: SurveyPlanSummary,
-        },
-        {
-          path: 'specifications',
-          component: SurveyPlanTechnicalSpecification,
-        },
-        {
-          path: 'deliverables',
-          component: SurveyPlanDeliverables,
-        },
-        {
-          path: 'attachments',
-          component: SurveyFile,
-          props: {attachesTo:"survey-plan"}
-        },
-      ]
-    },
+  {
+    path: '/survey-plan/new',
+    component: SurveyPlanSummary,
+  },
+  {
+    path: '/survey-plan/:id',
+    component: SurveyPlanMain,
+    children: [
+      {
+        path: 'summary',
+        component: SurveyPlanSummary,
+      },
+      {
+        path: 'specifications',
+        component: SurveyPlanTechnicalSpecification,
+      },
+      {
+        path: 'deliverables',
+        component: SurveyPlanDeliverables,
+      },
+      {
+        path: 'attachments',
+        component: SurveyFile,
+        props: { attachesTo: "survey-plan" }
+      },
+    ]
+  },
 
-    {
-      path: '/survey-request/:id',
-      component: SurveyRequest,
-      children: [
-        {
-          name: 'survey-request-registration',
-          path: 'registration',
-          component: SurveyRequestRegistration,
-        },
-        {
-          name: 'survey-request-business-case',
-          path: 'business-case',
-          component: SurveyRequestBusinessCase,
-        },
-        {
-          name: 'survey-request-areas-of-interest',
-          path: 'areas-of-interest',
-          component: SurveyRequestAreasOfInterest,
-        },
-        {
-          name: 'survey-request-sub-area-details',
-          path: 'sub-area-details',
-          component: SurveyRequestSubAreaDetails,
-        },
-        {
-          name: 'survey-request-sub-area-info',
-          path: 'sub-area-info',
-          component: SurveyRequestSubAreaInfo,
-        },
-        {
-          name: 'survey-request-summary',
-          path: 'summary',
-          component: SurveyRequestSummary,
-        },
-        {
-          name: 'survey-request-submission-details',
-          path: 'submission-details',
-          component: SurveyRequestSubmissionDetails,
-        },
-      ]
-    },
+  {
+    path: '/survey-request/:id',
+    component: SurveyRequest,
+    children: [
+      {
+        name: 'survey-request-registration',
+        path: 'registration',
+        component: SurveyRequestRegistration,
+      },
+      {
+        name: 'survey-request-business-case',
+        path: 'business-case',
+        component: SurveyRequestBusinessCase,
+      },
+      {
+        name: 'survey-request-areas-of-interest',
+        path: 'areas-of-interest',
+        component: SurveyRequestAreasOfInterest,
+      },
+      {
+        name: 'survey-request-sub-area-details',
+        path: 'sub-area-details',
+        component: SurveyRequestSubAreaDetails,
+      },
+      {
+        name: 'survey-request-sub-area-info',
+        path: 'sub-area-info',
+        component: SurveyRequestSubAreaInfo,
+      },
+      {
+        name: 'survey-request-summary',
+        path: 'summary',
+        component: SurveyRequestSummary,
+      },
+      {
+        name: 'survey-request-submission-details',
+        path: 'submission-details',
+        component: SurveyRequestSubmissionDetails,
+      },
+    ]
+  },
 
-    {
-      path: '/priority-area-submission/:id?',
-      component: PriorityAreaSubmission,
-      children: [
-        {
-          path: '',
-          component: PriorityAreaSubmissionRegistration,
-        },
-        {
-          path: 'registration',
-          name: 'priority-area-submission-registration',
-          component: PriorityAreaSubmissionRegistration,
-        },
-        {
-          path: 'areas',
-          name: 'priority-area-submission-areas',
-          component: PriorityAreaSubmissionAreas,
-        },
-        {
-          path: 'confirmation',
-          name: 'priority-area-submission-confirmation',
-          component: PriorityAreaSubmissionConfirmation,
-        },
-      ]
-    },
+  {
+    path: '/priority-area-submission/:id?',
+    component: PriorityAreaSubmission,
+    children: [
+      {
+        path: '',
+        component: PriorityAreaSubmissionRegistration,
+      },
+      {
+        path: 'registration',
+        name: 'priority-area-submission-registration',
+        component: PriorityAreaSubmissionRegistration,
+      },
+      {
+        path: 'areas',
+        name: 'priority-area-submission-areas',
+        component: PriorityAreaSubmissionAreas,
+      },
+      {
+        path: 'confirmation',
+        name: 'priority-area-submission-confirmation',
+        component: PriorityAreaSubmissionConfirmation,
+      },
+    ]
+  },
 
 
-    {
-      path: '/auth/callback',
-      component: {
-        template: '<div class="auth-component"></div>'
-      }
+  {
+    path: '/auth/callback',
+    component: {
+      template: '<div class="auth-component"></div>'
     }
+  }
 ]
 
 // Always leave this as last one

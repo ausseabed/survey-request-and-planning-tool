@@ -2,16 +2,16 @@
   <div class="column q-pa-md q-gutter-y-sm">
     <div>
       Thankyou for providing your priority areas to the AusSeabed community.
-      Below is a mapped view of your areas as they have been provided today.
-      If you have any questions, please contact us on
-      <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>.
-      These areas will be incorporated in the national priorities layer on the
-      AusSeabed data portal. Please be aware that the priorities assigned
-      during upload, may not be the same priorities assigned within the entire
-      national data set. National priorities are derived programmatically with
-      more information on how the priorities are assigned nationally
-      available
-      <a href="http://www.ausseabed.gov.au/about/initiatives/priorities">here</a>.
+      Below is a mapped view of your areas as they have been provided today. If
+      you have any questions, please contact us on
+      <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>. These areas
+      will be incorporated in the national priorities layer on the AusSeabed
+      data portal. Please be aware that the priorities assigned during upload,
+      may not be the same priorities assigned within the entire national data
+      set. National priorities are derived programmatically with more
+      information on how the priorities are assigned nationally available
+      <a href="http://www.ausseabed.gov.au/about/initiatives/priorities">here</a
+      >.
     </div>
     <div class="col rounded-borders">
       <l-map
@@ -29,7 +29,8 @@
           :base-url="mapBaseUrl"
           layers="World_Bathymetry_Image"
           name="WorldBathymetry Image"
-          layer-type="base">
+          layer-type="base"
+        >
         </l-wms-tile-layer>
         <l-geo-json
           v-if="pasGeometry"
@@ -42,13 +43,11 @@
     <div class="checkbox-div rounded-borders">
       <div class="q-pa-md">
         <q-checkbox
-          v-if="recordState && !(recordState.state === 'published') "
+          v-if="recordState && !(recordState.state === 'published')"
           v-model="acknowledged"
           label="I acknowledge that I have the authority and delegation to publish these priorities on behalf of the submitting organisation."
         />
-        <div
-          v-if="recordState && recordState.state === 'published'"
-        >
+        <div v-if="recordState && recordState.state === 'published'">
           Priority Area Submission has been published
         </div>
       </div>
@@ -57,16 +56,16 @@
 </template>
 
 <script>
-import Vue from 'vue';
-const _ = require('lodash');
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import Vue from "vue";
+const _ = require("lodash");
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
-import * as MapConstants from '../olmap/map-constants';
-import { errorHandler } from './../mixins/error-handling';
-import { permission } from './../mixins/permission';
+import * as MapConstants from "../olmap/map-constants";
+import { errorHandler } from "./../mixins/error-handling";
+import { permission } from "./../mixins/permission";
 
-import { latLng } from 'leaflet';
-import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from 'vue2-leaflet';
+import { latLng } from "leaflet";
+import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
 
 export default Vue.extend({
   mixins: [errorHandler, permission],
@@ -75,15 +74,12 @@ export default Vue.extend({
     LMap,
     LControlLayers,
     LLayerGroup,
-    'l-wms-tile-layer': LWMSTileLayer
+    "l-wms-tile-layer": LWMSTileLayer
   },
 
-  async mounted() {
-
-  },
+  async mounted() {},
 
   methods: {
-
     isValid() {
       return this.acknowledged;
       // this.$v.$touch();
@@ -97,32 +93,33 @@ export default Vue.extend({
     },
 
     updatePasGeometry(pasId) {
-      Vue.axios.get(`api/priority-area-submission/${pasId}/geometry`).then(res => {
-        this.pasGeometry = res.data;
-      });
-    },
-
+      Vue.axios
+        .get(`api/priority-area-submission/${pasId}/geometry`)
+        .then(res => {
+          this.pasGeometry = res.data;
+        });
+    }
   },
 
   validations() {
     return {
-      priorityAreaSubmission: {
-
-      }
-    }
+      priorityAreaSubmission: {}
+    };
   },
 
   computed: {
-    ...mapGetters('priorityAreaSubmission',{
-      'priorityAreaSubmission': 'activePriorityAreaSubmission',
+    ...mapGetters("priorityAreaSubmission", {
+      priorityAreaSubmission: "activePriorityAreaSubmission"
     }),
-    ...mapGetters('recordState', [
-      'recordState',
-    ]),
+    ...mapGetters("recordState", ["recordState"]),
     center() {
       var center = latLng(
-        ((MapConstants.WMTS_DEFAULT_EXTENT[1] + MapConstants.WMTS_DEFAULT_EXTENT[3]) / 2),
-        ((MapConstants.WMTS_DEFAULT_EXTENT[0] + MapConstants.WMTS_DEFAULT_EXTENT[2]) / 2)
+        (MapConstants.WMTS_DEFAULT_EXTENT[1] +
+          MapConstants.WMTS_DEFAULT_EXTENT[3]) /
+          2,
+        (MapConstants.WMTS_DEFAULT_EXTENT[0] +
+          MapConstants.WMTS_DEFAULT_EXTENT[2]) /
+          2
       );
       return center;
     },
@@ -130,7 +127,6 @@ export default Vue.extend({
     mapBaseUrl() {
       return MapConstants.LEAFLET_BASE_LAYER;
     }
-
   },
 
   data() {
@@ -139,34 +135,31 @@ export default Vue.extend({
       zoom: 4,
       mapStyle: { color: "red", weight: 3 },
       pasGeometry: undefined
-    }
+    };
   },
 
   watch: {
-    '$route': {
+    $route: {
       immediate: true,
       handler(newRoute, oldRoute) {
-        const pasId =  newRoute.params.id;
+        const pasId = newRoute.params.id;
         if (!_.isNil(pasId)) {
           this.updatePasGeometry(pasId);
         }
-      },
+      }
     },
-    '$priorityAreaSubmission': {
+    $priorityAreaSubmission: {
       handler(newPas, oldPas) {
         this.updatePasGeometry(newPas.id);
-      },
-    },
-  },
-
+      }
+    }
+  }
 });
 </script>
 
 
 <style scoped lang="stylus">
-
 .checkbox-div {
   border: 1px solid red;
 }
-
 </style>

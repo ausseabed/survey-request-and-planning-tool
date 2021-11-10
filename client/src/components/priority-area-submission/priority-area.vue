@@ -1,17 +1,19 @@
 <template>
-  <form-wrapper
-    :validator="$v"
-  >
-    <q-card flat bordered class="full-width" >
+  <form-wrapper :validator="$v">
+    <q-card flat bordered class="full-width">
       <q-card-section class="row q-col-gutter-md">
         <div class="column col-auto justify-between">
           <div class="column q-gutter-sm">
-            <q-badge v-if="priorityArea.isNew" color="yellow-6" text-color="black">
+            <q-badge
+              v-if="priorityArea.isNew"
+              color="yellow-6"
+              text-color="black"
+            >
               New Priority Area
             </q-badge>
             <q-img
               class="rounded-borders"
-              style="width:250px; max-height:250px; "
+              style="width: 250px; max-height: 250px"
               :src="`api/priority-area/${priorityArea.id}/thumbnail`"
               :ratio="1"
               contain
@@ -34,7 +36,6 @@
         </div>
 
         <div class="col column q-gutter-xs">
-
           <form-field-validated-input
             name="priorityArea.name"
             label="Identified Area Name"
@@ -45,7 +46,7 @@
             @blur="$v.priorityArea.name.$touch"
             :readonly="readonly"
             outlined
-            >
+          >
           </form-field-validated-input>
 
           <form-field-validated-button-toggle
@@ -53,7 +54,7 @@
             name="priorityArea.preferredTimeframe"
             label="Preferred Timeframe"
             :value="priorityArea.preferredTimeframe"
-            @input="valueChanged('preferredTimeframe',$event)"
+            @input="valueChanged('preferredTimeframe', $event)"
             :options="preferredTimeframeOptions"
             @blur="$v.priorityArea.preferredTimeframe.$touch"
             :readonly="readonly"
@@ -64,7 +65,7 @@
             name="priorityArea.riskRating"
             label="Risk Rating"
             :value="priorityArea.riskRating"
-            @input="valueChanged('riskRating',$event)"
+            @input="valueChanged('riskRating', $event)"
             :options="riskRatingOptions"
             @blur="$v.priorityArea.riskRating.$touch"
             :readonly="readonly"
@@ -76,7 +77,7 @@
             name="priorityArea.requiredDataQuality"
             label="Required Data Quality"
             :value="priorityArea.requiredDataQuality"
-            @input="valueChanged('requiredDataQuality',$event)"
+            @input="valueChanged('requiredDataQuality', $event)"
             :options="requiredDataQualityOptions"
             @blur="$v.priorityArea.requiredDataQuality.$touch"
             :readonly="readonly"
@@ -87,35 +88,30 @@
             name="priorityArea.priority"
             label="Priority"
             :value="priorityArea.priority"
-            @input="valueChanged('priority',$event)"
+            @input="valueChanged('priority', $event)"
             :options="priorityOptions"
             @blur="$v.priorityArea.priority.$touch"
             :readonly="readonly"
           />
-
         </div>
       </q-card-section>
-
     </q-card>
   </form-wrapper>
-
 </template>
 
 <script>
-import Vue from 'vue';
-const _ = require('lodash');
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
-import { required } from 'vuelidate/lib/validators';
+import Vue from "vue";
+const _ = require("lodash");
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
+import { required } from "vuelidate/lib/validators";
 
-import { errorHandler } from './../mixins/error-handling';
-import { permission } from './../mixins/permission';
+import { errorHandler } from "./../mixins/error-handling";
+import { permission } from "./../mixins/permission";
 
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
-  async mounted() {
-
-  },
+  async mounted() {},
 
   props: {
     priorityArea: {},
@@ -124,65 +120,44 @@ export default Vue.extend({
 
   methods: {
     valueChanged(propertyName, value) {
-      this.$emit(
-        'priority-area-value-changed',
-        {
-          'priorityArea': this.priorityArea,
-          'propertyName': propertyName,
-          'value': value,
-        }
-      );
+      this.$emit("priority-area-value-changed", {
+        priorityArea: this.priorityArea,
+        propertyName: propertyName,
+        value: value
+      });
     },
     deleteClicked() {
-      this.$emit(
-        'priority-area-deleted',
-        {
-          'priorityArea': this.priorityArea,
-        }
-      );
+      this.$emit("priority-area-deleted", {
+        priorityArea: this.priorityArea
+      });
     },
 
     applyToAllClicked() {
-      this.$emit(
-        'priority-area-apply-to-all',
-        {
-          'propertyName': 'preferredTimeframe',
-          'value': this.priorityArea.preferredTimeframe,
-        }
-      );
-      this.$emit(
-        'priority-area-apply-to-all',
-        {
-          'propertyName': 'riskRating',
-          'value': this.priorityArea.riskRating,
-        }
-      );
-      this.$emit(
-        'priority-area-apply-to-all',
-        {
-          'propertyName': 'requiredDataQuality',
-          'value': this.priorityArea.requiredDataQuality,
-        }
-      );
-      this.$emit(
-        'priority-area-apply-to-all',
-        {
-          'propertyName': 'priority',
-          'value': this.priorityArea.priority,
-        }
-      );
-
+      this.$emit("priority-area-apply-to-all", {
+        propertyName: "preferredTimeframe",
+        value: this.priorityArea.preferredTimeframe
+      });
+      this.$emit("priority-area-apply-to-all", {
+        propertyName: "riskRating",
+        value: this.priorityArea.riskRating
+      });
+      this.$emit("priority-area-apply-to-all", {
+        propertyName: "requiredDataQuality",
+        value: this.priorityArea.requiredDataQuality
+      });
+      this.$emit("priority-area-apply-to-all", {
+        propertyName: "priority",
+        value: this.priorityArea.priority
+      });
     },
 
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
-    },
+    }
   },
 
-  watch: {
-
-  },
+  watch: {},
 
   validations() {
     return {
@@ -191,31 +166,26 @@ export default Vue.extend({
         preferredTimeframe: { required },
         riskRating: { required },
         requiredDataQuality: { required },
-        priority: { required },
+        priority: { required }
       }
-    }
+    };
   },
 
   computed: {
     // these are all loaded by the parent component
-    ...mapState('priorityAreaSubmission',[
-      'preferredTimeframeOptions',
-      'riskRatingOptions',
-      'requiredDataQualityOptions',
-      'priorityOptions',
-    ]),
+    ...mapState("priorityAreaSubmission", [
+      "preferredTimeframeOptions",
+      "riskRatingOptions",
+      "requiredDataQualityOptions",
+      "priorityOptions"
+    ])
   },
 
   data() {
-    return {
-
-    }
-  },
-
+    return {};
+  }
 });
 </script>
 
 
-<style scoped lang="stylus">
-
-</style>
+<style scoped lang="stylus"></style>

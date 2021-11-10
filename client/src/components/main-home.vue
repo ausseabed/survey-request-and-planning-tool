@@ -14,7 +14,7 @@
             <div>
               The ASB SCT was developed by FrontierSI on behalf of AusSeabed and
               captures three record types, a survey plan, a survey request and a
-              priority area profile.
+              area of interest profile.
             </div>
             <div>
               The survey plans records the survey’s intended area of interest,
@@ -26,9 +26,9 @@
               panel.
             </div>
             <div>
-              The priority area profile enables an organisation to highlight the
-              areas of our marine jurisdiction that are of high, medium and low
-              priority for surveying.
+              The area of interest profile enables an organisation to highlight
+              the areas of our marine jurisdiction that are of interest for
+              surveying.
             </div>
           </div>
         </q-expansion-item>
@@ -109,16 +109,16 @@
           :value="expandedPriorityAreas"
           :header-class="headerClass"
           icon="app:priority-areas-dark"
-          label="Priority Areas"
-          caption="Add a new Priority Area or update existing Priority Area"
+          label="Areas of Interest"
+          caption="Create or update an Area of Interest"
         >
           <div class="q-px-md q-pb-sm q-gutter-y-sm column">
             <div class="q-gutter-y-sm column">
               <div>
-                Priority areas are designed to capture areas where data capture
-                is important to those submitting for a variety of reasons. Areas
-                identified in this section of the system may be identified of
-                importance for the following reasons:
+                Areas of Interest are designed to capture areas where data
+                capture is important to those submitting for a variety of
+                reasons. Areas identified in this section of the system may be
+                identified of importance for the following reasons:
               </div>
               <ul class="q-my-xs">
                 <li>Safety of navigation</li>
@@ -130,25 +130,18 @@
                 </li>
               </ul>
               <div>
-                When entering a priority area, the submitting organisation
-                assigns a priority from their perspective and both this, and how
-                this then folds into the national prioritisation.
-              </div>
-              <div>
-                These priority areas are provided to a variety of decision
-                makers, and form part of the incoming information for the
-                Australian Hydrographic Office (AHO) for consideration as
-                supplementary material for the annual preparation of
-                Hydroscheme.
+                When entering a Area of Interest, the submitting organisation
+                provides supporting information to help determine prioritisation
+                of data capure in the submitted area.
               </div>
             </div>
             <sct-btn
               class="self-center full-width"
-              label="Add a Priority Area"
+              label="Add a Area of Interest"
               icon="add"
               :to="'/priority-area-submission/new'"
             >
-              <q-tooltip> Add a Priority Area Submission </q-tooltip>
+              <q-tooltip> Add a Area of Interest </q-tooltip>
             </sct-btn>
           </div>
         </q-expansion-item>

@@ -24,7 +24,7 @@
         >
           <q-route-tab
             name="priority-area-submission-registration"
-            label="Priority Area Registration"
+            label="Area of Interest Registration"
             :to="{
               name: 'priority-area-submission-registration',
               params: { id: activePriorityAreaSubmission.id },
@@ -33,7 +33,7 @@
           />
           <q-route-tab
             name="priority-area-submission-areas"
-            label="Priority Areas"
+            label="Areas of Interest"
             :to="{
               name: 'priority-area-submission-areas',
               params: { id: activePriorityAreaSubmission.id },
@@ -165,10 +165,13 @@ export default Vue.extend({
       this.$refs.recordState
         .transitionRecordState("PUBLISH")
         .then(pas => {
-          this.notifySuccess("Priority Area Submission published");
+          this.notifySuccess("Area of Interest Submission published");
         })
         .catch(err => {
-          this.notifyError(`Failed to publish Priority Area Submission`, err);
+          this.notifyError(
+            `Failed to publish Area of Interest Submission`,
+            err
+          );
         });
     },
 
@@ -187,8 +190,8 @@ export default Vue.extend({
       this.savePriorityAreaSubmission(this.activePriorityAreaSubmission)
         .then(pas => {
           const successMsg = isNew
-            ? "Priority Area Submission created"
-            : "Priority Area Submission updated";
+            ? "Area of Interest Submission created"
+            : "Area of Interest Submission updated";
           this.notifySuccess(successMsg);
 
           if (!changeRoute) {
@@ -212,7 +215,7 @@ export default Vue.extend({
           }
         })
         .catch(err => {
-          this.notifyError(`Failed to save Priority Area Submission`, err);
+          this.notifyError(`Failed to save Area of Interest Submission`, err);
         });
     },
 

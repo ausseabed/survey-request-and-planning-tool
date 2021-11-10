@@ -1,15 +1,12 @@
 <template>
   <div class="column q-pa-md q-gutter-y-sm">
     <div>
-      Thankyou for providing your priority areas to the AusSeabed community.
+      Thankyou for providing your areas of interest to the AusSeabed community.
       Below is a mapped view of your areas as they have been provided today. If
       you have any questions, please contact us on
       <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>. These areas
       will be incorporated in the national priorities layer on the AusSeabed
-      data portal. Please be aware that the priorities assigned during upload,
-      may not be the same priorities assigned within the entire national data
-      set. National priorities are derived programmatically with more
-      information on how the priorities are assigned nationally available
+      data portal. More information on this process can be found
       <a href="http://www.ausseabed.gov.au/about/initiatives/priorities">here</a
       >.
     </div>
@@ -48,7 +45,7 @@
           label="I acknowledge that I have the authority and delegation to publish these priorities on behalf of the submitting organisation."
         />
         <div v-if="recordState && recordState.state === 'published'">
-          Priority Area Submission has been published
+          Area of Interest Submission has been published
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@
             />
             <q-tab
               name="priority-areas"
-              label="Priority Areas"
+              label="Areas of Interest"
               icon="app:priority-areas"
             />
           </q-tabs>
@@ -304,9 +304,7 @@
                           )
                         }}</q-item-label>
                         <q-item-label caption>
-                          {{
-                            priorityAreaSubmission.custodian.name
-                          }}
+                          {{ priorityAreaSubmission.custodian.name }}
                           (custodian)</q-item-label
                         >
                       </q-item-section>
@@ -363,7 +361,7 @@
                 </q-list>
                 <div v-else class="hint-text q-pa-lg">
                   There are currently no entries for your custodian, please add
-                  a priority area submission using the button below.
+                  an Area of Interest submission using the button below.
                 </div>
               </q-scroll-area>
 
@@ -379,7 +377,9 @@
                     icon="add"
                     :to="'/priority-area-submission/new'"
                   >
-                    <q-tooltip> Create new Priority Area Submission </q-tooltip>
+                    <q-tooltip>
+                      Create new Area of Interest Submission
+                    </q-tooltip>
                   </sct-btn>
                 </div>
               </div>
@@ -409,7 +409,7 @@
               >
                 <q-checkbox
                   v-model="showPriorityAreas"
-                  label="Priority Areas"
+                  label="Areas of Interest"
                 />
               </div>
             </l-control>
@@ -436,7 +436,7 @@
               :visible="showPriorityAreas"
               :base-url="priorityAreaLayerDetails.url"
               :layers="priorityAreaLayerDetails.layer"
-              name="Priority Areas"
+              name="Areas of Interest"
               layer-type="base"
               :transparent="true"
               format="image/png"

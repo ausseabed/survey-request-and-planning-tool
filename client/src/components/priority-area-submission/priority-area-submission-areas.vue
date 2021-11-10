@@ -3,18 +3,18 @@
     <div class="column q-px-md q-gutter-y-sm">
       <div class="column q-gutter-y-sm">
         <div v-if="!readonly" class="col">
-          The priority area tool also allows you to upload a simple shape file
-          or geojson of named polygons that can then be profiled in the table
-          below. If there is additional information that you would like to be
-          provided when a user reviews the priorities, please upload it via the
-          "additional readme file" function below the table. The readme file
+          The area of interest tool also allows you to upload a simple shape
+          file or geojson of named polygons that can then be profiled in the
+          table below. If there is additional information that you would like to
+          be provided when a user reviews the priorities, please upload it via
+          the "additional readme file" function below the table. The readme file
           will be provided as an optional file to download or view when they are
           interacting with its related polygon(s).
         </div>
         <div v-if="!readonly" class="row q-gutter-x-md">
           <q-uploader
             class="col"
-            label="Upload Priority Area spatial data files (max 30MB)"
+            label="Upload Area of Interest spatial data files (max 30MB)"
             flat
             bordered
             :multiple="false"
@@ -95,7 +95,7 @@
                     <div style="color: #616161">
                       {{
                         task.output.priorityAreaIds.length +
-                        " priority areas created"
+                        " areas of interest created"
                       }}
                     </div>
                   </div>
@@ -109,7 +109,7 @@
 
         <div class="column q-gutter-y-xs">
           <div class="row justify-between items-center">
-            <div class="main-page-sub-title">Priority Areas</div>
+            <div class="main-page-sub-title">Areas of Interest</div>
             <q-btn
               v-if="_.get(priorityAreaSubmission, 'priorityAreas.length') > 0"
               type="a"
@@ -118,12 +118,12 @@
               flat
               icon="cloud_download"
             >
-              <q-tooltip> Download all Priority Areas </q-tooltip>
+              <q-tooltip> Download all Areas of Interest </q-tooltip>
             </q-btn>
           </div>
 
           <div v-if="loadingPriorityAreaData" class="column">
-            <div style="color: #616161">Loading Priority Areas</div>
+            <div style="color: #616161">Loading Areas of Interest</div>
             <q-linear-progress
               size="25px"
               :value="loadingPriorityAreaDataProgress"
@@ -142,7 +142,7 @@
             class="column items-center"
             v-if="_.get(priorityAreaSubmission, 'priorityAreas.length') == 0"
           >
-            <div class="main-page-title">No priority areas provided</div>
+            <div class="main-page-title">No areas of interest provided</div>
             <div style="color: #616161">
               Drag and drop geojson or zipped shapefile to upload area above.
             </div>

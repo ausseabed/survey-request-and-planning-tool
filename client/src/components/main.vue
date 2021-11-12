@@ -2,7 +2,7 @@
   <q-page :style-fn="heightTweak">
     <div class="row q-pt-sm q-pl-sm q-col-gutter-sm fit">
       <div class="column full-height">
-        <q-card class="column col" style="max-width: 400px; width: 400px">
+        <q-card class="column col" style="max-width: 420px">
           <q-tabs v-model="tab" class="bg-secondary text-white">
             <q-tab name="home" label="Home" icon="home" />
             <q-tab

@@ -3,13 +3,9 @@
     <div class="column q-px-md q-gutter-y-sm">
       <div class="column q-gutter-y-sm">
         <div v-if="!readonly" class="col">
-          The area of interest tool also allows you to upload a simple shape
-          file or geojson of named polygons that can then be profiled in the
-          table below. If there is additional information that you would like to
-          be provided when a user reviews the priorities, please upload it via
-          the "additional readme file" function below the table. The readme file
-          will be provided as an optional file to download or view when they are
-          interacting with its related polygon(s).
+          The National Area of Interest tool provides the option to upload a
+          spatial file or to use the map controller to develop the area of
+          interest information within the tool.
         </div>
         <div v-if="!readonly" class="row q-gutter-x-md">
           <q-uploader
@@ -104,6 +100,75 @@
             </template>
           </q-card>
         </div>
+        <div v-if="!readonly" class="row q-gutter-x-md">
+          <div>OR</div>
+        </div>
+        <div v-if="!readonly" class="row q-gutter-x-md">
+          <div class="row full-width q-gutter-x-md">
+            <l-map
+              style="min-height: 400px"
+              class="col rounded-borders"
+              ref="aoiDefinitionMap"
+              :zoom="zoom"
+              :center="center"
+            >
+              <l-wms-tile-layer
+                :base-url="mapBaseUrl"
+                layers="World_Bathymetry_Image"
+                name="WorldBathymetry Image"
+                layer-type="base"
+              >
+              </l-wms-tile-layer>
+              <l-wms-tile-layer
+                v-if="showSurveyLayer"
+                base-url="map/wms"
+                layers="ASB_SPT"
+                name="Upcoming Surveys"
+                :transparent="true"
+                format="image/png"
+              >
+              </l-wms-tile-layer>
+              <l-control position="bottomleft">
+                <div class="column text-white">
+                  <q-checkbox
+                    v-model="showSurveyLayer"
+                    label="Show upcoming survey layer"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                  <q-checkbox
+                    v-model="showOrganisationSubmissionsLayer"
+                    label="Show my organisations submissions"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                </div>
+              </l-control>
+            </l-map>
+            <div class="column col-auto q-gutter-y-sm">
+              <q-card flat bordered style="max-width: 300px">
+                <div class="q-pa-sm">
+                  The National Area of Interest tool allows for the organisation
+                  to profile multiple areas of interest as per the model below:
+                </div>
+                <div class="q-pa-sm">
+                  <q-img src="~/assets/aoi-model.png"> </q-img>
+                </div>
+                <div class="q-pa-sm">
+                  An area of interest can consist of one or many spatial bounds
+                  (polygons). An area of interest should be contained within a
+                  single geographic area. Read the help file for more
+                  information.
+                </div>
+              </q-card>
+              <q-card flat bordered style="max-width: 300px">
+                <div class="q-pa-sm">User added WMS stuff goes here</div>
+              </q-card>
+            </div>
+          </div>
+        </div>
 
         <q-separator />
 
@@ -170,7 +235,10 @@
 import Vue from "vue";
 const _ = require("lodash");
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import { latLng } from "leaflet";
+import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
 
+import * as MapConstants from "../olmap/map-constants";
 import { errorHandler } from "./../mixins/error-handling";
 import { permission } from "./../mixins/permission";
 
@@ -184,7 +252,11 @@ export default Vue.extend({
   props: ["readonly"],
 
   components: {
-    "priority-area": PriorityArea
+    "priority-area": PriorityArea,
+    LMap,
+    LControlLayers,
+    LLayerGroup,
+    "l-wms-tile-layer": LWMSTileLayer
   },
 
   mounted() {
@@ -347,6 +419,22 @@ export default Vue.extend({
 
     progressLabel() {
       return Math.round(this.loadingPriorityAreaDataProgress * 100) + "%";
+    },
+
+    mapBaseUrl() {
+      return MapConstants.LEAFLET_BASE_LAYER;
+    },
+
+    center() {
+      var center = latLng(
+        (MapConstants.WMTS_DEFAULT_EXTENT[1] +
+          MapConstants.WMTS_DEFAULT_EXTENT[3]) /
+          2,
+        (MapConstants.WMTS_DEFAULT_EXTENT[0] +
+          MapConstants.WMTS_DEFAULT_EXTENT[2]) /
+          2
+      );
+      return center;
     }
   },
 
@@ -356,7 +444,11 @@ export default Vue.extend({
       taskTickCount: 0,
       taskTimeout: undefined,
       loadingPriorityAreaData: false,
-      loadingPriorityAreaDataProgress: 0
+      loadingPriorityAreaDataProgress: 0,
+      zoom: 4,
+      mapStyle: { color: "red", weight: 3 },
+      showSurveyLayer: true,
+      showOrganisationSubmissionsLayer: false
     };
   },
 

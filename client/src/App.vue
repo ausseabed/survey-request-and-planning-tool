@@ -20,9 +20,9 @@
 
           <q-card-section class="q-pt-none">
             The admin team will need to link your user account to the
-            appropriate organisation to gain access to unpublished data.
-            To support this process could you please indicate which
-            organisation you wish to be assigned too.
+            appropriate organisation to gain access to unpublished data. To
+            support this process could you please indicate which organisation
+            you wish to be assigned too.
           </q-card-section>
 
           <q-card-section>
@@ -31,8 +31,13 @@
               outlined
               :value="currentUser ? currentUser.requestedCustodian : undefined"
               label="Requested Organisation"
-              @input="updateCurrentUserValue({path:'requestedCustodian', value:$event})"
-              :rules="[val => !!val || 'Requested Organisation is required']"
+              @input="
+                updateCurrentUserValue({
+                  path: 'requestedCustodian',
+                  value: $event,
+                })
+              "
+              :rules="[(val) => !!val || 'Requested Organisation is required']"
             />
           </q-card-section>
 
@@ -41,38 +46,35 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
+import Toolbar from "components/toolbar";
+import { EventBus } from "./event-bus.js";
+import { mapActions, mapMutations } from "vuex";
 
-import Toolbar from 'components/toolbar'
-import { EventBus } from './event-bus.js';
-import { mapActions, mapMutations } from 'vuex'
+import { errorHandler } from "./components/mixins/error-handling";
+import { permission } from "./components/mixins/permission";
 
-import { errorHandler } from './components/mixins/error-handling';
-import { permission } from './components/mixins/permission';
-
-import * as userMutTypes from './store/modules/user/user-mutation-types';
+import * as userMutTypes from "./store/modules/user/user-mutation-types";
 
 const appIcons = {
-  'app:survey-plan': 'layers',
-  'app:survey-request': 'device_hub',
-  'app:priority-areas': 'img:statics/icons/priority-areas.svg',
-  'app:priority-areas-dark': 'img:statics/icons/priority-areas-dark.svg',
-}
-
+  "app:survey-plan": "layers",
+  "app:survey-request": "device_hub",
+  "app:priority-areas": "img:statics/icons/priority-areas.svg",
+  "app:priority-areas-dark": "img:statics/icons/priority-areas-dark.svg"
+};
 
 export default {
-  name: 'App',
+  name: "App",
   mixins: [errorHandler, permission],
   components: {
-    'toolbar': Toolbar
+    toolbar: Toolbar
   },
   mounted() {
-    if (this.$route.path == '/login' || this.$route.path == '/auth/callback') {
+    if (this.$route.path == "/login" || this.$route.path == "/auth/callback") {
       // part of the login process, don't request role & custodian as these will
       // fail and that causes issues in Safari
     } else {
@@ -80,14 +82,14 @@ export default {
       try {
         this.getCurrentUser();
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
   },
   created() {
-    EventBus.$on('redirect', this.redirectURL);
+    EventBus.$on("redirect", this.redirectURL);
 
-    this.$q.iconMapFn = (iconName) => {
+    this.$q.iconMapFn = iconName => {
       const icon = appIcons[iconName];
       if (icon !== void 0) {
         return { icon: icon };
@@ -95,48 +97,43 @@ export default {
     };
   },
   methods: {
-    ...mapActions('auth', [
-      'checkAuthentication',
-    ]),
-    ...mapActions('user', [
-      'getCurrentUser',
-      'saveCurrentUser'
-    ]),
-    ...mapMutations('user', {
-      'updateCurrentUserValue': userMutTypes.UPDATE_CURRENT_USER_VALUE,
+    ...mapActions("auth", ["checkAuthentication"]),
+    ...mapActions("user", ["getCurrentUser", "saveCurrentUser"]),
+    ...mapMutations("user", {
+      updateCurrentUserValue: userMutTypes.UPDATE_CURRENT_USER_VALUE
     }),
     resetScroll(el, done) {
-      document.documentElement.scrollTop = 0
-      document.body.scrollTop = 0
-      done()
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      done();
     },
     redirectURL(path) {
       this.$router.push(path);
     },
-    onSubmit () {
-      this.$refs.requestedCustodian.validate()
+    onSubmit() {
+      this.$refs.requestedCustodian.validate();
 
       if (!this.$refs.requestedCustodian.hasError) {
         this.showDialogue = false;
         this.saveCurrentUser()
-        .then(() => {
-          this.notifySuccess("User profile updated");
-        })
-        .catch((err) => {
-          this.notifyError(`Failed to update user profile`, err);
-        })
+          .then(() => {
+            this.notifySuccess("User profile updated");
+          })
+          .catch(err => {
+            this.notifyError(`Failed to update user profile`, err);
+          });
       }
-    },
+    }
   },
 
   data() {
     return {
-      showDialogue: false,
-    }
+      showDialogue: false
+    };
   },
 
   watch: {
-    'currentUser': {
+    currentUser: {
       immediate: false,
       handler(newUser, oldUser) {
         if (!newUser.custodian && !newUser.requestedCustodian) {
@@ -144,11 +141,10 @@ export default {
         } else {
           this.showDialogue = false;
         }
-      },
+      }
     }
   }
-}
-
+};
 </script>
 
 <style>

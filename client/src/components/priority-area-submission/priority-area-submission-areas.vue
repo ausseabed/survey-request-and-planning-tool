@@ -126,6 +126,7 @@
                 layers="ASB_SPT"
                 name="Upcoming Surveys"
                 :transparent="true"
+                :opacity="0.5"
                 format="image/png"
               >
               </l-wms-tile-layer>

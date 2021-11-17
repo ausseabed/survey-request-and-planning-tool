@@ -64,7 +64,10 @@ const appIcons = {
   "app:survey-plan": "layers",
   "app:survey-request": "device_hub",
   "app:priority-areas": "img:statics/icons/priority-areas.svg",
-  "app:priority-areas-dark": "img:statics/icons/priority-areas-dark.svg"
+  "app:priority-areas-dark": "img:statics/icons/priority-areas-dark.svg",
+  "app:draw": "img:statics/icons/draw_black_24dp.svg",
+  "app:pan": "img:statics/icons/pan_tool_black_24dp.svg",
+  "app:cursor": "img:statics/icons/icons8-cursor.svg"
 };
 
 export default {

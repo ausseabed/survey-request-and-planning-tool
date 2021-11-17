@@ -284,6 +284,8 @@ import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
 import LFreeDraw from "vue2-leaflet-freedraw";
 import { NONE, ALL } from "leaflet-freedraw";
 
+import { multiPolygon } from "@turf/helpers";
+
 import * as MapConstants from "../olmap/map-constants";
 import { errorHandler } from "./../mixins/error-handling";
 import { permission } from "./../mixins/permission";
@@ -434,6 +436,36 @@ export default Vue.extend({
     },
 
     saveAoiPolygons() {
+      // the freedraw component `this.polygons` is a list of coordinate
+      // lists. We need to convert this from {lat: -33, lng: 104} to arrays
+      // such as [104, -33]. geojson assumes more complex polygons (ones with
+      // holes) that freedraw doesn't do, so we need to add in an extra level
+      // on the arrays (the `return [polyCoords];` bit)
+      let polygonsCoords = this.polygons.map(poly => {
+        let polyCoords = poly.map(coord => {
+          return [coord.lng, coord.lat];
+        });
+        return [polyCoords];
+      });
+      let mp = multiPolygon(polygonsCoords);
+
+      Vue.axios
+        .post(
+          `api/priority-area/new-from-geometry/?aoiSubmissionId=${this.priorityAreaSubmission.id}`,
+          mp
+        )
+        .then(res => {
+          let tid = res.data.taskId;
+          this.updateTaskStatus(tid);
+        })
+        .catch(err => {
+          if (err.response.status == 404) {
+            // then no task has been provided, this is ok.
+          } else {
+            console.error(err);
+          }
+        });
+
       this.polygons = [];
     }
   },

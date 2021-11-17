@@ -61,6 +61,91 @@ router.get(
     readStream.pipe(res);
   }));
 
+//create a new area of interest based on geometry alone
+// accepts a body full of geojson
+router.post(
+  '/new-from-geometry',
+  [isAuthenticated],
+  asyncMiddleware(async function (req, res) {
+    let task = new Task();
+    task.statusMessage = "Initialising...";
+    let fields = {};
+
+    task.blobFileName = 'new_geometry.geojson';
+    task.blob = req.body;
+
+    console.log(task.blob);
+
+
+    let aoiSubmissionId = req.query.aoiSubmissionId;
+    if (_.isNil(aoiSubmissionId)) {
+      let err = Boom.badRequest(
+        "No `aoiSubmissionId` given via param data");
+      throw err;
+    }
+
+    console.log(aoiSubmissionId);
+
+    let taskId = undefined;
+
+    await getConnection().transaction(async transactionalEntityManager => {
+      const { id } = await getConnection()
+        .getRepository(Task)
+        .save(task);
+
+      let pasQuery = await getConnection()
+        .createQueryBuilder()
+        .update(PriorityAreaSubmission)
+        .set({ uploadTask: task })
+        .where("id = :id", { id: aoiSubmissionId })
+        .execute();
+
+      taskId = id;
+    });
+
+    const worker = workerFarm(
+      { maxRetries: 3 },
+      require.resolve('../../lib/workers/priority-area-processor')
+    );
+    worker(taskId, function (err, outp) {
+      if (err) {
+        console.log("error");
+        console.log(err);
+      }
+      workerFarm.end(worker);
+    });
+    res.json({ taskId: taskId });
+
+
+    // new formidable.IncomingForm().parse(req)
+    //   .on('field', (name, field) => {
+    //     fields[name] = field;
+    //   })
+    //   .on('file', async (name, file) => {
+    //     task.blobFileName = file.name;
+    //     const data = fs.readFileSync(file.path);
+    //     task.blob = data;
+    //   })
+    //   .on('aborted', () => {
+    //     console.error('Request aborted by the user');
+    //   })
+    //   .on('error', (err) => {
+    //     console.error('Error', err);
+    //     throw err;
+    //   })
+    //   .on('end', async () => {
+    //     if (!_.has(fields, 'priorityAreaSubmissionId')) {
+    //       let err = Boom.badRequest(
+    //         "No `priorityAreaSubmissionId` given on form data");
+    //       throw err;
+    //     }
+
+    //     let pasId = fields.priorityAreaSubmissionId;
+
+    //   });
+
+  }));
+
 
 //upload for a new template, form includes fields that are needed by DB
 router.put(

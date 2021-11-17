@@ -111,6 +111,7 @@
               ref="aoiDefinitionMap"
               :zoom="zoom"
               :center="center"
+              :options="{ attributionControl: false }"
             >
               <l-wms-tile-layer
                 :base-url="mapBaseUrl"
@@ -128,6 +129,48 @@
                 format="image/png"
               >
               </l-wms-tile-layer>
+              <l-control position="topleft">
+                <div class="column q-gutter-y-xs">
+                  <q-btn
+                    size="sm"
+                    color="white"
+                    padding="xs"
+                    :icon="isActive ? 'app:pan' : 'app:draw'"
+                    @click="flipActive"
+                  >
+                    <q-tooltip>
+                      {{
+                        isActive
+                          ? "Click to switch back to pan mode"
+                          : "Click to start drawing area of interest"
+                      }}
+                    </q-tooltip>
+                  </q-btn>
+                </div>
+              </l-control>
+              <l-control :position="'topright'">
+                <q-card flat bordered class="q-pa-xs" style="max-width: 300px">
+                  {{
+                    isActive
+                      ? "Click and hold mouse button to draw area of interest polygon. Clicking existing polygons will remove them."
+                      : "Click draw icon to begin creating area of interest."
+                  }}
+                </q-card>
+              </l-control>
+              <l-control :position="'bottomright'">
+                <q-btn
+                  :disable="polygons.length == 0"
+                  color="primary"
+                  @click="saveAoiPolygons"
+                >
+                  Save area of interest
+                </q-btn>
+              </l-control>
+              <l-freedraw
+                v-model="polygons"
+                :mode="mode"
+                :options="{ color: 'red' }"
+              />
               <l-control position="bottomleft">
                 <div class="column text-white">
                   <q-checkbox
@@ -238,6 +281,9 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import { latLng } from "leaflet";
 import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
 
+import LFreeDraw from "vue2-leaflet-freedraw";
+import { NONE, ALL } from "leaflet-freedraw";
+
 import * as MapConstants from "../olmap/map-constants";
 import { errorHandler } from "./../mixins/error-handling";
 import { permission } from "./../mixins/permission";
@@ -256,7 +302,8 @@ export default Vue.extend({
     LMap,
     LControlLayers,
     LLayerGroup,
-    "l-wms-tile-layer": LWMSTileLayer
+    "l-wms-tile-layer": LWMSTileLayer,
+    "l-freedraw": LFreeDraw
   },
 
   mounted() {
@@ -380,6 +427,14 @@ export default Vue.extend({
         const path = `priorityAreas[${paIndex}].${propertyName}`;
         this.updatePriorityAreaSubmissionValue({ path: path, value: value });
       }
+    },
+
+    flipActive() {
+      this.isActive = !this.isActive;
+    },
+
+    saveAoiPolygons() {
+      this.polygons = [];
     }
   },
 
@@ -435,6 +490,10 @@ export default Vue.extend({
           2
       );
       return center;
+    },
+
+    mode() {
+      return this.isActive ? ALL : NONE;
     }
   },
 
@@ -445,10 +504,12 @@ export default Vue.extend({
       taskTimeout: undefined,
       loadingPriorityAreaData: false,
       loadingPriorityAreaDataProgress: 0,
-      zoom: 4,
+      zoom: 3,
       mapStyle: { color: "red", weight: 3 },
       showSurveyLayer: true,
-      showOrganisationSubmissionsLayer: false
+      showOrganisationSubmissionsLayer: false,
+      polygons: [],
+      isActive: false
     };
   },
 

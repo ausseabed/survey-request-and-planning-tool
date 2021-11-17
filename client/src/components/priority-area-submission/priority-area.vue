@@ -9,7 +9,7 @@
               color="yellow-6"
               text-color="black"
             >
-              New Priority Area
+              New Area of Interest
             </q-badge>
             <q-img
               class="rounded-borders"

@@ -1,8 +1,10 @@
 <template>
   <q-layout
     view="hHh Lpr lff"
-    container style="height: calc(100vh - 54px); min-height: calc(100vh - 54px);"
-    class="shadow-2 rounded-borders">
+    container
+    style="height: calc(100vh - 54px); min-height: calc(100vh - 54px)"
+    class="shadow-2 rounded-borders"
+  >
     <q-drawer
       side="left"
       v-model="left"
@@ -14,7 +16,7 @@
     >
       <q-scroll-area class="fit">
         <div class="admin-heading">Administration</div>
-        <q-separator style="height:2px" class="q-mb-md" />
+        <q-separator style="height: 2px" class="q-mb-md" />
 
         <q-item to="/admin/users">
           <q-item-section avatar>
@@ -52,7 +54,7 @@
             <q-item-label caption>View role permissions</q-item-label>
           </q-item-section>
         </q-item>
-        <q-separator  class="q-my-sm" />
+        <q-separator class="q-my-sm" />
         <q-item to="/admin/report-templates">
           <q-item-section avatar>
             <q-icon name="library_books" />
@@ -68,26 +70,30 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>Documents</q-item-label>
-            <q-item-label caption>Upload user guides and other static documentation files</q-item-label>
+            <q-item-label caption
+              >Upload user guides and other static documentation
+              files</q-item-label
+            >
           </q-item-section>
         </q-item>
-        <q-separator  class="q-my-sm" />
+        <q-separator class="q-my-sm" />
         <q-item to="/admin/record-state-log">
           <q-item-section avatar>
             <q-icon name="supervisor_account" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Record State Log</q-item-label>
-            <q-item-label caption>View changes to record state for requests and plans</q-item-label>
+            <q-item-label caption
+              >View changes to record state for requests and plans</q-item-label
+            >
           </q-item-section>
         </q-item>
-
       </q-scroll-area>
     </q-drawer>
 
     <q-page-container>
       <q-page
-        style="height: calc(100vh - 54px); min-height: calc(100vh - 54px);"
+        style="height: calc(100vh - 54px); min-height: calc(100vh - 54px)"
         class="q-pt-sm q-pl-sm"
       >
         <router-view />
@@ -97,21 +103,19 @@
 </template>
 
 <script>
-import Vue from 'vue'
-const _ = require('lodash');
+import Vue from "vue";
+const _ = require("lodash");
 
 export default {
-  components: {
-  },
-  computed: {
-  },
+  components: {},
+  computed: {},
 
   data() {
     return {
-      left: false,
-    }
+      left: false
+    };
   }
-}
+};
 </script>
 
 <style>
@@ -122,5 +126,4 @@ export default {
   line-height: 2rem;
   padding: 16px;
 }
-
 </style>

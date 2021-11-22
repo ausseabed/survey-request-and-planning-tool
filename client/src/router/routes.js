@@ -3,6 +3,7 @@ import Custodians from 'components/administration/custodians/custodians.vue'
 import Documents from 'components/administration/document/documents.vue'
 import Login from 'components/login.vue'
 import Main from 'components/main.vue'
+import MarineParks from 'components/administration/marine-parks/marine-parks.vue'
 import Organisations from 'components/administration/organisations/organisations.vue'
 import PriorityAreaSubmission from 'components/priority-area-submission/priority-area-submission.vue'
 import PriorityAreaSubmissionAreas from 'components/priority-area-submission/priority-area-submission-areas.vue'
@@ -53,6 +54,10 @@ const routes = [
         component: Custodians,
       },
       {
+        path: 'marine-parks',
+        component: MarineParks,
+      },
+      {
         path: 'organisations',
         component: Organisations,
       },
@@ -79,7 +84,7 @@ const routes = [
       {
         path: 'record-state-log',
         component: RecordStateLog
-      },
+      }
     ]
   },
 

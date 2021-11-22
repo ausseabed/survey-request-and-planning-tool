@@ -76,6 +76,15 @@
             >
           </q-item-section>
         </q-item>
+        <q-item to="/admin/marine-parks">
+          <q-item-section avatar>
+            <q-icon name="map" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Marine Parks</q-item-label>
+            <q-item-label caption>Upload Marine Park spatial data</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-separator class="q-my-sm" />
         <q-item to="/admin/record-state-log">
           <q-item-section avatar>

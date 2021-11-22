@@ -8,6 +8,7 @@ var dataCaptureTypeRoutes = require('./api/data-capture-type');
 var deliverableRoutes = require('./api/deliverable');
 var documentRoutes = require('./api/document');
 var instrumentTypeRoutes = require('./api/instrument-type');
+var marineParkRoutes = require('./api/marine-park');
 var organisationRoutes = require('./api/organisation');
 var priorityAreaRoutes = require('./api/priority-area');
 var priorityAreaSubmissionRoutes = require('./api/priority-area-submission');
@@ -39,6 +40,7 @@ router
     .use('/document', documentRoutes)
     .use('/instrument-type', instrumentTypeRoutes)
     .use('/organisation', organisationRoutes)
+    .use('/marine-park', marineParkRoutes)
     .use('/priority-area', priorityAreaRoutes)
     .use('/priority-area-submission', priorityAreaSubmissionRoutes)
     .use('/record-state', recordStateRoutes)

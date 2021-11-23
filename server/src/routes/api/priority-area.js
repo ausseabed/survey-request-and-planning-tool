@@ -9,6 +9,7 @@ import workerFarm from 'worker-farm';
 import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated } from '../utils';
+import { MarinePark } from '../../lib/entity/marine-park';
 import { PriorityArea } from '../../lib/entity/priority-area';
 import { PriorityAreaSubmission } from '../../lib/entity/priority-area-submission';
 import { Task } from '../../lib/entity/task';
@@ -59,6 +60,47 @@ router.get(
     const readStream = new stream.PassThrough();
     readStream.end(pa.thumbnail);
     readStream.pipe(res);
+  }));
+
+router.get(
+  '/:id/intersections',
+  [isAuthenticated],
+  asyncMiddleware(async function (req, res) {
+    // gets a list of things (eg; Marine Parks) that this Area of Interest
+    // intersects
+    const id = req.params.id;
+
+
+    let intersectsQuery = getConnection()
+      .getRepository(MarinePark)
+      .createQueryBuilder("marine_park")
+      .leftJoinAndSelect(
+        PriorityArea,
+        "priority_area",
+        "ST_Intersects(marine_park.geometry, priority_area.geom)"
+      ).andWhere(
+        `priority_area.id = :aid`,
+        { aid: id }
+      );
+
+    let intersectingItems = await intersectsQuery.getMany();
+    let intersectingItemsResp = intersectingItems.map(ii => {
+      return [
+        {
+          key: "netname",
+          value: ii.netname
+        },
+        {
+          key: "resname",
+          value: ii.resname
+        },
+        {
+          key: "natlegend",
+          value: ii.natlegend
+        }
+      ]
+    });
+    return res.json(intersectingItemsResp);
   }));
 
 //create a new area of interest based on geometry alone

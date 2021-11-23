@@ -54,6 +54,7 @@ export class MarinePark {
     spatialFeatureType: "MultiPolygon",
     srid: 4326,
     nullable: true,
+    select: false
   })
   geometry;
 

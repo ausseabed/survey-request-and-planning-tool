@@ -117,33 +117,6 @@ router.post(
     res.json({ taskId: taskId });
 
 
-    // new formidable.IncomingForm().parse(req)
-    //   .on('field', (name, field) => {
-    //     fields[name] = field;
-    //   })
-    //   .on('file', async (name, file) => {
-    //     task.blobFileName = file.name;
-    //     const data = fs.readFileSync(file.path);
-    //     task.blob = data;
-    //   })
-    //   .on('aborted', () => {
-    //     console.error('Request aborted by the user');
-    //   })
-    //   .on('error', (err) => {
-    //     console.error('Error', err);
-    //     throw err;
-    //   })
-    //   .on('end', async () => {
-    //     if (!_.has(fields, 'priorityAreaSubmissionId')) {
-    //       let err = Boom.badRequest(
-    //         "No `priorityAreaSubmissionId` given on form data");
-    //       throw err;
-    //     }
-
-    //     let pasId = fields.priorityAreaSubmissionId;
-
-    //   });
-
   }));
 
 

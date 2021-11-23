@@ -49,6 +49,20 @@
           >
           </form-field-validated-input>
 
+          <div class="bg-grey-2 q-pa-sm rounded-borders">
+            <div class="field-label">Intersecting Management Boundaries</div>
+            <q-list bordered separator class="bg-white">
+              <q-item v-for="(ii, index) in intersections" :key="index">
+                <q-item-section>
+                  <q-item-label
+                    >{{ ii[0].value }} {{ ii[1].value }}</q-item-label
+                  >
+                  <q-item-label caption>{{ ii[2].value }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
+
           <form-field-validated-button-toggle
             inline
             name="priorityArea.preferredTimeframe"
@@ -111,7 +125,9 @@ import { permission } from "./../mixins/permission";
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
-  async mounted() {},
+  async mounted() {
+    this.getIntersections();
+  },
 
   props: {
     priorityArea: {},
@@ -154,6 +170,21 @@ export default Vue.extend({
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
+    },
+
+    getIntersections() {
+      Vue.axios
+        .get(`api/priority-area/${this.priorityArea.id}/intersections`)
+        .then(res => {
+          this.intersections = res.data;
+        })
+        .catch(err => {
+          if (err.response.status == 404) {
+            // then no task has been provided, this is ok.
+          } else {
+            console.error(err);
+          }
+        });
     }
   },
 
@@ -182,7 +213,9 @@ export default Vue.extend({
   },
 
   data() {
-    return {};
+    return {
+      intersections: []
+    };
   }
 });
 </script>

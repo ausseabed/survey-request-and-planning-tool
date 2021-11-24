@@ -24,7 +24,7 @@
         >
           <q-route-tab
             name="priority-area-submission-registration"
-            label="Area of Interest Registration"
+            label="Organisation Details"
             :to="{
               name: 'priority-area-submission-registration',
               params: { id: activePriorityAreaSubmission.id },

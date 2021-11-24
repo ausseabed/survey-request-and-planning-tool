@@ -5,7 +5,7 @@
         <div class="column full-width">
           <q-card v-if="hasPermission('isAdmin')">
             <q-card-section class="row">
-              <div class="text-h6">Upload Marine Parks shapfile (zipped)</div>
+              <div class="text-h6">Upload Marine Parks shapefile (zipped)</div>
             </q-card-section>
             <q-card-section>
               <q-uploader

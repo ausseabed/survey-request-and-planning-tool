@@ -1,7 +1,7 @@
 <template>
   <form-wrapper :validator="$v" class="scroll">
     <div class="column q-pa-md q-gutter-y-sm">
-      <div class="col-auto">
+      <div v-if="!readonly" class="col-auto">
         <q-btn no-caps outline color="primary" @click="prefill">
           Prefill with my registered details
         </q-btn>

@@ -1,6 +1,12 @@
 <template>
   <form-wrapper :validator="$v" class="scroll">
     <div class="column q-pa-md q-gutter-y-sm">
+      <div class="col-auto">
+        <q-btn no-caps outline color="primary" @click="prefill">
+          Prefill with my registered details
+        </q-btn>
+      </div>
+
       <form-field-validated-select
         name="priorityAreaSubmission.submittingOrganisation"
         label="Submitting organisation"
@@ -59,59 +65,6 @@
         :readonly="readonly"
       >
       </form-field-validated-input>
-
-      <form-field-validated-select
-        use-input
-        hide-selected
-        fill-input
-        clearable
-        name="priorityAreaSubmission.identifiedAreaName"
-        label="Identified Area name"
-        attribute="Identified Area name"
-        hint="The agreed name of the area that is provided by the submitting organisation."
-        :value="priorityAreaSubmission.identifiedAreaName"
-        @input-value="
-          updatePriorityAreaSubmissionValue({
-            path: 'identifiedAreaName',
-            value: $event,
-          })
-        "
-        @clear="
-          updatePriorityAreaSubmissionValue({
-            path: 'identifiedAreaName',
-            value: undefined,
-          })
-        "
-        :options="identifiedAreaOptionsFiltered"
-        @blur="$v.priorityAreaSubmission.identifiedAreaName.$touch"
-      >
-      </form-field-validated-select>
-
-      <form-field-validated-select
-        use-input
-        hide-selected
-        fill-input
-        clearable
-        name="priorityAreaSubmission.geographicalAreaName"
-        label="Geographical Area name"
-        attribute="Geographical Area name"
-        :value="priorityAreaSubmission.geographicalAreaName"
-        @input-value="
-          updatePriorityAreaSubmissionValue({
-            path: 'geographicalAreaName',
-            value: $event,
-          })
-        "
-        @clear="
-          updatePriorityAreaSubmissionValue({
-            path: 'geographicalAreaName',
-            value: undefined,
-          })
-        "
-        :options="geographicalAreaOptionsFiltered"
-        @blur="$v.priorityAreaSubmission.geographicalAreaName.$touch"
-      >
-      </form-field-validated-select>
     </div>
   </form-wrapper>
 </template>
@@ -139,10 +92,6 @@ export default Vue.extend({
 
   methods: {
     ...mapActions("organisation", ["getOrganisations"]),
-    ...mapActions("priorityAreaSubmission", [
-      "getIdentifiedAreaOptions",
-      "getGeographicalAreaOptions"
-    ]),
 
     ...mapMutations("priorityAreaSubmission", {
       updatePriorityAreaSubmissionValue:
@@ -155,8 +104,6 @@ export default Vue.extend({
 
     fetchData() {
       this.getOrganisations();
-      this.getIdentifiedAreaOptions();
-      this.getGeographicalAreaOptions();
     },
 
     filterOrganisationFunction(val, update, abort) {
@@ -176,6 +123,38 @@ export default Vue.extend({
       return opts;
     },
 
+    prefill() {
+      this.updatePriorityAreaSubmissionValue({
+        path: "contactEmail",
+        value: this.currentUser.email
+      });
+      this.updatePriorityAreaSubmissionValue({
+        path: "contactPerson",
+        value: this.currentUser.name
+      });
+
+      if (!_.isNil(this.currentUser.custodian)) {
+        let cust = this.currentUser.custodian;
+        let orgs = this.organisationsList.filter(org => {
+          return org.name.toLowerCase() == cust.name.toLowerCase();
+        });
+        if (orgs.length > 0) {
+          this.updatePriorityAreaSubmissionValue({
+            path: "submittingOrganisation",
+            value: orgs[0]
+          });
+        } else {
+          this.updatePriorityAreaSubmissionValue({
+            path: "submittingOrganisation",
+            value: undefined
+          });
+          this.notifyInfo(
+            "Could not match current users custodian to organisation"
+          );
+        }
+      }
+    },
+
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
@@ -189,9 +168,7 @@ export default Vue.extend({
       priorityAreaSubmission: {
         submittingOrganisation: { required },
         contactPerson: { required },
-        contactEmail: { required, email },
-        identifiedAreaName: { required },
-        geographicalAreaName: {}
+        contactEmail: { required, email }
       }
     };
   },
@@ -203,24 +180,9 @@ export default Vue.extend({
     ...mapGetters("organisation", {
       organisationsList: "organisations"
     }),
-    ...mapState("priorityAreaSubmission", {
-      identifiedAreaOptions: "identifiedAreaOptions",
-      geographicalAreaOptions: "geographicalAreaOptions"
-    }),
-
-    identifiedAreaOptionsFiltered() {
-      return this.getFilteredOptions(
-        this.priorityAreaSubmission.identifiedAreaName,
-        this.identifiedAreaOptions
-      );
-    },
-
-    geographicalAreaOptionsFiltered() {
-      return this.getFilteredOptions(
-        this.priorityAreaSubmission.geographicalAreaName,
-        this.geographicalAreaOptions
-      );
-    }
+    ...mapGetters("user", {
+      currentUser: "currentUser"
+    })
   },
 
   data() {

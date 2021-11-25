@@ -152,27 +152,8 @@ export default Vue.extend({
   async mounted() {
     this.getIntersections();
 
-    if (this.priorityArea.seacountryName == undefined) {
-      // new item so nothing to setup
-    } else if (
-      this.seacountryNameOptions.includes(this.priorityArea.seacountryName)
-    ) {
-      this.selectedSeacountryOption = this.priorityArea.seacountryName;
-    } else {
-      this.selectedSeacountryOption = "Other";
-    }
-
-    if (this.priorityArea.ecologicalAreaName == undefined) {
-      // new item so nothing to setup
-    } else if (
-      this.ecologicalAreaNameOptions.includes(
-        this.priorityArea.ecologicalAreaName
-      )
-    ) {
-      this.selectedEcologicalAreaOption = this.priorityArea.ecologicalAreaName;
-    } else {
-      this.selectedEcologicalAreaOption = "Other";
-    }
+    this.updateSeacountrySelection();
+    this.updateEcologicalAreaSelection();
   },
 
   props: {
@@ -196,21 +177,25 @@ export default Vue.extend({
 
     applyToAllClicked() {
       this.$emit("priority-area-apply-to-all", {
-        propertyName: "preferredTimeframe",
-        value: this.priorityArea.preferredTimeframe
+        propertyName: "seacountryName",
+        value: this.priorityArea.seacountryName
       });
       this.$emit("priority-area-apply-to-all", {
-        propertyName: "riskRating",
-        value: this.priorityArea.riskRating
+        propertyName: "ecologicalAreaName",
+        value: this.priorityArea.ecologicalAreaName
       });
-      this.$emit("priority-area-apply-to-all", {
-        propertyName: "requiredDataQuality",
-        value: this.priorityArea.requiredDataQuality
-      });
-      this.$emit("priority-area-apply-to-all", {
-        propertyName: "priority",
-        value: this.priorityArea.priority
-      });
+    },
+
+    updateSeacountrySelection() {
+      if (this.priorityArea.seacountryName == undefined) {
+        // new item so nothing to setup
+      } else if (
+        this.seacountryNameOptions.includes(this.priorityArea.seacountryName)
+      ) {
+        this.selectedSeacountryOption = this.priorityArea.seacountryName;
+      } else {
+        this.selectedSeacountryOption = "Other";
+      }
     },
 
     seacountrySelected(selected) {
@@ -222,6 +207,20 @@ export default Vue.extend({
         this.valueChanged("seacountryName", selected);
       } else {
         this.valueChanged("seacountryName", undefined);
+      }
+    },
+
+    updateEcologicalAreaSelection() {
+      if (this.priorityArea.ecologicalAreaName == undefined) {
+        // new item so nothing to setup
+      } else if (
+        this.ecologicalAreaNameOptions.includes(
+          this.priorityArea.ecologicalAreaName
+        )
+      ) {
+        this.selectedEcologicalAreaOption = this.priorityArea.ecologicalAreaName;
+      } else {
+        this.selectedEcologicalAreaOption = "Other";
       }
     },
 
@@ -255,7 +254,18 @@ export default Vue.extend({
     }
   },
 
-  watch: {},
+  watch: {
+    "priorityArea.seacountryName": {
+      handler(newVal, oldVal) {
+        this.updateSeacountrySelection();
+      }
+    },
+    "priorityArea.ecologicalAreaName": {
+      handler(newVal, oldVal) {
+        this.updateEcologicalAreaSelection();
+      }
+    }
+  },
 
   validations() {
     return {

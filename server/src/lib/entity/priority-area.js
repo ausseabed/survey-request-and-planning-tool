@@ -68,6 +68,20 @@ export class PriorityArea {
   })
   priority;
 
+  @Column({
+    type: "varchar",
+    nullable: true,
+    name: "seacountry_name"
+  })
+  seacountryName;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
+    name: "ecological_area_name"
+  })
+  ecologicalAreaName;
+
   @Column("geometry", {
     name: "geom",
     spatialFeatureType: "MultiPolygon",

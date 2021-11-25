@@ -158,3 +158,19 @@ export const getGeographicalAreaOptions = async ({ commit, state }) => {
     mutTypes.SET_GEOGRAPHICAL_AREA_OPTIONS
   );
 }
+
+export const getEcologicalAreaNameOptions = async ({ commit, state }) => {
+  getOptions(
+    commit,
+    'ecological-area-options',
+    mutTypes.SET_ECOLOGICAL_AREA_NAME_OPTIONS
+  );
+}
+
+export const getSeacountryNameOptions = async ({ commit, state }) => {
+  getOptions(
+    commit,
+    'seacountry-options',
+    mutTypes.SET_SEACOUNTRY_NAME_OPTIONS
+  );
+}

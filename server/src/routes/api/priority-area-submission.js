@@ -21,7 +21,8 @@ import {
   from '../../lib/entity/priority-area';
 import {
   IDENTIFIED_AREA_NAME_SUGGESTIONS,
-  GEOGRAPHICAL_AREA_NAME_SUGGESTIONS
+  GEOGRAPHICAL_AREA_NAME_SUGGESTIONS,
+  SEACOUNTRY_NAME_SUGGESTIONS, ECOLOGICAL_AREA_SUGGESTIONS
 }
   from '../../lib/entity/priority-area-submission';
 import { RecordState } from '../../lib/entity/record-state';
@@ -54,6 +55,14 @@ router.get('/identified-area-options', async function (req, res) {
 
 router.get('/geographical-area-options', async function (req, res) {
   return res.json(GEOGRAPHICAL_AREA_NAME_SUGGESTIONS);
+});
+
+router.get('/seacountry-options', async function (req, res) {
+  return res.json(SEACOUNTRY_NAME_SUGGESTIONS);
+});
+
+router.get('/ecological-area-options', async function (req, res) {
+  return res.json(ECOLOGICAL_AREA_SUGGESTIONS);
 });
 
 const PRIORITY_AREA_SUBMISSION_RELATIONS = [

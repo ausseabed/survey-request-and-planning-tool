@@ -111,15 +111,18 @@
 
           <div class="bg-grey-2 q-pa-sm rounded-borders">
             <div class="field-label">Intersecting Management Boundaries</div>
-            <q-list bordered separator class="bg-white">
-              <q-item v-for="(ii, index) in intersections" :key="index">
-                <q-item-section>
-                  <q-item-label
-                    >{{ ii[0].value }} {{ ii[1].value }}</q-item-label
-                  >
-                  <q-item-label caption>{{ ii[2].value }}</q-item-label>
-                </q-item-section>
-              </q-item>
+
+            <q-list bordered separator class="col bg-white">
+              <q-scroll-area style="height: 200px">
+                <q-item v-for="(ii, index) in intersections" :key="index">
+                  <q-item-section>
+                    <q-item-label
+                      >{{ ii[0].value }} {{ ii[1].value }}</q-item-label
+                    >
+                    <q-item-label caption>{{ ii[2].value }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-scroll-area>
             </q-list>
           </div>
         </div>

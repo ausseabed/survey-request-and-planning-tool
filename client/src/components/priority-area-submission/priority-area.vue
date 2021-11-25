@@ -152,13 +152,19 @@ export default Vue.extend({
   async mounted() {
     this.getIntersections();
 
-    if (this.seacountryNameOptions.includes(this.priorityArea.seacountryName)) {
+    if (this.priorityArea.seacountryName == undefined) {
+      // new item so nothing to setup
+    } else if (
+      this.seacountryNameOptions.includes(this.priorityArea.seacountryName)
+    ) {
       this.selectedSeacountryOption = this.priorityArea.seacountryName;
     } else {
       this.selectedSeacountryOption = "Other";
     }
 
-    if (
+    if (this.priorityArea.ecologicalAreaName == undefined) {
+      // new item so nothing to setup
+    } else if (
       this.ecologicalAreaNameOptions.includes(
         this.priorityArea.ecologicalAreaName
       )

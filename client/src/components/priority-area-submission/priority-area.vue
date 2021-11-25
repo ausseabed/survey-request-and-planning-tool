@@ -122,51 +122,6 @@
               </q-item>
             </q-list>
           </div>
-
-          <form-field-validated-button-toggle
-            inline
-            name="priorityArea.preferredTimeframe"
-            label="Preferred Timeframe"
-            :value="priorityArea.preferredTimeframe"
-            @input="valueChanged('preferredTimeframe', $event)"
-            :options="preferredTimeframeOptions"
-            @blur="$v.priorityArea.preferredTimeframe.$touch"
-            :readonly="readonly"
-          />
-
-          <form-field-validated-button-toggle
-            inline
-            name="priorityArea.riskRating"
-            label="Risk Rating"
-            :value="priorityArea.riskRating"
-            @input="valueChanged('riskRating', $event)"
-            :options="riskRatingOptions"
-            @blur="$v.priorityArea.riskRating.$touch"
-            :readonly="readonly"
-          />
-
-          <form-field-validated-select
-            class="bg-grey-2 q-pa-sm rounded-borders"
-            inline
-            name="priorityArea.requiredDataQuality"
-            label="Required Data Quality"
-            :value="priorityArea.requiredDataQuality"
-            @input="valueChanged('requiredDataQuality', $event)"
-            :options="requiredDataQualityOptions"
-            @blur="$v.priorityArea.requiredDataQuality.$touch"
-            :readonly="readonly"
-          />
-
-          <form-field-validated-button-toggle
-            inline
-            name="priorityArea.priority"
-            label="Priority"
-            :value="priorityArea.priority"
-            @input="valueChanged('priority', $event)"
-            :options="priorityOptions"
-            @blur="$v.priorityArea.priority.$touch"
-            :readonly="readonly"
-          />
         </div>
       </q-card-section>
     </q-card>
@@ -291,10 +246,6 @@ export default Vue.extend({
     return {
       priorityArea: {
         name: { required },
-        preferredTimeframe: { required },
-        riskRating: { required },
-        requiredDataQuality: { required },
-        priority: { required },
         ecologicalAreaName: { required },
         seacountryName: { required }
       }
@@ -304,10 +255,6 @@ export default Vue.extend({
   computed: {
     // these are all loaded by the parent component
     ...mapState("priorityAreaSubmission", [
-      "preferredTimeframeOptions",
-      "riskRatingOptions",
-      "requiredDataQualityOptions",
-      "priorityOptions",
       "seacountryNameOptions",
       "ecologicalAreaNameOptions"
     ])

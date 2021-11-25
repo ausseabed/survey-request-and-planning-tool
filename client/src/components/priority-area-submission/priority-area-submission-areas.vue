@@ -426,13 +426,34 @@ export default Vue.extend({
       this.loadingPriorityAreaData = false;
     },
 
-    priorityAreaApplytoAll({ propertyName, value }) {
+    priorityAreaApplytoAll({ propertyName, value, id, limit }) {
+      let limitCount = 0;
+      let startUpdating = false;
+
       for (const [
         paIndex,
         pa
       ] of this.priorityAreaSubmission.priorityAreas.entries()) {
-        const path = `priorityAreas[${paIndex}].${propertyName}`;
-        this.updatePriorityAreaSubmissionValue({ path: path, value: value });
+        if (id == undefined || limit == undefined) {
+          // no id, and no limit provided so update all the entries
+          const path = `priorityAreas[${paIndex}].${propertyName}`;
+          this.updatePriorityAreaSubmissionValue({ path: path, value: value });
+        } else {
+          if (pa.id == id) {
+            startUpdating = true;
+          }
+          if (startUpdating) {
+            const path = `priorityAreas[${paIndex}].${propertyName}`;
+            this.updatePriorityAreaSubmissionValue({
+              path: path,
+              value: value
+            });
+            limitCount++;
+          }
+          if (limitCount > limit) {
+            return;
+          }
+        }
       }
     },
 

@@ -19,7 +19,12 @@
               contain
             />
           </div>
-          <div class="column q-gutter-xs">
+          <div class="column q-pt-xs q-gutter-xs">
+            <sct-btn
+              v-if="!readonly"
+              label="Apply to Next"
+              @click="applyToNextClicked"
+            />
             <sct-btn
               v-if="!readonly"
               label="Apply to All"
@@ -183,6 +188,21 @@ export default Vue.extend({
       this.$emit("priority-area-apply-to-all", {
         propertyName: "ecologicalAreaName",
         value: this.priorityArea.ecologicalAreaName
+      });
+    },
+
+    applyToNextClicked() {
+      this.$emit("priority-area-apply-to-all", {
+        propertyName: "seacountryName",
+        value: this.priorityArea.seacountryName,
+        id: this.priorityArea.id,
+        limit: 1
+      });
+      this.$emit("priority-area-apply-to-all", {
+        propertyName: "ecologicalAreaName",
+        value: this.priorityArea.ecologicalAreaName,
+        id: this.priorityArea.id,
+        limit: 1
       });
     },
 

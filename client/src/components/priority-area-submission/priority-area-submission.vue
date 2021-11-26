@@ -41,6 +41,15 @@
             exact
           />
           <q-route-tab
+            name="area-of-interest-profiles"
+            label="Area(s) of Interest Profile"
+            :to="{
+              name: 'area-of-interest-profiles',
+              params: { id: activePriorityAreaSubmission.id },
+            }"
+            exact
+          />
+          <q-route-tab
             name="priority-area-submission-confirmation"
             label="Submission Confirmation"
             :to="{
@@ -110,7 +119,8 @@ import * as pasMutTypes from "../../store/modules/priority-area-submission/prior
 // what the route gets changed to after save and continue is clicked
 const NEXT_ROUTES = {
   "priority-area-submission-registration": "priority-area-submission-areas",
-  "priority-area-submission-areas": "priority-area-submission-confirmation",
+  "priority-area-submission-areas": "area-of-interest-profiles",
+  "area-of-interest-profiles": "priority-area-submission-confirmation",
   "priority-area-submission-confirmation":
     "priority-area-submission-confirmation"
 };

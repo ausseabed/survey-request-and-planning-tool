@@ -1,4 +1,5 @@
 import Administration from 'components/administration/administration.vue'
+import AreaOfInterestProfiles from 'components/priority-area-submission/area-of-interest-profiles.vue'
 import Custodians from 'components/administration/custodians/custodians.vue'
 import Documents from 'components/administration/document/documents.vue'
 import Login from 'components/login.vue'
@@ -177,6 +178,11 @@ const routes = [
         path: 'areas',
         name: 'priority-area-submission-areas',
         component: PriorityAreaSubmissionAreas,
+      },
+      {
+        path: 'profiles',
+        name: 'area-of-interest-profiles',
+        component: AreaOfInterestProfiles,
       },
       {
         path: 'confirmation',

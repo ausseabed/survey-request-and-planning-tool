@@ -32,6 +32,7 @@
         :area-of-interest="aoi"
         @aoi-value-changed="aoiValueChanged"
         :readonly="readonly"
+        ref="aoiProfile"
       >
       </area-of-interest-profile>
     </div>
@@ -79,6 +80,9 @@ export default Vue.extend({
 
     toggleExpanded() {
       this.expanded = !this.expanded;
+      for (const aoiProfile of this.$refs.aoiProfile) {
+        aoiProfile.setExpanded(this.expanded);
+      }
     },
 
     isValid() {

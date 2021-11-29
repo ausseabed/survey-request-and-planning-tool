@@ -4,19 +4,14 @@
       <q-card-section>
         <div class="main-page-sub-title">{{ areaOfInterest.name }}</div>
       </q-card-section>
-      <q-card-section class="row q-col-gutter-md">
-        <div
-          class="column justify-between q-gutter-y-sm"
-          style="max-width: 250px"
-        >
-          <!-- <div class="column q-gutter-sm"> -->
+      <q-card-section class="row q-gutter-md">
+        <div class="column justify-between" style="max-width: 250px">
           <q-img
             class="rounded-borders"
             :src="`api/priority-area/${areaOfInterest.id}/thumbnail`"
             :ratio="1"
             contain
           />
-          <!-- </div> -->
           <div class="column q-pt-xs q-gutter-xs">
             <q-badge color="secondary" text-color="white">
               Registration details
@@ -33,10 +28,32 @@
           </div>
         </div>
 
-        <div class="col column q-gutter-xs">
-          <div>other col</div>
-          <div>other col</div>
-        </div>
+        <q-list bordered class="col rounded-borders" ref="expansionItemList">
+          <q-expansion-item expand-separator label="Purpose">
+            <q-card>
+              <q-card-section>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Quidem, eius reprehenderit eos corrupti commodi magni quaerat ex
+                numquam, dolorum officiis modi facere maiores architecto
+                suscipit iste eveniet doloribus ullam aliquid.
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+          <q-expansion-item
+            expand-separator
+            label="Data collection timeline and cadence"
+            icon="schedule"
+          >
+            <q-card>
+              <q-card-section>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Quidem, eius reprehenderit eos corrupti commodi magni quaerat ex
+                numquam, dolorum officiis modi facere maiores architecto
+                suscipit iste eveniet doloribus ullam aliquid.
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+        </q-list>
       </q-card-section>
     </q-card>
   </form-wrapper>
@@ -62,6 +79,17 @@ export default Vue.extend({
   },
 
   methods: {
+    setExpanded(expanded) {
+      // expands or contracts all expansion controls
+      for (const expansionItem of this.$refs.expansionItemList.$children) {
+        if (expanded) {
+          expansionItem.show();
+        } else {
+          expansionItem.hide();
+        }
+      }
+    },
+
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;

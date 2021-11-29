@@ -1,9 +1,39 @@
 <template>
   <div class="scroll">
-    <div class="q-pa-sm">Foo</div>
+    <div class="row q-pa-sm justify-between items-center">
+      <div>
+        Provide additional metadata for each Area of Interest to support
+        prioritisation.
+      </div>
+      <div class="row q-gutter-xs">
+        <q-btn
+          size="sm"
+          :disable="!expanded"
+          color="secondary"
+          @click="toggleExpanded"
+        >
+          Collapse All
+        </q-btn>
+        <q-btn
+          size="sm"
+          :disable="expanded"
+          color="secondary"
+          @click="toggleExpanded"
+        >
+          Expand All
+        </q-btn>
+      </div>
+    </div>
 
     <div class="column q-pa-sm q-gutter-y-sm">
-      <div v-for="(n, i) in 100">Foo {{ i }}</div>
+      <area-of-interest-profile
+        v-for="aoi of priorityAreaSubmission.priorityAreas"
+        :key="aoi.id"
+        :area-of-interest="aoi"
+        @aoi-value-changed="aoiValueChanged"
+        :readonly="readonly"
+      >
+      </area-of-interest-profile>
     </div>
   </div>
 </template>
@@ -11,21 +41,46 @@
 <script>
 import Vue from "vue";
 const _ = require("lodash");
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 import { errorHandler } from "../mixins/error-handling";
 import { permission } from "../mixins/permission";
 
+import * as pasMutTypes from "../../store/modules/priority-area-submission/priority-area-submission-mutation-types";
+import AreaOfInterestProfile from "./area-of-interest-profile.vue";
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
+
+  components: {
+    "area-of-interest-profile": AreaOfInterestProfile
+  },
 
   props: ["readonly"],
 
   mounted() {
-    console.log("moungted");
+    console.log("mounted");
   },
 
   methods: {
+    ...mapMutations("priorityAreaSubmission", {
+      updatePriorityAreaSubmissionValue:
+        pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
+      setDirty: pasMutTypes.SET_DIRTY
+    }),
+
+    aoiValueChanged({ priorityArea, propertyName, value }) {
+      const paIndex = this.priorityAreaSubmission.priorityAreas.indexOf(
+        priorityArea
+      );
+      const path = `priorityAreas[${paIndex}].${propertyName}`;
+      this.updatePriorityAreaSubmissionValue({ path: path, value: value });
+    },
+
+    toggleExpanded() {
+      this.expanded = !this.expanded;
+    },
+
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
@@ -41,7 +96,9 @@ export default Vue.extend({
   },
 
   data() {
-    return {};
+    return {
+      expanded: false
+    };
   }
 });
 </script>

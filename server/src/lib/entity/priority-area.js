@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 
+import { AreaOfInterestPurpose } from './area-of-interest-purpose';
 import { PriorityAreaSubmission } from './priority-area-submission';
 
 
@@ -130,4 +131,11 @@ export class PriorityArea {
     submission => submission.priorityAreas
   )
   priorityAreaSubmissionSubmission;
+
+  @OneToMany(
+    type => AreaOfInterestPurpose,
+    aoip => aoip.priorityArea,
+    { cascade: true }
+  )
+  purposes;
 }

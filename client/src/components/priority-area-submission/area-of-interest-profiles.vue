@@ -70,8 +70,10 @@ export default Vue.extend({
       setDirty: pasMutTypes.SET_DIRTY
     }),
 
-    aoiValueChanged({ aoi, propertyName, value }) {
-      const paIndex = this.priorityAreaSubmission.priorityAreas.indexOf(aoi);
+    aoiValueChanged({ priorityArea, propertyName, value }) {
+      const paIndex = this.priorityAreaSubmission.priorityAreas.indexOf(
+        priorityArea
+      );
       const path = `priorityAreas[${paIndex}].${propertyName}`;
       this.updatePriorityAreaSubmissionValue({ path: path, value: value });
     },
@@ -84,18 +86,8 @@ export default Vue.extend({
     },
 
     isValid() {
-      // we perform map, then reduce, so that the `isValid` method
-      // is called on all priority area components. Doing the only the reduce
-      // will stop calling isValid after the first non-valid component.
-      if (_.isNil(this.$refs.aoiProfile)) {
-        // if there are no priority areas, then its valid
-        return true;
-      }
-      let allValid = this.$refs.aoiProfile
-        .map(comp => comp.isValid())
-        .reduce((sum, next) => sum && next, true);
-
-      return allValid;
+      this.$v.$touch();
+      return !this.$v.$error;
     }
   },
 

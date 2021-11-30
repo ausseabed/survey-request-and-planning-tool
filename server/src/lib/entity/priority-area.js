@@ -53,34 +53,6 @@ export class PriorityArea {
   @Column({
     type: "varchar",
     nullable: true,
-    name: "timeframe_reason"
-  })
-  timeframeReason;
-
-  @Column({
-    type: "varchar",
-    nullable: true,
-    name: "preferred_season"
-  })
-  preferredSeason;
-
-  @Column({
-    type: "varchar",
-    nullable: true,
-    name: "collection_cadence"
-  })
-  collectionCadence;
-
-  @Column({
-    type: "varchar",
-    nullable: true,
-    name: "time_series_description"
-  })
-  timeSeriesDescription;
-
-  @Column({
-    type: "varchar",
-    nullable: true,
   })
   riskRating;
 

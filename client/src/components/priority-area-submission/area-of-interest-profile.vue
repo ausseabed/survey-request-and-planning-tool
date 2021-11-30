@@ -104,6 +104,37 @@
               </q-card-section>
             </q-card>
           </q-expansion-item>
+
+          <q-expansion-item
+            expand-separator
+            label="Organisational Priority and Perceived Impact"
+            icon="hardware"
+          >
+            <q-card>
+              <q-card-section class="q-gutter-y-xs">
+                <form-field-validated-button-toggle
+                  inline
+                  name="areaOfInterest.perceivedImpact"
+                  label="Perceived Impact"
+                  :value="areaOfInterest.perceivedImpact"
+                  @input="valueChanged('perceivedImpact', $event)"
+                  :options="PERCEIVED_IMPACT_OPTIONS"
+                  @blur="$v.areaOfInterest.perceivedImpact.$touch"
+                  :readonly="readonly"
+                />
+                <form-field-validated-button-toggle
+                  inline
+                  name="areaOfInterest.organisationalPriority"
+                  label="Organisational Priority"
+                  :value="areaOfInterest.organisationalPriority"
+                  @input="valueChanged('organisationalPriority', $event)"
+                  :options="ORGANISATIONAL_PRIORITY_OPTIONS"
+                  @blur="$v.areaOfInterest.organisationalPriority.$touch"
+                  :readonly="readonly"
+                />
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
         </q-list>
       </q-card-section>
     </q-card>
@@ -134,15 +165,29 @@ const COLLECTION_CADENCE_OPTIONS = [
   "Time Series Established"
 ];
 
+const PERCEIVED_IMPACT_OPTIONS = [
+  "Unknown",
+  "Local (<10km)",
+  "Regional (10-100km)",
+  "National (>1000km)"
+];
+
+const ORGANISATIONAL_PRIORITY_OPTIONS = ["NA", "1", "2", "3"];
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
-  async mounted() {},
+  mounted() {
+    this.setDefaults();
+  },
 
   created() {
     this.PREFERRED_TIMEFRAME_OPTIONS = PREFERRED_TIMEFRAME_OPTIONS;
     this.PREFERRED_SEASON_OPTIONS = PREFERRED_SEASON_OPTIONS;
     this.COLLECTION_CADENCE_OPTIONS = COLLECTION_CADENCE_OPTIONS;
+
+    this.PERCEIVED_IMPACT_OPTIONS = PERCEIVED_IMPACT_OPTIONS;
+    this.ORGANISATIONAL_PRIORITY_OPTIONS = ORGANISATIONAL_PRIORITY_OPTIONS;
   },
 
   props: {
@@ -157,6 +202,18 @@ export default Vue.extend({
         propertyName: propertyName,
         value: value
       });
+    },
+
+    setDefaults() {
+      if (this.areaOfInterest.organisationalPriority == undefined) {
+        this.valueChanged(
+          "organisationalPriority",
+          ORGANISATIONAL_PRIORITY_OPTIONS[0]
+        );
+      }
+      if (this.areaOfInterest.perceivedImpact == undefined) {
+        this.valueChanged("perceivedImpact", PERCEIVED_IMPACT_OPTIONS[0]);
+      }
     },
 
     setExpanded(expanded) {
@@ -185,7 +242,10 @@ export default Vue.extend({
         timeframeReason: {},
         preferredSeason: {},
         collectionCadence: {},
-        timeSeriesDescription: {}
+        timeSeriesDescription: {},
+
+        perceivedImpact: { required },
+        organisationalPriority: { required }
       }
     };
   },

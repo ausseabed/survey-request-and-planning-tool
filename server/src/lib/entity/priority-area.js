@@ -81,6 +81,20 @@ export class PriorityArea {
   @Column({
     type: "varchar",
     nullable: true,
+    name: "perceived_impact"
+  })
+  perceivedImpact;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
+    name: "organisational_priority"
+  })
+  organisationalPriority;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
   })
   riskRating;
 

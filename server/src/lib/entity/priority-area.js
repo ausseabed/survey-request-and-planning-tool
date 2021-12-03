@@ -93,6 +93,28 @@ export class PriorityArea {
   organisationalPriority;
 
   @Column({
+    name: "existing_data_sources",
+    type: "simple-array",
+    nullable: true,
+    default: ""
+  })
+  existingDataSources = [];
+
+  @Column({
+    type: "varchar",
+    nullable: true,
+    name: "reason_for_aoi_raise"
+  })
+  reasonForAoiRaise;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
+    name: "existing_data_assessment_comments"
+  })
+  existingDataAssessmentComments;
+
+  @Column({
     type: "varchar",
     nullable: true,
   })

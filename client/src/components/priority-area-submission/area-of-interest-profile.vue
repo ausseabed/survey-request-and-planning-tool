@@ -28,7 +28,12 @@
           </div>
         </div>
 
-        <q-list bordered class="col rounded-borders" ref="expansionItemList">
+        <q-list
+          bordered
+          separator
+          class="col rounded-borders"
+          ref="expansionItemList"
+        >
           <q-expansion-item expand-separator label="Purpose">
             <q-card>
               <q-card-section>
@@ -39,6 +44,71 @@
               </q-card-section>
             </q-card>
           </q-expansion-item>
+
+          <q-expansion-item
+            expand-separator
+            label="Existing Data Assessment"
+            icon="fact_check"
+          >
+            <q-card>
+              <q-card-section class="q-gutter-y-xs">
+                <div>
+                  Please select all existing data sources you have considered,
+                  and brief note on why this area of interest is not being
+                  serviced to meet your needs.
+                </div>
+                <q-list dense>
+                  <q-item
+                    v-for="opt in EXISTING_DATA_SOURCE_OPTIONS"
+                    :key="opt.name"
+                    tag="label"
+                    v-ripple
+                  >
+                    <q-item-section avatar>
+                      <q-checkbox
+                        :value="areaOfInterest.existingDataSources"
+                        :val="opt.name"
+                        @input="valueChanged('existingDataSources', $event)"
+                      />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>{{ opt.name }} </q-item-label>
+                      <q-item-label caption>{{ opt.datatypes }}</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                      <q-item-label caption>{{ opt.url }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+                <div>Reason for Area of Interest to be raised.</div>
+                <q-option-group
+                  class="q-pl-md"
+                  :options="REASON_FOR_AOI_RAISE_OPTIONS"
+                  type="radio"
+                  :value="areaOfInterest.reasonForAoiRaise"
+                  @input="valueChanged('reasonForAoiRaise', $event)"
+                />
+
+                <form-field-validated-input
+                  name="areaOfInterest.existingDataAssessmentComments"
+                  attribute="Further Comments"
+                  label="Further Comments"
+                  :value="areaOfInterest.existingDataAssessmentComments"
+                  @input="
+                    valueChanged('existingDataAssessmentComments', $event)
+                  "
+                  @blur="
+                    $v.areaOfInterest.existingDataAssessmentComments.$touch
+                  "
+                  type="textarea"
+                  autogrow
+                  :readonly="readonly"
+                  outlined
+                />
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+
           <q-expansion-item
             expand-separator
             label="Data collection timeline and cadence"
@@ -174,6 +244,69 @@ const PERCEIVED_IMPACT_OPTIONS = [
 
 const ORGANISATIONAL_PRIORITY_OPTIONS = ["NA", "1", "2", "3"];
 
+const EXISTING_DATA_SOURCE_OPTIONS = [
+  {
+    name: "AusSeabed",
+    url: "https://www.ausseabed.gov.au/data",
+    datatypes: "acoustic data, bathymetry, etc"
+  },
+  {
+    name: "MARS",
+    url: "http://dbforms.ga.gov.au/pls/www/npm.mars.search",
+    datatypes: "sediments"
+  },
+  {
+    name: "Squidle+",
+    url: "https://squidle.org/",
+    datatypes: "epibenthos organisms / imagery"
+  },
+  {
+    name: "SOI Squidle",
+    url: "https://soi.squidle.org/",
+    datatypes: "epibenthos organisms / imagery"
+  },
+  {
+    name: "AODN  (all rationales)",
+    url: "https://portal.aodn.org.au/",
+    datatypes: "all data types"
+  },
+  {
+    name: "OBIS",
+    url: "https://obis.org/",
+    datatypes: "ecological data; species distributions"
+  },
+  {
+    name: "ALA",
+    url: "https://www.ala.org.au/",
+    datatypes: "ecological data; species distributions"
+  },
+  {
+    name: "SeaMap Australia",
+    url: "https://seamapaustralia.org/",
+    datatypes: "biotope"
+  },
+  {
+    name: "GlobalArchive",
+    url: "https://globalarchive.org/",
+    datatypes: "fish, BRUVS data"
+  },
+  {
+    name: "IMSA",
+    url: "biotope, sediment, chemical",
+    datatypes: "https://biocollect.ala.org.au/imsa"
+  }
+];
+
+const REASON_FOR_AOI_RAISE_OPTIONS = [
+  { label: "Data not found for AOI", value: "Data not found for AOI" },
+  {
+    label: "Data not found to meet requirements",
+    value: "Data not found to meet requirements"
+  },
+  { label: "Data found, not relevant", value: "Data found, not relevant" },
+  { label: "Timeseries required", value: "Timeseries required" }
+];
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
@@ -188,6 +321,9 @@ export default Vue.extend({
 
     this.PERCEIVED_IMPACT_OPTIONS = PERCEIVED_IMPACT_OPTIONS;
     this.ORGANISATIONAL_PRIORITY_OPTIONS = ORGANISATIONAL_PRIORITY_OPTIONS;
+
+    this.EXISTING_DATA_SOURCE_OPTIONS = EXISTING_DATA_SOURCE_OPTIONS;
+    this.REASON_FOR_AOI_RAISE_OPTIONS = REASON_FOR_AOI_RAISE_OPTIONS;
   },
 
   props: {
@@ -245,7 +381,11 @@ export default Vue.extend({
         timeSeriesDescription: {},
 
         perceivedImpact: { required },
-        organisationalPriority: { required }
+        organisationalPriority: { required },
+
+        existingDataSources: {},
+        reasonForAoiRaise: {},
+        existingDataAssessmentComments: {}
       }
     };
   },

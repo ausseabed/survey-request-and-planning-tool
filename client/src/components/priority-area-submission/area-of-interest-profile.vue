@@ -69,6 +69,7 @@
                         :value="areaOfInterest.existingDataSources"
                         :val="opt.name"
                         @input="valueChanged('existingDataSources', $event)"
+                        :disable="readonly"
                       />
                     </q-item-section>
                     <q-item-section>
@@ -87,6 +88,7 @@
                   type="radio"
                   :value="areaOfInterest.reasonForAoiRaise"
                   @input="valueChanged('reasonForAoiRaise', $event)"
+                  :disable="readonly"
                 />
 
                 <form-field-validated-input

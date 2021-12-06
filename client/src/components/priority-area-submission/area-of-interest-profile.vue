@@ -83,6 +83,7 @@
                 </q-list>
                 <div>Reason for Area of Interest to be raised.</div>
                 <q-option-group
+                  dense
                   class="q-pl-md"
                   :options="REASON_FOR_AOI_RAISE_OPTIONS"
                   type="radio"
@@ -107,6 +108,40 @@
                   :readonly="readonly"
                   outlined
                 />
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+
+          <q-expansion-item
+            expand-separator
+            label="Resolution and Standard"
+            icon="grid_on"
+          >
+            <q-card>
+              <q-card-section class="row q-gutter-x-xs">
+                <form-field-validated-option-group
+                  class="col"
+                  :value="areaOfInterest.gridSize"
+                  @input="valueChanged('gridSize', $event)"
+                  :options="GRID_SIZE_OPTIONS"
+                  name="areaOfInterest.gridSize"
+                  label="Grid Size"
+                  @blur="$v.areaOfInterest.gridSize.$touch"
+                  :readonly="readonly"
+                >
+                </form-field-validated-option-group>
+
+                <form-field-validated-option-group
+                  class="col"
+                  :value="areaOfInterest.surveyStandard"
+                  @input="valueChanged('surveyStandard', $event)"
+                  :options="SURVEY_STANDARD_OPTIONS"
+                  name="areaOfInterest.surveyStandard"
+                  label="Survey Standard"
+                  @blur="$v.areaOfInterest.surveyStandard.$touch"
+                  :readonly="readonly"
+                >
+                </form-field-validated-option-group>
               </q-card-section>
             </q-card>
           </q-expansion-item>
@@ -309,6 +344,25 @@ const REASON_FOR_AOI_RAISE_OPTIONS = [
   { label: "Timeseries required", value: "Timeseries required" }
 ];
 
+const GRID_SIZE_OPTIONS = [
+  { label: "<1 m", value: "<1 m" },
+  { label: "2-5 m", value: "2-5 m" },
+  { label: "10s m", value: "10s m" },
+  { label: "100s m", value: "100s m" },
+  { label: "kms", value: "kms" }
+];
+
+const SURVEY_STANDARD_OPTIONS = [
+  { label: "HIPP – Precise", value: "HIPP – Precise" },
+  { label: "IHO Exclusive Order", value: "IHO Exclusive Order" },
+  { label: "IHO – Special", value: "IHO – Special" },
+  { label: "IHO – 1a", value: "IHO – 1a" },
+  { label: "IHO – 1b", value: "IHO – 1b" },
+  { label: "HIPP – 2", value: "HIPP – 2" },
+  { label: "IHO – 2", value: "IHO – 2" },
+  { label: "HIPP – Passage", value: "HIPP – Passage" }
+];
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
@@ -326,6 +380,13 @@ export default Vue.extend({
 
     this.EXISTING_DATA_SOURCE_OPTIONS = EXISTING_DATA_SOURCE_OPTIONS;
     this.REASON_FOR_AOI_RAISE_OPTIONS = REASON_FOR_AOI_RAISE_OPTIONS;
+
+    this.GRID_SIZE_OPTIONS = GRID_SIZE_OPTIONS.map(o => {
+      return o.label;
+    });
+    this.SURVEY_STANDARD_OPTIONS = SURVEY_STANDARD_OPTIONS.map(o => {
+      return o.label;
+    });
   },
 
   props: {
@@ -387,7 +448,10 @@ export default Vue.extend({
 
         existingDataSources: {},
         reasonForAoiRaise: {},
-        existingDataAssessmentComments: {}
+        existingDataAssessmentComments: {},
+
+        gridSize: { required },
+        surveyStandard: {}
       }
     };
   },

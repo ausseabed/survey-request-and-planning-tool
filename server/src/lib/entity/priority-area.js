@@ -117,6 +117,20 @@ export class PriorityArea {
   @Column({
     type: "varchar",
     nullable: true,
+    name: "grid_size"
+  })
+  gridSize;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
+    name: "survey_standard"
+  })
+  surveyStandard;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
   })
   riskRating;
 

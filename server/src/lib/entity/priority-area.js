@@ -129,6 +129,22 @@ export class PriorityArea {
   surveyStandard;
 
   @Column({
+    type: "simple-array",
+    nullable: true,
+    name: "data_to_capture",
+    default: ""
+  })
+  dataToCapture = [];
+
+  @Column({
+    type: "simple-array",
+    nullable: true,
+    name: "data_capture_methods",
+    default: ""
+  })
+  dataCaptureMethods = [];
+
+  @Column({
     type: "varchar",
     nullable: true,
   })

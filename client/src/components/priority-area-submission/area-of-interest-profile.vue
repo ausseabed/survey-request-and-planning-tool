@@ -47,6 +47,94 @@
 
           <q-expansion-item
             expand-separator
+            label="Data and Methods"
+            icon="scatter_plot"
+          >
+            <q-card>
+              <q-card-section class="row q-gutter-x-xs">
+                <div class="col">
+                  <div>Data to Capture</div>
+                  <q-list dense>
+                    <q-item
+                      v-for="opt in DATA_OPTIONS"
+                      :key="opt"
+                      tag="label"
+                      v-ripple
+                    >
+                      <q-item-section avatar>
+                        <q-checkbox
+                          size="sm"
+                          :value="areaOfInterest.dataToCapture"
+                          :val="opt"
+                          @input="valueChanged('dataToCapture', $event)"
+                          :disable="readonly"
+                        />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>{{ opt }} </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+                <div class="col">
+                  <div>Preferred Method(s)</div>
+                  <q-list dense>
+                    <template v-for="methodGroup of DATA_AND_METHOD_OPTIONS">
+                      <q-item-label
+                        header
+                        :key="methodGroup.groupName + '-header'"
+                        style="padding-bottom: 0px"
+                      >
+                        {{ methodGroup.groupName }}
+                      </q-item-label>
+                      <q-item
+                        v-for="method in methodGroup.methods"
+                        :key="method.name"
+                        tag="label"
+                        v-ripple
+                      >
+                        <q-item-section avatar>
+                          <q-checkbox
+                            size="sm"
+                            :value="areaOfInterest.dataCaptureMethods"
+                            :val="method.name"
+                            @input="valueChanged('dataCaptureMethods', $event)"
+                            :disable="
+                              readonly || dataCaptureMethodDisabled(method.name)
+                            "
+                          />
+                        </q-item-section>
+                        <q-item-section>
+                          <q-item-label>{{ method.name }} </q-item-label>
+                        </q-item-section>
+                      </q-item>
+                    </template>
+                    <!-- <q-item
+                      v-for="opt in DATA_OPTIONS"
+                      :key="opt"
+                      tag="label"
+                      v-ripple
+                    >
+                      <q-item-section avatar>
+                        <q-checkbox
+                          :value="areaOfInterest.dataToCapture"
+                          :val="opt"
+                          @input="valueChanged('dataToCapture', $event)"
+                          :disable="readonly"
+                        />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>{{ opt }} </q-item-label>
+                      </q-item-section>
+                    </q-item> -->
+                  </q-list>
+                </div>
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+
+          <q-expansion-item
+            expand-separator
             label="Existing Data Assessment"
             icon="fact_check"
           >
@@ -137,7 +225,7 @@
                   @input="valueChanged('surveyStandard', $event)"
                   :options="SURVEY_STANDARD_OPTIONS"
                   name="areaOfInterest.surveyStandard"
-                  label="Survey Standard"
+                  label="Bathymetry Survey Standard"
                   @blur="$v.areaOfInterest.surveyStandard.$touch"
                   :readonly="readonly"
                 >
@@ -363,6 +451,186 @@ const SURVEY_STANDARD_OPTIONS = [
   { label: "HIPP – Passage", value: "HIPP – Passage" }
 ];
 
+const DATA_AND_METHOD_OPTIONS = [
+  {
+    groupName: "Acoustic",
+    methods: [
+      {
+        name: "MBES",
+        data: ["Bathymetry", "Backscatter", "Water column backscatter"]
+      },
+      {
+        name: "Side-scan",
+        data: ["Bathymetry", "Backscatter"]
+      },
+      {
+        name: "Single-beam",
+        data: ["Bathymetry"]
+      },
+      {
+        name: "Sub-bottom profiling",
+        data: ["Rock or sediment strata"]
+      }
+    ]
+  },
+  {
+    groupName: "Remote Sensing",
+    methods: [
+      {
+        name: "Satellite",
+        data: ["Bathymetry", "Imagery"]
+      },
+      {
+        name: "LiDAR/LADS/ALB",
+        data: ["Bathymetry"]
+      },
+      {
+        name: "Aerial photography",
+        data: ["Imagery"]
+      }
+    ]
+  },
+  {
+    groupName: "Semi-autonomous Imagery",
+    methods: [
+      {
+        name: "UAV",
+        data: ["Imagery"]
+      },
+      {
+        name: "AUV / Drift Camera",
+        data: [
+          "Imagery",
+          "Bathymetry",
+          "Backscatter",
+          "Water column backscatter"
+        ]
+      },
+      {
+        name: "ROV Imagery",
+        data: ["Imagery", "Sample collection"]
+      },
+      {
+        name: "Drop / Towed Video / DOV",
+        data: ["Imagery"]
+      },
+      {
+        name: "BRUV / Lander",
+        data: ["Imagery"]
+      }
+    ]
+  },
+  {
+    groupName: "Sensors (physical/chemical)",
+    methods: [
+      {
+        name: "CTD",
+        data: ["Salinity", "Temperature", "Depth", "Pressure"]
+      },
+      {
+        name: "ADCP",
+        data: ["Current velocity"]
+      },
+      {
+        name: "Chemical Sniffers",
+        data: ["Compound concentration"]
+      }
+    ]
+  },
+  {
+    groupName: "Physical Collection",
+    methods: [
+      {
+        name: "Net/Trawl",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Indicator species / TEPS",
+          "Biotope/habitat"
+        ]
+      },
+      {
+        name: "Benthic Sled/Dregde",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Indicator species / TEPS",
+          "Biotope/habitat"
+        ]
+      },
+      {
+        name: "Potting",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Indicator species / TEPS",
+          "Biotope/habitat"
+        ]
+      },
+      {
+        name: "ROV Collection",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Indicator species / TEPS",
+          "Biotope/habitat"
+        ]
+      },
+      {
+        name: "Grab",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Indicator species / TEPS",
+          "Biotope/habitat"
+        ]
+      },
+      {
+        name: "Sediment Cores",
+        data: [
+          "Pore water chemistry",
+          "Grain size analysis",
+          "Mineral composition",
+          "Micro fossil analysis"
+        ]
+      },
+      {
+        name: "Tissue Sample",
+        data: []
+      },
+      {
+        name: "eDNA",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Indicator species / TEPS",
+          "Biotope/habitat"
+        ]
+      },
+      {
+        name: "Settlement plates",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Indicator species / TEPS",
+          "Biotope/habitat"
+        ]
+      },
+      {
+        name: "Sediment traps",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Grain size analysis",
+          "Mineral composition",
+          "Micro fossil analysis"
+        ]
+      },
+      {
+        name: "Water samplers (e.g. Niskin Bottle)",
+        data: [
+          "Biodiversity (inc. Microbial diversity)",
+          "Indicator species / TEPS",
+          "Biotope/habitat",
+          "Water chemistry"
+        ]
+      }
+    ]
+  }
+];
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
@@ -387,6 +655,22 @@ export default Vue.extend({
     this.SURVEY_STANDARD_OPTIONS = SURVEY_STANDARD_OPTIONS.map(o => {
       return o.label;
     });
+
+    this.DATA_AND_METHOD_OPTIONS = DATA_AND_METHOD_OPTIONS;
+
+    // get a simple sorted list of the data types to make showing this
+    // in a checklist much easier
+    let optionsSet = new Set();
+    for (const methodGroup of this.DATA_AND_METHOD_OPTIONS) {
+      for (const method of methodGroup.methods) {
+        if (method.data.length != 0) {
+          method.data.forEach(d => {
+            optionsSet.add(d);
+          });
+        }
+      }
+    }
+    this.DATA_OPTIONS = Array.from(optionsSet).sort();
   },
 
   props: {
@@ -426,13 +710,52 @@ export default Vue.extend({
       }
     },
 
+    dataCaptureMethodDisabled(dataCaptureMethod) {
+      // data capture methods are disabled if there is no data collection
+      // type selected that requires this collection type.
+      for (const methodGroup of this.DATA_AND_METHOD_OPTIONS) {
+        for (const method of methodGroup.methods) {
+          if (method.name == dataCaptureMethod) {
+            let commonData = _.intersectionWith(
+              this.areaOfInterest.dataToCapture,
+              method.data,
+              (a, b) => a == b
+            );
+            return commonData.length == 0;
+          }
+        }
+      }
+    },
+
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
     }
   },
 
-  watch: {},
+  watch: {
+    "areaOfInterest.dataToCapture": function(oldVal, newVal) {
+      // deselect any data capture methods that should not be selected based
+      // on what dataToCapture types has been selected.
+      var toRemove = [];
+      for (const methodGroup of this.DATA_AND_METHOD_OPTIONS) {
+        for (const method of methodGroup.methods) {
+          if (
+            this.areaOfInterest.dataCaptureMethods.includes(method.name) &&
+            this.dataCaptureMethodDisabled(method.name)
+          ) {
+            toRemove.push(method.name);
+          }
+        }
+      }
+
+      let cleanedList = this.areaOfInterest.dataCaptureMethods.filter(i => {
+        return !toRemove.includes(i);
+      });
+
+      this.valueChanged("dataCaptureMethods", cleanedList);
+    }
+  },
 
   validations() {
     return {
@@ -451,7 +774,10 @@ export default Vue.extend({
         existingDataAssessmentComments: {},
 
         gridSize: { required },
-        surveyStandard: {}
+        surveyStandard: {},
+
+        dataToCapture: {},
+        dataCaptureMethods: {}
       }
     };
   },

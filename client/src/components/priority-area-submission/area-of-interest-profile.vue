@@ -483,11 +483,11 @@ const DATA_AND_METHOD_OPTIONS = [
       },
       {
         name: "Single-beam",
-        data: ["Bathymetry"]
+        data: ["Bathymetry", "Backscatter", "Water column backscatter"]
       },
       {
         name: "Sub-bottom profiling",
-        data: ["Rock or sediment strata"]
+        data: ["Sub-bottom"]
       }
     ]
   },
@@ -499,7 +499,7 @@ const DATA_AND_METHOD_OPTIONS = [
         data: ["Bathymetry", "Imagery"]
       },
       {
-        name: "LiDAR/LADS/ALB",
+        name: "LiDAR",
         data: ["Bathymetry"]
       },
       {
@@ -513,20 +513,15 @@ const DATA_AND_METHOD_OPTIONS = [
     methods: [
       {
         name: "UAV",
-        data: ["Imagery"]
+        data: ["Imagery", "Bathymetry"]
       },
       {
         name: "AUV / Drift Camera",
-        data: [
-          "Imagery",
-          "Bathymetry",
-          "Backscatter",
-          "Water column backscatter"
-        ]
+        data: ["Imagery", "Bathymetry", "Backscatter"]
       },
       {
         name: "ROV Imagery",
-        data: ["Imagery", "Sample collection"]
+        data: ["Imagery", "Bathymetry"]
       },
       {
         name: "Drop / Towed Video / DOV",
@@ -539,19 +534,19 @@ const DATA_AND_METHOD_OPTIONS = [
     ]
   },
   {
-    groupName: "Sensors (physical/chemical)",
+    groupName: "Sensors (physical / chemical)",
     methods: [
       {
         name: "CTD",
-        data: ["Salinity", "Temperature", "Depth", "Pressure"]
+        data: ["Water properties"]
       },
       {
         name: "ADCP",
-        data: ["Current velocity"]
+        data: ["Water movements (currents / tides / etc)"]
       },
       {
         name: "Chemical Sniffers",
-        data: ["Compound concentration"]
+        data: ["Water properties"]
       }
     ]
   },
@@ -559,25 +554,26 @@ const DATA_AND_METHOD_OPTIONS = [
     groupName: "Physical Collection",
     methods: [
       {
-        name: "Net/Trawl",
+        name: "Net / Trawl",
         data: [
-          "Biodiversity (inc. Microbial diversity)",
+          "Biodiversity (inc. microbial diversity)",
           "Indicator species / TEPS",
           "Biotope/habitat"
         ]
       },
       {
-        name: "Benthic Sled/Dregde",
+        name: "Benthic Sled / Dregde",
         data: [
-          "Biodiversity (inc. Microbial diversity)",
+          "Biodiversity (inc. microbial diversity)",
           "Indicator species / TEPS",
-          "Biotope/habitat"
+          "Biotope/habitat",
+          "Substrate"
         ]
       },
       {
-        name: "Potting",
+        name: "Pots / Traps",
         data: [
-          "Biodiversity (inc. Microbial diversity)",
+          "Biodiversity (inc. microbial diversity)",
           "Indicator species / TEPS",
           "Biotope/habitat"
         ]
@@ -585,64 +581,56 @@ const DATA_AND_METHOD_OPTIONS = [
       {
         name: "ROV Collection",
         data: [
-          "Biodiversity (inc. Microbial diversity)",
+          "Biodiversity (inc. microbial diversity)",
           "Indicator species / TEPS",
-          "Biotope/habitat"
+          "Biotope/habitat",
+          "Substrate"
         ]
       },
       {
         name: "Grab",
         data: [
-          "Biodiversity (inc. Microbial diversity)",
+          "Biodiversity (inc. microbial diversity)",
           "Indicator species / TEPS",
-          "Biotope/habitat"
+          "Biotope/habitat",
+          "Substrate"
         ]
       },
       {
         name: "Sediment Cores",
-        data: [
-          "Pore water chemistry",
-          "Grain size analysis",
-          "Mineral composition",
-          "Micro fossil analysis"
-        ]
+        data: ["Substrate", "Biodiversity (inc. microbial diversity)"]
       },
       {
         name: "Tissue Sample",
-        data: []
+        data: [
+          "Biodiversity (inc. microbial diversity)",
+          "Indicator species / TEPS"
+        ]
       },
       {
         name: "eDNA",
         data: [
-          "Biodiversity (inc. Microbial diversity)",
-          "Indicator species / TEPS",
-          "Biotope/habitat"
+          "Biodiversity (inc. microbial diversity)",
+          "Indicator species / TEPS"
         ]
       },
       {
         name: "Settlement plates",
         data: [
-          "Biodiversity (inc. Microbial diversity)",
-          "Indicator species / TEPS",
-          "Biotope/habitat"
+          "Biodiversity (inc. microbial diversity)",
+          "Indicator species / TEPS"
         ]
       },
       {
         name: "Sediment traps",
-        data: [
-          "Biodiversity (inc. Microbial diversity)",
-          "Grain size analysis",
-          "Mineral composition",
-          "Micro fossil analysis"
-        ]
+        data: ["Substrate"]
       },
       {
-        name: "Water samplers (e.g. Niskin Bottle)",
+        name: "Water samplers (e.g. Niskin bottle)",
         data: [
-          "Biodiversity (inc. Microbial diversity)",
+          "Biodiversity (inc. microbial diversity)",
           "Indicator species / TEPS",
-          "Biotope/habitat",
-          "Water chemistry"
+          "Water properties"
         ]
       }
     ]
@@ -1168,7 +1156,7 @@ const ACTIVITIES = [
     ]
   },
   {
-    label: "General use, access & waste management",
+    label: "General use access and waste management",
     children: [
       {
         label: "Ballast water discharge and exchange",
@@ -1294,7 +1282,7 @@ const ACTIVITIES = [
               "Marine debris (including microplastics and litter on islands)"
           },
           {
-            label: "Noxious substances (including chemicals & heavy metals)"
+            label: "Noxious substances (including chemicals and heavy metals)"
           },
           {
             label: "Suspended sediments (includes smothering)"
@@ -1309,7 +1297,7 @@ const ACTIVITIES = [
               "Marine debris (including microplastics and litter on islands)"
           },
           {
-            label: "Noxious substances (including chemicals & heavy metals)"
+            label: "Noxious substances (including chemicals and heavy metals)"
           },
           {
             label: "Sewage waste"
@@ -1377,7 +1365,7 @@ const ACTIVITIES = [
             label: "Noise pollution"
           },
           {
-            label: "Noxious substances (including chemicals & heavy metals)"
+            label: "Noxious substances (including chemicals and heavy metals)"
           },
           {
             label: "Oil/fuel spill or leak"
@@ -1565,7 +1553,7 @@ const ACTIVITIES = [
             label: "Noise pollution"
           },
           {
-            label: "Noxious substances (including chemicals & heavy metals)"
+            label: "Noxious substances (including chemicals and heavy metals)"
           }
         ]
       },
@@ -1594,7 +1582,7 @@ const ACTIVITIES = [
             label: "Noise pollution"
           },
           {
-            label: "Noxious substances (including chemicals & heavy metals)"
+            label: "Noxious substances (including chemicals and heavy metals)"
           },
           {
             label: "Oil/fuel spill or leak"

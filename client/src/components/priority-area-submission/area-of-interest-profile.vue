@@ -1671,7 +1671,7 @@ export default Vue.extend({
 
     this.ACTIVITIES = ACTIVITIES;
     this.addKeys(undefined, this.ACTIVITIES);
-    console.log(this.ACTIVITIES);
+    this.setActivitiesDisabled(false, this.ACTIVITIES);
   },
 
   props: {
@@ -1742,6 +1742,15 @@ export default Vue.extend({
       }
     },
 
+    setActivitiesDisabled(disabled, items) {
+      for (const item of items) {
+        item.tickable = !disabled;
+        if (item.children) {
+          this.setActivitiesDisabled(disabled, item.children);
+        }
+      }
+    },
+
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
@@ -1749,7 +1758,7 @@ export default Vue.extend({
   },
 
   watch: {
-    "areaOfInterest.dataToCapture": function(oldVal, newVal) {
+    "areaOfInterest.dataToCapture": function(newVal, oldVal) {
       // deselect any data capture methods that should not be selected based
       // on what dataToCapture types has been selected.
       var toRemove = [];
@@ -1769,6 +1778,13 @@ export default Vue.extend({
       });
 
       this.valueChanged("dataCaptureMethods", cleanedList);
+    },
+
+    readonly: {
+      immediate: false,
+      handler(newVal, oldVal) {
+        this.setActivitiesDisabled(newVal, this.ACTIVITIES);
+      }
     }
   },
 

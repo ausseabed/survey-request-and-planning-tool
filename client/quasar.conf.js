@@ -86,6 +86,7 @@ module.exports = function (ctx) {
         'QExpansionItem',
         'QBadge',
         'QBtnToggle',
+        'QTree',
       ],
 
       directives: [
@@ -122,7 +123,7 @@ module.exports = function (ctx) {
       // gzip: true,
       // analyze: true,
       // extractCSS: false,
-      extendWebpack (cfg) {
+      extendWebpack(cfg) {
       }
     },
 
@@ -198,7 +199,7 @@ module.exports = function (ctx) {
     electron: {
       // bundler: 'builder', // or 'packager'
 
-      extendWebpack (cfg) {
+      extendWebpack(cfg) {
         // do something with Electron main process Webpack cfg
         // chainWebpack also available besides this extendWebpack
       },

@@ -330,6 +330,24 @@
               </q-card-section>
             </q-card>
           </q-expansion-item>
+
+          <q-expansion-item expand-separator label="Pressures" icon="water">
+            <q-card>
+              <q-card-section class="column q-gutter-y-xs">
+                <div>
+                  Please select the appropriate profile within the MERI
+                  framework to identify the focus areas of proposed data
+                  acquisition.
+                </div>
+                <q-tree
+                  :nodes="ACTIVITIES"
+                  node-key="key"
+                  tick-strategy="leaf"
+                  :ticked.sync="pressuresTicked"
+                />
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
         </q-list>
       </q-card-section>
     </q-card>
@@ -631,6 +649,997 @@ const DATA_AND_METHOD_OPTIONS = [
   }
 ];
 
+const ACTIVITIES = [
+  {
+    label: "Climate change",
+    children: [
+      {
+        label: "Climate change",
+        children: [
+          {
+            label: "Altered ocean currents"
+          },
+          {
+            label: "Increased frequency and severity of weather events"
+          },
+          {
+            label: "Increased sea surface temperature"
+          },
+          {
+            label: "Ocean acidification"
+          },
+          {
+            label: "Sea level rise"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Climate change adaptation",
+    children: [
+      {
+        label: "Carbon storage and sequestration",
+        children: [
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Commercial aquaculture",
+    children: [
+      {
+        label: "Aquaculture (including commercial pearling)",
+        children: [
+          {
+            label:
+              "Habitat modification (due to changes in nutrients and organic matter)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Marine pests"
+          },
+          {
+            label: "Noise pollution"
+          }
+        ]
+      },
+      {
+        label: "Vessel transiting",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations - vessel transit/vessel strike etc.)"
+          },
+          {
+            label: "Marine pests"
+          },
+          {
+            label: "Noise pollution"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Commercial fishing",
+    children: [
+      {
+        label: "Danish Seine",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Demersal trawl",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label: "Noise pollution"
+          }
+        ]
+      },
+      {
+        label: "Dropline",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Hand collection",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          }
+        ]
+      },
+      {
+        label: "Hand net",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          }
+        ]
+      },
+      {
+        label: "Longline (demersal, auto-longline)",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Longline (pelagic)",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Minor line",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Net - demersal",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Net - pelagic",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Pot and Trap",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          }
+        ]
+      },
+      {
+        label: "Purse Seine",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Scallop dredge",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label: "Noise pollution"
+          }
+        ]
+      },
+      {
+        label: "Trawl - midwater",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Trotline",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Vessel transiting",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Commercial shipping",
+    children: [
+      {
+        label: "Anchoring",
+        children: [
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label: "Light pollution"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      },
+      {
+        label: "Vessel transiting",
+        children: [
+          {
+            label:
+              "Habitat modification (due to suspended sediments - including smothering)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Marine pests"
+          },
+          {
+            label: "Noise pollution"
+          },
+          {
+            label: "Oil/fuel spill or leak"
+          },
+          {
+            label: "Overabundant native species"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Commercial tourism",
+    children: [
+      {
+        label: "Charter fishing tours",
+        children: [
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Marine pests"
+          },
+          {
+            label: "Noise pollution"
+          }
+        ]
+      },
+      {
+        label: "Commercial aviation tours (up to 3000 m above sea level)",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations) "
+          },
+          {
+            label: "Noise pollution"
+          }
+        ]
+      },
+      {
+        label: "Non-fishing related tourism - nature watching",
+        children: [
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Marine pests"
+          },
+          {
+            label: "Noise pollution"
+          }
+        ]
+      },
+      {
+        label: "Non-fishing related tourism - scuba/snorkel tour",
+        children: [
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      },
+      {
+        label: "Non-fishing related tourism - vessel transiting",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Commercial Media",
+    children: [
+      {
+        label: "Commercial Media",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "General use, access & waste management",
+    children: [
+      {
+        label: "Ballast water discharge and exchange",
+        children: [
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      },
+      {
+        label: "Camping",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Terrestrial pest plants and animals"
+          }
+        ]
+      },
+      {
+        label: "Disposal of waste from normal operations of vessels",
+        children: [
+          {
+            label: "Sewage waste"
+          }
+        ]
+      },
+      {
+        label: "Non-commercial remote piloted aircraft",
+        children: [
+          {
+            label: "Noise pollution"
+          }
+        ]
+      },
+      {
+        label: "Recreational use – boating (including vessel transiting)",
+        children: [
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      },
+      {
+        label: "Recreational use - nature watching  (above and below water)",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Hunting and fishing",
+    children: [
+      {
+        label: "Cultural fishing",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Traditional hunting",
+        children: [
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Land-use intensification",
+    children: [
+      {
+        label: "Diffuse source runoff",
+        children: [
+          {
+            label: "Changes in nutrients and organic matter"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Noxious substances (including chemicals & heavy metals)"
+          },
+          {
+            label: "Suspended sediments (includes smothering)"
+          }
+        ]
+      },
+      {
+        label: "Point discharges",
+        children: [
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Noxious substances (including chemicals & heavy metals)"
+          },
+          {
+            label: "Sewage waste"
+          }
+        ]
+      },
+      {
+        label: "Stock grazing of riparian and marine vegetation",
+        children: [
+          {
+            label: "Changes in nutrients and organic matter"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label: "Suspended sediments (includes smothering)"
+          },
+          {
+            label: "Terrestrial pest plants and animals"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Mining",
+    children: [
+      {
+        label: "Construction and operation of pipelines",
+        children: [
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Mining - seismic survey",
+        children: [
+          {
+            label: "Noise pollution"
+          }
+        ]
+      },
+      {
+        label: "Mining operations including exploration",
+        children: [
+          {
+            label:
+              "Habitat modification (due to suspended sediments - including smothering)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label: "Light pollution"
+          },
+          {
+            label: "Marine pests"
+          },
+          {
+            label: "Noise pollution"
+          },
+          {
+            label: "Noxious substances (including chemicals & heavy metals)"
+          },
+          {
+            label: "Oil/fuel spill or leak"
+          }
+        ]
+      },
+      {
+        label: "Vessel transiting",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "National security and emergency response",
+    children: [
+      {
+        label:
+          "Actions by or under direction of the Commonwealth and Commonwealth agencies - defence, border protection, law enforcement and emergency response",
+        children: [
+          {
+            label: "#N/A"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Recreational fishing",
+    children: [
+      {
+        label: "Anchoring",
+        children: [
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Recreational fishing (including spearfishing)",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Marine pests"
+          },
+          {
+            label: "Overabundant native species"
+          }
+        ]
+      },
+      {
+        label: "Vessel transiting",
+        children: [
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Renewable energy",
+    children: [
+      {
+        label: "Wave, tidal and wind",
+        children: [
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Research and monitoring",
+    children: [
+      {
+        label: "Research, collecting, tagging",
+        children: [
+          {
+            label: "Extraction of benthic mobile invertebrates"
+          },
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Extraction of terrestrial biota"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label:
+              "Marine debris (including microplastics and litter on islands)"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    label: "Structures and works",
+    children: [
+      {
+        label: "Artificial reefs",
+        children: [
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          }
+        ]
+      },
+      {
+        label: "Dredging or disposal of dredged material",
+        children: [
+          {
+            label:
+              "Habitat modification (due to suspended sediments - including smothering)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Noise pollution"
+          },
+          {
+            label: "Noxious substances (including chemicals & heavy metals)"
+          }
+        ]
+      },
+      {
+        label:
+          "Excavation other than dredging, erection and maintenance of structures, and works (including cables, trenching & boring)",
+        children: [
+          {
+            label:
+              "Habitat modification (due to suspended sediments - including smothering)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label: "Marine pests"
+          },
+          {
+            label: "Noise pollution"
+          },
+          {
+            label: "Noxious substances (including chemicals & heavy metals)"
+          },
+          {
+            label: "Oil/fuel spill or leak"
+          }
+        ]
+      },
+      {
+        label: "Fish aggregating devices",
+        children: [
+          {
+            label: "Extraction of fish and free-swimming invertebrates"
+          },
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label:
+              "Human presence (disturbance of mobile fauna communities or populations)"
+          }
+        ]
+      },
+      {
+        label: "Moorings",
+        children: [
+          {
+            label: "Extraction of megafauna (excluding fish)"
+          },
+          {
+            label: "Habitat modification (physical disturbance and removal)"
+          },
+          {
+            label: "Introduced pathogens/disease"
+          },
+          {
+            label: "Light pollution"
+          },
+          {
+            label: "Marine pests"
+          }
+        ]
+      }
+    ]
+  }
+];
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
@@ -671,6 +1680,10 @@ export default Vue.extend({
       }
     }
     this.DATA_OPTIONS = Array.from(optionsSet).sort();
+
+    this.ACTIVITIES = ACTIVITIES;
+    this.addKeys(undefined, this.ACTIVITIES);
+    console.log(this.ACTIVITIES);
   },
 
   props: {
@@ -706,6 +1719,20 @@ export default Vue.extend({
           expansionItem.show();
         } else {
           expansionItem.hide();
+        }
+      }
+    },
+
+    addKeys(parentKey, items) {
+      // Each node in the tree needs a unique key, this is the value
+      // that ultimately gets saved to the database to maintain selections
+      // some leaf nodes use the same label, so we generate keys that
+      // include the complete path to the leaf (instead of just the leaf
+      // node label)
+      for (const item of items) {
+        item.key = parentKey ? parentKey + "-" + item.label : item.label;
+        if (item.children) {
+          this.addKeys(item.key, item.children);
         }
       }
     },
@@ -782,10 +1809,21 @@ export default Vue.extend({
     };
   },
 
-  computed: {},
+  computed: {
+    pressuresTicked: {
+      get: function() {
+        return this.areaOfInterest.pressures;
+      },
+      set: function(value) {
+        this.valueChanged("pressures", value);
+      }
+    }
+  },
 
   data() {
-    return {};
+    return {
+      ticked: []
+    };
   }
 });
 </script>

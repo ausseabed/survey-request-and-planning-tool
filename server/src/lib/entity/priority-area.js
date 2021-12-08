@@ -145,6 +145,14 @@ export class PriorityArea {
   dataCaptureMethods = [];
 
   @Column({
+    type: "simple-array",
+    nullable: true,
+    name: "pressures",
+    default: ""
+  })
+  pressures = [];
+
+  @Column({
     type: "varchar",
     nullable: true,
   })

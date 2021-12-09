@@ -499,7 +499,22 @@ export default Vue.extend({
         return !toRemove.includes(i);
       });
 
-      this.valueChanged("dataCaptureMethods", cleanedList);
+      // calling `this.valueChanged()` will set the dirty state to true
+      // so we need to check to make sure we aren't setting the dataCaptureMethods
+      // to what it is already set to (this happens immediately after a save).
+      // Issue was that the dirty state would alway be set to true without this.
+      let sharedWithExistingSelection = _.intersectionWith(
+        cleanedList,
+        this.areaOfInterest.dataCaptureMethods,
+        (a, b) => a == b
+      );
+
+      if (
+        sharedWithExistingSelection.length !=
+        this.areaOfInterest.dataCaptureMethods.length
+      ) {
+        this.valueChanged("dataCaptureMethods", cleanedList);
+      }
     },
 
     readonly: {

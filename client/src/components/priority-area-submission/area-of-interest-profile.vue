@@ -109,24 +109,6 @@
                         </q-item-section>
                       </q-item>
                     </template>
-                    <!-- <q-item
-                      v-for="opt in DATA_OPTIONS"
-                      :key="opt"
-                      tag="label"
-                      v-ripple
-                    >
-                      <q-item-section avatar>
-                        <q-checkbox
-                          :value="areaOfInterest.dataToCapture"
-                          :val="opt"
-                          @input="valueChanged('dataToCapture', $event)"
-                          :disable="readonly"
-                        />
-                      </q-item-section>
-                      <q-item-section>
-                        <q-item-label>{{ opt }} </q-item-label>
-                      </q-item-section>
-                    </q-item> -->
                   </q-list>
                 </div>
               </q-card-section>

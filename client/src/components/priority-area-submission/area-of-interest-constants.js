@@ -1266,3 +1266,229 @@ export const ACTIVITIES = [
         ]
     }
 ];
+
+export const PURPOSE_DATA = [
+    {
+        label: "Cultural Heritage",
+        children: [
+            {
+                label: "Tangible",
+                children: [
+                    {
+                        label: "Preservation of Cultural sites",
+                        flags: undefined
+                    },
+                    {
+                        label: "Management of Traditional Resources",
+                        flags: undefined
+                    },
+                    {
+                        label: "Protection of Totems",
+                        flags: undefined
+                    },
+                    {
+                        label: "Preservation of Language",
+                        flags: undefined
+                    }
+                ]
+            },
+            {
+                label: "Intangible",
+                children: [
+                    {
+                        label: "Conducting Ceremony",
+                        flags: undefined
+                    },
+                    {
+                        label: "Preservation of Songlines/creation stories",
+                        flags: undefined
+                    },
+                    {
+                        label: "Preservation of Language",
+                        flags: undefined
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        label: "Social/Historical",
+        children: [
+            {
+                label: "Managing Historical Heritage",
+                children: [
+                    {
+                        label: "Archaeology",
+                        flags: ["Known", "Likely"],
+                    },
+                    {
+                        label: "Wrecks",
+                        flags: ["Known", "Likely"],
+                    }
+                ]
+            },
+            {
+                label: "Enabling Recreation",
+                children: [
+                    {
+                        label: "Enabling Recreation",
+                        flags: ["Known", "Likely"]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        label: "Operational",
+        children: [
+            {
+                label: "Charting / Shipping",
+                children: [
+                    {
+                        label: "Ship routing",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "Port approaches",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "Anchoring Management",
+                        flags: ["Prospective", "Existing"]
+                    }
+                ]
+            },
+            {
+                label: "Defence",
+                flags: ["Prospective", "Existing"]
+            },
+            {
+                label: "Natural disaster management",
+                flags: ["Prospective", "Existing"]
+            },
+            {
+                label: "Anthropogenic disaster management",
+                flags: ["Prospective", "Existing"]
+            },
+            {
+                label: "Georegulation (boundaries/ borders)",
+                flags: ["Prospective", "Existing"]
+            }
+        ],
+        values: [
+            "Decrease operational risk",
+            "Reduce cost",
+            "Increase human safety",
+            "Inform infrastructure planning",
+            "Increased economic efficiency / tonnage",
+            "Freedom of manoeuvre",
+            "Pollution mitigation",
+            "Wildlife interaction mitigation"
+        ]
+    },
+    {
+        label: "Economic",
+        children: [
+            {
+                label: "Extractive",
+                children: [
+                    {
+                        label: "fisheries",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "oil & gas",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "seabed mining",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "bioprospecting / biodiscovery",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "Dredging",
+                        flags: ["Prospective", "Existing"]
+                    }
+                ]
+            },
+            {
+                label: "Infrastructure",
+                children: [
+                    {
+                        label: "pipeline / cables",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "Non-renewables",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "Renewables",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "Desalination",
+                        flags: ["Prospective", "Existing"]
+                    },
+                    {
+                        label: "Aquaculture",
+                        flags: ["Prospective", "Existing"]
+                    }
+                ]
+            },
+            {
+                label: "Disposal",
+                flags: ["Prospective", "Existing"]
+            },
+            {
+                label: "Tourism",
+                flags: ["Prospective", "Existing"]
+            },
+            {
+                label: "Coastal/ urban development",
+                flags: ["Prospective", "Existing"]
+            },
+            {
+                label: "Environmental economic accounting",
+                flags: ["Prospective", "Existing"]
+            }
+        ],
+        values: [
+            "Increase productivity",
+            "Decrease risk",
+            "Create jobs",
+            "Generate investment",
+            "Sustainable infrastructure",
+            "Environmental offsets"
+        ]
+    },
+    {
+        label: "Environmental",
+        children: [
+            {
+                label: "Characterisation / inventory",
+                flags: ["Sci.knowledge", "Intervention"]
+            },
+            {
+                label: "Fundamental Research",
+                flags: ["Sci.knowledge", "Intervention"]
+            },
+            {
+                label: "Monitoring",
+                flags: ["Sci.knowledge", "Intervention"]
+            },
+            {
+                label: "Restoration",
+                flags: ["Sci.knowledge", "Intervention"]
+            },
+            {
+                label: "Rehabilitation",
+                flags: ["Sci.knowledge", "Intervention"]
+            },
+        ],
+        values: []
+    }
+];

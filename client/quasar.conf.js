@@ -87,6 +87,8 @@ module.exports = function (ctx) {
         'QBadge',
         'QBtnToggle',
         'QTree',
+        'QRadio',
+        'QToggle'
       ],
 
       directives: [

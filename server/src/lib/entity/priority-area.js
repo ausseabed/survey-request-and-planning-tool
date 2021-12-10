@@ -153,6 +153,22 @@ export class PriorityArea {
   pressures = [];
 
   @Column({
+    type: "simple-array",
+    nullable: true,
+    name: "purposes",
+    default: ""
+  })
+  purposes = [];
+
+  @Column({
+    type: "simple-array",
+    nullable: true,
+    name: "purpose_flags",
+    default: ""
+  })
+  purposeFlags = [];
+
+  @Column({
     type: "varchar",
     nullable: true,
   })

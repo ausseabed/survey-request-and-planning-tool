@@ -34,13 +34,36 @@
           class="col rounded-borders"
           ref="expansionItemList"
         >
-          <q-expansion-item expand-separator label="Purpose">
+          <q-expansion-item expand-separator label="Purpose" icon="flag">
             <q-card>
-              <q-card-section>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Quidem, eius reprehenderit eos corrupti commodi magni quaerat ex
-                numquam, dolorum officiis modi facere maiores architecto
-                suscipit iste eveniet doloribus ullam aliquid.
+              <q-card-section class="column q-gutter-y-xs">
+                <div>
+                  Please select all that apply to your Area of Interest.
+                </div>
+                <q-tree
+                  :nodes="PURPOSE_DATA"
+                  node-key="key"
+                  tick-strategy="leaf"
+                  :ticked.sync="purposesTicked"
+                >
+                  <template v-slot:default-header="prop">
+                    <div class="row justify-between full-width">
+                      <div>{{ prop.node.label }}</div>
+                      <div class="q-gutter-sm" v-if="prop.node.flags">
+                        <q-radio
+                          v-for="flag in prop.node.flags"
+                          :value="getPurposeFlag(prop.node.key)"
+                          @input="setPurposeFlag(prop.node.key, $event)"
+                          :val="flag"
+                          :label="flag"
+                          :key="'flag-' + flag"
+                          dense
+                          size="sm"
+                        />
+                      </div>
+                    </div>
+                  </template>
+                </q-tree>
               </q-card-section>
             </q-card>
           </q-expansion-item>
@@ -394,6 +417,10 @@ export default Vue.extend({
     this.ACTIVITIES = constants.ACTIVITIES;
     this.addKeys(undefined, this.ACTIVITIES);
     this.setActivitiesDisabled(false, this.ACTIVITIES);
+
+    this.PURPOSE_DATA = constants.PURPOSE_DATA;
+    this.addKeys(undefined, this.PURPOSE_DATA);
+    this.setActivitiesDisabled(false, this.PURPOSE_DATA);
   },
 
   props: {
@@ -408,6 +435,37 @@ export default Vue.extend({
         propertyName: propertyName,
         value: value,
       });
+    },
+
+    getPurposeFlag(purposeFlagKey) {
+      let flagKey = purposeFlagKey + ":";
+      let flag = this.areaOfInterest.purposeFlags.find((f) =>
+        f.startsWith(flagKey)
+      );
+      if (flag) {
+        let f = flag.substring(flagKey.length, flag.length);
+        return f;
+      } else {
+        return undefined;
+      }
+    },
+
+    setPurposeFlag(purposeFlagKey, flag) {
+      let flagKey = purposeFlagKey + ":";
+      let updatedPurposeFlags = this.areaOfInterest.purposeFlags.filter((f) => {
+        return !f.startsWith(flagKey);
+      });
+      updatedPurposeFlags.push(flagKey + flag);
+      this.valueChanged("purposeFlags", updatedPurposeFlags);
+
+      // if the user selects a radio button option of a node that hasn't
+      // been ticked, then tick it automaticaly
+      if (!this.areaOfInterest.purposes.includes(purposeFlagKey)) {
+        this.valueChanged("purposes", [
+          ...this.areaOfInterest.purposes,
+          purposeFlagKey,
+        ]);
+      }
     },
 
     setDefaults() {
@@ -557,6 +615,29 @@ export default Vue.extend({
       },
       set: function (value) {
         this.valueChanged("pressures", value);
+      },
+    },
+    purposesTicked: {
+      get: function () {
+        return this.areaOfInterest.purposes;
+      },
+      set: function (value) {
+        this.valueChanged("purposes", value);
+
+        // if a purpose has been unticked, then automatically deselect any
+        // associate flag that has been selected.
+        let updatedPurposeFlags = this.areaOfInterest.purposeFlags.filter(
+          (f) => {
+            let found = false;
+            for (const aPurpose of value) {
+              if (f.startsWith(aPurpose)) {
+                found = true;
+              }
+            }
+            return found;
+          }
+        );
+        this.valueChanged("purposeFlags", updatedPurposeFlags);
       },
     },
   },

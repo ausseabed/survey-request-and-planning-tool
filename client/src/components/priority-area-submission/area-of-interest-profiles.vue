@@ -54,20 +54,18 @@ export default Vue.extend({
   mixins: [errorHandler, permission],
 
   components: {
-    "area-of-interest-profile": AreaOfInterestProfile
+    "area-of-interest-profile": AreaOfInterestProfile,
   },
 
   props: ["readonly"],
 
-  mounted() {
-    console.log("mounted");
-  },
+  mounted() {},
 
   methods: {
     ...mapMutations("priorityAreaSubmission", {
       updatePriorityAreaSubmissionValue:
         pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
-      setDirty: pasMutTypes.SET_DIRTY
+      setDirty: pasMutTypes.SET_DIRTY,
     }),
 
     aoiValueChanged({ aoi, propertyName, value }) {
@@ -92,26 +90,32 @@ export default Vue.extend({
         return true;
       }
       let allValid = this.$refs.aoiProfile
-        .map(comp => comp.isValid())
+        .map((comp) => comp.isValid())
         .reduce((sum, next) => sum && next, true);
 
       return allValid;
-    }
+    },
   },
 
   watch: {},
 
+  validations() {
+    return {
+      priorityAreaSubmission: {},
+    };
+  },
+
   computed: {
     ...mapGetters("priorityAreaSubmission", {
-      priorityAreaSubmission: "activePriorityAreaSubmission"
-    })
+      priorityAreaSubmission: "activePriorityAreaSubmission",
+    }),
   },
 
   data() {
     return {
-      expanded: false
+      expanded: false,
     };
-  }
+  },
 });
 </script>
 

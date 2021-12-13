@@ -105,6 +105,36 @@
 
           <q-expansion-item
             expand-separator
+            label="Ecosystem description"
+            icon="grass"
+          >
+            <q-card>
+              <q-card-section class="column q-gutter-y-xs">
+                <div>
+                  Which part(s) of the ecosystem should be targeted for mapping
+                  in the submitted AOI?
+                </div>
+                <q-tree
+                  :nodes="ECOSYSTEM_DATA"
+                  node-key="key"
+                  tick-strategy="leaf"
+                  :ticked.sync="ecosystemsTicked"
+                >
+                  <template v-slot:default-body="prop">
+                    <div
+                      v-if="prop.node.description"
+                      class="text-weight-light text-black"
+                    >
+                      {{ prop.node.description }}
+                    </div>
+                  </template>
+                </q-tree>
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+
+          <q-expansion-item
+            expand-separator
             label="Data and Methods"
             icon="scatter_plot"
           >
@@ -456,6 +486,10 @@ export default Vue.extend({
     this.PURPOSE_DATA = constants.PURPOSE_DATA;
     this.addKeys(undefined, this.PURPOSE_DATA);
     this.setActivitiesDisabled(false, this.PURPOSE_DATA);
+
+    this.ECOSYSTEM_DATA = constants.ECOSYSTEM_DATA;
+    this.addKeys(undefined, this.ECOSYSTEM_DATA);
+    this.setActivitiesDisabled(false, this.ECOSYSTEM_DATA);
   },
 
   props: {
@@ -659,6 +693,14 @@ export default Vue.extend({
       },
       set: function (value) {
         this.valueChanged("pressures", value);
+      },
+    },
+    ecosystemsTicked: {
+      get: function () {
+        return this.areaOfInterest.ecosystems;
+      },
+      set: function (value) {
+        this.valueChanged("ecosystems", value);
       },
     },
     purposesTicked: {

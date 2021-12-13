@@ -1511,3 +1511,193 @@ export const PURPOSE_DATA = [
         values: []
     }
 ];
+
+
+export const ECOSYSTEM_DATA = [
+    {
+        label: "Lower slope and abyssal reef and sediments ",
+        children: [
+            {
+                label: "Abyssal reef and sediments (>4000m)",
+                description: "Reef and sediment habitats in the abyssal zone, between 4000m and 6000m."
+            },
+            {
+                label: "Lower slope reef and sediments (2000-4000m)",
+                description: "Rocky reef and sediment habitats on the lower continental slope and continental rise (i.e. between 2000m and nominally 4000m)."
+            }
+        ]
+    },
+    {
+        label: "Upper and mid-slope reefs (including canyons)",
+        children: [
+            {
+                label: "Mid-slope reefs (700-2000m)",
+                description: "Reef habitats on the mid-continental slope between 700m and 2000m."
+            },
+            {
+                label: "Upper slope reefs (200-700m)",
+                description: "Reef habitats on the upper section of the continental slope between shelf break (nominally 200m) and 700m."
+            },
+            {
+                label: "Shelf-incising canyons (head <200m)",
+                description: "Steep sided valleys in the seabed that extend onto the continental shelf at least 500m shoreward of the shelf break."
+            }
+        ]
+    },
+    {
+        label: "Seamounts (including guyots)",
+        children: [
+            {
+                label: "Seamount sediments",
+                description: "Sediment habitats occurring on seamounts."
+            },
+            {
+                label: "Seamount reefs",
+                description: "Rocky and deep-sea cold-water coral formations occurring on seamounts."
+            }
+        ]
+    },
+    {
+        label: "Shelf upper and mid slope unvegetated sediments",
+        children: [
+            {
+                label: "Mid-slope sediments (700-2000m)",
+                description: "Sediment habitats on the mid continental slope (700-2000m)."
+            },
+            {
+                label: "Upper slope sediments (200-700m)",
+                description: "Sediment habitats on the upper continental slope (200m-700m)."
+            },
+            {
+                label: "Shelf unvegetated sediments (0-200m)",
+                description: "Sediment habitats on the continental shelf (0-200 metres) that lack marine macroalgae or seagrass"
+            }
+        ]
+    },
+    {
+        label: "Deep shelf reefs",
+        children: [
+            {
+                label: "Rariphotic shelf reefs (70-200m)",
+                description: "Rocky reef formations found on the continental shelf below the mesophotic zone where light is so scarce it is not enough to support photosynthesis. Nominally rariphotic shelf reefs occur between 70m and 200m (the nominal depth of the shelf break)."
+            },
+            {
+                label: "Mesophytic coral reefs (30-150m)",
+                description: "Coral reef formations on tropical continental shelf areas in the mesophotic zone: a reduced light zone between 30m and the maximum depth at which there is sufficient penetration of sunlight to support photosynthesis. The maximum depth is variable dependent upon water clarity and may extend to 150m in the clearest of waters however, as a national average it is nominally defined as 70m."
+            },
+            {
+                label: "Mesophytic rocky reefs (30-70m)",
+                description: "Rocky reef formations on temperate continental shelf areas in the mesophotic zone: a reduced light zone between 30m and the maximum depth at which there is sufficient penetration of sunlight to support photosynthesis. The maximum depth is variable dependent upon water clarity and may extend to 150m in the clearest of waters however, as a national average it is nominally defined as 70m."
+            }
+        ]
+    },
+    {
+        label: "Shelf vegetated sediments",
+        children: [
+            {
+                label: "Shelf vegetated sediments",
+                description: "Sediment habitats on the continental shelf that support marine macroalgae or seagrass. Typically, these occur in depths of less than 30m but can extend beyond this in areas with very clear waters."
+            }
+        ]
+    },
+    {
+        label: "Oceanic coral reefs",
+        children: [
+            {
+                label: "Oceanic mesophytic coral reefs (30-150m)",
+                description: "Coral reefs occurring seaward of the continental shelf break in in the mesophotic zone: a reduced light zone between 30m and the maximum depth at which there is sufficient penetration of sunlight to support photosynthesis. The maximum depth is variable dependent upon water clarity and may extend to 150m in the clearest of waters however, as a national average it is nominally defined as 70m."
+            },
+            {
+                label: "Oceanic shallow coral reefs (<30m)",
+                description: "Coral reefs occurring seaward of the continental shelf break in depths shallower than 30m."
+            }
+        ]
+    },
+    {
+        label: "Shallow reefs",
+        children: [
+            {
+                label: "Shallow coral reefs (<30m)",
+                description: "Coral reefs occurring in continental shelf areas shallower than 30m"
+            },
+            {
+                label: "Shallow rocky reefs (<30m)",
+                description: "Rocky reefs occurring in continental shelf areas shallower than 30m"
+            }
+        ]
+    },
+    {
+        label: "Intertidal areas",
+        children: [
+            {
+                label: "Intertidal coral reefs",
+                description: "Coral reefs found in the intertidal zone (i.e. between the highest and lowest tides)"
+            },
+            {
+                label: "Rocky shores",
+                description: "An intertidal area composed of rock platforms, boulders or cobbles"
+            },
+            {
+                label: "Beaches",
+                description: "Gently sloping zone of sand and/or gravel sized rock and/or biological fragments along the shore, extending from the highest high-tide point to the lowest low-tide point."
+            }
+        ]
+    },
+    {
+        label: "Islands (including cays and islets)",
+        children: [
+            {
+                label: "Islands (including cays and islets)",
+                description: "Island - Relatively small body of land surrounded by water; Cay – a low bank or reef of coral or sand; Islet – a little island."
+            }
+        ]
+    },
+    {
+        label: "IUCN - MFT1 Brackish tidal biome",
+        children: [
+            {
+                label: "MFT1.1 Coastal river deltas",
+                description: "River inflows structure the dynamic mosaics of coastal river deltas. Inflows depend on catchment geomorphology and climate and influence water levels, nutrient input, turbidity (hence light penetration), tidal amplitude, salinity gradients, temperature, dissolved oxygen and organic carbon."
+            },
+            {
+                label: "MFT1.2 Intertidal forests and shrublands",
+                description: "Mangrove forests"
+            },
+            {
+                label: "MFT1.3 Coastal saltmarshes and reedbeds",
+                description: "Coastal saltmarshes are vegetated by salt-tolerant forbs, grasses and shrubs, with fine-scale mosaics related to strong local hydrological and salinity gradients, as well as competition and facilitation."
+            }
+        ]
+    },
+    {
+        label: "IUCN - MT2 Supralittoral coastal biome",
+        children: [
+            {
+                label: "MT2.1 Coastal shrublands and grasslands",
+                description: "Desiccating winds promote an overall water deficit and appreciable exposure to salinity due to aerosol influx and salt spray. Warm to mild temperatures across the tropics to temperate zones and cold temperatures in the cool temperate to boreal zones are moderated by direct maritime influence. Above the regular intertidal zone, these systems are exposed to periodic disturbance from exceptional tides, coastal storm events, wind shear, bioturbation and aeolian substrate mobility."
+            }
+        ]
+    },
+    {
+        label: "IUCN - MT3 Anthropogenic shorelines biome",
+        children: [
+            {
+                label: "MT3.1 Artificial shorelines",
+                description: "Constructed sea walls, breakwaters, piers, docks, tidal canals, islands and other coastal infrastructure create substrates inhabited by intertidal and subtidal, benthic and demersal marine biota around ports, harbours, and other intensively settled coastal areas."
+            }
+        ]
+    },
+    {
+        label: "IUCN - FM1 - Semiconfined transitional waters biome",
+        children: [
+            {
+                label: "FM 1.2 Permanently open riverine estuaries and bays",
+                description: "Governed by the relative dominance of saline marine waters versus freshwater inflows (groundwater and riverine), the latter depending on the seasonality of precipitation and evaporative stress. Geomorphology ranges from wavedominated estuaries to drowned river valleys, tiny inlets and enormous bays."
+            },
+            {
+                label: "FM 1.3 Intermittently Open and Closed Lakes or Lagoons (COLLS)",
+                description: "Shallow coastal water bodies that are intermittently connected with the ocean. Some lagoons are mostly open, closing only once every few decades. Some open and close frequently, and some are closed most of the time. The timing and frequency of entrance opening depend on the balance between onshore and offshore sedimentation processes (which close the entrance) and flushes of catchment inflow or erosive wave action (which open the entrance)."
+            }
+        ]
+    }
+];

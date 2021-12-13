@@ -64,6 +64,41 @@
                     </div>
                   </template>
                 </q-tree>
+
+                <div class="col">
+                  <div>Values</div>
+                  <q-list dense>
+                    <template v-for="purposeGroup of purposeValues">
+                      <q-item-label
+                        v-if="purposeGroup.values.length != 0"
+                        header
+                        :key="purposeGroup.label + '-header'"
+                        style="padding-bottom: 0px"
+                      >
+                        {{ purposeGroup.label }}
+                      </q-item-label>
+                      <q-item
+                        v-for="value in purposeGroup.values"
+                        :key="purposeGroup.label + '-' + value"
+                        tag="label"
+                        v-ripple
+                      >
+                        <q-item-section avatar>
+                          <q-checkbox
+                            size="sm"
+                            :value="areaOfInterest.purposeValues"
+                            :val="value"
+                            @input="valueChanged('purposeValues', $event)"
+                            :disable="readonly"
+                          />
+                        </q-item-section>
+                        <q-item-section>
+                          <q-item-label>{{ value }} </q-item-label>
+                        </q-item-section>
+                      </q-item>
+                    </template>
+                  </q-list>
+                </div>
               </q-card-section>
             </q-card>
           </q-expansion-item>
@@ -522,6 +557,15 @@ export default Vue.extend({
       }
     },
 
+    purposeGroupSelected(purposeGroup) {
+      for (const tickedPurpose of this.purposesTicked) {
+        if (tickedPurpose.startsWith(purposeGroup)) {
+          return true;
+        }
+      }
+      return false;
+    },
+
     setActivitiesDisabled(disabled, items) {
       for (const item of items) {
         item.tickable = !disabled;
@@ -638,6 +682,23 @@ export default Vue.extend({
           }
         );
         this.valueChanged("purposeFlags", updatedPurposeFlags);
+
+        let updatedPurposeValues = this.areaOfInterest.purposeValues.filter(
+          (pv) => {
+            let pvGroup = this.PURPOSE_DATA.find((p) => {
+              p.values.includes(pv);
+            });
+            return this.purposeGroupSelected(pvGroup);
+          }
+        );
+        this.valueChanged("purposeValues", updatedPurposeValues);
+      },
+    },
+    purposeValues: {
+      get: function () {
+        return this.PURPOSE_DATA.filter((p) =>
+          this.purposeGroupSelected(p.label)
+        );
       },
     },
   },

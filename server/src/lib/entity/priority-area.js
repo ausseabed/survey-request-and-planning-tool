@@ -169,6 +169,14 @@ export class PriorityArea {
   purposeFlags = [];
 
   @Column({
+    type: "simple-array",
+    nullable: true,
+    name: "purpose_values",
+    default: ""
+  })
+  purposeValues = [];
+
+  @Column({
     type: "varchar",
     nullable: true,
   })

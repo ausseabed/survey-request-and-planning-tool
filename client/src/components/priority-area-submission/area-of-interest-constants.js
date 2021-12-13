@@ -1309,6 +1309,18 @@ export const PURPOSE_DATA = [
                     }
                 ]
             }
+        ],
+        values: [
+            "Access to Traditional resource areas (fishing, medicinal, ceremonial, spiritual)",
+            "Maintaining and protecting culture",
+            "Cultural Wellbeing",
+            "Connecting to culture/country",
+            "Cultural Awareness",
+            "Intergenerational transfer of knowledge",
+            "Responsibility to Country/cultural obligation",
+            "Practice and continuation of Language",
+            "Education",
+            "Outstanding universal value",
         ]
     },
     {
@@ -1336,6 +1348,13 @@ export const PURPOSE_DATA = [
                     }
                 ]
             }
+        ],
+        values: [
+            "Effective management of heritage sites",
+            "Memorial value",
+            "Increase awareness and understanding of heritage",
+            "Identify new recreational assets",
+            "Increase personal satisfaction",
         ]
     },
     {

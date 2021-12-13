@@ -96,10 +96,10 @@ export default Vue.extend({
     ...mapMutations("priorityAreaSubmission", {
       updatePriorityAreaSubmissionValue:
         pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
-      setDirty: pasMutTypes.SET_DIRTY
+      setDirty: pasMutTypes.SET_DIRTY,
     }),
     ...mapMutations("organisation", {
-      setOrganisationFilter: organisationMutTypes.SET_FILTER
+      setOrganisationFilter: organisationMutTypes.SET_FILTER,
     }),
 
     fetchData() {
@@ -108,7 +108,7 @@ export default Vue.extend({
 
     filterOrganisationFunction(val, update, abort) {
       this.setOrganisationFilter(val);
-      this.getOrganisations().then(orgs => {
+      this.getOrganisations().then((orgs) => {
         update();
       });
     },
@@ -117,7 +117,7 @@ export default Vue.extend({
       if (_.isNil(current) || current.length == 0) {
         return allOpts;
       }
-      let opts = allOpts.filter(areaNameOpt => {
+      let opts = allOpts.filter((areaNameOpt) => {
         return areaNameOpt.toLowerCase().includes(current.toLowerCase());
       });
       return opts;
@@ -126,27 +126,27 @@ export default Vue.extend({
     prefill() {
       this.updatePriorityAreaSubmissionValue({
         path: "contactEmail",
-        value: this.currentUser.email
+        value: this.currentUser.email,
       });
       this.updatePriorityAreaSubmissionValue({
         path: "contactPerson",
-        value: this.currentUser.name
+        value: this.currentUser.name,
       });
 
       if (!_.isNil(this.currentUser.custodian)) {
         let cust = this.currentUser.custodian;
-        let orgs = this.organisationsList.filter(org => {
+        let orgs = this.organisationsList.filter((org) => {
           return org.name.toLowerCase() == cust.name.toLowerCase();
         });
         if (orgs.length > 0) {
           this.updatePriorityAreaSubmissionValue({
             path: "submittingOrganisation",
-            value: orgs[0]
+            value: orgs[0],
           });
         } else {
           this.updatePriorityAreaSubmissionValue({
             path: "submittingOrganisation",
-            value: undefined
+            value: undefined,
           });
           this.notifyInfo(
             "Could not match current users custodian to organisation"
@@ -158,7 +158,7 @@ export default Vue.extend({
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
-    }
+    },
   },
 
   watch: {},
@@ -168,26 +168,26 @@ export default Vue.extend({
       priorityAreaSubmission: {
         submittingOrganisation: { required },
         contactPerson: { required },
-        contactEmail: { required, email }
-      }
+        contactEmail: { required, email },
+      },
     };
   },
 
   computed: {
     ...mapGetters("priorityAreaSubmission", {
-      priorityAreaSubmission: "activePriorityAreaSubmission"
+      priorityAreaSubmission: "activePriorityAreaSubmission",
     }),
     ...mapGetters("organisation", {
-      organisationsList: "organisations"
+      organisationsList: "organisations",
     }),
     ...mapGetters("user", {
-      currentUser: "currentUser"
-    })
+      currentUser: "currentUser",
+    }),
   },
 
   data() {
     return {};
-  }
+  },
 });
 </script>
 

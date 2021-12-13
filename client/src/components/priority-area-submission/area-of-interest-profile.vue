@@ -67,7 +67,15 @@
 
                 <div class="col">
                   <div>Values</div>
-                  <q-list dense>
+                  <div
+                    v-if="purposesTicked.length == 0"
+                    class="row justify-center"
+                  >
+                    <div class="text-light">
+                      Select one or more purposes to view associated values.
+                    </div>
+                  </div>
+                  <q-list v-else dense>
                     <template v-for="purposeGroup of purposeValues">
                       <q-item-label
                         v-if="purposeGroup.values.length != 0"

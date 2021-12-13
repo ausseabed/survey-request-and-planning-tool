@@ -541,11 +541,11 @@ export default Vue.extend({
       if (this.areaOfInterest.organisationalPriority == undefined) {
         this.valueChanged(
           "organisationalPriority",
-          ORGANISATIONAL_PRIORITY_OPTIONS[0]
+          this.ORGANISATIONAL_PRIORITY_OPTIONS[0]
         );
       }
       if (this.areaOfInterest.perceivedImpact == undefined) {
-        this.valueChanged("perceivedImpact", PERCEIVED_IMPACT_OPTIONS[0]);
+        this.valueChanged("perceivedImpact", this.PERCEIVED_IMPACT_OPTIONS[0]);
       }
     },
 

@@ -122,7 +122,7 @@ const NEXT_ROUTES = {
   "priority-area-submission-areas": "area-of-interest-profiles",
   "area-of-interest-profiles": "priority-area-submission-confirmation",
   "priority-area-submission-confirmation":
-    "priority-area-submission-confirmation"
+    "priority-area-submission-confirmation",
 };
 
 export default Vue.extend({
@@ -144,13 +144,13 @@ export default Vue.extend({
     ...mapActions("priorityAreaSubmission", [
       "getPriorityAreaSubmissions",
       "getActivePriorityAreaSubmission",
-      "savePriorityAreaSubmission"
+      "savePriorityAreaSubmission",
     ]),
     ...mapMutations("priorityAreaSubmission", {
       setActivePriorityAreaSubmission:
         pasMutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION,
       setDirty: pasMutTypes.SET_DIRTY,
-      restoreState: pasMutTypes.RESTORE
+      restoreState: pasMutTypes.RESTORE,
     }),
 
     restore() {
@@ -160,7 +160,7 @@ export default Vue.extend({
       // fetch the list of priority areas linked to the task, only those with
       // a direct link to the submission.
       this.savePriorityAreaSubmission({
-        id: this.activePriorityAreaSubmission.id
+        id: this.activePriorityAreaSubmission.id,
       });
       this.restoreState();
     },
@@ -174,10 +174,10 @@ export default Vue.extend({
 
       this.$refs.recordState
         .transitionRecordState("PUBLISH")
-        .then(pas => {
+        .then((pas) => {
           this.notifySuccess("Area of Interest Submission published");
         })
-        .catch(err => {
+        .catch((err) => {
           this.notifyError(
             `Failed to publish Area of Interest Submission`,
             err
@@ -198,7 +198,7 @@ export default Vue.extend({
 
       const isNew = _.isNil(this.activePriorityAreaSubmission.id);
       this.savePriorityAreaSubmission(this.activePriorityAreaSubmission)
-        .then(pas => {
+        .then((pas) => {
           const successMsg = isNew
             ? "Area of Interest Submission created"
             : "Area of Interest Submission updated";
@@ -224,7 +224,7 @@ export default Vue.extend({
             this.$router.push({ name: routeName, params: { id: pas.id } });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.notifyError(`Failed to save Area of Interest Submission`, err);
         });
     },
@@ -251,7 +251,7 @@ export default Vue.extend({
           submittingOrganisation: undefined,
           citedOrganisation: undefined,
           citedContactName: undefined,
-          citedContactEmail: undefined
+          citedContactEmail: undefined,
         };
         this.setActivePriorityAreaSubmission(pas);
         this.setDirty(false);
@@ -276,7 +276,7 @@ export default Vue.extend({
     heightTweak(offset) {
       return {
         minHeight: offset ? `calc(100vh - ${offset}px)` : "100vh",
-        height: offset ? `calc(100vh - ${offset}px)` : "100vh"
+        height: offset ? `calc(100vh - ${offset}px)` : "100vh",
       };
     },
 
@@ -293,25 +293,25 @@ export default Vue.extend({
         return false;
       }
       return true;
-    }
+    },
   },
 
   watch: {
     // call again the method if the route changes
-    $route: function(newRoute, oldRoute) {
+    $route: function (newRoute, oldRoute) {
       const id = newRoute.params.id;
       this.id = id;
     },
-    id: function(newId, oldId) {
+    id: function (newId, oldId) {
       this.updateActivePriorityAreaSubmission();
-    }
+    },
   },
 
   computed: {
     ...mapGetters("priorityAreaSubmission", [
       "priorityAreaSubmissions",
       "activePriorityAreaSubmission",
-      "dirty"
+      "dirty",
     ]),
     $v() {
       // the dirty route guard wants to call the validation method (touch) to
@@ -320,7 +320,7 @@ export default Vue.extend({
       // DRG to hook onto.
       let pasComp = this.$refs.pasComp;
       return pasComp.$v;
-    }
+    },
   },
 
   data() {
@@ -328,9 +328,9 @@ export default Vue.extend({
       tab: undefined,
       id: undefined,
       stateReadonly: true,
-      published: true
+      published: true,
     };
-  }
+  },
 });
 </script>
 

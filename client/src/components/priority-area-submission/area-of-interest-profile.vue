@@ -137,6 +137,29 @@
                     </div>
                   </template>
                 </q-tree>
+
+                <div class="q-pt-md">Ecosystem components</div>
+                <q-list dense>
+                  <q-item
+                    v-for="ecosystemComp of ECOSYSTEM_COMPONENT_DATA"
+                    :key="'key-' + ecosystemComp"
+                    tag="label"
+                    v-ripple
+                  >
+                    <q-item-section avatar>
+                      <q-checkbox
+                        size="sm"
+                        :value="areaOfInterest.ecosystemComponents"
+                        :val="ecosystemComp"
+                        @input="valueChanged('ecosystemComponents', $event)"
+                        :disable="readonly"
+                      />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>{{ ecosystemComp }} </q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
               </q-card-section>
             </q-card>
           </q-expansion-item>
@@ -498,6 +521,8 @@ export default Vue.extend({
     this.ECOSYSTEM_DATA = constants.ECOSYSTEM_DATA;
     this.addKeys(undefined, this.ECOSYSTEM_DATA);
     this.setActivitiesDisabled(false, this.ECOSYSTEM_DATA);
+
+    this.ECOSYSTEM_COMPONENT_DATA = constants.ECOSYSTEM_COMPONENT_DATA;
   },
 
   props: {

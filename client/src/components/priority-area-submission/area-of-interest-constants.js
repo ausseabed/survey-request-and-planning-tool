@@ -1701,3 +1701,21 @@ export const ECOSYSTEM_DATA = [
         ]
     }
 ];
+
+export const ECOSYSTEM_COMPONENT_DATA = [
+    "Benthic and cryptic fish",
+    "Demersal fish",
+    "Forest",
+    "Grassland",
+    "Herb field",
+    "Infauna",
+    "Macroalgae",
+    "Marine reptiles",
+    "Microbes",
+    "Mobile macroinvertebrates",
+    "Seabirds",
+    "Seagrass",
+    "Sessile invertebrates",
+    "Shorebirds and waterbirds",
+    "Shrubland",
+];

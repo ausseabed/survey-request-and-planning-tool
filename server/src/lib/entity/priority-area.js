@@ -185,6 +185,14 @@ export class PriorityArea {
   ecosystems = [];
 
   @Column({
+    type: "simple-array",
+    nullable: true,
+    name: "ecosystem_components",
+    default: ""
+  })
+  ecosystemComponents = [];
+
+  @Column({
     type: "varchar",
     nullable: true,
   })

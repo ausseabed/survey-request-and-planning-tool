@@ -403,7 +403,7 @@
 
           <q-expansion-item
             expand-separator
-            label="Organisational Priority and Perceived Impact"
+            label="Perceived Impact and Organisational Priority"
             icon="hardware"
           >
             <q-card>

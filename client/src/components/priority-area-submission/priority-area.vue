@@ -115,7 +115,7 @@
           </div>
 
           <div class="bg-grey-2 q-pa-sm rounded-borders">
-            <div class="field-label">Intersecting Management Boundaries</div>
+            <div class="field-label">Intersecting Marine Park boundaries</div>
             <div
               v-if="intersections.length == 0"
               class="column justify-center bg-white"
@@ -163,7 +163,7 @@ export default Vue.extend({
 
   props: {
     priorityArea: {},
-    readonly: true
+    readonly: true,
   },
 
   methods: {
@@ -171,23 +171,23 @@ export default Vue.extend({
       this.$emit("priority-area-value-changed", {
         priorityArea: this.priorityArea,
         propertyName: propertyName,
-        value: value
+        value: value,
       });
     },
     deleteClicked() {
       this.$emit("priority-area-deleted", {
-        priorityArea: this.priorityArea
+        priorityArea: this.priorityArea,
       });
     },
 
     applyToAllClicked() {
       this.$emit("priority-area-apply-to-all", {
         propertyName: "seacountryName",
-        value: this.priorityArea.seacountryName
+        value: this.priorityArea.seacountryName,
       });
       this.$emit("priority-area-apply-to-all", {
         propertyName: "ecologicalAreaName",
-        value: this.priorityArea.ecologicalAreaName
+        value: this.priorityArea.ecologicalAreaName,
       });
     },
 
@@ -196,13 +196,13 @@ export default Vue.extend({
         propertyName: "seacountryName",
         value: this.priorityArea.seacountryName,
         id: this.priorityArea.id,
-        limit: 1
+        limit: 1,
       });
       this.$emit("priority-area-apply-to-all", {
         propertyName: "ecologicalAreaName",
         value: this.priorityArea.ecologicalAreaName,
         id: this.priorityArea.id,
-        limit: 1
+        limit: 1,
       });
     },
 
@@ -238,7 +238,8 @@ export default Vue.extend({
           this.priorityArea.ecologicalAreaName
         )
       ) {
-        this.selectedEcologicalAreaOption = this.priorityArea.ecologicalAreaName;
+        this.selectedEcologicalAreaOption =
+          this.priorityArea.ecologicalAreaName;
       } else {
         this.selectedEcologicalAreaOption = "Other";
       }
@@ -261,30 +262,30 @@ export default Vue.extend({
     getIntersections() {
       Vue.axios
         .get(`api/priority-area/${this.priorityArea.id}/intersections`)
-        .then(res => {
+        .then((res) => {
           this.intersections = res.data;
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response.status == 404) {
             // then no task has been provided, this is ok.
           } else {
             console.error(err);
           }
         });
-    }
+    },
   },
 
   watch: {
     "priorityArea.seacountryName": {
       handler(newVal, oldVal) {
         this.updateSeacountrySelection();
-      }
+      },
     },
     "priorityArea.ecologicalAreaName": {
       handler(newVal, oldVal) {
         this.updateEcologicalAreaSelection();
-      }
-    }
+      },
+    },
   },
 
   validations() {
@@ -292,8 +293,8 @@ export default Vue.extend({
       priorityArea: {
         name: { required },
         ecologicalAreaName: { required },
-        seacountryName: { required }
-      }
+        seacountryName: { required },
+      },
     };
   },
 
@@ -301,17 +302,17 @@ export default Vue.extend({
     // these are all loaded by the parent component
     ...mapState("priorityAreaSubmission", [
       "seacountryNameOptions",
-      "ecologicalAreaNameOptions"
-    ])
+      "ecologicalAreaNameOptions",
+    ]),
   },
 
   data() {
     return {
       intersections: [],
       selectedSeacountryOption: undefined,
-      selectedEcologicalAreaOption: undefined
+      selectedEcologicalAreaOption: undefined,
     };
-  }
+  },
 });
 </script>
 

@@ -133,18 +133,19 @@ const requestStates = {
 }
 
 
-// state machine definition for the HIPP Request
+// state machine definition for the Priority Area / Area of
+// Interest Request
 const pasStates = {
   drafted: {
     on: {
       SAVE: { target: 'drafted' },
-      SUBMIT: {
-        target: 'submitted',
+      PUBLISH: {
+        target: 'published',
         actions: ['incrementVersion'],
         cond: {
           type: 'userPermissionGuard',
-          allPermission: 'canSubmitAllPriorityAreaSubmission',
-          custodianPermission: 'canSubmitCustodianPriorityAreaSubmission',
+          allPermission: 'canPublishAllPriorityAreaSubmission',
+          custodianPermission: 'canPublishCustodianPriorityAreaSubmission',
         },
       },
       ARCHIVE: {
@@ -159,28 +160,6 @@ const pasStates = {
     entry: ['makeWriteable'],
     exit: ['logAction'],
   },
-  submitted: {
-    on: {
-      REVISE: {
-        target: 'drafted',
-        cond: {
-          type: 'userPermissionGuard',
-          allPermission: 'canSubmitAllPriorityAreaSubmission',
-          custodianPermission: 'canSubmitCustodianPriorityAreaSubmission',
-        },
-      },
-      PUBLISH: {
-        target: 'published',
-        cond: {
-          type: 'userPermissionGuard',
-          allPermission: 'canPublishAllPriorityAreaSubmission',
-          custodianPermission: 'canPublishCustodianPriorityAreaSubmission',
-        },
-      }
-    },
-    entry: ['makeReadonly'],
-    exit: ['logAction'],
-  },
   published: {
     on: {
       ARCHIVE: {
@@ -192,7 +171,7 @@ const pasStates = {
         },
       },
       REVISE: {
-        target: 'submitted',
+        target: 'drafted',
         cond: {
           type: 'userPermissionGuard',
           allPermission: 'canPublishAllPriorityAreaSubmission',

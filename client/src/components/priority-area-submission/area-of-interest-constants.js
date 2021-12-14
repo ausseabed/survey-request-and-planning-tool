@@ -1508,7 +1508,13 @@ export const PURPOSE_DATA = [
                 flags: ["Sci.knowledge", "Intervention"]
             },
         ],
-        values: []
+        values: [
+            "Knowledge gap / discovery",
+            "Foraging / Nesting grounds for TEPS",
+            "Status / trends of TEPS / ecosystems",
+            "Ecosystem function",
+            "New management areas (e.g. 30x30 initiative)",
+        ]
     }
 ];
 

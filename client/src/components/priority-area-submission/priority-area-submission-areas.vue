@@ -181,13 +181,13 @@
                     dark
                   >
                   </q-checkbox>
-                  <q-checkbox
+                  <!-- <q-checkbox
                     v-model="showOrganisationSubmissionsLayer"
                     label="Show my organisations submissions"
                     size="xs"
                     dark
                   >
-                  </q-checkbox>
+                  </q-checkbox> -->
                 </div>
               </l-control>
             </l-map>
@@ -207,9 +207,9 @@
                   information.
                 </div>
               </q-card>
-              <q-card flat bordered style="max-width: 300px">
+              <!-- <q-card flat bordered style="max-width: 300px">
                 <div class="q-pa-sm">User added WMS stuff goes here</div>
-              </q-card>
+              </q-card> -->
             </div>
           </div>
         </div>
@@ -306,7 +306,7 @@ export default Vue.extend({
     LControlLayers,
     LLayerGroup,
     "l-wms-tile-layer": LWMSTileLayer,
-    "l-freedraw": LFreeDraw
+    "l-freedraw": LFreeDraw,
   },
 
   mounted() {
@@ -320,7 +320,7 @@ export default Vue.extend({
       "getRequiredDataQualityOptions",
       "getRiskRatingOptions",
       "getEcologicalAreaNameOptions",
-      "getSeacountryNameOptions"
+      "getSeacountryNameOptions",
     ]),
 
     ...mapMutations("priorityAreaSubmission", {
@@ -328,7 +328,7 @@ export default Vue.extend({
       removePriorityArea: pasMutTypes.REMOVE_PRIORITY_AREA,
       updatePriorityAreaSubmissionValue:
         pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
-      setDirty: pasMutTypes.SET_DIRTY
+      setDirty: pasMutTypes.SET_DIRTY,
     }),
 
     fetchData() {
@@ -354,16 +354,15 @@ export default Vue.extend({
         return true;
       }
       let allValid = this.$refs.priorityAreaComponents
-        .map(comp => comp.isValid())
+        .map((comp) => comp.isValid())
         .reduce((sum, next) => sum && next, true);
 
       return allValid;
     },
 
     priorityAreaValueChanged({ priorityArea, propertyName, value }) {
-      const paIndex = this.priorityAreaSubmission.priorityAreas.indexOf(
-        priorityArea
-      );
+      const paIndex =
+        this.priorityAreaSubmission.priorityAreas.indexOf(priorityArea);
       const path = `priorityAreas[${paIndex}].${propertyName}`;
       this.updatePriorityAreaSubmissionValue({ path: path, value: value });
     },
@@ -382,7 +381,7 @@ export default Vue.extend({
       const finishedStates = ["COMPLETED", "FAILED"];
       Vue.axios
         .get(`api/task/${taskId}`)
-        .then(res => {
+        .then((res) => {
           this.task = res.data;
           this.taskTickCount += 1;
 
@@ -400,7 +399,7 @@ export default Vue.extend({
             );
           }
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response.status == 404) {
             // then no task has been provided, this is ok.
           } else {
@@ -432,7 +431,7 @@ export default Vue.extend({
 
       for (const [
         paIndex,
-        pa
+        pa,
       ] of this.priorityAreaSubmission.priorityAreas.entries()) {
         if (id == undefined || limit == undefined) {
           // no id, and no limit provided so update all the entries
@@ -446,7 +445,7 @@ export default Vue.extend({
             const path = `priorityAreas[${paIndex}].${propertyName}`;
             this.updatePriorityAreaSubmissionValue({
               path: path,
-              value: value
+              value: value,
             });
             limitCount++;
           }
@@ -467,8 +466,8 @@ export default Vue.extend({
       // such as [104, -33]. geojson assumes more complex polygons (ones with
       // holes) that freedraw doesn't do, so we need to add in an extra level
       // on the arrays (the `return [polyCoords];` bit)
-      let polygonsCoords = this.polygons.map(poly => {
-        let polyCoords = poly.map(coord => {
+      let polygonsCoords = this.polygons.map((poly) => {
+        let polyCoords = poly.map((coord) => {
           return [coord.lng, coord.lat];
         });
         return [polyCoords];
@@ -480,11 +479,11 @@ export default Vue.extend({
           `api/priority-area/new-from-geometry/?aoiSubmissionId=${this.priorityAreaSubmission.id}`,
           mp
         )
-        .then(res => {
+        .then((res) => {
           let tid = res.data.taskId;
           this.updateTaskStatus(tid);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response.status == 404) {
             // then no task has been provided, this is ok.
           } else {
@@ -493,29 +492,29 @@ export default Vue.extend({
         });
 
       this.polygons = [];
-    }
+    },
   },
 
   watch: {
-    "priorityAreaSubmission.uploadTaskId": function(newId, oldId) {
+    "priorityAreaSubmission.uploadTaskId": function (newId, oldId) {
       this.fetchData();
     },
-    "task.state": function(newState, oldState) {
+    "task.state": function (newState, oldState) {
       if (newState == "COMPLETED") {
         this.addTaskPriorityAreasToSubmission();
       }
-    }
+    },
   },
 
   validations() {
     return {
-      priorityAreaSubmission: {}
+      priorityAreaSubmission: {},
     };
   },
 
   computed: {
     ...mapGetters("priorityAreaSubmission", {
-      priorityAreaSubmission: "activePriorityAreaSubmission"
+      priorityAreaSubmission: "activePriorityAreaSubmission",
     }),
 
     isProcessing() {
@@ -552,7 +551,7 @@ export default Vue.extend({
 
     mode() {
       return this.isActive ? ALL : NONE;
-    }
+    },
   },
 
   data() {
@@ -567,7 +566,7 @@ export default Vue.extend({
       showSurveyLayer: true,
       showOrganisationSubmissionsLayer: false,
       polygons: [],
-      isActive: false
+      isActive: false,
     };
   },
 
@@ -576,7 +575,7 @@ export default Vue.extend({
       clearTimeout(this.taskTimeout);
     }
     next();
-  }
+  },
 });
 </script>
 

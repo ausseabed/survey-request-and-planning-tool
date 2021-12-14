@@ -36,9 +36,9 @@ async function processMarineParkData(data, filename) {
     for (const feature of features) {
       let mp = new MarinePark();
       mp.geometry = feature.geometry;
-      mp.netname = getParameterCaseInsensitive(feature.properties, 'netname');
-      mp.resname = getParameterCaseInsensitive(feature.properties, 'resname');
-      mp.zonename = getParameterCaseInsensitive(feature.properties, 'zonename');
+      mp.netname = getParameterCaseInsensitive(feature.properties, 'name');
+      mp.resname = getParameterCaseInsensitive(feature.properties, 'type');
+      mp.zonename = getParameterCaseInsensitive(feature.properties, 'zone_type');
       mp.zoneuicn = getParameterCaseInsensitive(feature.properties, 'zoneuicn');
       mp.polygonid = getParameterCaseInsensitive(feature.properties, 'polygonid');
       mp.natlegend = getParameterCaseInsensitive(feature.properties, 'natlegend');

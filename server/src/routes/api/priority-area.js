@@ -95,8 +95,8 @@ router.get(
           value: ii.resname
         },
         {
-          key: "natlegend",
-          value: ii.natlegend
+          key: "zonename",
+          value: ii.zonename
         }
       ]
     });

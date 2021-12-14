@@ -24,16 +24,12 @@ export const GEOGRAPHICAL_AREA_NAME_SUGGESTIONS = [
   'geo placeholder name 2',
 ];
 
-export const SEACOUNTRY_NAME_SUGGESTIONS = [
-  'Seacountry placeholder name 1',
-  'Seacountry placeholder name 2',
-  'Seacountry placeholder name 3',
-];
+export const SEACOUNTRY_NAME_SUGGESTIONS = [];
 
 export const ECOLOGICAL_AREA_SUGGESTIONS = [
-  'Ecological area placeholder name 1',
-  'Ecological area placeholder name 2',
-  'Ecological area placeholder name 3',
+  'Ecologically or Biologically Significant Areas',
+  'Key Ecological Feature',
+  'Ramsar',
 ];
 
 @Entity()

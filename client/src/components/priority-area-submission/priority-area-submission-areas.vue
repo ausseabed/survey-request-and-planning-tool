@@ -123,7 +123,7 @@
               <l-wms-tile-layer
                 v-if="showSurveyLayer"
                 base-url="map/wms"
-                layers="ASB_SPT"
+                layers="Survey_Plans"
                 name="Upcoming Surveys"
                 :transparent="true"
                 :opacity="0.5"

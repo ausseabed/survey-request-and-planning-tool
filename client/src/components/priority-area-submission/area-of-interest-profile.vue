@@ -59,6 +59,7 @@
                           :key="'flag-' + flag"
                           dense
                           size="sm"
+                          :disable="readonly"
                         />
                       </div>
                     </div>
@@ -510,18 +511,6 @@ export default Vue.extend({
     }
     this.DATA_OPTIONS = Array.from(optionsSet).sort();
 
-    this.ACTIVITIES = constants.ACTIVITIES;
-    this.addKeys(undefined, this.ACTIVITIES);
-    this.setActivitiesDisabled(false, this.ACTIVITIES);
-
-    this.PURPOSE_DATA = constants.PURPOSE_DATA;
-    this.addKeys(undefined, this.PURPOSE_DATA);
-    this.setActivitiesDisabled(false, this.PURPOSE_DATA);
-
-    this.ECOSYSTEM_DATA = constants.ECOSYSTEM_DATA;
-    this.addKeys(undefined, this.ECOSYSTEM_DATA);
-    this.setActivitiesDisabled(false, this.ECOSYSTEM_DATA);
-
     this.ECOSYSTEM_COMPONENT_DATA = constants.ECOSYSTEM_COMPONENT_DATA;
   },
 
@@ -580,6 +569,18 @@ export default Vue.extend({
       if (this.areaOfInterest.perceivedImpact == undefined) {
         this.valueChanged("perceivedImpact", this.PERCEIVED_IMPACT_OPTIONS[0]);
       }
+
+      this.ACTIVITIES = constants.ACTIVITIES;
+      this.addKeys(undefined, this.ACTIVITIES);
+      this.setActivitiesDisabled(this.readonly, this.ACTIVITIES);
+
+      this.PURPOSE_DATA = constants.PURPOSE_DATA;
+      this.addKeys(undefined, this.PURPOSE_DATA);
+      this.setActivitiesDisabled(this.readonly, this.PURPOSE_DATA);
+
+      this.ECOSYSTEM_DATA = constants.ECOSYSTEM_DATA;
+      this.addKeys(undefined, this.ECOSYSTEM_DATA);
+      this.setActivitiesDisabled(this.readonly, this.ECOSYSTEM_DATA);
     },
 
     setExpanded(expanded) {
@@ -687,9 +688,11 @@ export default Vue.extend({
     },
 
     readonly: {
-      immediate: false,
+      immediate: true,
       handler(newVal, oldVal) {
         this.setActivitiesDisabled(newVal, this.ACTIVITIES);
+        this.setActivitiesDisabled(newVal, this.PURPOSE_DATA);
+        this.setActivitiesDisabled(newVal, this.ECOSYSTEM_DATA);
       },
     },
   },
@@ -781,6 +784,9 @@ export default Vue.extend({
   data() {
     return {
       ticked: [],
+      ACTIVITIES: [],
+      PURPOSE_DATA: [],
+      ECOSYSTEM_DATA: [],
     };
   },
 });

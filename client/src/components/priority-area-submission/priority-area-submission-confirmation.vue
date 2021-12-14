@@ -4,11 +4,7 @@
       Thankyou for providing your areas of interest to the AusSeabed community.
       Below is a mapped view of your areas as they have been provided today. If
       you have any questions, please contact us on
-      <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>. These areas
-      will be incorporated in the national priorities layer on the AusSeabed
-      data portal. More information on this process can be found
-      <a href="http://www.ausseabed.gov.au/about/initiatives/priorities">here</a
-      >.
+      <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>.
     </div>
     <div class="col rounded-borders">
       <l-map
@@ -71,7 +67,7 @@ export default Vue.extend({
     LMap,
     LControlLayers,
     LLayerGroup,
-    "l-wms-tile-layer": LWMSTileLayer
+    "l-wms-tile-layer": LWMSTileLayer,
   },
 
   async mounted() {},
@@ -92,21 +88,21 @@ export default Vue.extend({
     updatePasGeometry(pasId) {
       Vue.axios
         .get(`api/priority-area-submission/${pasId}/geometry`)
-        .then(res => {
+        .then((res) => {
           this.pasGeometry = res.data;
         });
-    }
+    },
   },
 
   validations() {
     return {
-      priorityAreaSubmission: {}
+      priorityAreaSubmission: {},
     };
   },
 
   computed: {
     ...mapGetters("priorityAreaSubmission", {
-      priorityAreaSubmission: "activePriorityAreaSubmission"
+      priorityAreaSubmission: "activePriorityAreaSubmission",
     }),
     ...mapGetters("recordState", ["recordState"]),
     center() {
@@ -123,7 +119,7 @@ export default Vue.extend({
 
     mapBaseUrl() {
       return MapConstants.LEAFLET_BASE_LAYER;
-    }
+    },
   },
 
   data() {
@@ -131,7 +127,7 @@ export default Vue.extend({
       acknowledged: false,
       zoom: 4,
       mapStyle: { color: "red", weight: 3 },
-      pasGeometry: undefined
+      pasGeometry: undefined,
     };
   },
 
@@ -143,14 +139,14 @@ export default Vue.extend({
         if (!_.isNil(pasId)) {
           this.updatePasGeometry(pasId);
         }
-      }
+      },
     },
     $priorityAreaSubmission: {
       handler(newPas, oldPas) {
         this.updatePasGeometry(newPas.id);
-      }
-    }
-  }
+      },
+    },
+  },
 });
 </script>
 

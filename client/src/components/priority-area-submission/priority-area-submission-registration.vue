@@ -10,7 +10,7 @@
       <form-field-validated-select
         name="priorityAreaSubmission.submittingOrganisation"
         label="Submitting organisation"
-        hint="Organisation that is submitting the list or priorities"
+        hint="Organisation that is submitting the list or areas of interest"
         use-input
         clearable
         input-debounce="200"

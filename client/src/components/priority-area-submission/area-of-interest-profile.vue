@@ -387,6 +387,11 @@
                   :readonly="readonly"
                 />
                 <form-field-validated-input
+                  v-if="
+                    areaOfInterest.collectionCadence == 'Time Series Desired' ||
+                    areaOfInterest.collectionCadence ==
+                      'Time Series Established'
+                  "
                   name="areaOfInterest.timeSeriesDescription"
                   attribute="Time Series Description"
                   label="Time Series Description"

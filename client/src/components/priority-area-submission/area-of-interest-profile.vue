@@ -322,6 +322,7 @@
                 </form-field-validated-option-group>
 
                 <form-field-validated-option-group
+                  v-if="areaOfInterest.dataToCapture.includes('Bathymetry')"
                   class="col"
                   :value="areaOfInterest.surveyStandard"
                   @input="valueChanged('surveyStandard', $event)"

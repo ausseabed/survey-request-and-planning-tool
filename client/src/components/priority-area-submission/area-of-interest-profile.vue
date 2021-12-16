@@ -770,9 +770,9 @@ export default Vue.extend({
         let updatedPurposeValues = this.areaOfInterest.purposeValues.filter(
           (pv) => {
             let pvGroup = this.PURPOSE_DATA.find((p) => {
-              p.values.includes(pv);
+              return p.values.includes(pv);
             });
-            return this.purposeGroupSelected(pvGroup);
+            return this.purposeGroupSelected(pvGroup.label);
           }
         );
         this.valueChanged("purposeValues", updatedPurposeValues);

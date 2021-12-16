@@ -43,7 +43,6 @@
                 <q-tree
                   :nodes="PURPOSE_DATA"
                   node-key="key"
-                  tick-strategy="leaf"
                   :ticked.sync="purposesTicked"
                 >
                   <template v-slot:default-header="prop">
@@ -126,7 +125,6 @@
                 <q-tree
                   :nodes="ECOSYSTEM_DATA"
                   node-key="key"
-                  tick-strategy="leaf"
                   :ticked.sync="ecosystemsTicked"
                 >
                   <template v-slot:default-body="prop">
@@ -450,7 +448,6 @@
                 <q-tree
                   :nodes="ACTIVITIES"
                   node-key="key"
-                  tick-strategy="leaf"
                   :ticked.sync="pressuresTicked"
                 />
               </q-card-section>
@@ -578,14 +575,17 @@ export default Vue.extend({
 
       this.ACTIVITIES = constants.ACTIVITIES;
       this.addKeys(undefined, this.ACTIVITIES);
+      this.addTickStrategy(this.ACTIVITIES);
       this.setActivitiesDisabled(this.readonly, this.ACTIVITIES);
 
       this.PURPOSE_DATA = constants.PURPOSE_DATA;
       this.addKeys(undefined, this.PURPOSE_DATA);
+      this.addTickStrategy(this.PURPOSE_DATA);
       this.setActivitiesDisabled(this.readonly, this.PURPOSE_DATA);
 
       this.ECOSYSTEM_DATA = constants.ECOSYSTEM_DATA;
       this.addKeys(undefined, this.ECOSYSTEM_DATA);
+      this.addTickStrategy(this.ECOSYSTEM_DATA);
       this.setActivitiesDisabled(this.readonly, this.ECOSYSTEM_DATA);
     },
 
@@ -610,6 +610,20 @@ export default Vue.extend({
         item.key = parentKey ? parentKey + "-" + item.label : item.label;
         if (item.children) {
           this.addKeys(item.key, item.children);
+        }
+      }
+    },
+
+    addTickStrategy(items) {
+      // Users should only be able to tick leaf nodes of tree components.
+      // This sets the tick strategy to ensure only leaf nodes can be
+      // selected.
+      for (const item of items) {
+        if (item.children) {
+          item.tickStrategy = "none";
+          this.addTickStrategy(item.children);
+        } else {
+          item.tickStrategy = "strict";
         }
       }
     },

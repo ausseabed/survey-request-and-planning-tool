@@ -54,35 +54,18 @@
           >
           </form-field-validated-input>
 
-          <form-field-validated-select
-            class="bg-grey-2 q-pa-sm rounded-borders"
-            inline
+          <form-field-validated-input
             name="priorityArea.seacountryName"
             label="Seacountry name"
-            :value="selectedSeacountryOption"
-            @input="seacountrySelected($event)"
-            :options="[...seacountryNameOptions, 'Other']"
+            attribute="Seacountry name"
+            :value="priorityArea.seacountryName"
+            @input="valueChanged('seacountryName', $event)"
+            type="text"
             @blur="$v.priorityArea.seacountryName.$touch"
             :readonly="readonly"
-          />
-
-          <div class="row">
-            <div style="min-width: 90px"></div>
-            <form-field-validated-input
-              v-if="selectedSeacountryOption == 'Other'"
-              name="priorityArea.seacountryName"
-              label="Other"
-              attribute="Seacountry name"
-              :value="priorityArea.seacountryName"
-              @input="valueChanged('seacountryName', $event)"
-              type="text"
-              @blur="$v.priorityArea.seacountryName.$touch"
-              :readonly="readonly"
-              outlined
-              class="col"
-            >
-            </form-field-validated-input>
-          </div>
+            outlined
+          >
+          </form-field-validated-input>
 
           <form-field-validated-select
             class="bg-grey-2 q-pa-sm rounded-borders"
@@ -157,7 +140,6 @@ export default Vue.extend({
   async mounted() {
     this.getIntersections();
 
-    this.updateSeacountrySelection();
     this.updateEcologicalAreaSelection();
   },
 
@@ -206,30 +188,6 @@ export default Vue.extend({
       });
     },
 
-    updateSeacountrySelection() {
-      if (this.priorityArea.seacountryName == undefined) {
-        // new item so nothing to setup
-      } else if (
-        this.seacountryNameOptions.includes(this.priorityArea.seacountryName)
-      ) {
-        this.selectedSeacountryOption = this.priorityArea.seacountryName;
-      } else {
-        this.selectedSeacountryOption = "Other";
-      }
-    },
-
-    seacountrySelected(selected) {
-      this.selectedSeacountryOption = selected;
-      if (this.seacountryNameOptions.includes(selected)) {
-        // seacountryNameOptions doesn't include the 'Other' option
-        // so we use this to set the vuex model value if the 'Other'
-        // option hasn't been selected
-        this.valueChanged("seacountryName", selected);
-      } else {
-        this.valueChanged("seacountryName", undefined);
-      }
-    },
-
     updateEcologicalAreaSelection() {
       if (this.priorityArea.ecologicalAreaName == undefined) {
         // new item so nothing to setup
@@ -276,11 +234,6 @@ export default Vue.extend({
   },
 
   watch: {
-    "priorityArea.seacountryName": {
-      handler(newVal, oldVal) {
-        this.updateSeacountrySelection();
-      },
-    },
     "priorityArea.ecologicalAreaName": {
       handler(newVal, oldVal) {
         this.updateEcologicalAreaSelection();
@@ -300,16 +253,12 @@ export default Vue.extend({
 
   computed: {
     // these are all loaded by the parent component
-    ...mapState("priorityAreaSubmission", [
-      "seacountryNameOptions",
-      "ecologicalAreaNameOptions",
-    ]),
+    ...mapState("priorityAreaSubmission", ["ecologicalAreaNameOptions"]),
   },
 
   data() {
     return {
       intersections: [],
-      selectedSeacountryOption: undefined,
       selectedEcologicalAreaOption: undefined,
     };
   },

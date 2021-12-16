@@ -24,8 +24,6 @@ export const GEOGRAPHICAL_AREA_NAME_SUGGESTIONS = [
   'geo placeholder name 2',
 ];
 
-export const SEACOUNTRY_NAME_SUGGESTIONS = [];
-
 export const ECOLOGICAL_AREA_SUGGESTIONS = [
   'Ecologically or Biologically Significant Areas',
   'Key Ecological Feature',

@@ -26,7 +26,6 @@ function initialState() {
     priorityOptions: [],
     identifiedAreaOptions: [],
     geographicalAreaOptions: [],
-    seacountryNameOptions: [],
     ecologicalAreaNameOptions: [],
   }
 };

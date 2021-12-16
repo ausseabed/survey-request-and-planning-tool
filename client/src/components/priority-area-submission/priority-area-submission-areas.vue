@@ -320,7 +320,6 @@ export default Vue.extend({
       "getRequiredDataQualityOptions",
       "getRiskRatingOptions",
       "getEcologicalAreaNameOptions",
-      "getSeacountryNameOptions",
     ]),
 
     ...mapMutations("priorityAreaSubmission", {
@@ -337,7 +336,6 @@ export default Vue.extend({
       this.getRequiredDataQualityOptions();
       this.getRiskRatingOptions();
       this.getEcologicalAreaNameOptions();
-      this.getSeacountryNameOptions();
 
       if (!_.isNil(this.priorityAreaSubmission.uploadTaskId)) {
         this.taskTickCount = 0;

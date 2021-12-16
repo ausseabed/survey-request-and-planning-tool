@@ -136,10 +136,6 @@ const mutations = {
     state.geographicalAreaOptions = options;
   },
 
-  [types.SET_SEACOUNTRY_NAME_OPTIONS](state, options) {
-    state.seacountryNameOptions = options;
-  },
-
   [types.SET_ECOLOGICAL_AREA_NAME_OPTIONS](state, options) {
     state.ecologicalAreaNameOptions = options;
   },

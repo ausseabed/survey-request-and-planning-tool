@@ -164,6 +164,10 @@ export default Vue.extend({
         propertyName: "ecologicalAreaName",
         value: this.priorityArea.ecologicalAreaName,
       });
+      this.$emit("priority-area-apply-to-all", {
+        propertyName: "ecologicalAreaType",
+        value: this.priorityArea.ecologicalAreaType,
+      });
     },
 
     applyToNextClicked() {
@@ -176,6 +180,12 @@ export default Vue.extend({
       this.$emit("priority-area-apply-to-all", {
         propertyName: "ecologicalAreaName",
         value: this.priorityArea.ecologicalAreaName,
+        id: this.priorityArea.id,
+        limit: 1,
+      });
+      this.$emit("priority-area-apply-to-all", {
+        propertyName: "ecologicalAreaType",
+        value: this.priorityArea.ecologicalAreaType,
         id: this.priorityArea.id,
         limit: 1,
       });

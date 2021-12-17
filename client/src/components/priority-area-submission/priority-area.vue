@@ -70,32 +70,27 @@
           <form-field-validated-select
             class="bg-grey-2 q-pa-sm rounded-borders"
             inline
-            name="priorityArea.ecologicalAreaName"
+            name="priorityArea.ecologicalAreaType"
             label="Significant ecological area name"
-            :value="selectedEcologicalAreaOption"
-            @input="ecologicalAreaSelected($event)"
+            :value="priorityArea.ecologicalAreaType"
+            @input="valueChanged('ecologicalAreaType', $event)"
             :options="[...ecologicalAreaNameOptions, 'Other']"
-            @blur="$v.priorityArea.ecologicalAreaName.$touch"
+            @blur="$v.priorityArea.ecologicalAreaType.$touch"
             :readonly="readonly"
           />
 
-          <div class="row">
-            <div style="min-width: 90px"></div>
-            <form-field-validated-input
-              v-if="selectedEcologicalAreaOption == 'Other'"
-              name="priorityArea.ecologicalAreaName"
-              label="Other"
-              attribute="Ecological area name"
-              :value="priorityArea.ecologicalAreaName"
-              @input="valueChanged('ecologicalAreaName', $event)"
-              type="text"
-              @blur="$v.priorityArea.ecologicalAreaName.$touch"
-              :readonly="readonly"
-              outlined
-              class="col"
-            >
-            </form-field-validated-input>
-          </div>
+          <form-field-validated-input
+            name="priorityArea.ecologicalAreaName"
+            label="Ecological area name"
+            attribute="Ecological area name"
+            :value="priorityArea.ecologicalAreaName"
+            @input="valueChanged('ecologicalAreaName', $event)"
+            type="text"
+            @blur="$v.priorityArea.ecologicalAreaName.$touch"
+            :readonly="readonly"
+            outlined
+          >
+          </form-field-validated-input>
 
           <div class="bg-grey-2 q-pa-sm rounded-borders">
             <div class="field-label">Intersecting Marine Park boundaries</div>
@@ -139,8 +134,6 @@ export default Vue.extend({
 
   async mounted() {
     this.getIntersections();
-
-    this.updateEcologicalAreaSelection();
   },
 
   props: {
@@ -188,30 +181,6 @@ export default Vue.extend({
       });
     },
 
-    updateEcologicalAreaSelection() {
-      if (this.priorityArea.ecologicalAreaName == undefined) {
-        // new item so nothing to setup
-      } else if (
-        this.ecologicalAreaNameOptions.includes(
-          this.priorityArea.ecologicalAreaName
-        )
-      ) {
-        this.selectedEcologicalAreaOption =
-          this.priorityArea.ecologicalAreaName;
-      } else {
-        this.selectedEcologicalAreaOption = "Other";
-      }
-    },
-
-    ecologicalAreaSelected(selected) {
-      this.selectedEcologicalAreaOption = selected;
-      if (this.ecologicalAreaNameOptions.includes(selected)) {
-        this.valueChanged("ecologicalAreaName", selected);
-      } else {
-        this.valueChanged("ecologicalAreaName", undefined);
-      }
-    },
-
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
@@ -233,18 +202,13 @@ export default Vue.extend({
     },
   },
 
-  watch: {
-    "priorityArea.ecologicalAreaName": {
-      handler(newVal, oldVal) {
-        this.updateEcologicalAreaSelection();
-      },
-    },
-  },
+  watch: {},
 
   validations() {
     return {
       priorityArea: {
         name: { required },
+        ecologicalAreaType: { required },
         ecologicalAreaName: { required },
         seacountryName: { required },
       },
@@ -259,7 +223,6 @@ export default Vue.extend({
   data() {
     return {
       intersections: [],
-      selectedEcologicalAreaOption: undefined,
     };
   },
 });

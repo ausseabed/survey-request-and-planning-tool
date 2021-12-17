@@ -220,6 +220,13 @@ export class PriorityArea {
   @Column({
     type: "varchar",
     nullable: true,
+    name: "ecological_area_type"
+  })
+  ecologicalAreaType;
+
+  @Column({
+    type: "varchar",
+    nullable: true,
     name: "ecological_area_name"
   })
   ecologicalAreaName;

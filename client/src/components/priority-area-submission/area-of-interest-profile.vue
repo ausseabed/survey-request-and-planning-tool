@@ -468,6 +468,8 @@ import { required } from "vuelidate/lib/validators";
 import { errorHandler } from "./../mixins/error-handling";
 import { permission } from "./../mixins/permission";
 
+import * as pasMutTypes from "../../store/modules/priority-area-submission/priority-area-submission-mutation-types";
+
 import * as constants from "./area-of-interest-constants";
 
 export default Vue.extend({
@@ -523,6 +525,10 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapMutations("priorityAreaSubmission", {
+      setDirty: pasMutTypes.SET_DIRTY,
+    }),
+
     valueChanged(propertyName, value) {
       this.$emit("aoi-value-changed", {
         aoi: this.areaOfInterest,
@@ -568,9 +574,11 @@ export default Vue.extend({
           "organisationalPriority",
           this.ORGANISATIONAL_PRIORITY_OPTIONS[0]
         );
+        this.setDirty(false);
       }
       if (this.areaOfInterest.perceivedImpact == undefined) {
         this.valueChanged("perceivedImpact", this.PERCEIVED_IMPACT_OPTIONS[0]);
+        this.setDirty(false);
       }
 
       this.ACTIVITIES = constants.ACTIVITIES;

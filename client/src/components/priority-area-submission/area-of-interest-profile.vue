@@ -319,18 +319,29 @@
                 >
                 </form-field-validated-option-group>
 
-                <form-field-validated-option-group
-                  v-if="areaOfInterest.dataToCapture.includes('Bathymetry')"
-                  class="col"
-                  :value="areaOfInterest.surveyStandard"
-                  @input="valueChanged('surveyStandard', $event)"
-                  :options="SURVEY_STANDARD_OPTIONS"
-                  name="areaOfInterest.surveyStandard"
-                  label="Bathymetry Survey Standard"
-                  @blur="$v.areaOfInterest.surveyStandard.$touch"
-                  :readonly="readonly"
-                >
-                </form-field-validated-option-group>
+                <div class="column col">
+                  <form-field-validated-option-group
+                    v-if="areaOfInterest.dataToCapture.includes('Bathymetry')"
+                    :value="areaOfInterest.surveyStandard"
+                    @input="valueChanged('surveyStandard', $event)"
+                    :options="SURVEY_STANDARD_OPTIONS"
+                    name="areaOfInterest.surveyStandard"
+                    label="Bathymetry Survey Standard"
+                    @blur="$v.areaOfInterest.surveyStandard.$touch"
+                    :readonly="readonly"
+                  >
+                  </form-field-validated-option-group>
+                  <div class="column q-pa-sm">
+                    <div>{{ areaOfInterest.surveyStandard }}</div>
+                    <div
+                      class="text-weight-light"
+                      v-if="surveyStandardDescription"
+                    >
+                      {{ surveyStandardDescription }}
+                    </div>
+                    <div v-else class="text-weight-light">No description</div>
+                  </div>
+                </div>
               </q-card-section>
             </q-card>
           </q-expansion-item>
@@ -715,6 +726,20 @@ export default Vue.extend({
       }
     },
 
+    "areaOfInterest.surveyStandard": {
+      immediate: true,
+      handler(newVal, oldVal) {
+        let surveyStandardDetails = constants.SURVEY_STANDARD_OPTIONS.find(
+          (ss) => {
+            return ss.label == newVal;
+          }
+        );
+        if (surveyStandardDetails) {
+          this.surveyStandardDescription = surveyStandardDetails.description;
+        }
+      },
+    },
+
     readonly: {
       immediate: true,
       handler(newVal, oldVal) {
@@ -815,6 +840,7 @@ export default Vue.extend({
       ACTIVITIES: [],
       PURPOSE_DATA: [],
       ECOSYSTEM_DATA: [],
+      surveyStandardDescription: "",
     };
   },
 });

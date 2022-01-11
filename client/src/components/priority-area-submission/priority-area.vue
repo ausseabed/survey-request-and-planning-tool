@@ -218,9 +218,9 @@ export default Vue.extend({
     return {
       priorityArea: {
         name: { required },
-        ecologicalAreaType: { required },
-        ecologicalAreaName: { required },
-        seacountryName: { required },
+        ecologicalAreaType: {},
+        ecologicalAreaName: {},
+        seacountryName: {},
       },
     };
   },

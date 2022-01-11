@@ -24,7 +24,7 @@ export const PERCEIVED_IMPACT_OPTIONS = [
     "National (>1000km)"
 ];
 
-export const ORGANISATIONAL_PRIORITY_OPTIONS = ["NA", "1", "2", "3"];
+export const ORGANISATIONAL_PRIORITY_OPTIONS = ["NA", "Low", "Medium", "High"];
 
 export const EXISTING_DATA_SOURCE_OPTIONS = [
     {

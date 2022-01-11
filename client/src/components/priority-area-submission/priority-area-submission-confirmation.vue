@@ -1,7 +1,7 @@
 <template>
   <div class="column q-pa-md q-gutter-y-sm">
     <div>
-      Thankyou for providing your areas of interest to the AusSeabed community.
+      Thank you for providing your areas of interest to the AusSeabed community.
       Below is a mapped view of your areas as they have been provided today. If
       you have any questions, please contact us on
       <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>.

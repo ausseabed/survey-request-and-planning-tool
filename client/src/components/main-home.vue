@@ -137,11 +137,11 @@
             </div>
             <sct-btn
               class="self-center full-width"
-              label="Add a Area of Interest"
+              label="Add an Area of Interest"
               icon="add"
               :to="'/priority-area-submission/new'"
             >
-              <q-tooltip> Add a Area of Interest </q-tooltip>
+              <q-tooltip> Add an Area of Interest </q-tooltip>
             </sct-btn>
           </div>
         </q-expansion-item>
@@ -170,28 +170,28 @@ export default Vue.extend({
   watch: {},
 
   computed: {
-    expandedAbout: function() {
+    expandedAbout: function () {
       return true;
     },
-    expandedSurveyPlans: function() {
+    expandedSurveyPlans: function () {
       return false;
     },
-    expandedSurveyRequests: function() {
+    expandedSurveyRequests: function () {
       return false;
     },
-    expandedPriorityAreas: function() {
+    expandedPriorityAreas: function () {
       return false;
     },
     title() {
       return process.env.PRODUCT_NAME;
-    }
+    },
   },
 
   data() {
     return {
-      headerClass: "bg-grey-3"
+      headerClass: "bg-grey-3",
     };
-  }
+  },
 });
 </script>
 

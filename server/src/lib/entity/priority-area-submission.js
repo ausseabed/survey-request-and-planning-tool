@@ -80,6 +80,22 @@ export class PriorityAreaSubmission {
   furtherInformation;
 
   @Column({
+    type: "bool",
+    nullable: false,
+    default: false,
+    name: "open_to_collaboration"
+  })
+  openToCollaboration;
+
+  @Column({
+    type: "bool",
+    nullable: false,
+    default: false,
+    name: "have_funds_resources"
+  })
+  haveFundsResources;
+
+  @Column({
     type: "timestamp with time zone",
     default: () => 'CURRENT_TIMESTAMP',
     transformer: new DateTransformer(),

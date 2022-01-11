@@ -78,16 +78,24 @@
             :to="'/'"
           />
         </div>
-        <q-btn
+        <div
           v-if="
             activePriorityAreaSubmission &&
             $route.name === 'priority-area-submission-confirmation'
           "
-          :disable="published"
-          color="primary"
-          label="Publish"
-          @click="publishClicked()"
-        />
+        >
+          <q-btn
+            :disable="published || dirty"
+            color="primary"
+            label="Publish"
+            @click="publishClicked()"
+          >
+          </q-btn>
+          <q-tooltip v-if="dirty"
+            >Submission must be saved before publishing</q-tooltip
+          >
+        </div>
+
         <q-btn
           v-else
           color="primary"
@@ -167,7 +175,9 @@ export default Vue.extend({
 
     publishClicked() {
       let pasComp = this.$refs.pasComp;
-      if (!pasComp.isValid()) {
+      console.log(pasComp.acknowledged);
+
+      if (!pasComp.acknowledged) {
         this.notifyError("Please confirm acknowledgement");
         return;
       }
@@ -290,6 +300,12 @@ export default Vue.extend({
         !pasComp.isValid()
       ) {
         this.notifyError("Please confirm acknowledgement on confirmation tab");
+        return false;
+      } else if (
+        this.$route.name == "priority-area-submission-confirmation" &&
+        !pasComp.acknowledged
+      ) {
+        this.notifyError("Please confirm acknowledgement");
         return false;
       }
       return true;

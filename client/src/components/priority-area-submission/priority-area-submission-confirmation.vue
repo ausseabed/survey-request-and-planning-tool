@@ -33,6 +33,32 @@
         />
       </l-map>
     </div>
+
+    <div>
+      <div class="q-pa-md column">
+        <q-checkbox
+          @input="
+            updatePriorityAreaSubmissionValue({
+              path: 'openToCollaboration',
+              value: $event,
+            })
+          "
+          :value="priorityAreaSubmission.openToCollaboration"
+          label="We are open to collaboration with data collection"
+        />
+        <q-checkbox
+          @input="
+            updatePriorityAreaSubmissionValue({
+              path: 'haveFundsResources',
+              value: $event,
+            })
+          "
+          :value="priorityAreaSubmission.haveFundsResources"
+          label="We have funds, resources, or expertise to contribute to collaboration"
+        />
+      </div>
+    </div>
+
     <div class="checkbox-div rounded-borders">
       <div class="q-pa-md">
         <q-checkbox
@@ -60,8 +86,12 @@ import { permission } from "./../mixins/permission";
 import { latLng } from "leaflet";
 import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
 
+import * as pasMutTypes from "../../store/modules/priority-area-submission/priority-area-submission-mutation-types";
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
+
+  props: ["readonly"],
 
   components: {
     LMap,
@@ -73,10 +103,14 @@ export default Vue.extend({
   async mounted() {},
 
   methods: {
+    ...mapMutations("priorityAreaSubmission", {
+      updatePriorityAreaSubmissionValue:
+        pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
+      setDirty: pasMutTypes.SET_DIRTY,
+    }),
+
     isValid() {
-      return this.acknowledged;
-      // this.$v.$touch();
-      // return !this.$v.$error;
+      return true;
     },
 
     geometrySet(info) {

@@ -1588,11 +1588,11 @@ export const ECOSYSTEM_DATA = [
                 description: "Rocky reef formations found on the continental shelf below the mesophotic zone where light is so scarce it is not enough to support photosynthesis. Nominally rariphotic shelf reefs occur between 70m and 200m (the nominal depth of the shelf break)."
             },
             {
-                label: "Mesophytic coral reefs (30-150m)",
+                label: "Mesophotic coral reefs (30-150m)",
                 description: "Coral reef formations on tropical continental shelf areas in the mesophotic zone: a reduced light zone between 30m and the maximum depth at which there is sufficient penetration of sunlight to support photosynthesis. The maximum depth is variable dependent upon water clarity and may extend to 150m in the clearest of waters however, as a national average it is nominally defined as 70m."
             },
             {
-                label: "Mesophytic rocky reefs (30-70m)",
+                label: "Mesophotic rocky reefs (30-70m)",
                 description: "Rocky reef formations on temperate continental shelf areas in the mesophotic zone: a reduced light zone between 30m and the maximum depth at which there is sufficient penetration of sunlight to support photosynthesis. The maximum depth is variable dependent upon water clarity and may extend to 150m in the clearest of waters however, as a national average it is nominally defined as 70m."
             }
         ]
@@ -1610,7 +1610,7 @@ export const ECOSYSTEM_DATA = [
         label: "Oceanic coral reefs",
         children: [
             {
-                label: "Oceanic mesophytic coral reefs (30-150m)",
+                label: "Oceanic mesophotic coral reefs (30-150m)",
                 description: "Coral reefs occurring seaward of the continental shelf break in in the mesophotic zone: a reduced light zone between 30m and the maximum depth at which there is sufficient penetration of sunlight to support photosynthesis. The maximum depth is variable dependent upon water clarity and may extend to 150m in the clearest of waters however, as a national average it is nominally defined as 70m."
             },
             {

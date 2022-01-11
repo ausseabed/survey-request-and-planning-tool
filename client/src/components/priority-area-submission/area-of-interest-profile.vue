@@ -331,7 +331,10 @@
                     :readonly="readonly"
                   >
                   </form-field-validated-option-group>
-                  <div class="column q-pa-sm">
+                  <div
+                    v-if="areaOfInterest.dataToCapture.includes('Bathymetry')"
+                    class="column q-pa-sm"
+                  >
                     <div>{{ areaOfInterest.surveyStandard }}</div>
                     <div
                       class="text-weight-light"

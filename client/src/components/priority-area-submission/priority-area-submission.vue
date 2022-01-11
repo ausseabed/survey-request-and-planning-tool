@@ -175,7 +175,6 @@ export default Vue.extend({
 
     publishClicked() {
       let pasComp = this.$refs.pasComp;
-      console.log(pasComp.acknowledged);
 
       if (!pasComp.acknowledged) {
         this.notifyError("Please confirm acknowledgement");

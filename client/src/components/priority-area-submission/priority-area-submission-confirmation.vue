@@ -1,11 +1,33 @@
 <template>
   <div class="column q-pa-md q-gutter-y-sm">
-    <div>
-      Thank you for providing your areas of interest to the AusSeabed community.
-      Below is a mapped view of your areas as they have been provided today. If
-      you have any questions, please contact us on
-      <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>.
+    <div class="row q-gutter-x-sm">
+      <div class="col">
+        Thank you for providing your areas of interest to the AusSeabed
+        community. Below is a mapped view of your areas as they have been
+        provided today. If you have any questions, please contact us on
+        <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>.
+      </div>
+      <div
+        class="col-auto download-div row rounded-borders q-pa-sm q-gutter-x-sm"
+      >
+        <div class="row justify-center">
+          <q-btn
+            type="a"
+            :href="`/api/priority-area-submission/${priorityAreaSubmission.id}/shp`"
+            round
+            flat
+            icon="cloud_download"
+          >
+            <q-tooltip> Download all Areas of Interest </q-tooltip>
+          </q-btn>
+        </div>
+        <div style="max-width: 250px">
+          Download shapefile containing Areas of Interest and associated
+          metadata.
+        </div>
+      </div>
     </div>
+
     <div class="col rounded-borders">
       <l-map
         class="col rounded-borders"
@@ -188,5 +210,9 @@ export default Vue.extend({
 <style scoped lang="stylus">
 .checkbox-div {
   border: 1px solid red;
+}
+
+.download-div {
+  border: 1px solid grey;
 }
 </style>

@@ -219,16 +219,6 @@
         <div class="column q-gutter-y-xs">
           <div class="row justify-between items-center">
             <div class="main-page-sub-title">Areas of Interest</div>
-            <q-btn
-              v-if="_.get(priorityAreaSubmission, 'priorityAreas.length') > 0"
-              type="a"
-              :href="`/api/priority-area-submission/${priorityAreaSubmission.id}/shp`"
-              round
-              flat
-              icon="cloud_download"
-            >
-              <q-tooltip> Download all Areas of Interest </q-tooltip>
-            </q-btn>
           </div>
 
           <div v-if="loadingPriorityAreaData" class="column">

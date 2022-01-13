@@ -21,8 +21,6 @@ function initialState() {
     requestError: undefined,
 
     preferredTimeframeOptions: [],
-    riskRatingOptions: [],
-    requiredDataQualityOptions: [],
     priorityOptions: [],
     identifiedAreaOptions: [],
     geographicalAreaOptions: [],

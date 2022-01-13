@@ -307,8 +307,6 @@ export default Vue.extend({
     ...mapActions("priorityAreaSubmission", [
       "getPreferredTimeframeOptions",
       "getPriorityOptions",
-      "getRequiredDataQualityOptions",
-      "getRiskRatingOptions",
       "getEcologicalAreaNameOptions",
     ]),
 
@@ -323,8 +321,6 @@ export default Vue.extend({
     fetchData() {
       this.getPreferredTimeframeOptions();
       this.getPriorityOptions();
-      this.getRequiredDataQualityOptions();
-      this.getRiskRatingOptions();
       this.getEcologicalAreaNameOptions();
 
       if (!_.isNil(this.priorityAreaSubmission.uploadTaskId)) {

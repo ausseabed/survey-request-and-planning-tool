@@ -127,22 +127,6 @@ export const getPriorityOptions = async ({ commit, state }) => {
   );
 }
 
-export const getRequiredDataQualityOptions = async ({ commit, state }) => {
-  getOptions(
-    commit,
-    'required-data-quality-options',
-    mutTypes.SET_REQUIRED_DATA_QUALITY_OPTIONS
-  );
-}
-
-export const getRiskRatingOptions = async ({ commit, state }) => {
-  getOptions(
-    commit,
-    'risk-rating-options',
-    mutTypes.SET_RISK_RATING_OPTIONS
-  );
-}
-
 export const getIdentifiedAreaOptions = async ({ commit, state }) => {
   getOptions(
     commit,
@@ -164,13 +148,5 @@ export const getEcologicalAreaNameOptions = async ({ commit, state }) => {
     commit,
     'ecological-area-options',
     mutTypes.SET_ECOLOGICAL_AREA_NAME_OPTIONS
-  );
-}
-
-export const getSeacountryNameOptions = async ({ commit, state }) => {
-  getOptions(
-    commit,
-    'seacountry-options',
-    mutTypes.SET_SEACOUNTRY_NAME_OPTIONS
   );
 }

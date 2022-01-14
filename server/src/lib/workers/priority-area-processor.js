@@ -138,14 +138,22 @@ const featureToPriorityArea = async (feature) => {
 
   // this is where we support ingesting the same data that is exported
   // from the `shp-builder.js`
-  pa.name = getParameterCaseInsensitive(feature.properties, 'PA_NAME');
+  pa.name = getParameterCaseInsensitive(feature.properties, 'A_NAME');
   if (_.isNil(pa.name)) {
     pa.name = getParameterCaseInsensitive(feature.properties, 'name');
   }
-  pa.preferredTimeframe = getParameterCaseInsensitive(feature.properties, 'PA_TIME');
-  pa.riskRating = getParameterCaseInsensitive(feature.properties, 'PA_RISK');
-  pa.requiredDataQuality = getParameterCaseInsensitive(feature.properties, 'PA_DATA_Q');
-  pa.priority = getParameterCaseInsensitive(feature.properties, 'PA_PRIORIT');
+  // if no name is provided, then fill the name with an id value
+  if (_.isNil(pa.name)) {
+    pa.name = getParameterCaseInsensitive(feature.properties, 'id');
+  }
+  if (_.isNil(pa.name)) {
+    pa.name = getParameterCaseInsensitive(feature.properties, 'objectid');
+  }
+  if (_.isNil(pa.name)) {
+    pa.name = getParameterCaseInsensitive(feature.properties, 'fid');
+  }
+
+  // set the features geometry
   pa.geom = feature.geometry;
 
   const { id } = await getConnection()

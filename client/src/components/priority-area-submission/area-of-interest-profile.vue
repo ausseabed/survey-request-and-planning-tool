@@ -44,6 +44,7 @@
                   :nodes="PURPOSE_DATA"
                   node-key="key"
                   :ticked.sync="purposesTicked"
+                  :expanded.sync="purposesExpanded"
                 >
                   <template v-slot:default-header="prop">
                     <div class="row justify-between full-width">
@@ -126,6 +127,7 @@
                   :nodes="ECOSYSTEM_DATA"
                   node-key="key"
                   :ticked.sync="ecosystemsTicked"
+                  :expanded.sync="ecosystemsExpanded"
                 >
                   <template v-slot:default-body="prop">
                     <div
@@ -463,6 +465,7 @@
                   :nodes="ACTIVITIES"
                   node-key="key"
                   :ticked.sync="pressuresTicked"
+                  :expanded.sync="pressuresExpanded"
                 />
               </q-card-section>
             </q-card>
@@ -599,16 +602,19 @@ export default Vue.extend({
       this.addKeys(undefined, this.ACTIVITIES);
       this.addTickStrategy(this.ACTIVITIES);
       this.setActivitiesDisabled(this.readonly, this.ACTIVITIES);
+      this.pressuresExpanded = this.getDefaultExpansion(this.pressuresTicked);
 
       this.PURPOSE_DATA = constants.PURPOSE_DATA;
       this.addKeys(undefined, this.PURPOSE_DATA);
       this.addTickStrategy(this.PURPOSE_DATA);
       this.setActivitiesDisabled(this.readonly, this.PURPOSE_DATA);
+      this.purposesExpanded = this.getDefaultExpansion(this.purposesTicked);
 
       this.ECOSYSTEM_DATA = constants.ECOSYSTEM_DATA;
       this.addKeys(undefined, this.ECOSYSTEM_DATA);
       this.addTickStrategy(this.ECOSYSTEM_DATA);
       this.setActivitiesDisabled(this.readonly, this.ECOSYSTEM_DATA);
+      this.ecosystemsExpanded = this.getDefaultExpansion(this.ecosystemsTicked);
     },
 
     setExpanded(expanded) {
@@ -634,6 +640,26 @@ export default Vue.extend({
           this.addKeys(item.key, item.children);
         }
       }
+    },
+
+    addExpandedKeys(key, expandedKeys) {
+      expandedKeys.add(key);
+      const lastSeparator = key.lastIndexOf("-");
+      if (lastSeparator != -1) {
+        const parentKey = key.substring(0, lastSeparator);
+        this.addExpandedKeys(parentKey, expandedKeys);
+      }
+    },
+
+    getDefaultExpansion(tickedKeys) {
+      // By default tree nodes that have selected nodes under them should
+      // be expanded. This makes it much easier for a user to see what was
+      // previously selected.
+      let expandedKeys = new Set();
+      for (const tickedKey of tickedKeys) {
+        this.addExpandedKeys(tickedKey, expandedKeys);
+      }
+      return Array.from(expandedKeys);
     },
 
     addTickStrategy(items) {
@@ -844,6 +870,9 @@ export default Vue.extend({
       PURPOSE_DATA: [],
       ECOSYSTEM_DATA: [],
       surveyStandardDescription: "",
+      purposesExpanded: [],
+      pressuresExpanded: [],
+      ecosystemsExpanded: [],
     };
   },
 });

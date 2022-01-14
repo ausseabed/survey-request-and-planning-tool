@@ -271,6 +271,13 @@ export const DATA_AND_METHOD_OPTIONS = [
                     "Indicator species / TEPS",
                     "Water properties"
                 ]
+            },
+            {
+                name: "Hook & Line",
+                data: [
+                    "Biodiversity (inc. microbial diversity)",
+                    "Indicator species / TEPS"
+                ]
             }
         ]
     }

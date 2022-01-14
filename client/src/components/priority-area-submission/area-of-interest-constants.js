@@ -74,8 +74,8 @@ export const EXISTING_DATA_SOURCE_OPTIONS = [
     },
     {
         name: "IMSA",
-        url: "biotope, sediment, chemical",
-        datatypes: "https://biocollect.ala.org.au/imsa"
+        url: "https://biocollect.ala.org.au/imsa",
+        datatypes: "biotope, sediment, chemical"
     }
 ];
 

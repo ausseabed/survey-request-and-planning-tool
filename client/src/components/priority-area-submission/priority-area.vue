@@ -70,6 +70,7 @@
           <form-field-validated-select
             class="bg-grey-2 q-pa-sm rounded-borders"
             inline
+            clearable
             name="priorityArea.ecologicalAreaType"
             label="Significant ecological area name"
             :value="priorityArea.ecologicalAreaType"

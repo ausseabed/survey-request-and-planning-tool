@@ -3,9 +3,20 @@
     <div class="column q-px-md q-gutter-y-sm">
       <div class="column q-gutter-y-sm">
         <div v-if="!readonly" class="col">
-          The National Area of Interest tool provides the option to upload a
-          spatial file or to use the map controller to develop the area of
-          interest information within the tool.
+          <div>
+            This tool allows users to create an Area of Interest (AOI)
+            submission by either uploading a zipped shapefile of polygons
+            identified by an Area of Interest name (‘A_NAME’) or using the map
+            window to draw a polygon. Submissions can be made with either a
+            single polygon or multiple polygons but should be constrained to a
+            single geographic area with new submissions being used for different
+            geographic areas. Users can toggle preloaded layers on and off or
+            add a custom web map service to assist with their planning.
+          </div>
+          <div>
+            Subsequent forms build the associated metadata required for each
+            AOI. For more information please refer to the help file.
+          </div>
         </div>
         <div v-if="!readonly" class="row q-gutter-x-md">
           <q-uploader
@@ -103,8 +114,8 @@
         <div v-if="!readonly" class="row q-gutter-x-md">
           <div>OR</div>
         </div>
-        <div v-if="!readonly" class="row q-gutter-x-md">
-          <div class="row full-width q-gutter-x-md">
+        <div v-if="!readonly" class="row">
+          <div class="column full-width q-gutter-y-sm">
             <l-map
               style="min-height: 400px"
               class="col rounded-borders"
@@ -210,35 +221,13 @@
                     dark
                   >
                   </q-checkbox>
-                  <!-- <q-checkbox
-                    v-model="showOrganisationSubmissionsLayer"
-                    label="Show my organisations submissions"
-                    size="xs"
-                    dark
-                  >
-                  </q-checkbox> -->
                 </div>
               </l-control>
             </l-map>
             <div class="column col-auto q-gutter-y-sm">
               <q-card flat bordered style="max-width: 300px">
-                <div class="q-pa-sm">
-                  The National Area of Interest tool allows for the organisation
-                  to profile multiple areas of interest as per the model below:
-                </div>
-                <div class="q-pa-sm">
-                  <q-img src="~/assets/aoi-model.png"> </q-img>
-                </div>
-                <div class="q-pa-sm">
-                  An area of interest can consist of one or many spatial bounds
-                  (polygons). An area of interest should be contained within a
-                  single geographic area. Read the help file for more
-                  information.
-                </div>
+                <div class="q-pa-sm"></div>
               </q-card>
-              <!-- <q-card flat bordered style="max-width: 300px">
-                <div class="q-pa-sm">User added WMS stuff goes here</div>
-              </q-card> -->
             </div>
           </div>
         </div>

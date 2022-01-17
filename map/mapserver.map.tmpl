@@ -241,4 +241,45 @@ MAP
 
 
 
+  LAYER
+    NAME "Marine_Parks"
+    METADATA
+      "wfs_title"         "Marine Parks" ##REQUIRED
+      "wfs_srs"           "EPSG:4326" ## REQUIRED
+      "gml_include_items" "all" ## Optional (serves all attributes for layer)
+      "gml_featureid"     "id" ## REQUIRED
+      "wfs_enable_request" "*"
+      wms_enable_request "*"
+      "ows_enable_request" "*"
+      wms_getfeature_formatlist "application/json,application/geojson"
+      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml,csv,SHAPE-ZIP,kml,application/vnd.google-earth.kml xml"
+    END
+    STATUS ON
+    TEMPLATE "dummy.js"
+    TYPE POLYGON
+    CONNECTIONTYPE postgis
+
+    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
+
+    DATA "geom from (
+            select mp.id as mpid ,mp.netname as netname, mp.resname as resname, mp.zonename as zonename, mp.zoneuicn as zoneuicn, mp.polygonid as polygonid, mp.geometry as geom
+            from marine_park mp
+          ) as subquery using unique mpid using srid=4326"
+
+    CLASS
+      STYLE
+        OUTLINECOLOR '#00ff00'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#00ff00'
+        OPACITY 30
+      END
+    END
+
+  END
+
+
+
+
 END

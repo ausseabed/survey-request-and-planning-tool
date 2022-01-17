@@ -130,6 +130,16 @@
                 format="image/png"
               >
               </l-wms-tile-layer>
+              <l-wms-tile-layer
+                v-if="showMarineParksLayer"
+                base-url="map/wms"
+                layers="Marine_Parks"
+                name="Marine Parks"
+                :transparent="true"
+                :opacity="0.5"
+                format="image/png"
+              >
+              </l-wms-tile-layer>
               <l-control position="topleft">
                 <div class="column q-gutter-y-xs">
                   <q-btn
@@ -177,6 +187,13 @@
                   <q-checkbox
                     v-model="showSurveyLayer"
                     label="Show upcoming survey layer"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                  <q-checkbox
+                    v-model="showMarineParksLayer"
+                    label="Show marine parks layer"
                     size="xs"
                     dark
                   >
@@ -548,6 +565,7 @@ export default Vue.extend({
       zoom: 3,
       mapStyle: { color: "red", weight: 3 },
       showSurveyLayer: true,
+      showMarineParksLayer: true,
       showOrganisationSubmissionsLayer: false,
       polygons: [],
       isActive: false,

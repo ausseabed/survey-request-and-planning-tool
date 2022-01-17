@@ -141,15 +141,25 @@ router.get(
   ],
   asyncMiddleware(async function (req, res) {
 
+    // the exclude query string parameter allows the requestor to specify they want
+    // the geometry of all submissions excluding this submission, but only ones that 
+    // share the same submitting organisations.
+    let { exclude } = req.query;
+    exclude = _.isNil(exclude) || !(exclude === 'true') ? false : true;
+
     let pas = await getConnection()
       .getRepository(PriorityAreaSubmission)
-      .findOne(req.params.id);
+      .findOne(req.params.id, {
+        relations: ["submittingOrganisation"]
+      });
 
     if (!pas) {
       let err = Boom.notFound(
         `PriorityAreaSubmission ${req.params.id} does not exist`);
       throw err;
     }
+
+    const wqs = exclude ? `priority_area_submission.id != :id` : `priority_area_submission.id = :id`
 
     const pas2 = await getConnection()
       .createQueryBuilder()
@@ -159,7 +169,13 @@ router.get(
           .select(`geom`, 'extent')
           .addSelect(`name`, 'name')
           .from('priority_area')
-          .where(`"priorityAreaSubmissionSubmissionId" = :id`, { id: req.params.id });
+          .leftJoinAndSelect(
+            "priority_area.priorityAreaSubmissionSubmission", "priority_area_submission")
+          .where(
+            `priority_area_submission."submittingOrganisationId" = :subOrgId`,
+            { subOrgId: pas.submittingOrganisation.id }
+          )
+          .andWhere(wqs, { id: req.params.id });
       }, "extent")
       .getRawOne();
 

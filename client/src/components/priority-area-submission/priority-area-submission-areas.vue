@@ -140,6 +140,11 @@
                 format="image/png"
               >
               </l-wms-tile-layer>
+              <l-geo-json
+                v-if="otherPasGeometry && showOtherPasLayer"
+                :geojson="otherPasGeometry"
+                :optionsStyle="otherPasMapStyle"
+              />
               <l-control position="topleft">
                 <div class="column q-gutter-y-xs">
                   <q-btn
@@ -194,6 +199,13 @@
                   <q-checkbox
                     v-model="showMarineParksLayer"
                     label="Show marine parks layer"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                  <q-checkbox
+                    v-model="showOtherPasLayer"
+                    label="Show my organisation submissions"
                     size="xs"
                     dark
                   >
@@ -344,6 +356,15 @@ export default Vue.extend({
         this.taskTickCount = 0;
         this.updateTaskStatus(this.priorityAreaSubmission.uploadTaskId);
       }
+
+      // get the geometry from all the other priority are submissions
+      Vue.axios
+        .get(
+          `api/priority-area-submission/${this.priorityAreaSubmission.id}/geometry?exclude=true`
+        )
+        .then((res) => {
+          this.otherPasGeometry = res.data;
+        });
     },
 
     isValid() {
@@ -565,10 +586,13 @@ export default Vue.extend({
       zoom: 3,
       mapStyle: { color: "red", weight: 3 },
       showSurveyLayer: true,
-      showMarineParksLayer: true,
+      showMarineParksLayer: false,
+      showOtherPasLayer: false,
       showOrganisationSubmissionsLayer: false,
       polygons: [],
       isActive: false,
+      otherPasGeometry: undefined,
+      otherPasMapStyle: { color: "yellow", weight: 2 },
     };
   },
 

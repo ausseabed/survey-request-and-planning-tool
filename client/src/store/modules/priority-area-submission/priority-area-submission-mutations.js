@@ -120,14 +120,6 @@ const mutations = {
     state.priorityOptions = options;
   },
 
-  [types.SET_REQUIRED_DATA_QUALITY_OPTIONS](state, options) {
-    state.requiredDataQualityOptions = options;
-  },
-
-  [types.SET_RISK_RATING_OPTIONS](state, options) {
-    state.riskRatingOptions = options;
-  },
-
   [types.SET_IDENTIFIED_AREA_OPTIONS](state, options) {
     state.identifiedAreaOptions = options;
   },

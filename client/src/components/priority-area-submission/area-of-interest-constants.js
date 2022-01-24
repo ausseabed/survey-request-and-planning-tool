@@ -1618,7 +1618,7 @@ export const ECOSYSTEM_DATA = [
         children: [
             {
                 label: "Oceanic mesophotic coral reefs (30-150m)",
-                description: "Coral reefs occurring seaward of the continental shelf break in in the mesophotic zone: a reduced light zone between 30m and the maximum depth at which there is sufficient penetration of sunlight to support photosynthesis. The maximum depth is variable dependent upon water clarity and may extend to 150m in the clearest of waters however, as a national average it is nominally defined as 70m."
+                description: "Coral reefs occurring seaward of the continental shelf break in the mesophotic zone: a reduced light zone between 30m and the maximum depth at which there is sufficient penetration of sunlight to support photosynthesis. The maximum depth is variable dependent upon water clarity and may extend to 150m in the clearest of waters however, as a national average it is nominally defined as 70m."
             },
             {
                 label: "Oceanic shallow coral reefs (<30m)",

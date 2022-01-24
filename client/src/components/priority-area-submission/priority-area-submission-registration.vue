@@ -135,23 +135,26 @@ export default Vue.extend({
 
       if (!_.isNil(this.currentUser.custodian)) {
         let cust = this.currentUser.custodian;
-        let orgs = this.organisationsList.filter((org) => {
-          return org.name.toLowerCase() == cust.name.toLowerCase();
+
+        this.setOrganisationFilter(cust.name);
+        this.getOrganisations().then((orgsData) => {
+          const orgs = orgsData.data;
+          console.log(orgs);
+          if (orgs.length > 0) {
+            this.updatePriorityAreaSubmissionValue({
+              path: "submittingOrganisation",
+              value: orgs[0],
+            });
+          } else {
+            this.updatePriorityAreaSubmissionValue({
+              path: "submittingOrganisation",
+              value: undefined,
+            });
+            this.notifyInfo(
+              "Could not match current users custodian to organisation"
+            );
+          }
         });
-        if (orgs.length > 0) {
-          this.updatePriorityAreaSubmissionValue({
-            path: "submittingOrganisation",
-            value: orgs[0],
-          });
-        } else {
-          this.updatePriorityAreaSubmissionValue({
-            path: "submittingOrganisation",
-            value: undefined,
-          });
-          this.notifyInfo(
-            "Could not match current users custodian to organisation"
-          );
-        }
       }
     },
 

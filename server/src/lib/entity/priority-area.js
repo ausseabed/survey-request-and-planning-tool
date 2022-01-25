@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 
 import { PriorityAreaSubmission } from './priority-area-submission';
+import { DateTransformer } from './utils';
 
 
 export const PREFERRED_TIMEFRAME_OPTIONS = [
@@ -245,6 +246,14 @@ export class PriorityArea {
     select: false
   })
   thumbnail;
+
+  @Column({
+    type: "timestamp with time zone",
+    default: () => 'CURRENT_TIMESTAMP',
+    transformer: new DateTransformer(),
+    nullable: false,
+  })
+  created;
 
   @ManyToOne(
     type => PriorityAreaSubmission,

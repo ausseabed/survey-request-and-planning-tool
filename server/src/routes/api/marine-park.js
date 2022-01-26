@@ -25,29 +25,26 @@ async function processMarineParkData(data, filename) {
   let geojson = shp.parseZip(data);
   let features = geojsonToFeatureList(geojson);
 
-  await getConnection().transaction(async transactionalEntityManager => {
+  let pasQuery = await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(MarinePark)
+    .execute();
 
-    let pasQuery = await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(MarinePark)
-      .execute();
+  for (const feature of features) {
+    let mp = new MarinePark();
+    mp.geometry = feature.geometry;
+    mp.netname = getParameterCaseInsensitive(feature.properties, 'name');
+    mp.resname = getParameterCaseInsensitive(feature.properties, 'type');
+    mp.zonename = getParameterCaseInsensitive(feature.properties, 'zone_type');
+    mp.zoneuicn = getParameterCaseInsensitive(feature.properties, 'zoneuicn');
+    mp.polygonid = getParameterCaseInsensitive(feature.properties, 'polygonid');
+    mp.natlegend = getParameterCaseInsensitive(feature.properties, 'natlegend');
 
-    for (const feature of features) {
-      let mp = new MarinePark();
-      mp.geometry = feature.geometry;
-      mp.netname = getParameterCaseInsensitive(feature.properties, 'name');
-      mp.resname = getParameterCaseInsensitive(feature.properties, 'type');
-      mp.zonename = getParameterCaseInsensitive(feature.properties, 'zone_type');
-      mp.zoneuicn = getParameterCaseInsensitive(feature.properties, 'zoneuicn');
-      mp.polygonid = getParameterCaseInsensitive(feature.properties, 'polygonid');
-      mp.natlegend = getParameterCaseInsensitive(feature.properties, 'natlegend');
-
-      await getConnection()
-        .getRepository(MarinePark)
-        .save(mp);
-    }
-  });
+    await getConnection()
+      .getRepository(MarinePark)
+      .save(mp);
+  }
 
 }
 

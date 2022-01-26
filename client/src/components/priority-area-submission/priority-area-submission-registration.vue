@@ -139,7 +139,6 @@ export default Vue.extend({
         this.setOrganisationFilter(cust.name);
         this.getOrganisations().then((orgsData) => {
           const orgs = orgsData.data;
-          console.log(orgs);
           if (orgs.length > 0) {
             this.updatePriorityAreaSubmissionValue({
               path: "submittingOrganisation",

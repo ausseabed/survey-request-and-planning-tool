@@ -151,6 +151,17 @@
                 format="image/png"
               >
               </l-wms-tile-layer>
+              <l-wms-tile-layer
+                v-if="userWms && userWmsLayer"
+                :base-url="userWms"
+                :layers="userWmsLayer"
+                :name="userWmsLayer"
+                :transparent="true"
+                :opacity="0.5"
+                format="image/png"
+                ref="userWmsMapLayer"
+              >
+              </l-wms-tile-layer>
               <l-geo-json
                 v-if="otherPasGeometry && showOtherPasLayer"
                 :geojson="otherPasGeometry"
@@ -224,10 +235,30 @@
                 </div>
               </l-control>
             </l-map>
-            <div class="column col-auto q-gutter-y-sm">
-              <q-card flat bordered style="max-width: 300px">
-                <div class="q-pa-sm"></div>
-              </q-card>
+            <div class="column col-auto">
+              <div class="row">Custom WMS base layer</div>
+              <div class="row q-col-gutter-x-sm">
+                <div class="column col">
+                  <q-input
+                    outlined
+                    clearable
+                    dense
+                    v-model="userWms"
+                    label="Web Mapping Service GetCapabilities URL"
+                    hint="eg; https://coordination.ausseabed.gov.au/map/wms?service=WMS&request=GetCapabilities"
+                  />
+                </div>
+
+                <div class="column" style="min-width: 260px">
+                  <q-select
+                    outlined
+                    v-model="userWmsLayer"
+                    :options="wmsLayerOptions"
+                    label="Layer name"
+                    dense
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -292,6 +323,7 @@ import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
 
 import LFreeDraw from "vue2-leaflet-freedraw";
 import { NONE, ALL } from "leaflet-freedraw";
+import WMSCapabilities from "wms-capabilities";
 
 import { multiPolygon } from "@turf/helpers";
 
@@ -504,6 +536,61 @@ export default Vue.extend({
 
       this.polygons = [];
     },
+
+    getWmsLayersRec(getCap, parentName, layerlist) {
+      // recursively traverses the getCap object to find layer names. These
+      // may be nested, so any layer object that has an attribute of 'name'
+      // is regarded as a layer name.
+      if (_.isNil(getCap)) {
+        return;
+      }
+      for (const [key, value] of Object.entries(getCap)) {
+        if (_.isNil(key) || _.isNil(value)) {
+          // skip it
+        } else if (
+          parentName &&
+          parentName.toLowerCase() === "layer" &&
+          key.toLowerCase() == "name"
+        ) {
+          layerlist.push(value);
+        } else if (!_.isNil(value) && Array.isArray(value)) {
+          for (const item of value) {
+            this.getWmsLayersRec(item, key, layerlist);
+          }
+        } else if (typeof value === "object" && !_.isNil(value)) {
+          this.getWmsLayersRec(value, key, layerlist);
+        }
+      }
+    },
+
+    getWmsLayers(getCapabilitiesUrl) {
+      // http://localhost:3001/map/wms?service=WMS&request=GetCapabilities
+      if (getCapabilitiesUrl && getCapabilitiesUrl.length != 0) {
+        Vue.axios
+          .get(getCapabilitiesUrl)
+          .then((res) => {
+            const getCapabilitiesXml = res.data;
+            const getCapabilitiesJson = new WMSCapabilities(
+              getCapabilitiesXml
+            ).toJSON();
+            let layerNames = [];
+            this.getWmsLayersRec(getCapabilitiesJson, undefined, layerNames);
+            this.wmsLayerOptions = layerNames;
+            if (layerNames.length > 0) {
+              this.userWmsLayer = layerNames[0];
+            }
+          })
+          .catch((error) => {
+            // error is possibly due to CORS, and if so will be undefined
+            this.notifyError(
+              `Failed to fetch GetCapabilties response from server`
+            );
+            console.log(error);
+          });
+      } else {
+        this.wmsLayerOptions = [];
+      }
+    },
   },
 
   watch: {
@@ -513,6 +600,22 @@ export default Vue.extend({
     "task.state": function (newState, oldState) {
       if (newState == "COMPLETED") {
         this.addTaskPriorityAreasToSubmission();
+      }
+    },
+    userWms: function (newUrl, oldUrl) {
+      this.userWmsLayer = undefined;
+      this.wmsLayerOptions = [];
+      this.getWmsLayers(newUrl);
+    },
+    userWmsLayer: function (newLayerName, oldLayerName) {
+      // there seems to be an issue with the Vue wrapper around leaflet
+      // whereby the reactive layer name is not passed to the underlying
+      // leaflet object. As a result it keeps requesting the same map layer
+      // regardless of what layer name is set.
+      // following code sets the leaflet layer name directly
+      const mapVueObject = this.$refs.userWmsMapLayer;
+      if (mapVueObject) {
+        mapVueObject.mapObject.wmsParams.layers = newLayerName;
       }
     },
   },
@@ -582,6 +685,9 @@ export default Vue.extend({
       isActive: false,
       otherPasGeometry: undefined,
       otherPasMapStyle: { color: "yellow", weight: 2 },
+      userWms: undefined,
+      userWmsLayer: undefined,
+      wmsLayerOptions: [],
     };
   },
 

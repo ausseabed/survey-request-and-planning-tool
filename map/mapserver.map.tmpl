@@ -190,7 +190,7 @@ MAP
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
 
     DATA "geom from (
-            select pa.id as paid ,pa.name as \"Name\", pa.priority as \"Priority\", pa.\"riskRating\" as \"Risk_Rating\", pa.\"preferredTimeframe\" as \"Preferred_Timeframe\", pa.\"requiredDataQuality\" as \"Required_Data_Quality\", pa.geom as geom, pas.\"contactPerson\" as \"Contact_Person\", pas.\"contactEmail\" as \"Contact_email\", sorg.name as \"Submitting_Organisation\"
+            select pa.id as paid ,pa.name as \"Name\", pa.organisational_priority as \"Priority\", pa.\"riskRating\" as \"Risk_Rating\", pa.\"preferredTimeframe\" as \"Preferred_Timeframe\", pa.\"requiredDataQuality\" as \"Required_Data_Quality\", pa.geom as geom, pas.\"contactPerson\" as \"Contact_Person\", pas.\"contactEmail\" as \"Contact_email\", sorg.name as \"Submitting_Organisation\"
             from priority_area pa
             join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
             left outer join organisation sorg on sorg.id = pas.\"submittingOrganisationId\"
@@ -199,8 +199,8 @@ MAP
           ) as subquery using unique paid using srid=4326"
 
     CLASS
-      NAME "Priority 1"
-      EXPRESSION ('[Priority]' = "1")
+      NAME "High Priority"
+      EXPRESSION ('[Priority]' = "High")
       STYLE
         OUTLINECOLOR '#ff0000'
         WIDTH 2
@@ -212,8 +212,8 @@ MAP
     END
 
     CLASS
-      NAME "Priority 2"
-      EXPRESSION ('[Priority]' = "2")
+      NAME "Medium Priority"
+      EXPRESSION ('[Priority]' = "Medium")
       STYLE
         OUTLINECOLOR '#2000ff'
         WIDTH 2
@@ -225,14 +225,27 @@ MAP
     END
 
     CLASS
-      NAME "Priority 3"
-      EXPRESSION ('[Priority]' = "3")
+      NAME "Low Priority"
+      EXPRESSION ('[Priority]' = "Low")
       STYLE
         OUTLINECOLOR '#008400'
         WIDTH 2
       END
       STYLE
         COLOR '#008400'
+        OPACITY 30
+      END
+    END
+
+    CLASS
+      NAME "Priority NA"
+      EXPRESSION ('[Priority]' = "NA")
+      STYLE
+        OUTLINECOLOR '#090909'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#090909'
         OPACITY 30
       END
     END

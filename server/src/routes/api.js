@@ -12,6 +12,7 @@ var marineParkRoutes = require('./api/marine-park');
 var organisationRoutes = require('./api/organisation');
 var priorityAreaRoutes = require('./api/priority-area');
 var priorityAreaSubmissionRoutes = require('./api/priority-area-submission');
+var proxy = require('./api/proxy');
 var recordStateRoutes = require('./api/record-state');
 var referenceSystemRoutes = require('./api/reference-system');
 var reportTemplateRoutes = require('./api/report-template');
@@ -43,6 +44,7 @@ router
     .use('/marine-park', marineParkRoutes)
     .use('/priority-area', priorityAreaRoutes)
     .use('/priority-area-submission', priorityAreaSubmissionRoutes)
+    .use('/proxy', proxy)
     .use('/record-state', recordStateRoutes)
     .use('/reference-system', referenceSystemRoutes)
     .use('/report-template', reportTemplateRoutes)

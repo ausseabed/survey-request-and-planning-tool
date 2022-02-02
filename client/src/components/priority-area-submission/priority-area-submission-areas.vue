@@ -153,9 +153,9 @@
               </l-wms-tile-layer>
               <l-wms-tile-layer
                 v-if="userWms && userWmsLayer"
-                :base-url="userWms"
-                :layers="userWmsLayer"
-                :name="userWmsLayer"
+                :base-url="'api/proxy/' + userWms"
+                :layers="userWmsLayer.value"
+                :name="userWmsLayer.value"
                 :transparent="true"
                 :opacity="0.5"
                 format="image/png"
@@ -317,13 +317,13 @@
 <script>
 import Vue from "vue";
 const _ = require("lodash");
+const convert = require("xml-js");
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import { latLng } from "leaflet";
 import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
 
 import LFreeDraw from "vue2-leaflet-freedraw";
 import { NONE, ALL } from "leaflet-freedraw";
-import WMSCapabilities from "wms-capabilities";
 
 import { multiPolygon } from "@turf/helpers";
 
@@ -552,7 +552,11 @@ export default Vue.extend({
           parentName.toLowerCase() === "layer" &&
           key.toLowerCase() == "name"
         ) {
-          layerlist.push(value);
+          let title = value._text;
+          if (getCap.Title && getCap.Title._text) {
+            title = getCap.Title._text;
+          }
+          layerlist.push({ value: value._text, label: title });
         } else if (!_.isNil(value) && Array.isArray(value)) {
           for (const item of value) {
             this.getWmsLayersRec(item, key, layerlist);
@@ -570,9 +574,17 @@ export default Vue.extend({
           .get(getCapabilitiesUrl)
           .then((res) => {
             const getCapabilitiesXml = res.data;
-            const getCapabilitiesJson = new WMSCapabilities(
-              getCapabilitiesXml
-            ).toJSON();
+
+            var options = {
+              ignoreComment: true,
+              alwaysChildren: true,
+              compact: true,
+            };
+            var getCapabilitiesJson = convert.xml2js(
+              getCapabilitiesXml,
+              options
+            );
+
             let layerNames = [];
             this.getWmsLayersRec(getCapabilitiesJson, undefined, layerNames);
             this.wmsLayerOptions = layerNames;
@@ -605,9 +617,10 @@ export default Vue.extend({
     userWms: function (newUrl, oldUrl) {
       this.userWmsLayer = undefined;
       this.wmsLayerOptions = [];
-      this.getWmsLayers(newUrl);
+      // use the backend proxy as CORS will probably block direct requests
+      this.getWmsLayers("api/proxy/" + newUrl);
     },
-    userWmsLayer: function (newLayerName, oldLayerName) {
+    userWmsLayer: function (newLayer, oldLayer) {
       // there seems to be an issue with the Vue wrapper around leaflet
       // whereby the reactive layer name is not passed to the underlying
       // leaflet object. As a result it keeps requesting the same map layer
@@ -615,7 +628,7 @@ export default Vue.extend({
       // following code sets the leaflet layer name directly
       const mapVueObject = this.$refs.userWmsMapLayer;
       if (mapVueObject) {
-        mapVueObject.mapObject.wmsParams.layers = newLayerName;
+        mapVueObject.mapObject.wmsParams.layers = newLayer.value;
       }
     },
   },

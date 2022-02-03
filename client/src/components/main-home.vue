@@ -114,26 +114,89 @@
         >
           <div class="q-px-md q-pb-sm q-gutter-y-sm column">
             <div class="q-gutter-y-sm column">
+              <div class="row full-width q-px-lg">
+                <q-img class="col" contain src="~assets/nesp-logo.png" />
+                <q-img class="col" contain src="~assets/aus-seabed-logo.png" />
+              </div>
               <div>
-                Areas of Interest are designed to capture areas where data
-                capture is important to those submitting for a variety of
-                reasons. Areas identified in this section of the system may be
-                identified of importance for the following reasons:
+                This version of the Areas of Interest tool was developed by
+                AusSeabed in partnership with the National Environmental Science
+                Program Marine and Coastal Hub. The tool is designed to help
+                users from <u>all sectors</u> across the seabed mapping and
+                characterisation community submit and describe Areas of Interest
+                for data collection to help create collaboration opportunities.
+                Areas created in this section of the system should have value
+                that can be categorised under the following themes:
               </div>
               <ul class="q-my-xs">
-                <li>Safety of navigation</li>
-                <li>Environmental baseline assessment</li>
-                <li>Resource competition and baseline data</li>
-                <li>
-                  Areas urgently needed to support policy and government
-                  decisions
-                </li>
+                <li>Cultural Heritage</li>
+                <li>Social/Historical</li>
+                <li>Operational</li>
+                <li>Economic</li>
+                <li>Environmental</li>
               </ul>
               <div>
-                When entering a Area of Interest, the submitting organisation
-                provides supporting information to help determine prioritisation
-                of data capure in the submitted area.
+                Before submitting an area of interest users should check the
+                below portals to ensure that there isn’t already open data that
+                meets their needs:
               </div>
+              <ul class="q-my-xs">
+                <li>
+                  <a href="https://www.ausseabed.gov.au/data" target="_blank"
+                    >AusSeabed</a
+                  >
+                  Acoustic data, bathymetry, etc
+                </li>
+                <li>
+                  <a
+                    href="http://dbforms.ga.gov.au/pls/www/npm.mars.search"
+                    target="_blank"
+                    >MARS Sediments</a
+                  >
+                </li>
+                <li>
+                  <a href="https://squidle.org/" target="_blank">Squidle+</a>
+                  Epibenthos organisms / imagery
+                </li>
+                <li>
+                  <a href="https://soi.squidle.org/" target="_blank"
+                    >SOI Squidle</a
+                  >
+                  Epibenthos organisms / imagery
+                </li>
+                <li>
+                  <a href="https://portal.aodn.org.au/" target="_blank"
+                    >AODN (all rationales)</a
+                  >
+                  All data types
+                </li>
+                <li>
+                  <a href="https://obis.org/" target="_blank">OBIS</a>
+                  Ecological data; species distributions
+                </li>
+                <li>
+                  <a href="https://www.ala.org.au/" target="_blank">ALA</a>
+                  Ecological data; species distributions
+                </li>
+                <li>
+                  <a href="https://seamapaustralia.org/" target="_blank"
+                    >SeaMap Australia</a
+                  >
+                  Biotope
+                </li>
+                <li>
+                  <a href="https://globalarchive.org/" target="_blank"
+                    >GlobalArchive</a
+                  >
+                  Fish, BRUVS data
+                </li>
+                <li>
+                  <a href="https://biocollect.ala.org.au/imsa" target="_blank"
+                    >IMSA</a
+                  >
+                  Biotope, sediment, chemical
+                </li>
+              </ul>
             </div>
             <sct-btn
               class="self-center full-width"

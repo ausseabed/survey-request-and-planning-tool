@@ -142,6 +142,16 @@
               >
               </l-wms-tile-layer>
               <l-wms-tile-layer
+                v-if="showAoiLayer"
+                base-url="map/wms"
+                layers="Priority_Area_Submissions"
+                name="Priority_Area_Submissions"
+                :transparent="true"
+                :opacity="0.5"
+                format="image/png"
+              >
+              </l-wms-tile-layer>
+              <l-wms-tile-layer
                 v-if="showMarineParksLayer"
                 base-url="map/wms"
                 layers="Marine_Parks"
@@ -214,6 +224,13 @@
                   <q-checkbox
                     v-model="showSurveyLayer"
                     label="Show upcoming survey layer"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                  <q-checkbox
+                    v-model="showAoiLayer"
+                    label="Show published areas of interest"
                     size="xs"
                     dark
                   >
@@ -730,6 +747,7 @@ export default Vue.extend({
       zoom: 3,
       mapStyle: { color: "red", weight: 3 },
       showSurveyLayer: true,
+      showAoiLayer: false,
       showMarineParksLayer: false,
       showOtherPasLayer: false,
       showOrganisationSubmissionsLayer: false,

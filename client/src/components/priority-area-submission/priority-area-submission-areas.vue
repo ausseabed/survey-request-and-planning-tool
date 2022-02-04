@@ -153,7 +153,7 @@
               </l-wms-tile-layer>
               <l-wms-tile-layer
                 v-if="userWms && userWmsLayer"
-                :base-url="'api/proxy/' + userWms"
+                :base-url="userWmsUrlProxy"
                 :layers="userWmsLayer.value"
                 :name="userWmsLayer.value"
                 :transparent="true"
@@ -318,6 +318,7 @@
 import Vue from "vue";
 const _ = require("lodash");
 const convert = require("xml-js");
+const url = require("url");
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import { latLng } from "leaflet";
 import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
@@ -617,8 +618,23 @@ export default Vue.extend({
     userWms: function (newUrl, oldUrl) {
       this.userWmsLayer = undefined;
       this.wmsLayerOptions = [];
+
+      // check the url includes the necessary query string params to
+      // get the GetCapabilities response. If these aren't included,
+      // add them.
+      let parsedUrl = new URL(newUrl);
+      let searchParams = parsedUrl.searchParams;
+      if (!searchParams.get("request")) {
+        searchParams.set("request", "GetCapabilities");
+      }
+      if (!searchParams.get("service")) {
+        searchParams.set("service", "WMS");
+      }
+      parsedUrl.search = searchParams.toString();
+      let parsedUrlString = parsedUrl.toString();
+
       // use the backend proxy as CORS will probably block direct requests
-      this.getWmsLayers("api/proxy/" + newUrl);
+      this.getWmsLayers("api/proxy/" + parsedUrlString);
     },
     userWmsLayer: function (newLayer, oldLayer) {
       // there seems to be an issue with the Vue wrapper around leaflet
@@ -678,6 +694,14 @@ export default Vue.extend({
 
     mode() {
       return this.isActive ? ALL : NONE;
+    },
+
+    userWmsUrlProxy() {
+      // leaflet will generate a getMap request with whatever is returned
+      // by this function. We therefore need to strip out parts that may confuse
+      // a wms server such as having getMap and getCapabilities query params
+      let cleanWmsUrl = this.userWms.replaceAll("request=GetCapabilities", "");
+      return "api/proxy/" + cleanWmsUrl;
     },
   },
 

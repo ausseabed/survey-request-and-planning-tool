@@ -1466,6 +1466,10 @@ export const PURPOSE_DATA = [
                 ]
             },
             {
+                label: "Decommissioning",
+                flags: ["Prospective", "Existing"]
+            },
+            {
                 label: "Disposal",
                 flags: ["Prospective", "Existing"]
             },
@@ -1723,6 +1727,7 @@ export const ECOSYSTEM_COMPONENT_DATA = [
     "Herb field",
     "Infauna",
     "Macroalgae",
+    "Marine mammals",
     "Marine reptiles",
     "Microbes",
     "Mobile macroinvertebrates",

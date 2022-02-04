@@ -619,10 +619,22 @@ export default Vue.extend({
       this.userWmsLayer = undefined;
       this.wmsLayerOptions = [];
 
+      if (!newUrl || newUrl.length == 0) {
+        // then user has cleared the url, don't need to get layer list
+        return;
+      }
+
       // check the url includes the necessary query string params to
       // get the GetCapabilities response. If these aren't included,
       // add them.
-      let parsedUrl = new URL(newUrl);
+      let parsedUrl;
+      try {
+        parsedUrl = new URL(newUrl);
+      } catch (_) {
+        this.notifyError(`Invalid URL`);
+        return;
+      }
+
       let searchParams = parsedUrl.searchParams;
       if (!searchParams.get("request")) {
         searchParams.set("request", "GetCapabilities");
@@ -637,6 +649,9 @@ export default Vue.extend({
       this.getWmsLayers("api/proxy/" + parsedUrlString);
     },
     userWmsLayer: function (newLayer, oldLayer) {
+      if (!newLayer) {
+        return;
+      }
       // there seems to be an issue with the Vue wrapper around leaflet
       // whereby the reactive layer name is not passed to the underlying
       // leaflet object. As a result it keeps requesting the same map layer

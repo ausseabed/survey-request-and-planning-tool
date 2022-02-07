@@ -135,7 +135,7 @@ export const DATA_AND_METHOD_OPTIONS = [
         methods: [
             {
                 name: "Satellite",
-                data: ["Bathymetry", "Imagery"]
+                data: ["Bathymetry"]
             },
             {
                 name: "LiDAR",
@@ -143,7 +143,7 @@ export const DATA_AND_METHOD_OPTIONS = [
             },
             {
                 name: "Aerial photography",
-                data: ["Imagery"]
+                data: []
             }
         ]
     },
@@ -152,23 +152,23 @@ export const DATA_AND_METHOD_OPTIONS = [
         methods: [
             {
                 name: "UAV",
-                data: ["Imagery", "Bathymetry"]
+                data: ["Bathymetry"]
             },
             {
                 name: "AUV / Drift Camera",
-                data: ["Imagery", "Bathymetry", "Backscatter"]
+                data: ["Bathymetry", "Backscatter"]
             },
             {
                 name: "ROV Imagery",
-                data: ["Imagery", "Bathymetry"]
+                data: ["Bathymetry"]
             },
             {
                 name: "Drop / Towed Video / DOV",
-                data: ["Imagery"]
+                data: []
             },
             {
                 name: "BRUV / Lander",
-                data: ["Imagery"]
+                data: []
             }
         ]
     },

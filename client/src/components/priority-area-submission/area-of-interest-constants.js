@@ -114,15 +114,15 @@ export const DATA_AND_METHOD_OPTIONS = [
         methods: [
             {
                 name: "MBES",
-                data: ["Bathymetry", "Backscatter", "Water column backscatter"]
+                data: ["Bathymetry", "Backscatter", "Water column backscatter", "Biotope/habitat"]
             },
             {
                 name: "Side-scan",
-                data: ["Bathymetry", "Backscatter"]
+                data: ["Bathymetry", "Backscatter", "Biotope/habitat"]
             },
             {
                 name: "Single-beam",
-                data: ["Bathymetry", "Backscatter", "Water column backscatter"]
+                data: ["Bathymetry", "Backscatter", "Water column backscatter", "Biotope/habitat"]
             },
             {
                 name: "Sub-bottom profiling",
@@ -135,15 +135,15 @@ export const DATA_AND_METHOD_OPTIONS = [
         methods: [
             {
                 name: "Satellite",
-                data: ["Bathymetry"]
+                data: ["Bathymetry", "Biotope/habitat"]
             },
             {
                 name: "LiDAR",
-                data: ["Bathymetry"]
+                data: ["Bathymetry", "Biotope/habitat"]
             },
             {
                 name: "Aerial photography",
-                data: []
+                data: ["Biotope/habitat"]
             }
         ]
     },
@@ -152,23 +152,23 @@ export const DATA_AND_METHOD_OPTIONS = [
         methods: [
             {
                 name: "UAV",
-                data: ["Bathymetry"]
+                data: ["Bathymetry", "Biodiversity", "Biotope/habitat", "Indicator species / TEPS"]
             },
             {
                 name: "AUV / Drift Camera",
-                data: ["Bathymetry", "Backscatter"]
+                data: ["Bathymetry", "Backscatter", "Biodiversity", "Biotope/habitat", "Indicator species / TEPS"]
             },
             {
                 name: "ROV Imagery",
-                data: ["Bathymetry"]
+                data: ["Bathymetry", "Biodiversity", "Biotope/habitat", "Indicator species / TEPS"]
             },
             {
                 name: "Drop / Towed Video / DOV",
-                data: []
+                data: ["Biodiversity", "Biotope/habitat", "Indicator species / TEPS"]
             },
             {
                 name: "BRUV / Lander",
-                data: []
+                data: ["Biodiversity", "Biotope/habitat", "Indicator species / TEPS"]
             }
         ]
     },
@@ -197,14 +197,16 @@ export const DATA_AND_METHOD_OPTIONS = [
                 data: [
                     "Biodiversity (inc. microbial diversity)",
                     "Indicator species / TEPS",
-                    "Biotope/habitat"
+                    "Biotope/habitat",
+                    "Biological specimens"
                 ]
             },
             {
-                name: "Benthic Sled / Dregde",
+                name: "Benthic Sled / Dredge",
                 data: [
                     "Biodiversity (inc. microbial diversity)",
                     "Indicator species / TEPS",
+                    "Biological specimens",
                     "Biotope/habitat",
                     "Substrate"
                 ]
@@ -214,7 +216,8 @@ export const DATA_AND_METHOD_OPTIONS = [
                 data: [
                     "Biodiversity (inc. microbial diversity)",
                     "Indicator species / TEPS",
-                    "Biotope/habitat"
+                    "Biotope/habitat",
+                    "Biological specimens"
                 ]
             },
             {
@@ -223,7 +226,8 @@ export const DATA_AND_METHOD_OPTIONS = [
                     "Biodiversity (inc. microbial diversity)",
                     "Indicator species / TEPS",
                     "Biotope/habitat",
-                    "Substrate"
+                    "Substrate",
+                    "Biological specimens"
                 ]
             },
             {
@@ -232,32 +236,42 @@ export const DATA_AND_METHOD_OPTIONS = [
                     "Biodiversity (inc. microbial diversity)",
                     "Indicator species / TEPS",
                     "Biotope/habitat",
-                    "Substrate"
+                    "Substrate",
+                    "Biological specimens"
                 ]
             },
             {
                 name: "Sediment Cores",
-                data: ["Substrate", "Biodiversity (inc. microbial diversity)"]
+                data: [
+                    "Substrate",
+                    "Biodiversity (inc. microbial diversity)",
+                    "Biological specimens",
+                    "Indicator species / TEPS",
+                    "Sub-bottom"
+                ]
             },
             {
                 name: "Tissue Sample",
                 data: [
                     "Biodiversity (inc. microbial diversity)",
-                    "Indicator species / TEPS"
+                    "Indicator species / TEPS",
+                    "Biological specimens"
                 ]
             },
             {
                 name: "eDNA",
                 data: [
                     "Biodiversity (inc. microbial diversity)",
-                    "Indicator species / TEPS"
+                    "Indicator species / TEPS",
+                    "Biological specimens"
                 ]
             },
             {
                 name: "Settlement plates",
                 data: [
                     "Biodiversity (inc. microbial diversity)",
-                    "Indicator species / TEPS"
+                    "Indicator species / TEPS",
+                    "Biological specimens"
                 ]
             },
             {
@@ -269,14 +283,22 @@ export const DATA_AND_METHOD_OPTIONS = [
                 data: [
                     "Biodiversity (inc. microbial diversity)",
                     "Indicator species / TEPS",
-                    "Water properties"
+                    "Water properties",
+                    "Biological specimens"
                 ]
             },
             {
                 name: "Hook & Line",
                 data: [
                     "Biodiversity (inc. microbial diversity)",
-                    "Indicator species / TEPS"
+                    "Indicator species / TEPS",
+                    "Biological specimens"
+                ]
+            },
+            {
+                name: "Stratigraphic drilling",
+                data: [
+                    "Sub-bottom"
                 ]
             }
         ]

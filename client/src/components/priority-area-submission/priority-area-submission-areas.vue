@@ -123,6 +123,7 @@
               :zoom="zoom"
               :center="center"
               :options="{ attributionControl: false }"
+              @click="mapClicked"
             >
               <l-wms-tile-layer
                 :base-url="mapBaseUrl"
@@ -177,6 +178,16 @@
                 :geojson="otherPasGeometry"
                 :optionsStyle="otherPasMapStyle"
               />
+              <l-layer-group ref="popz">
+                <l-popup :latLng="sfgLatLng" :options="{ maxWidth: 'auto' }">
+                  {{ sfgText[0] }} <br />
+                  {{ sfgText[1] }}
+                </l-popup>
+              </l-layer-group>
+              <template v-if="sfg">
+                <l-geo-json :geojson="sfg" :optionsStyle="sfgStyle">
+                </l-geo-json>
+              </template>
               <l-control position="topleft">
                 <div class="column q-gutter-y-xs">
                   <q-btn
@@ -337,8 +348,14 @@ const _ = require("lodash");
 const convert = require("xml-js");
 const url = require("url");
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { latLng } from "leaflet";
-import { LMap, LWMSTileLayer, LControlLayers, LLayerGroup } from "vue2-leaflet";
+import { latLng, Util } from "leaflet";
+import {
+  LMap,
+  LWMSTileLayer,
+  LControlLayers,
+  LLayerGroup,
+  LPopup,
+} from "vue2-leaflet";
 
 import LFreeDraw from "vue2-leaflet-freedraw";
 import { NONE, ALL } from "leaflet-freedraw";
@@ -363,6 +380,7 @@ export default Vue.extend({
     LMap,
     LControlLayers,
     LLayerGroup,
+    LPopup,
     "l-wms-tile-layer": LWMSTileLayer,
     "l-freedraw": LFreeDraw,
   },
@@ -621,6 +639,85 @@ export default Vue.extend({
         this.wmsLayerOptions = [];
       }
     },
+
+    getFeatureInfoUrl: function (latlng, layerName) {
+      // Construct a GetFeatureInfo request URL given a point
+      const mapObject = this.$refs.aoiDefinitionMap.mapObject;
+
+      const lBounds = mapObject.getBounds();
+      const wmsBounds = [
+        lBounds.getSouth(),
+        lBounds.getWest(),
+        lBounds.getNorth(),
+        lBounds.getEast(),
+      ];
+
+      var point = mapObject.latLngToContainerPoint(latlng, mapObject.getZoom()),
+        size = mapObject.getSize(),
+        params = {
+          request: "GetFeatureInfo",
+          service: "WMS",
+          crs: "EPSG:4326",
+          styles: "",
+          version: "1.3.0",
+          bbox: wmsBounds,
+          height: size.y,
+          width: size.x,
+          layers: layerName,
+          query_layers: layerName,
+          info_format: "application/json",
+        };
+
+      params[params.version === "1.3.0" ? "i" : "x"] = point.x;
+      params[params.version === "1.3.0" ? "j" : "y"] = point.y;
+
+      const featureUrl =
+        "map/wms" + Util.getParamString(params, "map/wms", true);
+
+      return featureUrl;
+    },
+
+    mapClicked(e) {
+      if (this.isActive) {
+        // then user is in edit mode, so do not respond to any clicks to
+        // show feature info
+        return;
+      }
+      this.sfg = undefined;
+
+      let layerName = undefined;
+      if (this.showSurveyLayer) {
+        layerName = "Survey_Plans";
+      }
+      if (this.showAoiLayer) {
+        layerName = "Priority_Area_Submissions";
+      }
+
+      this.sfgLatLng = e.latlng;
+
+      const featureInfoUrl = this.getFeatureInfoUrl(e.latlng, layerName);
+      Vue.axios.get(featureInfoUrl).then((res) => {
+        if (res.data.features.length == 0) {
+          this.sfg = undefined;
+          this.$refs.popz.mapObject.closePopup();
+        } else {
+          this.sfg = res.data;
+          const aFeature = res.data.features[0];
+          if (layerName == "Survey_Plans") {
+            this.sfgText = [
+              aFeature.properties.Commissioning_Organisations,
+              aFeature.properties.Contact_email,
+            ];
+          } else if (layerName == "Priority_Area_Submissions") {
+            this.sfgText = [
+              aFeature.properties.Submitting_Organisation,
+              aFeature.properties.Contact_email,
+            ];
+          }
+          this.$refs.popz.mapObject.openPopup(this.sfgLatLng);
+        }
+      });
+    },
   },
 
   watch: {
@@ -755,6 +852,10 @@ export default Vue.extend({
       isActive: false,
       otherPasGeometry: undefined,
       otherPasMapStyle: { color: "yellow", weight: 2 },
+      sfgStyle: { color: "orange", weight: 2 },
+      sfgText: ["", ""],
+      sfgLatLng: undefined,
+      sfg: undefined,
       userWms: undefined,
       userWmsLayer: undefined,
       wmsLayerOptions: [],

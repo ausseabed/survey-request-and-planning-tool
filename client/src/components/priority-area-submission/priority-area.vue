@@ -72,7 +72,7 @@
             inline
             clearable
             name="priorityArea.ecologicalAreaType"
-            label="Significant ecological area name"
+            label="Significant ecological area type"
             :value="priorityArea.ecologicalAreaType"
             @input="valueChanged('ecologicalAreaType', $event)"
             :options="[...ecologicalAreaNameOptions, 'Other']"

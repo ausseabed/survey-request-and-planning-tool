@@ -110,7 +110,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   }
 
   // this order by last modified
-  pasQuery = pasQuery.orderBy("priority_area_submission.lastModified");
+  pasQuery = pasQuery.orderBy("priority_area_submission.lastModified", "DESC");
 
   let count = await pasQuery.getCount();
 

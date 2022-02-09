@@ -117,6 +117,8 @@ export class PriorityAreaShpBuilder extends ShpBuilder {
       'sorg.name as AS_SUB_ORG',
       'pas.\"contactPerson\" as AS_C_NAME',
       'pas.\"contactEmail\" as AS_C_EMAIL',
+      'pas.open_to_collaboration as AS_COL_OPEN',
+      'pas.have_funds_resources as AS_FUNDING',
       'cust.name as AS_CUSTOD',
       'pa.name as A_NAME',
       'pa.seacountry_name as A_SEA_NAME',

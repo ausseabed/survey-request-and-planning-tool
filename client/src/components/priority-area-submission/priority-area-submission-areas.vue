@@ -179,9 +179,12 @@
                 :optionsStyle="otherPasMapStyle"
               />
               <l-layer-group ref="popz">
-                <l-popup :latLng="sfgLatLng" :options="{ maxWidth: 'auto' }">
-                  {{ sfgText[0] }} <br />
-                  {{ sfgText[1] }}
+                <l-popup
+                  :latLng="sfgLatLng"
+                  :options="{ maxWidth: 300, minWidth: 100 }"
+                >
+                  <span>{{ sfgText[0] }}</span> <br />
+                  <span>{{ sfgText[1] }}</span>
                 </l-popup>
               </l-layer-group>
               <template v-if="sfg">
@@ -688,9 +691,10 @@ export default Vue.extend({
       let layerName = undefined;
       if (this.showSurveyLayer) {
         layerName = "Survey_Plans";
-      }
-      if (this.showAoiLayer) {
+      } else if (this.showAoiLayer) {
         layerName = "Priority_Area_Submissions";
+      } else if (this.showMarineParksLayer) {
+        layerName = "Marine_Parks";
       }
 
       this.sfgLatLng = e.latlng;
@@ -712,6 +716,11 @@ export default Vue.extend({
             this.sfgText = [
               aFeature.properties.Submitting_Organisation,
               aFeature.properties.Contact_email,
+            ];
+          } else if (layerName == "Marine_Parks") {
+            this.sfgText = [
+              aFeature.properties.netname,
+              aFeature.properties.resname,
             ];
           }
           this.$refs.popz.mapObject.openPopup(this.sfgLatLng);

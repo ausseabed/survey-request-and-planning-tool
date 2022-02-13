@@ -223,7 +223,7 @@ router.get(
       throw err;
     }
 
-    if (!priorityAreaSubmission.deleted) {
+    if (priorityAreaSubmission.deleted) {
       let err = Boom.notFound(
         `Priority Area Submission ${req.params.id} is deleted`);
       throw err;

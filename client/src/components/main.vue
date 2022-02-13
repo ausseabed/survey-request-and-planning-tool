@@ -414,6 +414,15 @@
               </div>
             </l-control>
 
+            <l-control :position="'bottomright'" v-if="showPriorityAreas">
+              <div
+                class="rounded-borders q-px-xs q-pt-xs"
+                style="background-color: #ffffff4f"
+              >
+                <img :src="mapLegendUrl" spinner-color="white" contain />
+              </div>
+            </l-control>
+
             <l-control position="topleft">
               <q-btn
                 class="map-btn"
@@ -507,7 +516,7 @@ import {
   LControlLayers,
   LLayerGroup,
   LControlScale,
-  LRectangle
+  LRectangle,
 } from "vue2-leaflet";
 
 import * as pmMutTypes from "../store/modules/survey-plan/survey-plan-mutation-types";
@@ -542,7 +551,7 @@ export default Vue.extend({
     LLayerGroup,
     LControlScale,
     LRectangle,
-    "l-wms-tile-layer": LWMSTileLayer
+    "l-wms-tile-layer": LWMSTileLayer,
   },
 
   beforeMount() {
@@ -559,7 +568,7 @@ export default Vue.extend({
   methods: {
     ...mapMutations("surveyPlan", [
       pmMutTypes.SET_AOI,
-      pmMutTypes.SET_SURVEY_PLAN_LIST_FILTER
+      pmMutTypes.SET_SURVEY_PLAN_LIST_FILTER,
     ]),
     ...mapActions("surveyPlan", ["getSurveyPlans"]),
     ...mapActions("surveyRequest", ["getSurveyRequests"]),
@@ -567,7 +576,7 @@ export default Vue.extend({
     heightTweak(offset) {
       return {
         minHeight: offset ? `calc(100vh - ${offset}px)` : "100vh",
-        height: offset ? `calc(100vh - ${offset}px)` : "100vh"
+        height: offset ? `calc(100vh - ${offset}px)` : "100vh",
       };
     },
 
@@ -576,7 +585,7 @@ export default Vue.extend({
       this.getSurveyPlans();
     },
 
-    debounceExtents: _.debounce(function(extents) {
+    debounceExtents: _.debounce(function (extents) {
       this.fetchSurveyPlans(extents);
     }, 500),
 
@@ -651,34 +660,36 @@ export default Vue.extend({
       // for each one; differences being the url and what property holds
       // the name value
       if (!_.isNil(featureUrlName) && !_.isNil(featureList)) {
-        entityList.forEach(sr => {
-          Vue.axios.get(`api/${featureUrlName}/${sr.id}/geometry`).then(res => {
-            const geojson = res.data;
-            if (!_.isNil(geojson) && geojson.length != 0) {
-              geojson.properties = {
-                id: sr.id,
-                name: _.get(sr, nameProp)
-              };
-              const existingIndex = featureList.findIndex(esr => {
-                return esr.sr.id === sr.id;
-              });
-              const nf = {
-                geojson: geojson,
-                sr: sr
-              };
-              if (existingIndex == -1) {
-                featureList.push(nf);
-              } else {
-                this.$set(featureList, existingIndex, nf);
+        entityList.forEach((sr) => {
+          Vue.axios
+            .get(`api/${featureUrlName}/${sr.id}/geometry`)
+            .then((res) => {
+              const geojson = res.data;
+              if (!_.isNil(geojson) && geojson.length != 0) {
+                geojson.properties = {
+                  id: sr.id,
+                  name: _.get(sr, nameProp),
+                };
+                const existingIndex = featureList.findIndex((esr) => {
+                  return esr.sr.id === sr.id;
+                });
+                const nf = {
+                  geojson: geojson,
+                  sr: sr,
+                };
+                if (existingIndex == -1) {
+                  featureList.push(nf);
+                } else {
+                  this.$set(featureList, existingIndex, nf);
+                }
               }
-            }
-          });
+            });
         });
       }
     },
 
     styleFunction(sr) {
-      return f => {
+      return (f) => {
         const srid = f.geometry.properties.id;
         return {
           weight: 2,
@@ -691,7 +702,7 @@ export default Vue.extend({
             srid === this.activeId
               ? "rgba(255, 0, 0, 0.3)"
               : "rgba(0, 0, 0, 0.1)",
-          fillOpacity: 1
+          fillOpacity: 1,
         };
       };
     },
@@ -699,7 +710,7 @@ export default Vue.extend({
     zoomToDefault() {
       const map = this.$refs.map;
       map.mapObject.flyToBounds(defaultBounds, { duration: 0.2 });
-    }
+    },
   },
 
   computed: {
@@ -716,12 +727,12 @@ export default Vue.extend({
     priorityAreaLayerDetails() {
       return {
         url: MapConstants.WMS_PRIORITY_AREAS,
-        layer: MapConstants.WMS_PRIORITY_AREAS_LAYER
+        layer: MapConstants.WMS_PRIORITY_AREAS_LAYER,
       };
     },
     options() {
       return {
-        onEachFeature: this.onEachFeatureFunction
+        onEachFeature: this.onEachFeatureFunction,
       };
     },
     onEachFeatureFunction() {
@@ -730,10 +741,10 @@ export default Vue.extend({
           `<div class="rounded-borders">` + feature.properties.name + `</div>`,
           { permanent: false, sticky: false }
         );
-        layer.on("mouseover", e => {
+        layer.on("mouseover", (e) => {
           this.activeId = feature.properties.id;
         });
-        layer.on("click", e => {
+        layer.on("click", (e) => {
           this.activeId = feature.properties.id;
           const layerBounds = layer.getBounds().pad(0.2);
           const map = this.$refs.map;
@@ -746,14 +757,14 @@ export default Vue.extend({
       return [
         [
           MapConstants.WMTS_DEFAULT_EXTENT[1],
-          MapConstants.WMTS_DEFAULT_EXTENT[0]
+          MapConstants.WMTS_DEFAULT_EXTENT[0],
         ],
         [
           MapConstants.WMTS_DEFAULT_EXTENT[3],
-          MapConstants.WMTS_DEFAULT_EXTENT[2]
-        ]
+          MapConstants.WMTS_DEFAULT_EXTENT[2],
+        ],
       ];
-    }
+    },
   },
 
   data() {
@@ -762,12 +773,13 @@ export default Vue.extend({
       activeId: undefined,
       lastSelectedFeatureIds: [],
       zoom: 4,
+      mapLegendUrl: `map/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.3.0&FORMAT=image/png&HEIGHT=25&LAYER=Priority_Area_Submissions&LAYERS=Priority_Area_Submissions&LEGEND_OPTIONS=forceLabels:on;minSymbolSize&SLD_VERSION=1.1.0&TRANSPARENT=true`,
       center: defaultCenter,
       bounds: defaultBounds,
       showPriorityAreas: true,
       surveyPlanFeatures: [],
       surveyRequestFeatures: [],
-      priorityAreaSubmissionFeatures: []
+      priorityAreaSubmissionFeatures: [],
     };
   },
 
@@ -776,14 +788,14 @@ export default Vue.extend({
       immediate: true,
       handler(newRole, oldRole) {
         this.tab = "home";
-      }
+      },
     },
     tab: {
       handler(newTab, oldTab) {
         this.fetchMapFeatures(newTab);
-      }
-    }
-  }
+      },
+    },
+  },
 });
 </script>
 

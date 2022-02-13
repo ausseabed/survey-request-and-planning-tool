@@ -84,8 +84,17 @@ MAP
     FORMATOPTION 'ATTACHMENT=sct.kml'
   END
 
+  OUTPUTFORMAT
+    NAME "cairopng"
+    DRIVER CAIRO/PNG
+    MIMETYPE "image/png"
+    IMAGEMODE RGBA
+    EXTENSION "png"
+    TRANSPARENT on
+  END
+
   LEGEND
-    IMAGECOLOR "#FFFFFF"
+    
   END
 
   LAYER

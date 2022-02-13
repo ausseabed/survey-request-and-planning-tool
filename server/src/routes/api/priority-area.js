@@ -70,35 +70,37 @@ router.get(
     // intersects
     const id = req.params.id;
 
-
-    let intersectsQuery = getConnection()
-      .getRepository(MarinePark)
-      .createQueryBuilder("marine_park")
-      .leftJoinAndSelect(
-        PriorityArea,
-        "priority_area",
-        "ST_Intersects(marine_park.geometry, priority_area.geom)"
-      ).andWhere(
-        `priority_area.id = :aid`,
-        { aid: id }
+    // note this function now relies on pre-computed intersections that are performed
+    // in the priority-area-processing.js worker
+    let pa = await getConnection()
+      .getRepository(PriorityArea)
+      .findOne(
+        id,
+        { select: ["intersections"] }
       );
 
-    let intersectingItems = await intersectsQuery.getMany();
-    let intersectingItemsResp = intersectingItems.map(ii => {
-      return [
-        {
-          key: "netname",
-          value: ii.netname
-        },
-        {
-          key: "resname",
-          value: ii.resname
-        },
-        {
-          key: "zonename",
-          value: ii.zonename
-        }
-      ]
+    if (_.isNil(pa)) {
+      let err = Boom.notFound(`No priority area found with id ${id}`);
+      throw err;
+    }
+
+    // spatial intersection check
+    // let intersectsQuery = getConnection()
+    //   .getRepository(MarinePark)
+    //   .createQueryBuilder("marine_park")
+    //   .leftJoinAndSelect(
+    //     PriorityArea,
+    //     "priority_area",
+    //     "ST_Intersects(marine_park.geometry, priority_area.geom)"
+    //   ).andWhere(
+    //     `priority_area.id = :aid`,
+    //     { aid: id }
+    //   );
+
+    let intersectingItemsResp = pa.intersections.map(ii => {
+      const netname = ii.substring(0, ii.indexOf('('));
+      const zonename = ii.substring(ii.indexOf('(') + 1, ii.lastIndexOf(')'));
+      return [netname, zonename];
     });
     return res.json(intersectingItemsResp);
   }));

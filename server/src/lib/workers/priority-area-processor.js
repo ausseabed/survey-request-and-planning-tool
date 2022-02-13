@@ -13,6 +13,7 @@ import { geojsonToFeatureList, getParameterCaseInsensitive } from '../../lib/ent
 import { sleep } from '../../routes/utils';
 import { Task } from '../../lib/entity/task';
 import { PriorityArea } from '../../lib/entity/priority-area';
+import { MarinePark } from '../../lib/entity/marine-park';
 
 
 const getDbImage = async (connection, paId, attrName, extents, imageSize) => {
@@ -277,7 +278,7 @@ const doProcessing = async (taskId) => {
 
     count += 1;
     let percentageComplete = Math.round(
-      (count / features.length * 0.8 + 0.2) * 100
+      (count / features.length * 0.4 + 0.2) * 100
     );
 
     completedPriorityAreaIds.push(paId);
@@ -287,6 +288,48 @@ const doProcessing = async (taskId) => {
         progress: percentageComplete
       });
   };
+
+  await getConnection().getRepository(Task)
+    .update(taskId, {
+      statusMessage: "Finding intersections"
+    });
+
+  count = 0;
+  for (const paId of priorityAreaIds) {
+    let intersectsQuery = getConnection()
+      .getRepository(MarinePark)
+      .createQueryBuilder("marine_park")
+      .leftJoinAndSelect(
+        PriorityArea,
+        "priority_area",
+        "ST_Intersects(marine_park.geometry, priority_area.geom)"
+      ).andWhere(
+        `priority_area.id = :aid`,
+        { aid: paId }
+      );
+
+    let intersectingItems = await intersectsQuery.getMany();
+    let intersectingItemsResp = intersectingItems.map(ii => {
+      // need to remove comma chars as they will mess up the simple-array based
+      // db storage
+      const netname = ii.netname.replace(/,/g, "")
+      const zonename = ii.zonename.replace(/,/g, "")
+      return `${netname} (${zonename})`;
+    });
+
+    await getConnection().getRepository(PriorityArea)
+      .update(paId, { intersections: intersectingItemsResp });
+
+    count += 1;
+    let percentageComplete = Math.round(
+      (count / features.length * 0.4 + 0.6) * 100
+    );
+
+    await getConnection().getRepository(Task)
+      .update(taskId, {
+        progress: percentageComplete
+      });
+  }
 
   await getConnection().getRepository(Task)
     .update(taskId, {

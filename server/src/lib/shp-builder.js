@@ -144,6 +144,7 @@ export class PriorityAreaShpBuilder extends ShpBuilder {
       'pa.purpose_values as A_PURVALS',
       'pa.ecosystems as A_ECOSYSTS',
       'pa.ecosystem_components as A_ECOCOMPS',
+      'pa.intersections as A_INTERSEC',
       'pa.geom as GEOM',
     ]
     let q = '' +

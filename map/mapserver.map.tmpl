@@ -199,7 +199,7 @@ MAP
     CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
 
     DATA "geom from (
-            select pa.id as paid ,pa.name as \"Name\", pa.organisational_priority as \"Priority\", pa.\"riskRating\" as \"Risk_Rating\", pa.\"preferredTimeframe\" as \"Preferred_Timeframe\", pa.\"requiredDataQuality\" as \"Required_Data_Quality\", pa.geom as geom, pas.\"contactPerson\" as \"Contact_Person\", pas.\"contactEmail\" as \"Contact_email\", sorg.name as \"Submitting_Organisation\"
+            select pa.id as paid ,pa.name as \"Name\", pa.organisational_priority as \"Priority\", pa.intersections as \"Intersections\", pa.\"preferredTimeframe\" as \"Preferred_Timeframe\", pa.\"requiredDataQuality\" as \"Required_Data_Quality\", pa.geom as geom, pas.\"contactPerson\" as \"Contact_Person\", pas.\"contactEmail\" as \"Contact_email\", sorg.name as \"Submitting_Organisation\"
             from priority_area pa
             join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
             left outer join organisation sorg on sorg.id = pas.\"submittingOrganisationId\"

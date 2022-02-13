@@ -232,6 +232,15 @@ export class PriorityArea {
   })
   ecologicalAreaName;
 
+  // list of intersecting areas such as marine parks
+  @Column({
+    type: "simple-array",
+    nullable: true,
+    name: "intersections",
+    default: ""
+  })
+  intersections = [];
+
   @Column("geometry", {
     name: "geom",
     spatialFeatureType: "MultiPolygon",

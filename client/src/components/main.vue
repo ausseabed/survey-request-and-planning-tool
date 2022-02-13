@@ -773,7 +773,7 @@ export default Vue.extend({
       activeId: undefined,
       lastSelectedFeatureIds: [],
       zoom: 4,
-      mapLegendUrl: `map/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.3.0&FORMAT=image/png&HEIGHT=25&LAYER=Priority_Area_Submissions&LAYERS=Priority_Area_Submissions&LEGEND_OPTIONS=forceLabels:on;minSymbolSize&SLD_VERSION=1.1.0&TRANSPARENT=true`,
+      mapLegendUrl: `map/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.3.0&FORMAT=image/png&HEIGHT=25&LAYER=areas_of_interest&LAYERS=areas_of_interest&LEGEND_OPTIONS=forceLabels:on;minSymbolSize&SLD_VERSION=1.1.0&TRANSPARENT=true`,
       center: defaultCenter,
       bounds: defaultBounds,
       showPriorityAreas: true,

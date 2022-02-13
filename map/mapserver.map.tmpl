@@ -264,6 +264,93 @@ MAP
 
 
   LAYER
+    NAME "areas_of_interest"
+    METADATA
+      "wfs_title"         "Areas of Interest" ##REQUIRED
+      "wfs_srs"           "EPSG:4326" ## REQUIRED
+      "gml_include_items" "all" ## Optional (serves all attributes for layer)
+      "gml_featureid"     "id" ## REQUIRED
+      "wfs_enable_request" "*"
+      wms_enable_request "*"
+      "ows_enable_request" "*"
+      wms_getfeature_formatlist "application/json,application/geojson"
+      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml,csv,SHAPE-ZIP,kml,application/vnd.google-earth.kml xml"
+    END
+    STATUS ON
+    TEMPLATE "dummy.js"
+    TYPE POLYGON
+    CONNECTIONTYPE postgis
+
+    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
+
+    DATA "geom from (
+            select pa.id as paid ,pa.name as \"Name\", pa.organisational_priority as \"Priority\", pa.intersections as \"Intersections\", pa.\"preferredTimeframe\" as \"Preferred_Timeframe\", pa.\"requiredDataQuality\" as \"Required_Data_Quality\", pa.geom as geom, pas.\"contactPerson\" as \"Contact_Person\", pas.\"contactEmail\" as \"Contact_email\", sorg.name as \"Submitting_Organisation\"
+            from priority_area pa
+            join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
+            left outer join organisation sorg on sorg.id = pas.\"submittingOrganisationId\"
+            join record_state rs on pas.\"recordStateId\" = rs.id
+            where rs.state = 'published' AND pas.deleted = false
+          ) as subquery using unique paid using srid=4326"
+
+    CLASS
+      NAME "High Priority"
+      EXPRESSION ('[Priority]' = "High")
+      STYLE
+        OUTLINECOLOR '#ff0000'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#ff0000'
+        OPACITY 30
+      END
+    END
+
+    CLASS
+      NAME "Medium Priority"
+      EXPRESSION ('[Priority]' = "Medium")
+      STYLE
+        OUTLINECOLOR '#2000ff'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#2000ff'
+        OPACITY 30
+      END
+    END
+
+    CLASS
+      NAME "Low Priority"
+      EXPRESSION ('[Priority]' = "Low")
+      STYLE
+        OUTLINECOLOR '#008400'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#008400'
+        OPACITY 30
+      END
+    END
+
+    CLASS
+      NAME "Priority NA"
+      EXPRESSION ('[Priority]' = "NA")
+      STYLE
+        OUTLINECOLOR '#090909'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#090909'
+        OPACITY 30
+      END
+    END
+
+  END
+
+
+
+
+
+  LAYER
     NAME "Marine_Parks"
     METADATA
       "wfs_title"         "Marine Parks" ##REQUIRED

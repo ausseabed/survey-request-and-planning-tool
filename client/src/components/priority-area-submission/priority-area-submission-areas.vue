@@ -145,8 +145,8 @@
               <l-wms-tile-layer
                 v-if="showAoiLayer"
                 base-url="map/wms"
-                layers="Priority_Area_Submissions"
-                name="Priority_Area_Submissions"
+                layers="areas_of_interest"
+                name="areas_of_interest"
                 :transparent="true"
                 :opacity="0.5"
                 format="image/png"
@@ -692,7 +692,7 @@ export default Vue.extend({
       if (this.showSurveyLayer) {
         layerName = "Survey_Plans";
       } else if (this.showAoiLayer) {
-        layerName = "Priority_Area_Submissions";
+        layerName = "areas_of_interest";
       } else if (this.showMarineParksLayer) {
         layerName = "Marine_Parks";
       }
@@ -712,7 +712,7 @@ export default Vue.extend({
               aFeature.properties.Commissioning_Organisations,
               aFeature.properties.Contact_email,
             ];
-          } else if (layerName == "Priority_Area_Submissions") {
+          } else if (layerName == "areas_of_interest") {
             this.sfgText = [
               aFeature.properties.Submitting_Organisation,
               aFeature.properties.Contact_email,

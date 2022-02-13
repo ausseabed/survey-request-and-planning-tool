@@ -276,7 +276,7 @@
                     dense
                     v-model="userWms"
                     label="Web Mapping Service GetCapabilities URL"
-                    hint="eg; https://coordination.ausseabed.gov.au/map/wms?service=WMS&request=GetCapabilities"
+                    hint="eg; https://warehouse.ausseabed.gov.au/geoserver/wms"
                   />
                 </div>
 

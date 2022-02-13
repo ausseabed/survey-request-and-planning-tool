@@ -195,7 +195,7 @@ MAP
             join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
             left outer join organisation sorg on sorg.id = pas.\"submittingOrganisationId\"
             join record_state rs on pas.\"recordStateId\" = rs.id
-            where rs.state = 'published'
+            where rs.state = 'published' AND pas.deleted = false
           ) as subquery using unique paid using srid=4326"
 
     CLASS

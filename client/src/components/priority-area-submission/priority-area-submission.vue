@@ -1,6 +1,7 @@
 <template>
   <q-page :style-fn="heightTweak" class="column items-center">
     <div
+      v-if="!errorFetching"
       class="column q-px-sm q-pt-sm q-gutter-y-sm fit"
       style="max-width: 900px"
     >
@@ -77,6 +78,13 @@
             icon="close"
             :to="'/'"
           />
+          <q-btn
+            color="red"
+            label="Delete"
+            icon="delete"
+            :disable="stateReadonly"
+            @click="deleteClicked"
+          />
         </div>
         <div
           v-if="
@@ -103,6 +111,21 @@
           icon-right="forward"
           @click="saveClicked(true, true)"
         />
+      </div>
+    </div>
+    <div v-else class="column full-width full-height justify-center">
+      <div class="row justify-center items-center q-gutter-sm">
+        <div>
+          <q-icon
+            name="report_problem"
+            class="text-red"
+            style="font-size: 4rem"
+          />
+        </div>
+        <div class="column items-center">
+          <div>Error loading Area of Interest Submission</div>
+          <a href="/">Go back</a>
+        </div>
       </div>
     </div>
 
@@ -153,6 +176,7 @@ export default Vue.extend({
       "getPriorityAreaSubmissions",
       "getActivePriorityAreaSubmission",
       "savePriorityAreaSubmission",
+      "deletePriorityAreaSubmission",
     ]),
     ...mapMutations("priorityAreaSubmission", {
       setActivePriorityAreaSubmission:
@@ -238,11 +262,36 @@ export default Vue.extend({
         });
     },
 
+    deleteClicked() {
+      this.$q
+        .dialog({
+          title: "Delete Area of Interest Submission",
+          message: `This area of interest submission will be deleted.`,
+          ok: "Delete",
+          cancel: "Cancel",
+        })
+        .onOk(() => {
+          this.deletePriorityAreaSubmission({
+            id: this.activePriorityAreaSubmission.id,
+          }).then((pmd) => {
+            this.notifySuccess("Deleted Area of Interest Submission");
+            this.$router.replace({ path: `/` });
+          });
+          console.log("delete confirmed");
+        });
+    },
+
     updateActivePriorityAreaSubmission() {
       if (_.isNil(this.id) && this.priorityAreaSubmissions.length != 0) {
         // then just use a default PAS, the first one
         this.setActivePriorityAreaSubmission(this.priorityAreaSubmissions[0]);
-        this.getActivePriorityAreaSubmission();
+        this.getActivePriorityAreaSubmission()
+          .then((_) => {
+            this.errorFetching = false;
+          })
+          .catch((_) => {
+            this.errorFetching = true;
+          });
 
         let routeName = this.$route.name
           ? this.$route.name
@@ -268,7 +317,13 @@ export default Vue.extend({
       } else {
         // id has been included in url, so get and set this PAS
         this.setActivePriorityAreaSubmission({ id: this.id });
-        this.getActivePriorityAreaSubmission();
+        this.getActivePriorityAreaSubmission()
+          .then((_) => {
+            this.errorFetching = false;
+          })
+          .catch((_) => {
+            this.errorFetching = true;
+          });
       }
     },
 
@@ -344,6 +399,7 @@ export default Vue.extend({
       id: undefined,
       stateReadonly: true,
       published: true,
+      errorFetching: false,
     };
   },
 });

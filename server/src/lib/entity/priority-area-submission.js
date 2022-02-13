@@ -152,4 +152,11 @@ export class PriorityAreaSubmission {
   @JoinColumn({ name: "upload_task_id" })
   uploadTask;
 
+  @Column({
+    type: "bool",
+    nullable: false,
+    default: false
+  })
+  deleted;
+
 }

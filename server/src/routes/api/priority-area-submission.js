@@ -93,7 +93,8 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     .leftJoinAndSelect(
       "priority_area_submission.custodian", "custodian")
     .leftJoinAndSelect(
-      "priority_area_submission.recordState", "recordState");
+      "priority_area_submission.recordState", "recordState")
+    .where("priority_area_submission.deleted = false");
 
   if (hasPermission(req.user.role, 'canViewAllPriorityAreaSubmissions')) {
     // then no additional where clauses
@@ -101,7 +102,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     // need to filter list to include only hipp requests that include the
     // custodian this user is assigned.
     pasQuery = pasQuery
-      .where(
+      .andWhere(
         `(custodian.id = :custodianId)`,
         { custodianId: req.user.custodian.id }
       );
@@ -156,6 +157,11 @@ router.get(
     if (!pas) {
       let err = Boom.notFound(
         `PriorityAreaSubmission ${req.params.id} does not exist`);
+      throw err;
+    }
+    if (pas.deleted) {
+      let err = Boom.notFound(
+        `PriorityAreaSubmission ${req.params.id} is deleted`);
       throw err;
     }
 
@@ -214,6 +220,12 @@ router.get(
     if (!priorityAreaSubmission) {
       let err = Boom.notFound(
         `Priority Area Submission ${req.params.id} does not exist`);
+      throw err;
+    }
+
+    if (!priorityAreaSubmission.deleted) {
+      let err = Boom.notFound(
+        `Priority Area Submission ${req.params.id} is deleted`);
       throw err;
     }
 
@@ -287,6 +299,15 @@ router.get(
       throw err;
     }
 
+    if (pas.deleted) {
+      let err = Boom.notFound(
+        `PriorityAreaSubmission ${req.params.id} is deleted`);
+      throw err;
+    }
+
+    // don't return the deleted flag
+    delete pas.deleted;
+
     return res.json(pas);
   }));
 
@@ -309,11 +330,27 @@ router.post(
     var pas = new PriorityAreaSubmission();
     _.merge(pas, req.body);
 
+    const isNew = _.isNil(pas.id);
+    if (!isNew) {
+      // then check if record is deleted
+      const checkPas = await getConnection()
+        .getRepository(PriorityAreaSubmission)
+        .findOne(pas.id);
+      if (checkPas.deleted) {
+        let err = Boom.notFound(
+          `PriorityAreaSubmission ${pas.id} was deleted, cannot save`);
+        throw err;
+      }
+    }
+
     // DO NOT update the record state here. Record state changes should only
     // happen in the record state handlers
     delete pas.recordState;
     // created is set by default when new entry added to db table
     delete pas.created;
+
+    // don't allow record deletion here, must call delete handler explicitly
+    delete pas.deleted;
 
     pas.lastModified = Date.now();
     pas.custodian = req.user.custodian;
@@ -325,7 +362,6 @@ router.post(
     pas.uploadTaskId = null;
 
     await getConnection().transaction(async transactionalEntityManager => {
-      const isNew = _.isNil(pas.id);
       if (isNew) {
         // if it's new it won;t have an id, so we need to save it so we have
         // an id to pass to the recordState.recordId attrib
@@ -391,7 +427,8 @@ router.delete(
       throw err;
     }
 
-    await pasRepo.delete(pas.id);
+    pas.deleted = true;
+    pas = await pasRepo.save(pas);
 
     const responseSuccess = { success: 'Deleted' };
     return res.json(responseSuccess);

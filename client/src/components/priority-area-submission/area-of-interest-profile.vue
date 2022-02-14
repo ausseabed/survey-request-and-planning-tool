@@ -27,6 +27,19 @@
               </div>
             </div>
           </div>
+          <div class="column q-pt-xs q-gutter-xs q-pt-md">
+            <sct-btn
+              v-if="!readonly"
+              label="Apply to Next"
+              @click="applyToNextClicked"
+            />
+            <sct-btn
+              v-if="!readonly"
+              label="Apply to All"
+              icon="format_line_spacing"
+              @click="applyToAllClicked"
+            />
+          </div>
         </div>
 
         <q-list
@@ -490,6 +503,30 @@ import * as pasMutTypes from "../../store/modules/priority-area-submission/prior
 
 import * as constants from "./area-of-interest-constants";
 
+// list of attributes that have the value copied to other areas of interest
+// when the 'apply to all' button is clicked
+const APPLY_TO_ATTRS = [
+  "purposes",
+  "purposeValues",
+  "ecosystems",
+  "ecosystemComponents",
+  "dataToCapture",
+  "dataCaptureMethods",
+  "existingDataSources",
+  "reasonForAoiRaise",
+  "existingDataAssessmentComments",
+  "gridSize",
+  "surveyStandard",
+  "preferredTimeframe",
+  "timeframeReason",
+  "preferredSeason",
+  "collectionCadence",
+  "timeSeriesDescription",
+  "perceivedImpact",
+  "organisationalPriority",
+  "pressures",
+];
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
@@ -553,6 +590,31 @@ export default Vue.extend({
         propertyName: propertyName,
         value: value,
       });
+    },
+
+    applyTo(limit) {
+      for (const attrName of APPLY_TO_ATTRS) {
+        if (limit) {
+          this.$emit("aoi-apply-to-all", {
+            propertyName: attrName,
+            value: this.areaOfInterest[attrName],
+            limit: limit,
+          });
+        } else {
+          this.$emit("aoi-apply-to-all", {
+            propertyName: attrName,
+            value: this.areaOfInterest[attrName],
+          });
+        }
+      }
+    },
+
+    applyToAllClicked() {
+      this.applyTo(undefined);
+    },
+
+    applyToNextClicked() {
+      this.applyTo(1);
     },
 
     getPurposeFlag(purposeFlagKey) {

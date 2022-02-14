@@ -33,6 +33,7 @@
         @aoi-value-changed="aoiValueChanged"
         :readonly="readonly"
         ref="aoiProfile"
+        @aoi-apply-to-all="aoiApplyToAll"
       >
       </area-of-interest-profile>
     </div>
@@ -78,6 +79,37 @@ export default Vue.extend({
       this.expanded = !this.expanded;
       for (const aoiProfile of this.$refs.aoiProfile) {
         aoiProfile.setExpanded(this.expanded);
+      }
+    },
+
+    aoiApplyToAll({ propertyName, value, id, limit }) {
+      let limitCount = 0;
+      let startUpdating = false;
+
+      for (const [
+        paIndex,
+        pa,
+      ] of this.priorityAreaSubmission.priorityAreas.entries()) {
+        if (id == undefined || limit == undefined) {
+          // no id, and no limit provided so update all the entries
+          const path = `priorityAreas[${paIndex}].${propertyName}`;
+          this.updatePriorityAreaSubmissionValue({ path: path, value: value });
+        } else {
+          if (pa.id == id) {
+            startUpdating = true;
+          }
+          if (startUpdating) {
+            const path = `priorityAreas[${paIndex}].${propertyName}`;
+            this.updatePriorityAreaSubmissionValue({
+              path: path,
+              value: value,
+            });
+            limitCount++;
+          }
+          if (limitCount > limit) {
+            return;
+          }
+        }
       }
     },
 

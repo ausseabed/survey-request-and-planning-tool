@@ -8,6 +8,7 @@
         <div class="column" style="max-width: 250px">
           <q-img
             class="rounded-borders"
+            style="width: 250px; max-height: 250px"
             :src="`api/priority-area/${areaOfInterest.id}/thumbnail`"
             :ratio="1"
             contain

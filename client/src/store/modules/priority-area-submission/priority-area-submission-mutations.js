@@ -9,7 +9,7 @@ const mutations = {
       return existingPriorityAreaSubmission.id == priorityAreaSubmission.id;
     });
     if (existingIndex == -1) {
-      state.priorityAreaSubmissions.push(priorityAreaSubmission);
+      state.priorityAreaSubmissions.unshift(priorityAreaSubmission);
     } else {
       Vue.set(state.priorityAreaSubmissions, existingIndex, priorityAreaSubmission);
     }

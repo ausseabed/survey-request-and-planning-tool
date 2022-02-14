@@ -311,7 +311,7 @@
 
                       <q-item-section side top>
                         <q-item-label caption>{{
-                          priorityAreaSubmission.created | dateString
+                          priorityAreaSubmission.lastModified | dateString
                         }}</q-item-label>
                       </q-item-section>
                     </div>

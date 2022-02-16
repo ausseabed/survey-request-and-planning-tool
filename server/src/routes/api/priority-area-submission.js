@@ -87,11 +87,14 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
       "priority_area_submission.lastModified",
       "priority_area_submission.riskIssues",
       "priority_area_submission.furtherInformation",
+      "priorityAreas.name"
     ])
     .leftJoinAndSelect(
       "priority_area_submission.submittingOrganisation", "submittingOrganisation")
     .leftJoinAndSelect(
       "priority_area_submission.custodian", "custodian")
+    .leftJoin(
+      "priority_area_submission.priorityAreas", "priorityAreas")
     .leftJoinAndSelect(
       "priority_area_submission.recordState", "recordState")
     .where("priority_area_submission.deleted = false");

@@ -32,14 +32,14 @@ services:
       - ./server:/code
     depends_on:
       - 'db-postgres'
-      - 'mail'
+      # - 'mail'
     ports:
       - '3000:3000'
       - '9229:9229' #nodeJS debug port
     command: bash -c "yarn install && npm run dev"
 
 
-  mail:
-    image: djfarrelly/maildev
-    ports:
-      - "9000:80"
+#  mail:
+#    image: djfarrelly/maildev
+#    ports:
+#      - "9000:80"

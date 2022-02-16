@@ -508,6 +508,7 @@ import * as constants from "./area-of-interest-constants";
 const APPLY_TO_ATTRS = [
   "purposes",
   "purposeValues",
+  "purposeFlags",
   "ecosystems",
   "ecosystemComponents",
   "dataToCapture",

@@ -304,9 +304,11 @@
                           )
                         }}</q-item-label>
                         <q-item-label caption>
-                          {{ priorityAreaSubmission.custodian.name }}
-                          (custodian)</q-item-label
-                        >
+                          {{
+                            getPriorityAreaNames(priorityAreaSubmission)
+                              | truncate(90)
+                          }}
+                        </q-item-label>
                       </q-item-section>
 
                       <q-item-section side top>
@@ -583,6 +585,18 @@ export default Vue.extend({
     fetchSurveyPlans() {
       this.SET_SURVEY_PLAN_LIST_FILTER(undefined);
       this.getSurveyPlans();
+    },
+
+    getPriorityAreaNames(priorityAreaSubmission) {
+      // returns a single string containing all the names of the priority
+      // areas belonging to a submission. String is comma separated.
+      if (priorityAreaSubmission.priorityAreas.length == 0) {
+        return "No areas provided";
+      }
+      const names = priorityAreaSubmission.priorityAreas.map((pa) => {
+        return pa.name;
+      });
+      return names.join(", ");
     },
 
     debounceExtents: _.debounce(function (extents) {

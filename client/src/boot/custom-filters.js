@@ -34,7 +34,23 @@ export default ({ Vue }) => {
     return ts;
   })
 
+  Vue.filter('truncate', function (value, length) {
+    // converts the millisecond based timestamp into human readable form
+    if (_.isNil(value)) {
+      return '';
+    }
+
+    if (value.length <= length) {
+      return value;
+    }
+
+    const ellips = '...';
+
+    var trucText = value.slice(0, length - ellips.length);
+    return trucText + ellips;
+  })
+
   Vue.filter('formatNumber', function (value) {
-    return new Intl.NumberFormat(undefined,{maximumFractionDigits:1}).format(value)
+    return new Intl.NumberFormat(undefined, { maximumFractionDigits: 1 }).format(value)
   })
 }

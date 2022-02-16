@@ -2,26 +2,31 @@
   <div class="column q-pa-md q-gutter-y-sm">
     <div class="row q-gutter-x-sm">
       <div class="col">
-        Thank you for providing your areas of interest to the AusSeabed
-        community. Below is a mapped view of your areas as they have been
-        provided today. If you have any questions, please contact us on
-        <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>.
+        Below is a mapped view of your areas as they have been provided today.
+        Click through the buttons below to publish your submission alongside
+        other Areas of Interest on the AusSeabed portal under Layers<q-icon
+          name="arrow_forward"
+        />AusSeabed Coordination. If you have any questions, please contact us
+        on <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>. Thank
+        you for your submission!
       </div>
       <div
         class="col-auto download-div row rounded-borders q-pa-sm q-gutter-x-sm"
       >
-        <div class="row justify-center">
-          <q-btn
-            type="a"
-            :href="`/api/priority-area-submission/${priorityAreaSubmission.id}/shp`"
-            round
-            flat
-            icon="cloud_download"
-          >
-            <q-tooltip> Download all Areas of Interest </q-tooltip>
-          </q-btn>
+        <div class="row justify-center items-center">
+          <div>
+            <q-btn
+              type="a"
+              :href="`/api/priority-area-submission/${priorityAreaSubmission.id}/shp`"
+              round
+              flat
+              icon="cloud_download"
+            >
+              <q-tooltip> Download all Areas of Interest </q-tooltip>
+            </q-btn>
+          </div>
         </div>
-        <div style="max-width: 250px">
+        <div style="max-width: 200px">
           Download shapefile containing Areas of Interest and associated
           metadata.
         </div>
@@ -57,7 +62,7 @@
     </div>
 
     <div>
-      <div class="q-pa-md column">
+      <div class="q-px-md column">
         <q-checkbox
           @input="
             updatePriorityAreaSubmissionValue({
@@ -69,6 +74,7 @@
           label="We are open to collaboration with data collection"
         />
         <q-checkbox
+          style="margin-top: -8px"
           @input="
             updatePriorityAreaSubmissionValue({
               path: 'haveFundsResources',

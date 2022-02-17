@@ -48,8 +48,20 @@
           class="col rounded-borders"
           ref="expansionItemList"
         >
-          <q-expansion-item expand-separator label="Purpose" icon="flag">
+          <q-expansion-item
+            expand-separator
+            label="Purpose"
+            icon="flag"
+            :header-style="{
+              color: getSectionValidation(['purposes']) ? '#000000' : '#ff0000',
+            }"
+          >
             <q-card>
+              <q-card-section v-if="!getSectionValidation(['purposes'])">
+                <div style="color: #ff0000">
+                  Please select at least one purpose.
+                </div>
+              </q-card-section>
               <q-card-section class="column q-gutter-y-xs">
                 <div>
                   Please select all that apply to your Area of Interest.
@@ -130,8 +142,18 @@
             expand-separator
             label="Ecosystem description"
             icon="grass"
+            :header-style="{
+              color: getSectionValidation(['ecosystems'])
+                ? '#000000'
+                : '#ff0000',
+            }"
           >
             <q-card>
+              <q-card-section v-if="!getSectionValidation(['ecosystems'])">
+                <div style="color: #ff0000">
+                  Please select at least one ecosystem.
+                </div>
+              </q-card-section>
               <q-card-section class="column q-gutter-y-xs">
                 <div>
                   Which part(s) of the ecosystem should be targeted for mapping
@@ -183,8 +205,26 @@
             expand-separator
             label="Data and Methods"
             icon="scatter_plot"
+            :header-style="{
+              color: getSectionValidation([
+                'dataToCapture',
+                'dataCaptureMethods',
+              ])
+                ? '#000000'
+                : '#ff0000',
+            }"
           >
             <q-card>
+              <q-card-section
+                v-if="
+                  !getSectionValidation(['dataToCapture', 'dataCaptureMethods'])
+                "
+              >
+                <div style="color: #ff0000">
+                  Please select at least one data type to capture and preferred
+                  method.
+                </div>
+              </q-card-section>
               <q-card-section class="row q-gutter-x-xs">
                 <div class="col">
                   <div>Data to Capture</div>
@@ -320,6 +360,9 @@
             expand-separator
             label="Resolution and Standard"
             icon="grid_on"
+            :header-style="{
+              color: getSectionValidation(['gridSize']) ? '#000000' : '#ff0000',
+            }"
           >
             <q-card>
               <q-card-section class="row q-gutter-x-xs">
@@ -369,6 +412,14 @@
             expand-separator
             label="Data collection timeline and cadence"
             icon="schedule"
+            :header-style="{
+              color: getSectionValidation([
+                'preferredTimeframe',
+                'collectionCadence',
+              ])
+                ? '#000000'
+                : '#ff0000',
+            }"
           >
             <q-card>
               <q-card-section class="q-gutter-y-xs">
@@ -494,7 +545,7 @@
 import Vue from "vue";
 const _ = require("lodash");
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
-import { required } from "vuelidate/lib/validators";
+import { required, minLength } from "vuelidate/lib/validators";
 
 import { errorHandler } from "./../mixins/error-handling";
 import { permission } from "./../mixins/permission";
@@ -779,6 +830,17 @@ export default Vue.extend({
       this.$v.$touch();
       return !this.$v.$error;
     },
+
+    getSectionValidation(attributes) {
+      for (const attribute of attributes) {
+        if (_.isNil(this.$v.areaOfInterest[attribute])) {
+          // then skip
+        } else if (this.$v.areaOfInterest[attribute].$error) {
+          return false;
+        }
+      }
+      return true;
+    },
   },
 
   watch: {
@@ -849,7 +911,7 @@ export default Vue.extend({
         preferredTimeframe: { required },
         timeframeReason: {},
         preferredSeason: {},
-        collectionCadence: {},
+        collectionCadence: { required },
         timeSeriesDescription: {},
 
         perceivedImpact: { required },
@@ -862,8 +924,23 @@ export default Vue.extend({
         gridSize: { required },
         surveyStandard: {},
 
-        dataToCapture: {},
-        dataCaptureMethods: {},
+        purposes: {
+          required,
+          minLength: minLength(1),
+        },
+        ecosystems: {
+          required,
+          minLength: minLength(1),
+        },
+
+        dataToCapture: {
+          required,
+          minLength: minLength(1),
+        },
+        dataCaptureMethods: {
+          required,
+          minLength: minLength(1),
+        },
       },
     };
   },
@@ -948,5 +1025,9 @@ export default Vue.extend({
   div, b {
     font-size: 0.9em;
   }
+}
+
+.section-validation-fail {
+  backgroundColor: '#ff0000';
 }
 </style>

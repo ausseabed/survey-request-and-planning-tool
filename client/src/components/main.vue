@@ -29,7 +29,7 @@
             />
             <q-tab
               name="priority-areas"
-              label="Areas of Interest"
+              label="Published Areas of Interest"
               icon="app:priority-areas"
             />
           </q-tabs>

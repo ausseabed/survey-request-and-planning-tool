@@ -29,7 +29,7 @@
             />
             <q-tab
               name="priority-areas"
-              label="Published Areas of Interest"
+              label="Areas of Interest"
               icon="app:priority-areas"
             />
           </q-tabs>
@@ -411,7 +411,7 @@
               >
                 <q-checkbox
                   v-model="showPriorityAreas"
-                  label="Areas of Interest"
+                  label="Published Areas of Interest"
                 />
               </div>
             </l-control>

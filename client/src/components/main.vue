@@ -790,7 +790,7 @@ export default Vue.extend({
       mapLegendUrl: `map/wms?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.3.0&FORMAT=image/png&HEIGHT=25&LAYER=areas_of_interest&LAYERS=areas_of_interest&LEGEND_OPTIONS=forceLabels:on;minSymbolSize&SLD_VERSION=1.1.0&TRANSPARENT=true`,
       center: defaultCenter,
       bounds: defaultBounds,
-      showPriorityAreas: true,
+      showPriorityAreas: false,
       surveyPlanFeatures: [],
       surveyRequestFeatures: [],
       priorityAreaSubmissionFeatures: [],

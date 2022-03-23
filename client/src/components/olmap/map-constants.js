@@ -1,7 +1,7 @@
 export const WMTS_GET_CAPABILITIES_URL = 'http://gaservices.ga.gov.au/site_7/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer/WMTS/1.0.0/WMTSCapabilities.xml';
 export const WMTS_MAPSERVER_URL = 'http://gaservices.ga.gov.au/gis/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer';
 
-export const MAP_ATTRIBUTION_HTML = '© Geoscience Australia - <a target="_blank" href="http://gaservices.ga.gov.au/site_7/rest/services/NationalMap_Colour_Topographic_Base_World_WM/MapServer">details<a>'
+export const MAP_ATTRIBUTION_HTML = '© Geoscience Australia - <a target="_blank" href="https://services.ga.gov.au/gis/rest/services/NationalBaseMap/MapServer">details<a>'
 
 export const WMS_PRIORITY_AREAS = 'map/wms';
 export const WMS_PRIORITY_AREAS_LAYER = 'areas_of_interest';

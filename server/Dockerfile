@@ -20,7 +20,7 @@ ARG AUTH_CLIENT_ID
 ADD package.json yarn.lock .babelrc $APPDIR/
 ADD ormconfig.js $APPDIR/ormconfig.js
 
-RUN yarn global add mocha typeorm @babel/core @babel/cli
+RUN yarn global add mocha typeorm@0.2.45 @babel/core @babel/cli
 
 ADD src $APPDIR/src
 ADD ssh_keys $APPDIR/ssh_keys

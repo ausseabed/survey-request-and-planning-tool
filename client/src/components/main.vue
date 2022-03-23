@@ -372,7 +372,19 @@
                 class="full-width column"
               >
                 <q-separator style="height: 1px" />
-                <div class="row justify-end q-py-sm q-mx-md">
+                <div class="row q-pl-sm q-py-sm q-gutter-x-sm">
+                  <sct-btn
+                    label="Go to data portal"
+                    align="right"
+                    icon="public"
+                    type="a"
+                    href="https://portal.ga.gov.au/restore/8163b137-c621-4e9f-8781-883e6af7a662"
+                    target="_blank"
+                  >
+                    <q-tooltip max-height="160px" >
+                      View AoI submissions on AusSeabed <br/>Marine Data Portal
+                    </q-tooltip>
+                  </sct-btn>
                   <sct-btn
                     label="add submission"
                     align="right"

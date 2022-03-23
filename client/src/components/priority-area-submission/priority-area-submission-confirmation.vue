@@ -4,7 +4,7 @@
       <div class="col">
         Below is a mapped view of your areas as they have been provided today.
         Click through the buttons below to publish your submission alongside
-        other Areas of Interest on the AusSeabed portal under Layers<q-icon
+        other <a href="https://portal.ga.gov.au/restore/8163b137-c621-4e9f-8781-883e6af7a662" target="_blank">Areas of Interest on the AusSeabed portal</a> under Layers<q-icon
           name="arrow_forward"
         />AusSeabed Coordination. If you have any questions, please contact us
         on <a href="mailto:ausseabed@ga.gov.au">ausseabed@ga.gov.au</a>. Thank

@@ -119,8 +119,8 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   let count = await pasQuery.getCount();
 
   pasQuery = pasQuery
-    .offset(start)
-    .limit(limit);
+    .skip(start)
+    .take(limit);
 
   const pasList = await pasQuery.getMany();
   return res.json({

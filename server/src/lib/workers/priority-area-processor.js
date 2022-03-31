@@ -160,6 +160,11 @@ const featureToPriorityArea = async (feature) => {
   const { id } = await getConnection()
     .getRepository(PriorityArea)
     .save(pa);
+
+  // once geometry is saved to PostGIS, update it to be valid
+  await getConnection()
+    .query(`UPDATE priority_area SET geom = ST_Multi(ST_CollectionExtract(ST_MakeValid(geom), 3)) WHERE id = '${id}'`);
+
   return id;
 }
 

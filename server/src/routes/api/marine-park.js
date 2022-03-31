@@ -8,7 +8,7 @@ var shp = require('shpjs');
 import { multiPolygon } from "@turf/helpers";
 import truncate from "@turf/truncate";
 
-import { getConnection } from 'typeorm'
+import { getConnection, SimpleConsoleLogger } from 'typeorm'
 
 import {
   asyncMiddleware, isAuthenticated, permitPermission,
@@ -41,9 +41,15 @@ async function processMarineParkData(data, filename) {
     mp.polygonid = getParameterCaseInsensitive(feature.properties, 'polygonid');
     mp.natlegend = getParameterCaseInsensitive(feature.properties, 'natlegend');
 
+    console.log(`  processing marine park: ${mp.netname}`)
+
     await getConnection()
       .getRepository(MarinePark)
       .save(mp);
+
+    // once geometry is saved to PostGIS, update it to be valid
+    await getConnection()
+      .query(`UPDATE marine_park SET geometry = ST_Multi(ST_CollectionExtract(ST_MakeValid(geometry), 3)) WHERE id = '${mp.id}'`);
   }
 
 }

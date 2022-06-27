@@ -3,6 +3,8 @@ The AusSeabed Survey Coordination tool (ASB SCT) is a tool designed by GA and Fr
 
 Its intent is to provide a location for, and consistency in specification of bathymetric data acquisition for scientific research purposes.
 
+The tool was partly funded by the National Environmental Science Program (NESP2) Marine and Coastal Hub, project 1.2 - National Areas of Interest for Seabed Mapping, Characterisation and Biodiversity Assessment. Project partners – Geoscience Australia, CSIRO, University of Tasmania.
+
 ### Build status
 [![CircleCI](https://circleci.com/gh/ausseabed/survey-request-and-planning-tool.svg?style=svg)](https://circleci.com/gh/ausseabed/survey-request-and-planning-tool)
 

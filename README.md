@@ -1,31 +1,14 @@
-# AusSeabed Survey Request and Planning Tool
-The AusSeabed Survey Request and Planning tool (ASB RPT) is a tool designed by GA and FrontierSI in collaboration with the AusSeabed Steering Committee and broader community.
+# AusSeabed Survey Coordination Tool
+The AusSeabed Survey Coordination tool (ASB SCT) is a tool designed by GA and FrontierSI in collaboration with the AusSeabed Steering Committee and broader community.
 
 Its intent is to provide a location for, and consistency in specification of bathymetric data acquisition for scientific research purposes.
 
 ### Build status
 [![CircleCI](https://circleci.com/gh/ausseabed/survey-request-and-planning-tool.svg?style=svg)](https://circleci.com/gh/ausseabed/survey-request-and-planning-tool)
 
-# Licensing Terms
+# Copyright and Licensing Terms
 
-AusSeabed Data Hub – Survey Request and Planning is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-Copyright (c) 2019- AusSeabed Development Team
-
-# About the AusSeabed Development Team
-
-The AusSeabed Development Team is the set of all contributors to the AusSeabed Program. This includes all of the AusSeabed Subprojects, which are the different repositories under the AusSeabed GitHub organization.
-
-## Our Copyright Policy
-
-AusSeabed Data Hub – Survey Request and Planning tool uses a shared copyright model. Each contributor maintains copyright over their contributions. But, it is important to note that these contributions are typically only changes to the repositories. Thus, the ASB Request and Planning tool source code, in its entirety is not the copyright of any single person or institution. Instead, it is the collective copyright of the entire AusSeabed Development Team. If individual contributors want to maintain a record of what changes/contributions they have specific copyright on, they should indicate their copyright in the commit message of the change, when they commit the change to one of the AusSeabed repositories.
-
-With this in mind, the following banner should be used in any source code file to indicate the copyright and license terms:
-
-    Distributed under the terms of the Apache License, Version 2.0.
-
+© Commonwealth of Australia (Geoscience Australia) 2022. This project was developed under a project agreement between FrontierSI and Geoscience Australia. With the exception of the Commonwealth Coat of Arms and where otherwise noted, this work is licensed under the Apache Licence, Version 2.0. 
 
 # Dependencies
 User authentication is by an external OAuth2 provider; the staging environment makes use of AWS cognito by other OAuth2 providers will also work. Configuration is set in the `server.conf` and `docker-compose-prod.yml` files. The `AUTH_HOST` (domain name of auth server), `AUTH_CLIENT_ID` and `AUTH_CLIENT_SECRET` variables must be set (latter two are provided by the auth system). The auth system will need to be configured to accept the request tools domain name as a login/logout callback (even `localhost`). `ANALYTICS_CODE` is used by the analytics plugin.

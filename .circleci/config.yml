@@ -117,7 +117,45 @@ workflows:
           repo: ausseabed-staging-sct-api
           repo-scan-on-push: true
           skip-when-tags-exist: false
-          tag: 'latest,$CIRCLE_SHA1'
+          tag: 'latest, $CIRCLE_SHA1'
+          <<: *develop_only
+      - aws-ecr/build-and-push-image:
+          aws-access-key-id: STAGING_ACCESS_KEY_ID
+          aws-cli-version: latest
+          aws-secret-access-key: STAGING_SECRET_ACCESS_KEY
+          dockerfile: Dockerfile
+          executor: aws-ecr/default
+          extra-build-args: '--compress'
+          no-output-timeout: 20m
+          path: ./client
+          platform: linux/amd64
+          public-registry: false
+          push-image: true
+          region: ap-southeast-2
+          registry-id: STAGING_AWS_ECR_REGISTRY_ID
+          repo: ausseabed-staging-sct-www
+          repo-scan-on-push: true
+          skip-when-tags-exist: false
+          tag: 'latest, $CIRCLE_SHA1'
+          <<: *develop_only
+      - aws-ecr/build-and-push-image:
+          aws-access-key-id: STAGING_ACCESS_KEY_ID
+          aws-cli-version: latest
+          aws-secret-access-key: STAGING_SECRET_ACCESS_KEY
+          dockerfile: Dockerfile
+          executor: aws-ecr/default
+          extra-build-args: '--compress'
+          no-output-timeout: 20m
+          path: ./map
+          platform: linux/amd64
+          public-registry: false
+          push-image: true
+          region: ap-southeast-2
+          registry-id: STAGING_AWS_ECR_REGISTRY_ID
+          repo: ausseabed-staging-sct-mapserver
+          repo-scan-on-push: true
+          skip-when-tags-exist: false
+          tag: 'latest, $CIRCLE_SHA1'
           <<: *develop_only
 
   # version: 2

@@ -116,9 +116,8 @@ workflows:
           registry-id: STAGING_AWS_ECR_REGISTRY_ID
           repo: ausseabed-staging-sct-api
           repo-scan-on-push: true
-          role-arn: 'arn:aws:iam::123456789012:role/testing'
           skip-when-tags-exist: false
-          tag: 'latest'
+          tag: 'latest,$CIRCLE_SHA1'
           <<: *develop_only
 
   # version: 2

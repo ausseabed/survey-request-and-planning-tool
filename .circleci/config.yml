@@ -99,7 +99,6 @@ jobs:
 
 workflows:
   build_and_push_staging:
-    <<: *develop_only
     jobs:
       - aws-ecr/build-and-push-image:
           aws-access-key-id: STAGING_ACCESS_KEY_ID
@@ -119,6 +118,7 @@ workflows:
           repo-scan-on-push: true
           skip-when-tags-exist: false
           tag: 'latest,$CIRCLE_SHA1'
+          <<: *develop_only
       - aws-ecr/build-and-push-image:
           aws-access-key-id: STAGING_ACCESS_KEY_ID
           aws-cli-version: latest
@@ -137,6 +137,7 @@ workflows:
           repo-scan-on-push: true
           skip-when-tags-exist: false
           tag: 'latest,$CIRCLE_SHA1'
+          <<: *develop_only
       - aws-ecr/build-and-push-image:
           aws-access-key-id: STAGING_ACCESS_KEY_ID
           aws-cli-version: latest
@@ -155,8 +156,8 @@ workflows:
           repo-scan-on-push: true
           skip-when-tags-exist: false
           tag: 'latest,$CIRCLE_SHA1'
+          <<: *develop_only
   build_and_push_prod:
-    <<: *master_only
     jobs:
       - aws-ecr/build-and-push-image:
           aws-access-key-id: PROD_ACCESS_KEY_ID
@@ -176,6 +177,7 @@ workflows:
           repo-scan-on-push: true
           skip-when-tags-exist: false
           tag: 'latest,$CIRCLE_SHA1'
+          <<: *master_only
       - aws-ecr/build-and-push-image:
           aws-access-key-id: PROD_ACCESS_KEY_ID
           aws-cli-version: latest
@@ -194,6 +196,7 @@ workflows:
           repo-scan-on-push: true
           skip-when-tags-exist: false
           tag: 'latest,$CIRCLE_SHA1'
+          <<: *master_only
       - aws-ecr/build-and-push-image:
           aws-access-key-id: PROD_ACCESS_KEY_ID
           aws-cli-version: latest
@@ -212,3 +215,4 @@ workflows:
           repo-scan-on-push: true
           skip-when-tags-exist: false
           tag: 'latest,$CIRCLE_SHA1'
+          <<: *master_only

@@ -157,100 +157,60 @@ workflows:
           skip-when-tags-exist: false
           tag: 'latest,$CIRCLE_SHA1'
           <<: *develop_only
-
-  # version: 2
-  # build-develop:
-  #   jobs:
-  #     - build:
-  #         name: build-api-develop
-  #         image-name: ausseabed/spt-api
-  #         image-tag-suffix: '-beta'
-  #         image-file: image-api.tar
-  #         docker-file-path: server
-  #         <<: *develop_only
-  #     - publish:
-  #         name: publish-api-develop
-  #         image-name: ausseabed/spt-api
-  #         image-tag-suffix: '-beta'
-  #         image-file: image-api.tar
-  #         requires:
-  #           - build-api-develop
-  #         <<: *develop_only
-  #     - build:
-  #         name: build-www-develop
-  #         image-name: ausseabed/spt-www
-  #         image-tag-suffix: '-beta'
-  #         image-file: image-www.tar
-  #         docker-file-path: client
-  #         <<: *develop_only
-  #     - publish:
-  #         name: publish-www-develop
-  #         image-name: ausseabed/spt-www
-  #         image-tag-suffix: '-beta'
-  #         image-file: image-www.tar
-  #         requires:
-  #           - build-www-develop
-  #         <<: *develop_only
-  #     - build:
-  #         name: build-mapserver-develop
-  #         image-name: ausseabed/spt-mapserver
-  #         image-tag-suffix: '-beta'
-  #         image-file: image-mapserver.tar
-  #         docker-file-path: map
-  #         <<: *develop_only
-  #     - publish:
-  #         name: publish-mapserver-develop
-  #         image-name: ausseabed/spt-mapserver
-  #         image-tag-suffix: '-beta'
-  #         image-file: image-mapserver.tar
-  #         requires:
-  #           - build-mapserver-develop
-  #         <<: *develop_only
-  #     - deploy-staging:
-  #         requires:
-  #           - publish-www-develop
-  #           - publish-mapserver-develop
-  #           - publish-api-develop
-  #         <<: *develop_only
-
-  # build-master:
-  #   jobs:
-  #     - build:
-  #         name: build-api-master
-  #         image-name: ausseabed/spt-api
-  #         image-file: image-api.tar
-  #         docker-file-path: server
-  #         <<: *master_only
-  #     - publish:
-  #         name: publish-api-master
-  #         image-name: ausseabed/spt-api
-  #         image-file: image-api.tar
-  #         requires:
-  #           - build-api-master
-  #         <<: *master_only
-  #     - build:
-  #         name: build-www-master
-  #         image-name: ausseabed/spt-www
-  #         image-file: image-www.tar
-  #         docker-file-path: client
-  #         <<: *master_only
-  #     - publish:
-  #         name: publish-www-master
-  #         image-name: ausseabed/spt-www
-  #         image-file: image-www.tar
-  #         requires:
-  #           - build-www-master
-  #         <<: *master_only
-  #     - build:
-  #         name: build-mapserver-master
-  #         image-name: ausseabed/spt-mapserver
-  #         image-file: image-mapserver.tar
-  #         docker-file-path: map
-  #         <<: *master_only
-  #     - publish:
-  #         name: publish-mapserver-master
-  #         image-name: ausseabed/spt-mapserver
-  #         image-file: image-mapserver.tar
-  #         requires:
-  #           - build-mapserver-master
-  #         <<: *master_only
+      - aws-ecr/build-and-push-image:
+          aws-access-key-id: PROD_ACCESS_KEY_ID
+          aws-cli-version: latest
+          aws-secret-access-key: PROD_SECRET_ACCESS_KEY
+          dockerfile: Dockerfile
+          executor: aws-ecr/default
+          extra-build-args: '--compress'
+          no-output-timeout: 20m
+          path: ./server
+          platform: linux/amd64
+          public-registry: false
+          push-image: true
+          region: ap-southeast-2
+          registry-id: PROD_AWS_ECR_REGISTRY_ID
+          repo: ausseabed-prod-sct-api
+          repo-scan-on-push: true
+          skip-when-tags-exist: false
+          tag: 'latest,$CIRCLE_SHA1'
+          <<: *master_only
+      - aws-ecr/build-and-push-image:
+          aws-access-key-id: PROD_ACCESS_KEY_ID
+          aws-cli-version: latest
+          aws-secret-access-key: PROD_SECRET_ACCESS_KEY
+          dockerfile: Dockerfile
+          executor: aws-ecr/default
+          extra-build-args: '--compress'
+          no-output-timeout: 20m
+          path: ./client
+          platform: linux/amd64
+          public-registry: false
+          push-image: true
+          region: ap-southeast-2
+          registry-id: PROD_AWS_ECR_REGISTRY_ID
+          repo: ausseabed-prod-sct-www
+          repo-scan-on-push: true
+          skip-when-tags-exist: false
+          tag: 'latest,$CIRCLE_SHA1'
+          <<: *master_only
+      - aws-ecr/build-and-push-image:
+          aws-access-key-id: PROD_ACCESS_KEY_ID
+          aws-cli-version: latest
+          aws-secret-access-key: PROD_SECRET_ACCESS_KEY
+          dockerfile: Dockerfile
+          executor: aws-ecr/default
+          extra-build-args: '--compress'
+          no-output-timeout: 20m
+          path: ./map
+          platform: linux/amd64
+          public-registry: false
+          push-image: true
+          region: ap-southeast-2
+          registry-id: PROD_AWS_ECR_REGISTRY_ID
+          repo: ausseabed-prod-sct-mapserver
+          repo-scan-on-push: true
+          skip-when-tags-exist: false
+          tag: 'latest,$CIRCLE_SHA1'
+          <<: *master_only

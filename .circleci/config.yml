@@ -99,6 +99,7 @@ jobs:
             kubectl set image --namespace=qa4mbes deployment/mapserver mapserver=ausseabed/spt-mapserver:$IMAGE_TAG
 
   build-push-staging-to-ecr:
+    executor: aws-ecr/default
     steps:
       - aws-ecr/build-and-push-image:
           aws-access-key-id: STAGING_ACCESS_KEY_ID

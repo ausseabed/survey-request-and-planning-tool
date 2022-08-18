@@ -106,7 +106,6 @@ jobs:
           aws-cli-version: latest
           aws-secret-access-key: STAGING_SECRET_ACCESS_KEY
           dockerfile: Dockerfile
-          executor: aws-ecr/default
           extra-build-args: '--compress'
           no-output-timeout: 20m
           path: ./server
@@ -124,7 +123,6 @@ jobs:
           aws-cli-version: latest
           aws-secret-access-key: STAGING_SECRET_ACCESS_KEY
           dockerfile: Dockerfile
-          executor: aws-ecr/default
           extra-build-args: '--compress'
           no-output-timeout: 20m
           path: ./client
@@ -142,7 +140,6 @@ jobs:
           aws-cli-version: latest
           aws-secret-access-key: STAGING_SECRET_ACCESS_KEY
           dockerfile: Dockerfile
-          executor: aws-ecr/default
           extra-build-args: '--compress'
           no-output-timeout: 20m
           path: ./map

@@ -11,94 +11,10 @@ master_only: &master_only
 
 version: 2.1
 orbs:
-  aws-cli: circleci/aws-cli@3.1
   aws-ecr: circleci/aws-ecr@8.1.2
   aws-eks: circleci/aws-eks@2.2.0
-  kubernetes: circleci/kubernetes@1.3
-executors:
-  docker-publisher:
-    docker:
-      - image: circleci/buildpack-deps@sha256:f15719b269c2c7337d2fb29a31abf4edcfe30311291765b831e699b0ad9ae77d
 
 jobs:
-  build:
-    parameters:
-      image-name:
-        type: string
-      image-tag-suffix:
-        type: string
-        default: ''
-      image-file:
-        type: string
-      docker-file-path:
-        type: string
-      auth-host:
-        type: string
-        default: ''
-      auth-client-id:
-        type: string
-        default: ''
-    executor: docker-publisher
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build << parameters.image-name >> Docker image
-          command: docker build -t << parameters.image-name >>:$(echo "$CIRCLE_SHA1" | cut -c -7)<< parameters.image-tag-suffix >>  << parameters.docker-file-path >>
-      - run:
-          name: Tagging << parameters.image-name >> Docker image
-          command: docker tag << parameters.image-name >>:$(echo "$CIRCLE_SHA1" | cut -c -7)<< parameters.image-tag-suffix >> << parameters.image-name >>:latest<< parameters.image-tag-suffix >>
-      - run:
-          name: Archive API Docker image
-          command: docker save -o << parameters.image-file >> << parameters.image-name >>
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./<< parameters.image-file >>
-
-  publish:
-    parameters:
-      image-name:
-        type: string
-      image-tag-suffix:
-        type: string
-        default: ''
-      image-file:
-        type: string
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived << parameters.image-file >> Docker image
-          command: docker load -i /tmp/workspace/<< parameters.image-file >>
-      - run:
-          name: Publish Docker Images to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push << parameters.image-name >>
-
-  deploy-staging:
-    docker:
-      - image: airhelp/kops:1.10
-    steps:
-      - checkout
-      - run:
-          command: |
-            # connect to cluster
-            export KUBE_CLUSTER=fsi.staging.frontiersi.io
-            export KUBE_SERVER=https://api.fsi.staging.frontiersi.io/
-            kubectl config set-cluster $KUBE_CLUSTER --server=$KUBE_SERVER --insecure-skip-tls-verify=true
-            kubectl config set-credentials $KUBE_USER --token=$KUBE_TOKEN
-            kubectl config set-context fsi.staging.frontiersi.io --cluster=$KUBE_CLUSTER --user=$KUBE_USER
-            kubectl config use-context fsi.staging.frontiersi.io
-            # update image to latest
-            export IMAGE_TAG=$(echo "$CIRCLE_SHA1" | cut -c -7)-beta
-            kubectl set image --namespace=qa4mbes deployment/api api=ausseabed/spt-api:$IMAGE_TAG
-            kubectl set image --namespace=qa4mbes deployment/www www=ausseabed/spt-www:$IMAGE_TAG
-            kubectl set image --namespace=qa4mbes deployment/mapserver mapserver=ausseabed/spt-mapserver:$IMAGE_TAG
-
   build-push-staging-to-ecr-api:
     executor: aws-ecr/default
     steps:
@@ -159,18 +75,10 @@ jobs:
           repo-scan-on-push: true
           skip-when-tags-exist: false
           tag: 'latest,$CIRCLE_SHA1'
-  configure-aws-iam:
-    executor: aws-cli/default
-    steps:
-      - aws-cli/setup:
-          profile-name: default
-          aws-access-key-id: STAGING_EKS_ACCESS_KEY_ID
-          aws-secret-access-key: STAGING_EKS_SECRET_ACCESS_KEY
-          aws-region: AWS_REGION
 
 
 workflows:
-  build_and_push_staging:
+  build_push_deploy_staging:
     jobs:
       - build-push-staging-to-ecr-api:
           <<: *develop_only
@@ -206,7 +114,7 @@ workflows:
           namespace: qa4mbes
           show-kubectl-command: true
 
-  build_and_push_prod:
+  build_push_prod:
     jobs:
       - aws-ecr/build-and-push-image:
           aws-access-key-id: PROD_ACCESS_KEY_ID

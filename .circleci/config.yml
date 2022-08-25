@@ -178,20 +178,16 @@ workflows:
           <<: *develop_only
       - build-push-staging-to-ecr-mapserver:
           <<: *develop_only
-      - configure-aws-iam:
+      - aws-eks/update-container-image:
           requires:
               - build-push-staging-to-ecr-api
               - build-push-staging-to-ecr-www
               - build-push-staging-to-ecr-mapserver
-      - aws-eks/update-container-image:
-          requires:
-              - configure-aws-iam
           aws-region: ap-southeast-2
           cluster-name: ausseabed-nonprod
           container-image-updates: api=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-api:$CIRCLE_SHA1,www=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-www:$CIRCLE_SHA1,mapserver=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-mapserver:$CIRCLE_SHA1
           namespace: qa4mbes
           show-kubectl-command: true
-
 
 
   build_and_push_prod:

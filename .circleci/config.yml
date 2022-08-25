@@ -181,14 +181,30 @@ workflows:
       - aws-eks/update-container-image:
           requires:
               - build-push-staging-to-ecr-api
+          aws-region: ap-southeast-2
+          cluster-name: ausseabed-nonprod
+          resource-name: deployment/api
+          container-image-updates: api=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-api:$CIRCLE_SHA1
+          namespace: qa4mbes
+          show-kubectl-command: true
+      - aws-eks/update-container-image:
+          requires:
               - build-push-staging-to-ecr-www
+          aws-region: ap-southeast-2
+          cluster-name: ausseabed-nonprod
+          resource-name: deployment/www
+          container-image-updates: www=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-www:$CIRCLE_SHA1
+          namespace: qa4mbes
+          show-kubectl-command: true
+      - aws-eks/update-container-image:
+          requires:
               - build-push-staging-to-ecr-mapserver
           aws-region: ap-southeast-2
           cluster-name: ausseabed-nonprod
-          container-image-updates: api=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-api:$CIRCLE_SHA1,www=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-www:$CIRCLE_SHA1,mapserver=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-mapserver:$CIRCLE_SHA1
+          resource-name: deployment/mapserver
+          container-image-updates: mapserver=288871573946.dkr.ecr.ap-southeast-2.amazonaws.com/ausseabed-staging-sct-mapserver:$CIRCLE_SHA1
           namespace: qa4mbes
           show-kubectl-command: true
-
 
   build_and_push_prod:
     jobs:

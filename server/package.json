@@ -35,7 +35,7 @@
     "fstream": "^1.0.12",
     "json-rules-engine": "5.0.3",
     "json2csv": "^5.0.1",
-    "jsonwebtoken": "^8.1.0",
+    "jsonwebtoken": "^9.0.0",
     "libreoffice-convert": "^1.1.1",
     "lodash": "4.17.21",
     "moment": "^2.29.2",

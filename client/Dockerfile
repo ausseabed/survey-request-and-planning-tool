@@ -9,7 +9,7 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
 
 # install quasar command line interface
-RUN npm install -g @quasar/cli
+RUN npm install -g @quasar/cli@1.4.0
 
 # And npm bits
 ADD package.json package-lock.json babel.config.js .postcssrc.js quasar.conf.js $APPDIR/

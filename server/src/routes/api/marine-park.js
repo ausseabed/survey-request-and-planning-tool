@@ -35,8 +35,17 @@ async function processMarineParkData(data, filename) {
     let mp = new MarinePark();
     mp.geometry = feature.geometry;
     mp.netname = getParameterCaseInsensitive(feature.properties, 'name');
+    if (mp.netname == undefined) {
+      mp.netname = getParameterCaseInsensitive(feature.properties, 'netname');
+    }
     mp.resname = getParameterCaseInsensitive(feature.properties, 'type');
+    if (mp.resname == undefined) {
+      mp.resname = getParameterCaseInsensitive(feature.properties, 'resname');
+    }
     mp.zonename = getParameterCaseInsensitive(feature.properties, 'zone_type');
+    if (mp.zonename == undefined) {
+      mp.zonename = getParameterCaseInsensitive(feature.properties, 'zonename');
+    }
     mp.zoneuicn = getParameterCaseInsensitive(feature.properties, 'zoneuicn');
     mp.polygonid = getParameterCaseInsensitive(feature.properties, 'polygonid');
     mp.natlegend = getParameterCaseInsensitive(feature.properties, 'natlegend');

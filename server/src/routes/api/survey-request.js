@@ -79,7 +79,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   }
 
   surveyRequestQuery = surveyRequestQuery
-  .orderBy("survey_request.name")
+  .orderBy("recordState.created", "DESC")
 
   const surveyRequests = await surveyRequestQuery.getMany()
   return res.json(surveyRequests);

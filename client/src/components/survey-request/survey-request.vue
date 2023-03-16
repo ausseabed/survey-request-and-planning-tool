@@ -78,13 +78,21 @@
             label="Save"
             icon="save"
             @click="saveClicked(false, true)"
-            :disable="stateReadonly"
+            :disable="stateReadonly || !userCanEdit"
           />
           <q-btn
             color="primary"
             :label="dirty ? 'Exit without saving' : 'Exit'"
             icon="close"
             :to="'/'"
+          />
+          <q-btn
+            v-if="userCanEdit"
+            color="red"
+            label="Delete"
+            icon="delete"
+            :disable="stateReadonly"
+            @click="deleteClicked"
           />
         </div>
         <q-btn
@@ -100,7 +108,7 @@
           label="Save and next"
           icon-right="forward"
           @click="saveClicked(true, true)"
-          :disable="stateReadonly"
+          :disable="stateReadonly || !userCanEdit"
         />
       </div>
     </div>
@@ -371,6 +379,25 @@ export default Vue.extend({
       });
     },
 
+    deleteClicked() {
+      this.$q
+        .dialog({
+          title: "Delete HIPP Request",
+          message: `This HIPP Request will be deleted.`,
+          ok: "Delete",
+          cancel: "Cancel",
+        })
+        .onOk(() => {
+          this.deleteSurveyRequest({
+            id: this.surveyRequest.id,
+          }).then((pmd) => {
+            this.notifySuccess("Deleted HIPP Request");
+            this.$router.replace({ path: `/` });
+          });
+          console.log("delete confirmed");
+        });
+    },
+
     updateActiveSurveyrequest () {
       if (this.id == 'new') {
 
@@ -515,6 +542,18 @@ export default Vue.extend({
     ...mapGetters('custodian', [
       'custodians',
     ]),
+    userCanEdit: function() {
+      if (this.hasPermission('canEditAllSurveyRequests')) {
+        return true
+      } else if (
+        this.hasPermission('canEditCustodianSurveyRequests') &&
+        this.hasCustodianLink('surveyRequest.custodians')
+      ) {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 
   validations() {

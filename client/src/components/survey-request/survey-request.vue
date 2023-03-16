@@ -22,7 +22,10 @@
         <!-- Empty div ensures the logo is right aligned even when no
              record state is displayed -->
         <div></div>
-        <img height="48px" src="~/assets/aho-logo-small.png" />
+        <div class="row">
+          <img height="48px" src="~/assets/aho-logo-small.png" />
+          <img height="48px" src="~/assets/hipp-logo-small.png" />
+        </div>
       </div>
       <div>
         The HydroScheme Industry Partnership Program (HIPP) is an enduring partnership, with a request timeframe domain of 5-10 years. It aims to boost Australia's hydrographic industry capability allowing partners to acquire maritime survey data for the production of digital maps of Australia's seas and coastal areas.

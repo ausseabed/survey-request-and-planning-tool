@@ -74,7 +74,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
 
   start = _.isNil(start) ? 0 : start;
   limit = _.isNil(limit) ? 20 : limit;
-  limit = limit > 100 ? 100 : limit;  // don't ever allow more than 100
+  limit = limit > 300 ? 300 : limit;  // don't ever allow more than 300
 
   let pasQuery = getConnection()
     .getRepository(PriorityAreaSubmission)

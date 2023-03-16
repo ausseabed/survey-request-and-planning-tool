@@ -14,7 +14,7 @@ function initialState() {
     // total number of orgs irrespective of pagination, don't request more than
     // this
     count: undefined,
-    pageSize: 50,
+    pageSize: 300,
     // filter string used for search
     filter: undefined,
     requestStatus: RequestStatus.NOT_REQUESTED,

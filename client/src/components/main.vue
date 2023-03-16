@@ -24,7 +24,7 @@
                 ])
               "
               name="survey-requests"
-              label="Requests"
+              label="HIPP"
               icon="device_hub"
             />
             <q-tab

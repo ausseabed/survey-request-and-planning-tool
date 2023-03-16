@@ -5,7 +5,7 @@
     <q-card-section class="column q-gutter-y-sm">
       <div>
         A valid HIPP Request requires registration and the addition of at
-        least one area of interest. Optional fields are labelled (optional).
+        least one requested area. Optional fields are labelled (optional).
         All other fields are mandatory.
       </div>
 

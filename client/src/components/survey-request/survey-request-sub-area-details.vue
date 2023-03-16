@@ -7,14 +7,14 @@
         <div class="column q-gutter-y-xs">
 
           <div class="row justify-between items-center">
-            <div class="main-page-sub-title">Area(s) of Interest</div>
+            <div class="main-page-sub-title">Requested Areas</div>
             <q-btn
               v-if="_.get(surveyRequest, 'aois.length') > 0"
               type="a"
               :href="`/api/survey-request/${surveyRequest.id}/shp`"
               round flat icon="cloud_download">
               <q-tooltip>
-                Download all areas of interest
+                Download all requested areas
               </q-tooltip>
             </q-btn>
           </div>

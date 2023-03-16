@@ -3,10 +3,10 @@
     <q-card-section class="column q-pa-md q-gutter-y-sm">
       <div>
         The HIPP Request form will allow you to add and define as many survey
-        areas of interest as you choose, called sub-areas. Please refer to the
+        requested areas as you choose, called sub-areas. Please refer to the
         online HELP to determine whether you need to define one survey area or
-        many. A valid request must contain at least one area of interest and
-        all areas of interest should be contained within a defined geographic
+        many. A valid request must contain at least one requested area and
+        all area should be contained within a defined geographic
         area (for example all located within the same bay, gulf, strait, sea
         etc). Requests that contain areas that are not spatially related will
         be returned to the requestor for review.
@@ -18,7 +18,7 @@
       >
         <q-uploader
           class="col"
-          label="Upload Area of Interest spatial data files (max 30MB)"
+          label="Upload Requested Area spatial data files (max 30MB)"
           flat bordered
           :multiple="false"
           accept=".zip,.json"
@@ -93,7 +93,7 @@
                 <div class="column">
                   <div class="main-page-sub-title">Processing complete</div>
                   <div style="color:#616161">
-                    {{task.output.surveyRequestAoiIds.length + " Area of Interest entries created"}}
+                    {{task.output.surveyRequestAoiIds.length + " Requested Area entries created"}}
                   </div>
                 </div>
               </div>
@@ -108,20 +108,20 @@
     <q-card-section>
       <div class="column q-gutter-y-xs">
         <div class="row justify-between items-center">
-          <div class="main-page-sub-title">Area(s) of Interest</div>
+          <div class="main-page-sub-title">Requested Areas</div>
           <q-btn
             v-if="_.get(surveyRequest, 'aois.length') > 0"
             type="a"
             :href="`/api/survey-request/${surveyRequest.id}/shp`"
             round flat icon="cloud_download">
             <q-tooltip>
-              Download all areas of interest
+              Download all requested areas
             </q-tooltip>
           </q-btn>
         </div>
 
         <div v-if="loadingAreaOfInterestData" class="column">
-          <div style="color:#616161">Loading Areas of Interest</div>
+          <div style="color:#616161">Loading Requested Areas</div>
           <q-linear-progress size="25px" :value="loadingAreaOfInterestProgress" color="grey-5">
             <div class="absolute-full flex flex-center">
               <q-badge color="white" text-color="grey-5" :label="progressLabel" />
@@ -129,7 +129,7 @@
           </q-linear-progress>
         </div>
         <div class="column items-center" v-if="_.get(surveyRequest, 'aois.length') == 0">
-          <div class="main-page-title">No areas of interest provided</div>
+          <div class="main-page-title">No requested areas provided</div>
           <div style="color:#616161">Drag and drop geojson or zipped shapefile to upload area above.</div>
         </div>
         <div v-else class="column q-gutter-y-sm">

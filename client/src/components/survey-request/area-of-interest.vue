@@ -5,7 +5,7 @@
       <div class="column col-auto">
         <div class="column q-gutter-sm">
           <q-badge v-if="aoi.isNew" color="yellow-6" text-color="black">
-            New Area of Interest
+            New Requested Area
           </q-badge>
           <q-img
             class="rounded-borders"

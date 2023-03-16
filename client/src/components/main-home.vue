@@ -12,24 +12,35 @@
         >
           <div class="q-px-md q-pb-sm column q-gutter-y-sm">
             <div>
-              The ASB SCT was developed by FrontierSI on behalf of AusSeabed and
-              captures three record types, a survey plan, a survey request and a
-              area of interest profile.
+              The AusSeabed Survey Coordination Tool was developed to support
+              coordination of survey activities across the Australian seafloor
+              mapping community. Access to the Survey Coordination Tool requires
+              a simple registration process. Governmental and academic entities,
+              and others conducting seafloor mapping surveys are able to consider
+              the areas of interest during mapping planning activities. ASB
+              encourages collaboration and leveraging of opportunities based on
+              common interests. The three tools contained within the SCT are
+              independent of one another. The ASB SCT was developed by FrontierSI
+              on behalf of AusSeabed.
             </div>
-            <div>
-              The survey plans records the survey’s intended area of interest,
-              its specifications and intended deliverable.
-            </div>
-            <div>
-              The survey request record the information required for submission
-              to the Hydroscheme Industry Partnership Program (HIPP) review
-              panel.
-            </div>
-            <div>
-              The area of interest profile enables an organisation to highlight
-              the areas of our marine jurisdiction that are of interest for
-              surveying.
-            </div>
+            <ol class="q-my-xs">
+              <li>
+                Survey Plans - Communicate planned mapping surveys to notify the
+                seabed mapping community.
+              </li>
+              <li>
+                Areas of Interest - identify your organisation's marine area of
+                interest.
+              </li>
+              <li>
+                HIPP Request submission - The Australian Hydrographic Office's
+                HydroScheme Industry Partnership Program (HIPP) is the commercial
+                acquisition program that undertakes focused hydrographic survey
+                activities to support national charting priorities and safety of
+                navigation. For more information see
+                <a href="https://www.hydro.gov.au/NHP/" target="_blank">here</a>.
+              </li>
+            </ol>
           </div>
         </q-expansion-item>
 

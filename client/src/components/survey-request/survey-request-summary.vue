@@ -135,7 +135,7 @@
         </div>
 
         <div v-if="surveyRequest.aois.length == 0">
-          <div> No area of interest provided </div>
+          <div> No Requested Areas provided </div>
         </div>
         <div v-else class="q-gutter-y-lg">
           <div

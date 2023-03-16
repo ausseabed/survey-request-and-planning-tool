@@ -190,7 +190,7 @@ const TABS_INFO = [
   },
   {
     name: 'survey-request-areas-of-interest',
-    label: ['Area(s)', 'of Interest'],
+    label: ['Requested', 'Areas'],
     route: 'survey-request-areas-of-interest',
     nextRoute: 'survey-request-sub-area-details',
     saveValidations: {

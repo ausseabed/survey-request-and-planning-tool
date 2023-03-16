@@ -200,7 +200,11 @@ const TABS_INFO = [
       }
     },
     submitValidations: {
-      surveyRequest: {}
+      surveyRequest: {
+        aois: {
+          required, minLength:minLength(1),
+        }
+      }
     },
   },
   {

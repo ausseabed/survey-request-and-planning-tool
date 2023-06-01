@@ -329,13 +329,15 @@
           <div v-else class="column q-gutter-y-sm">
             <priority-area
               ref="priorityAreaComponents"
-              v-for="priorityArea of priorityAreaSubmission.priorityAreas"
+              v-for="(priorityArea, index) of priorityAreaSubmission.priorityAreas"
               :key="priorityArea.id"
               :priority-area="priorityArea"
+              :index="index"
               @priority-area-value-changed="priorityAreaValueChanged"
               @priority-area-deleted="priorityAreaDeleted"
               :readonly="readonly"
               @priority-area-apply-to-all="priorityAreaApplytoAll"
+              :validator="validator"
             >
             </priority-area>
           </div>
@@ -376,7 +378,11 @@ import PriorityArea from "./priority-area";
 export default Vue.extend({
   mixins: [errorHandler, permission],
 
-  props: ["readonly"],
+  props: [
+    'readonly',
+    'validationIntent',
+    'validator'
+  ],
 
   components: {
     "priority-area": PriorityArea,
@@ -427,19 +433,24 @@ export default Vue.extend({
         });
     },
 
-    isValid() {
-      // we perform map, then reduce, so that the `isValid` method
-      // is called on all priority area components. Doing the only the reduce
-      // will stop calling isValid after the first non-valid component.
-      if (_.isNil(this.$refs.priorityAreaComponents)) {
-        // if there are no priority areas, then its valid
-        return true;
-      }
-      let allValid = this.$refs.priorityAreaComponents
-        .map((comp) => comp.isValid())
-        .reduce((sum, next) => sum && next, true);
+    // isValid() {
+    //   // we perform map, then reduce, so that the `isValid` method
+    //   // is called on all priority area components. Doing the only the reduce
+    //   // will stop calling isValid after the first non-valid component.
+    //   if (_.isNil(this.$refs.priorityAreaComponents)) {
+    //     // if there are no priority areas, then its valid
+    //     return true;
+    //   }
+    //   let allValid = this.$refs.priorityAreaComponents
+    //     .map((comp) => comp.isValid())
+    //     .reduce((sum, next) => sum && next, true);
 
-      return allValid;
+    //   return allValid;
+    // },
+
+    isValid() {
+      this.$v.$touch();
+      return !this.$v.$error;
     },
 
     priorityAreaValueChanged({ priorityArea, propertyName, value }) {
@@ -787,16 +798,19 @@ export default Vue.extend({
     },
   },
 
-  validations() {
-    return {
-      priorityAreaSubmission: {},
-    };
-  },
+  // validations() {
+  //   return {
+  //     priorityAreaSubmission: {},
+  //   };
+  // },
 
   computed: {
     ...mapGetters("priorityAreaSubmission", {
       priorityAreaSubmission: "activePriorityAreaSubmission",
     }),
+    $v () {
+      return this.validator;
+    },
 
     isProcessing() {
       if (this.task == undefined) {

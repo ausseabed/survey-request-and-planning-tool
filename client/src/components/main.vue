@@ -389,7 +389,7 @@
                     label="add submission"
                     align="right"
                     icon="add"
-                    :to="'/priority-area-submission/new'"
+                    :to="'/priority-area-submission/new/registration'"
                   >
                     <q-tooltip>
                       Create new Area of Interest Submission

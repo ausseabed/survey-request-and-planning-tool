@@ -1,15 +1,15 @@
 <template>
-  <form-wrapper :validator="$v">
+  <!-- <form-wrapper :validator="$v"> -->
     <q-card flat bordered class="full-width">
       <q-card-section>
-        <div class="main-page-sub-title">{{ areaOfInterest.name }}</div>
+        <div class="main-page-sub-title">{{ priorityArea.name }}</div>
       </q-card-section>
       <q-card-section class="row q-gutter-md">
         <div class="column" style="max-width: 250px">
           <q-img
             class="rounded-borders"
             style="width: 250px; max-height: 250px"
-            :src="`api/priority-area/${areaOfInterest.id}/thumbnail`"
+            :src="`api/priority-area/${priorityArea.id}/thumbnail`"
             :ratio="1"
             contain
           />
@@ -18,12 +18,12 @@
               Registration details
             </q-badge>
             <div class="column q-pl-sm reg-details-text">
-              <div><b>Identified area name:</b> {{ areaOfInterest.name }}</div>
+              <div><b>Identified area name:</b> {{ priorityArea.name }}</div>
               <div>
-                <b>Seacountry name:</b> {{ areaOfInterest.seacountryName }}
+                <b>Seacountry name:</b> {{ priorityArea.seacountryName }}
               </div>
               <div>
-                <b>Ecological area:</b> {{ areaOfInterest.ecologicalAreaName }}
+                <b>Ecological area:</b> {{ priorityArea.ecologicalAreaName }}
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@
                         <q-item-section avatar>
                           <q-checkbox
                             size="sm"
-                            :value="areaOfInterest.purposeValues"
+                            :value="priorityArea.purposeValues"
                             :val="value"
                             @input="valueChanged('purposeValues', $event)"
                             :disable="readonly"
@@ -186,7 +186,7 @@
                     <q-item-section avatar>
                       <q-checkbox
                         size="sm"
-                        :value="areaOfInterest.ecosystemComponents"
+                        :value="priorityArea.ecosystemComponents"
                         :val="ecosystemComp"
                         @input="valueChanged('ecosystemComponents', $event)"
                         :disable="readonly"
@@ -238,7 +238,7 @@
                       <q-item-section avatar>
                         <q-checkbox
                           size="sm"
-                          :value="areaOfInterest.dataToCapture"
+                          :value="priorityArea.dataToCapture"
                           :val="opt"
                           @input="valueChanged('dataToCapture', $event)"
                           :disable="readonly"
@@ -270,7 +270,7 @@
                         <q-item-section avatar>
                           <q-checkbox
                             size="sm"
-                            :value="areaOfInterest.dataCaptureMethods"
+                            :value="priorityArea.dataCaptureMethods"
                             :val="method.name"
                             @input="valueChanged('dataCaptureMethods', $event)"
                             :disable="
@@ -310,7 +310,7 @@
                   >
                     <q-item-section avatar>
                       <q-checkbox
-                        :value="areaOfInterest.existingDataSources"
+                        :value="priorityArea.existingDataSources"
                         :val="opt.name"
                         @input="valueChanged('existingDataSources', $event)"
                         :disable="readonly"
@@ -331,21 +331,21 @@
                   class="q-pl-md"
                   :options="REASON_FOR_AOI_RAISE_OPTIONS"
                   type="radio"
-                  :value="areaOfInterest.reasonForAoiRaise"
+                  :value="priorityArea.reasonForAoiRaise"
                   @input="valueChanged('reasonForAoiRaise', $event)"
                   :disable="readonly"
                 />
 
                 <form-field-validated-input
-                  name="areaOfInterest.existingDataAssessmentComments"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.existingDataAssessmentComments`"
                   attribute="Further Comments"
                   label="Further Comments"
-                  :value="areaOfInterest.existingDataAssessmentComments"
+                  :value="priorityArea.existingDataAssessmentComments"
                   @input="
                     valueChanged('existingDataAssessmentComments', $event)
                   "
                   @blur="
-                    $v.areaOfInterest.existingDataAssessmentComments.$touch
+                    `$v.priorityArea.priorityAreas.$each.${index}.existingDataAssessmentComments.$touch`
                   "
                   type="textarea"
                   autogrow
@@ -368,33 +368,33 @@
               <q-card-section class="row q-gutter-x-xs">
                 <form-field-validated-option-group
                   class="col"
-                  :value="areaOfInterest.gridSize"
+                  :value="priorityArea.gridSize"
                   @input="valueChanged('gridSize', $event)"
                   :options="GRID_SIZE_OPTIONS"
-                  name="areaOfInterest.gridSize"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.gridSize`"
                   label="Grid Size"
-                  @blur="$v.areaOfInterest.gridSize.$touch"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.gridSize.$touch`"
                   :readonly="readonly"
                 >
                 </form-field-validated-option-group>
 
                 <div class="column col">
                   <form-field-validated-option-group
-                    v-if="areaOfInterest.dataToCapture.includes('Bathymetry')"
-                    :value="areaOfInterest.surveyStandard"
+                    v-if="priorityArea.dataToCapture.includes('Bathymetry')"
+                    :value="priorityArea.surveyStandard"
                     @input="valueChanged('surveyStandard', $event)"
                     :options="SURVEY_STANDARD_OPTIONS"
-                    name="areaOfInterest.surveyStandard"
+                    :name="`priorityAreaSubmission.priorityAreas.$each.${index}.surveyStandard`"
                     label="Bathymetry Survey Standard"
-                    @blur="$v.areaOfInterest.surveyStandard.$touch"
+                    @blur="`$v.priorityArea.priorityAreas.$each.${index}.surveyStandard.$touch`"
                     :readonly="readonly"
                   >
                   </form-field-validated-option-group>
                   <div
-                    v-if="areaOfInterest.dataToCapture.includes('Bathymetry')"
+                    v-if="priorityArea.dataToCapture.includes('Bathymetry')"
                     class="column q-pa-sm"
                   >
-                    <div>{{ areaOfInterest.surveyStandard }}</div>
+                    <div>{{ priorityArea.surveyStandard }}</div>
                     <div
                       class="text-weight-light"
                       v-if="surveyStandardDescription"
@@ -425,21 +425,21 @@
               <q-card-section class="q-gutter-y-xs">
                 <form-field-validated-button-toggle
                   inline
-                  name="areaOfInterest.preferredTimeframe"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.preferredTimeframe`"
                   label="Preferred Timeframe"
-                  :value="areaOfInterest.preferredTimeframe"
+                  :value="priorityArea.preferredTimeframe"
                   @input="valueChanged('preferredTimeframe', $event)"
                   :options="PREFERRED_TIMEFRAME_OPTIONS"
-                  @blur="$v.areaOfInterest.preferredTimeframe.$touch"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.preferredTimeframe.$touch`"
                   :readonly="readonly"
                 />
                 <form-field-validated-input
-                  name="areaOfInterest.timeframeReason"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.timeframeReason`"
                   attribute="Reason for timeframe"
                   label="Reason for timeframe"
-                  :value="areaOfInterest.timeframeReason"
+                  :value="priorityArea.timeframeReason"
                   @input="valueChanged('timeframeReason', $event)"
-                  @blur="$v.areaOfInterest.timeframeReason.$touch"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.timeframeReason.$touch`"
                   type="textarea"
                   autogrow
                   :readonly="readonly"
@@ -448,36 +448,36 @@
                 </form-field-validated-input>
                 <form-field-validated-button-toggle
                   inline
-                  name="areaOfInterest.preferredSeason"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.preferredSeason`"
                   label="Preferred Season"
-                  :value="areaOfInterest.preferredSeason"
+                  :value="priorityArea.preferredSeason"
                   @input="valueChanged('preferredSeason', $event)"
                   :options="PREFERRED_SEASON_OPTIONS"
-                  @blur="$v.areaOfInterest.preferredSeason.$touch"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.preferredSeason.$touch`"
                   :readonly="readonly"
                 />
                 <form-field-validated-button-toggle
                   inline
-                  name="areaOfInterest.collectionCadence"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.collectionCadence`"
                   label="Intended Cadence for Collection"
-                  :value="areaOfInterest.collectionCadence"
+                  :value="priorityArea.collectionCadence"
                   @input="valueChanged('collectionCadence', $event)"
                   :options="COLLECTION_CADENCE_OPTIONS"
-                  @blur="$v.areaOfInterest.collectionCadence.$touch"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.collectionCadence.$touch`"
                   :readonly="readonly"
                 />
                 <form-field-validated-input
                   v-if="
-                    areaOfInterest.collectionCadence == 'Time Series Desired' ||
-                    areaOfInterest.collectionCadence ==
+                    priorityArea.collectionCadence == 'Time Series Desired' ||
+                    priorityArea.collectionCadence ==
                       'Time Series Established'
                   "
-                  name="areaOfInterest.timeSeriesDescription"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.timeSeriesDescription`"
                   attribute="Time Series Description"
                   label="Time Series Description"
-                  :value="areaOfInterest.timeSeriesDescription"
+                  :value="priorityArea.timeSeriesDescription"
                   @input="valueChanged('timeSeriesDescription', $event)"
-                  @blur="$v.areaOfInterest.timeSeriesDescription.$touch"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.timeSeriesDescription.$touch`"
                   type="textarea"
                   autogrow
                   :readonly="readonly"
@@ -496,22 +496,22 @@
               <q-card-section class="q-gutter-y-xs">
                 <form-field-validated-button-toggle
                   inline
-                  name="areaOfInterest.perceivedImpact"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.perceivedImpact`"
                   label="Perceived Impact"
-                  :value="areaOfInterest.perceivedImpact"
+                  :value="priorityArea.perceivedImpact"
                   @input="valueChanged('perceivedImpact', $event)"
                   :options="PERCEIVED_IMPACT_OPTIONS"
-                  @blur="$v.areaOfInterest.perceivedImpact.$touch"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.perceivedImpact.$touch`"
                   :readonly="readonly"
                 />
                 <form-field-validated-button-toggle
                   inline
-                  name="areaOfInterest.organisationalPriority"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.organisationalPriority`"
                   label="Organisational Priority"
-                  :value="areaOfInterest.organisationalPriority"
+                  :value="priorityArea.organisationalPriority"
                   @input="valueChanged('organisationalPriority', $event)"
                   :options="ORGANISATIONAL_PRIORITY_OPTIONS"
-                  @blur="$v.areaOfInterest.organisationalPriority.$touch"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.organisationalPriority.$touch`"
                   :readonly="readonly"
                 />
               </q-card-section>
@@ -538,7 +538,7 @@
         </q-list>
       </q-card-section>
     </q-card>
-  </form-wrapper>
+  <!-- </form-wrapper> -->
 </template>
 
 <script>
@@ -626,10 +626,17 @@ export default Vue.extend({
     this.ECOSYSTEM_COMPONENT_DATA = constants.ECOSYSTEM_COMPONENT_DATA;
   },
 
-  props: {
-    areaOfInterest: {},
-    readonly: true,
-  },
+  // props: {
+  //   areaOfInterest: {},
+  //   readonly: true,
+  // },
+
+  props: [
+    'priorityArea',
+    'index',
+    'readonly',
+    'validator'
+  ],
 
   methods: {
     ...mapMutations("priorityAreaSubmission", {
@@ -638,7 +645,7 @@ export default Vue.extend({
 
     valueChanged(propertyName, value) {
       this.$emit("aoi-value-changed", {
-        aoi: this.areaOfInterest,
+        aoi: this.priorityArea,
         propertyName: propertyName,
         value: value,
       });
@@ -649,13 +656,13 @@ export default Vue.extend({
         if (limit) {
           this.$emit("aoi-apply-to-all", {
             propertyName: attrName,
-            value: this.areaOfInterest[attrName],
+            value: this.priorityArea[attrName],
             limit: limit,
           });
         } else {
           this.$emit("aoi-apply-to-all", {
             propertyName: attrName,
-            value: this.areaOfInterest[attrName],
+            value: this.priorityArea[attrName],
           });
         }
       }
@@ -671,7 +678,7 @@ export default Vue.extend({
 
     getPurposeFlag(purposeFlagKey) {
       let flagKey = purposeFlagKey + ":";
-      let flag = this.areaOfInterest.purposeFlags.find((f) =>
+      let flag = this.priorityArea.purposeFlags.find((f) =>
         f.startsWith(flagKey)
       );
       if (flag) {
@@ -684,7 +691,7 @@ export default Vue.extend({
 
     setPurposeFlag(purposeFlagKey, flag) {
       let flagKey = purposeFlagKey + ":";
-      let updatedPurposeFlags = this.areaOfInterest.purposeFlags.filter((f) => {
+      let updatedPurposeFlags = this.priorityArea.purposeFlags.filter((f) => {
         return !f.startsWith(flagKey);
       });
       updatedPurposeFlags.push(flagKey + flag);
@@ -692,23 +699,23 @@ export default Vue.extend({
 
       // if the user selects a radio button option of a node that hasn't
       // been ticked, then tick it automaticaly
-      if (!this.areaOfInterest.purposes.includes(purposeFlagKey)) {
+      if (!this.priorityArea.purposes.includes(purposeFlagKey)) {
         this.valueChanged("purposes", [
-          ...this.areaOfInterest.purposes,
+          ...this.priorityArea.purposes,
           purposeFlagKey,
         ]);
       }
     },
 
     setDefaults() {
-      if (this.areaOfInterest.organisationalPriority == undefined) {
+      if (this.priorityArea.organisationalPriority == undefined) {
         this.valueChanged(
           "organisationalPriority",
           this.ORGANISATIONAL_PRIORITY_OPTIONS[0]
         );
         this.setDirty(false);
       }
-      if (this.areaOfInterest.perceivedImpact == undefined) {
+      if (this.priorityArea.perceivedImpact == undefined) {
         this.valueChanged("perceivedImpact", this.PERCEIVED_IMPACT_OPTIONS[0]);
         this.setDirty(false);
       }
@@ -798,7 +805,7 @@ export default Vue.extend({
         for (const method of methodGroup.methods) {
           if (method.name == dataCaptureMethod) {
             let commonData = _.intersectionWith(
-              this.areaOfInterest.dataToCapture,
+              this.priorityArea.dataToCapture,
               method.data,
               (a, b) => a == b
             );
@@ -826,16 +833,17 @@ export default Vue.extend({
       }
     },
 
-    isValid() {
-      this.$v.$touch();
-      return !this.$v.$error;
-    },
+    // isValid() {
+    //   this.$v.$touch();
+    //   return !this.$v.$error;
+    // },
 
     getSectionValidation(attributes) {
+      let paVal = this.$v.priorityAreaSubmission.priorityAreas.$each[this.index];
       for (const attribute of attributes) {
-        if (_.isNil(this.$v.areaOfInterest[attribute])) {
+        if (_.isNil(paVal[attribute])) {
           // then skip
-        } else if (this.$v.areaOfInterest[attribute].$error) {
+        } else if (paVal[attribute].$error) {
           return false;
         }
       }
@@ -844,14 +852,14 @@ export default Vue.extend({
   },
 
   watch: {
-    "areaOfInterest.dataToCapture": function (newVal, oldVal) {
+    "priorityArea.dataToCapture": function (newVal, oldVal) {
       // deselect any data capture methods that should not be selected based
       // on what dataToCapture types has been selected.
       var toRemove = [];
       for (const methodGroup of this.DATA_AND_METHOD_OPTIONS) {
         for (const method of methodGroup.methods) {
           if (
-            this.areaOfInterest.dataCaptureMethods.includes(method.name) &&
+            this.priorityArea.dataCaptureMethods.includes(method.name) &&
             this.dataCaptureMethodDisabled(method.name)
           ) {
             toRemove.push(method.name);
@@ -859,7 +867,7 @@ export default Vue.extend({
         }
       }
 
-      let cleanedList = this.areaOfInterest.dataCaptureMethods.filter((i) => {
+      let cleanedList = this.priorityArea.dataCaptureMethods.filter((i) => {
         return !toRemove.includes(i);
       });
 
@@ -869,19 +877,19 @@ export default Vue.extend({
       // Issue was that the dirty state would alway be set to true without this.
       let sharedWithExistingSelection = _.intersectionWith(
         cleanedList,
-        this.areaOfInterest.dataCaptureMethods,
+        this.priorityArea.dataCaptureMethods,
         (a, b) => a == b
       );
 
       if (
         sharedWithExistingSelection.length !=
-        this.areaOfInterest.dataCaptureMethods.length
+        this.priorityArea.dataCaptureMethods.length
       ) {
         this.valueChanged("dataCaptureMethods", cleanedList);
       }
     },
 
-    "areaOfInterest.surveyStandard": {
+    "priorityArea.surveyStandard": {
       immediate: true,
       handler(newVal, oldVal) {
         let surveyStandardDetails = constants.SURVEY_STANDARD_OPTIONS.find(
@@ -905,50 +913,50 @@ export default Vue.extend({
     },
   },
 
-  validations() {
-    return {
-      areaOfInterest: {
-        preferredTimeframe: { required },
-        timeframeReason: {},
-        preferredSeason: {},
-        collectionCadence: { required },
-        timeSeriesDescription: {},
+  // validations() {
+  //   return {
+  //     priorityArea: {
+  //       preferredTimeframe: { required },
+  //       timeframeReason: {},
+  //       preferredSeason: {},
+  //       collectionCadence: { required },
+  //       timeSeriesDescription: {},
 
-        perceivedImpact: { required },
-        organisationalPriority: { required },
+  //       perceivedImpact: { required },
+  //       organisationalPriority: { required },
 
-        existingDataSources: {},
-        reasonForAoiRaise: {},
-        existingDataAssessmentComments: {},
+  //       existingDataSources: {},
+  //       reasonForAoiRaise: {},
+  //       existingDataAssessmentComments: {},
 
-        gridSize: { required },
-        surveyStandard: {},
+  //       gridSize: { required },
+  //       surveyStandard: {},
 
-        purposes: {
-          required,
-          minLength: minLength(1),
-        },
-        ecosystems: {
-          required,
-          minLength: minLength(1),
-        },
+  //       purposes: {
+  //         required,
+  //         minLength: minLength(1),
+  //       },
+  //       ecosystems: {
+  //         required,
+  //         minLength: minLength(1),
+  //       },
 
-        dataToCapture: {
-          required,
-          minLength: minLength(1),
-        },
-        dataCaptureMethods: {
-          required,
-          minLength: minLength(1),
-        },
-      },
-    };
-  },
+  //       dataToCapture: {
+  //         required,
+  //         minLength: minLength(1),
+  //       },
+  //       dataCaptureMethods: {
+  //         required,
+  //         minLength: minLength(1),
+  //       },
+  //     },
+  //   };
+  // },
 
   computed: {
     pressuresTicked: {
       get: function () {
-        return this.areaOfInterest.pressures;
+        return this.priorityArea.pressures;
       },
       set: function (value) {
         this.valueChanged("pressures", value);
@@ -956,7 +964,7 @@ export default Vue.extend({
     },
     ecosystemsTicked: {
       get: function () {
-        return this.areaOfInterest.ecosystems;
+        return this.priorityArea.ecosystems;
       },
       set: function (value) {
         this.valueChanged("ecosystems", value);
@@ -964,14 +972,14 @@ export default Vue.extend({
     },
     purposesTicked: {
       get: function () {
-        return this.areaOfInterest.purposes;
+        return this.priorityArea.purposes;
       },
       set: function (value) {
         this.valueChanged("purposes", value);
 
         // if a purpose has been unticked, then automatically deselect any
         // associate flag that has been selected.
-        let updatedPurposeFlags = this.areaOfInterest.purposeFlags.filter(
+        let updatedPurposeFlags = this.priorityArea.purposeFlags.filter(
           (f) => {
             let found = false;
             for (const aPurpose of value) {
@@ -984,7 +992,7 @@ export default Vue.extend({
         );
         this.valueChanged("purposeFlags", updatedPurposeFlags);
 
-        let updatedPurposeValues = this.areaOfInterest.purposeValues.filter(
+        let updatedPurposeValues = this.priorityArea.purposeValues.filter(
           (pv) => {
             let pvGroup = this.PURPOSE_DATA.find((p) => {
               return p.values.includes(pv);
@@ -1001,6 +1009,10 @@ export default Vue.extend({
           this.purposeGroupSelected(p.label)
         );
       },
+    },
+
+    $v () {
+      return this.validator;
     },
   },
 

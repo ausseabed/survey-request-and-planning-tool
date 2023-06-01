@@ -27,13 +27,15 @@
 
     <div class="column q-pa-sm q-gutter-y-sm">
       <area-of-interest-profile
-        v-for="aoi of priorityAreaSubmission.priorityAreas"
+        v-for="(aoi, index) of priorityAreaSubmission.priorityAreas"
         :key="aoi.id"
-        :area-of-interest="aoi"
+        :index="index"
+        :priority-area="aoi"
         @aoi-value-changed="aoiValueChanged"
         :readonly="readonly"
         ref="aoiProfile"
         @aoi-apply-to-all="aoiApplyToAll"
+        :validator="validator"
       >
       </area-of-interest-profile>
     </div>
@@ -58,7 +60,11 @@ export default Vue.extend({
     "area-of-interest-profile": AreaOfInterestProfile,
   },
 
-  props: ["readonly"],
+  props: [
+    'readonly',
+    'validationIntent',
+    'validator'
+  ],
 
   mounted() {},
 
@@ -113,34 +119,43 @@ export default Vue.extend({
       }
     },
 
-    isValid() {
-      // we perform map, then reduce, so that the `isValid` method
-      // is called on all priority area components. Doing the only the reduce
-      // will stop calling isValid after the first non-valid component.
-      if (_.isNil(this.$refs.aoiProfile)) {
-        // if there are no priority areas, then its valid
-        return true;
-      }
-      let allValid = this.$refs.aoiProfile
-        .map((comp) => comp.isValid())
-        .reduce((sum, next) => sum && next, true);
+    // isValid() {
+    //   // we perform map, then reduce, so that the `isValid` method
+    //   // is called on all priority area components. Doing the only the reduce
+    //   // will stop calling isValid after the first non-valid component.
+    //   if (_.isNil(this.$refs.aoiProfile)) {
+    //     // if there are no priority areas, then its valid
+    //     return true;
+    //   }
+    //   let allValid = this.$refs.aoiProfile
+    //     .map((comp) => comp.isValid())
+    //     .reduce((sum, next) => sum && next, true);
 
-      return allValid;
+    //   return allValid;
+    // },
+
+    isValid() {
+      this.$v.$touch();
+      return !this.$v.$error;
     },
+
   },
 
   watch: {},
 
-  validations() {
-    return {
-      priorityAreaSubmission: {},
-    };
-  },
+  // validations() {
+  //   return {
+  //     priorityAreaSubmission: {},
+  //   };
+  // },
 
   computed: {
     ...mapGetters("priorityAreaSubmission", {
       priorityAreaSubmission: "activePriorityAreaSubmission",
     }),
+    $v () {
+      return this.validator;
+    },
   },
 
   data() {

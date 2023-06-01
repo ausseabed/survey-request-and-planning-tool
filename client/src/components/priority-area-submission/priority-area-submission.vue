@@ -7,9 +7,9 @@
     >
       <record-state
         ref="recordState"
-        v-if="activePriorityAreaSubmission.id"
+        v-if="priorityAreaSubmission.id"
         entity-type="priority-area-submission"
-        :entity-id="activePriorityAreaSubmission.id"
+        :entity-id="priorityAreaSubmission.id"
         :disable="dirty"
         @updated-state="stateUpdated($event)"
         class="col-auto"
@@ -23,46 +23,37 @@
           align="left"
           class="col-auto bg-secondary text-white"
         >
+
           <q-route-tab
-            name="priority-area-submission-registration"
-            label="Organisation Details"
-            :to="{
-              name: 'priority-area-submission-registration',
-              params: { id: activePriorityAreaSubmission.id },
-            }"
+            v-for="tabInfo in tabs"
+            :key="tabInfo.name"
+            :name="tabInfo.name"
+            :to="{name: tabInfo.route, params: {id: priorityAreaSubmission.id}}"
             exact
-          />
-          <q-route-tab
-            name="priority-area-submission-areas"
-            label="Areas of Interest"
-            :to="{
-              name: 'priority-area-submission-areas',
-              params: { id: activePriorityAreaSubmission.id },
-            }"
-            exact
-          />
-          <q-route-tab
-            name="area-of-interest-profiles"
-            label="Area(s) of Interest Profile"
-            :to="{
-              name: 'area-of-interest-profiles',
-              params: { id: activePriorityAreaSubmission.id },
-            }"
-            exact
-          />
-          <q-route-tab
-            name="priority-area-submission-confirmation"
-            label="Submission Confirmation"
-            :to="{
-              name: 'priority-area-submission-confirmation',
-              params: { id: activePriorityAreaSubmission.id },
-            }"
-            exact
-          />
+            class="q-tab__label"
+          >
+            <div v-bind:class="{ 'red-tab-label': !tabValid(tabInfo.name) , 'rounded-borders': !tabValid(tabInfo.name) }">
+              <template>
+                {{ tabInfo.label[0] }}
+              </template>
+            </div>
+          </q-route-tab>
+
         </q-tabs>
         <div class="col-auto fat-spacer bg-secondary"></div>
-        <router-view class="col" ref="pasComp" :readonly="stateReadonly">
-        </router-view>
+        <form-wrapper
+          :validator="$v"
+          class="column col"
+        >
+          <router-view
+            class="col"
+            ref="pasComp"
+            :readonly="stateReadonly"
+            :validationIntent="validationIntent"
+            :validator = "$v"
+          >
+          </router-view>
+        </form-wrapper>
       </q-card>
       <div class="row justify-between col-auto">
         <div class="row justify-start q-gutter-sm">
@@ -88,7 +79,7 @@
         </div>
         <div
           v-if="
-            activePriorityAreaSubmission &&
+            priorityAreaSubmission &&
             $route.name === 'priority-area-submission-confirmation'
           "
         >
@@ -140,6 +131,7 @@
 import Vue from "vue";
 const _ = require("lodash");
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import { required, minLength, email } from "vuelidate/lib/validators";
 
 import { errorHandler } from "./../mixins/error-handling";
 import { permission } from "./../mixins/permission";
@@ -147,14 +139,156 @@ import { DirtyRouteGuard } from "./../mixins/dirty-route-guard";
 
 import * as pasMutTypes from "../../store/modules/priority-area-submission/priority-area-submission-mutation-types";
 
-// what the route gets changed to after save and continue is clicked
-const NEXT_ROUTES = {
-  "priority-area-submission-registration": "priority-area-submission-areas",
-  "priority-area-submission-areas": "area-of-interest-profiles",
-  "area-of-interest-profiles": "priority-area-submission-confirmation",
-  "priority-area-submission-confirmation":
-    "priority-area-submission-confirmation",
-};
+// // what the route gets changed to after save and continue is clicked
+// const NEXT_ROUTES = {
+//   "priority-area-submission-registration": "priority-area-submission-areas",
+//   "priority-area-submission-areas": "area-of-interest-profiles",
+//   "area-of-interest-profiles": "priority-area-submission-confirmation",
+//   "priority-area-submission-confirmation":
+//     "priority-area-submission-confirmation",
+// };
+
+const TABS_INFO = [
+  {
+    name: 'priority-area-submission-registration',
+    label: ['Organisation Details'],
+    route: 'priority-area-submission-registration',
+    nextRoute: 'priority-area-submission-areas',
+    saveValidations: {
+      priorityAreaSubmission: {
+        submittingOrganisation: { required },
+        contactPerson: {  },
+        contactEmail: {  },
+      },
+    },
+    submitValidations: {
+      priorityAreaSubmission: {
+        submittingOrganisation: { required },
+        contactPerson: { required },
+        contactEmail: { required, email },
+      },
+    },
+  },
+  {
+    name: 'priority-area-submission-areas',
+    label: ['Areas of Interest'],
+    route: 'priority-area-submission-areas',
+    nextRoute: 'area-of-interest-profiles',
+    saveValidations: {
+      priorityAreaSubmission: {
+        priorityAreas: {
+          $each: {
+            name: {},
+            ecologicalAreaType: {},
+            ecologicalAreaName: {},
+            seacountryName: {}
+          }
+        }
+      }
+    },
+    submitValidations: {
+      priorityAreaSubmission: {
+        priorityAreas: {
+          $each: {
+            name: { required },
+            ecologicalAreaType: {},
+            ecologicalAreaName: {},
+            seacountryName: {}
+          }
+        }
+      }
+    },
+  },
+  {
+    name: 'area-of-interest-profiles',
+    label: ['Areas of Interest Profile'],
+    route: 'area-of-interest-profiles',
+    nextRoute: 'priority-area-submission-confirmation',
+    saveValidations: {
+      priorityAreaSubmission: {
+        priorityAreas: {
+          $each: {
+            preferredTimeframe: {},
+            timeframeReason: {},
+            preferredSeason: {},
+            collectionCadence: {},
+            timeSeriesDescription: {},
+
+            perceivedImpact: {},
+            organisationalPriority: {},
+
+            existingDataSources: {},
+            reasonForAoiRaise: {},
+            existingDataAssessmentComments: {},
+
+            gridSize: {},
+            surveyStandard: {},
+
+            purposes: {},
+            ecosystems: {},
+
+            dataToCapture: {},
+            dataCaptureMethods: {},
+          }
+        }
+      }
+    },
+    submitValidations: {
+      priorityAreaSubmission: {
+        priorityAreas: {
+          $each: {
+            preferredTimeframe: { required },
+            timeframeReason: {},
+            preferredSeason: {},
+            collectionCadence: { required },
+            timeSeriesDescription: {},
+
+            perceivedImpact: { required },
+            organisationalPriority: { required },
+
+            existingDataSources: {},
+            reasonForAoiRaise: {},
+            existingDataAssessmentComments: {},
+
+            gridSize: { required },
+            surveyStandard: {},
+
+            purposes: {
+              required,
+              minLength: minLength(1),
+            },
+            ecosystems: {
+              required,
+              minLength: minLength(1),
+            },
+
+            dataToCapture: {
+              required,
+              minLength: minLength(1),
+            },
+            dataCaptureMethods: {
+              required,
+              minLength: minLength(1),
+            },
+          }
+        }
+      }
+    },
+  },
+  {
+    name: 'priority-area-submission-confirmation',
+    label: ['Submission Confirmation'],
+    route: 'priority-area-submission-confirmation',
+    nextRoute: 'priority-area-submission-confirmation',
+    saveValidations: {
+
+    },
+    submitValidations: {
+
+    },
+  },
+]
+
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
@@ -192,12 +326,20 @@ export default Vue.extend({
       // fetch the list of priority areas linked to the task, only those with
       // a direct link to the submission.
       this.savePriorityAreaSubmission({
-        id: this.activePriorityAreaSubmission.id,
+        id: this.priorityAreaSubmission.id,
       });
       this.restoreState();
     },
 
     publishClicked() {
+      this.validationIntent = 'submit';
+      this.$v.$touch();
+
+      if (this.$v.$error) {
+        this.notifyError('Please review field errors on highlighted tabs');
+        return;
+      }
+
       let pasComp = this.$refs.pasComp;
 
       if (!pasComp.acknowledged) {
@@ -222,15 +364,27 @@ export default Vue.extend({
       this.saveClicked(false, false);
     },
 
+    beforeDirtyCheck() {
+      this.validationIntent = 'save';
+    },
+
     saveClicked(moveNext, changeRoute) {
-      let pasComp = this.$refs.pasComp;
-      if (!pasComp.isValid()) {
-        this.notifyError("Please review fields");
+      this.validationIntent = 'save';
+      this.$v.$touch();
+
+      if (this.$v.$error) {
+        this.notifyError('Please review fields');
         return;
       }
 
-      const isNew = _.isNil(this.activePriorityAreaSubmission.id);
-      this.savePriorityAreaSubmission(this.activePriorityAreaSubmission)
+      // let pasComp = this.$refs.pasComp;
+      // if (!pasComp.isValid()) {
+      //   this.notifyError("Please review fields");
+      //   return;
+      // }
+
+      const isNew = _.isNil(this.priorityAreaSubmission.id);
+      this.savePriorityAreaSubmission(this.priorityAreaSubmission)
         .then((pas) => {
           const successMsg = isNew
             ? "Area of Interest Submission created"
@@ -245,11 +399,10 @@ export default Vue.extend({
           // else via "save and continue".
           const currentId = this.$route.params.id;
           let routeName = this.$route.name;
-          routeName = _.isNil(routeName)
-            ? "priority-area-submission-registration"
-            : routeName;
+          let nextRouteName = this.getNextRouteName(routeName);
+          routeName = _.isNil(routeName) ? 'priority-area-submission-registration' : routeName;
           if (moveNext) {
-            routeName = NEXT_ROUTES[routeName];
+            routeName = nextRouteName;
           }
           if (isNew || moveNext) {
             // don't push a new route that could be the same as the current
@@ -262,6 +415,14 @@ export default Vue.extend({
         });
     },
 
+    getNextRouteName(oldRouteName) {
+      let routeName = _.isNil(oldRouteName) ? 'priority-area-submission-registration' : oldRouteName;
+      const nextRouteName = this.tabs.find((tabInfo) => {
+        return routeName == tabInfo.route;
+      }).nextRoute;
+      return nextRouteName
+    },
+
     deleteClicked() {
       this.$q
         .dialog({
@@ -272,7 +433,7 @@ export default Vue.extend({
         })
         .onOk(() => {
           this.deletePriorityAreaSubmission({
-            id: this.activePriorityAreaSubmission.id,
+            id: this.priorityAreaSubmission.id,
           }).then((pmd) => {
             this.notifySuccess("Deleted Area of Interest Submission");
             this.$router.replace({ path: `/` });
@@ -296,7 +457,7 @@ export default Vue.extend({
         let routeName = this.$route.name
           ? this.$route.name
           : "priority-area-submission-registration";
-        let id = this.activePriorityAreaSubmission.id;
+        let id = this.priorityAreaSubmission.id;
         this.$router.push({ name: routeName, params: { id: id } });
       } else if (this.id == "new") {
         let pas = {
@@ -345,24 +506,69 @@ export default Vue.extend({
     },
 
     recordStateValidationCallback(evt) {
-      if (evt != "PUBLISH") {
+      if (evt != 'PUBLISH') {
         return true;
       }
-      let pasComp = this.$refs.pasComp;
-      if (
-        this.$route.name !== "priority-area-submission-confirmation" ||
-        !pasComp.isValid()
-      ) {
-        this.notifyError("Please confirm acknowledgement on confirmation tab");
+      this.validationIntent = 'submit';
+
+      this.$v.$touch();
+
+      if (this.$v.$error) {
+        this.notifyError('Please review field errors on highlighted tabs');
         return false;
-      } else if (
-        this.$route.name == "priority-area-submission-confirmation" &&
-        !pasComp.acknowledged
-      ) {
-        this.notifyError("Please confirm acknowledgement");
-        return false;
+      } else {
+        return true;
       }
-      return true;
+
+    },
+
+    // recordStateValidationCallback(evt) {
+    //   if (evt != "PUBLISH") {
+    //     return true;
+    //   }
+    //   let pasComp = this.$refs.pasComp;
+    //   if (
+    //     this.$route.name !== "priority-area-submission-confirmation" ||
+    //     !pasComp.isValid()
+    //   ) {
+    //     this.notifyError("Please confirm acknowledgement on confirmation tab");
+    //     return false;
+    //   } else if (
+    //     this.$route.name == "priority-area-submission-confirmation" &&
+    //     !pasComp.acknowledged
+    //   ) {
+    //     this.notifyError("Please confirm acknowledgement");
+    //     return false;
+    //   }
+    //   return true;
+    // },
+
+    tabValid(tabName) {
+      const tabInfo = this.tabs.find((tabInfo) => {
+        return tabName == tabInfo.name;
+      });
+      let tabValidations = undefined;
+      if (this.validationIntent == 'save') {
+        tabValidations = tabInfo.saveValidations;
+      } else if (this.validationIntent == 'submit') {
+        tabValidations = tabInfo.submitValidations;
+      }
+      if (!tabValidations.priorityAreaSubmission) {
+        return true;
+      }
+
+      const validationNames = Object.keys(tabValidations.priorityAreaSubmission)
+      let allValid = validationNames
+        .map((validationName) => {
+          const val = _.get(this.$v.priorityAreaSubmission, validationName);
+          if (!val) {
+            return true;
+          }
+          return !val.$error;
+        })
+        .reduce((sum, next) => sum && next, true);
+
+      return allValid;
     },
   },
 
@@ -378,32 +584,59 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters("priorityAreaSubmission", [
-      "priorityAreaSubmissions",
-      "activePriorityAreaSubmission",
-      "dirty",
-    ]),
-    $v() {
-      // the dirty route guard wants to call the validation method (touch) to
-      // determin if the form is in a valid state. However in this case the
-      // form lives in the current child component. This exists solely for the
-      // DRG to hook onto.
-      let pasComp = this.$refs.pasComp;
-      return pasComp.$v;
-    },
+    ...mapGetters("priorityAreaSubmission", {
+      priorityAreaSubmissions: "priorityAreaSubmissions",
+      priorityAreaSubmission: "activePriorityAreaSubmission",
+      dirty: "dirty",
+    }),
+    // $v() {
+    //   // the dirty route guard wants to call the validation method (touch) to
+    //   // determin if the form is in a valid state. However in this case the
+    //   // form lives in the current child component. This exists solely for the
+    //   // DRG to hook onto.
+    //   let pasComp = this.$refs.pasComp;
+    //   return pasComp.$v;
+    // },
+  },
+
+  validations() {
+    if (this.validationIntent == 'save') {
+      let routeName = this.$route.name;
+      const tabInfo = this.tabs.find((tabInfo) => {
+        return routeName == tabInfo.route;
+      });
+      return tabInfo.saveValidations;
+    } else if (this.validationIntent == 'submit') {
+      const allValidations = {}
+      this.tabs.forEach((tab, i) => {
+        _.merge(allValidations, tab.submitValidations)
+      });
+      return allValidations;
+    }
   },
 
   data() {
     return {
       tab: undefined,
+      tabs: TABS_INFO,
       id: undefined,
       stateReadonly: true,
       published: true,
       errorFetching: false,
+      validationIntent: 'save',
     };
   },
 });
 </script>
 
 
-<style scoped lang="stylus"></style>
+<style scoped lang="stylus">
+
+.red-tab-label {
+  color: rgba(255, 0, 0, 1.0);
+  padding-left: 4px;
+  padding-right: 4px;
+  background-color: rgba(255,210,210,1.0);
+}
+
+</style>

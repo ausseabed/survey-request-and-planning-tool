@@ -72,6 +72,7 @@
           "
           :value="priorityAreaSubmission.openToCollaboration"
           label="We are open to collaboration with data collection"
+          :disable="readonly"
         />
         <q-checkbox
           style="margin-top: -8px"
@@ -83,6 +84,7 @@
           "
           :value="priorityAreaSubmission.haveFundsResources"
           label="We have funds, resources, or expertise to contribute to collaboration"
+          :disable="readonly"
         />
       </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <form-wrapper :validator="$v">
+  <!-- <form-wrapper :validator="$v"> -->
     <q-card flat bordered class="full-width">
       <q-card-section class="row q-col-gutter-md">
         <div class="column col-auto justify-between">
@@ -42,26 +42,26 @@
 
         <div class="col column q-gutter-xs">
           <form-field-validated-input
-            name="priorityArea.name"
+            :name="`priorityAreaSubmission.priorityAreas.$each.${index}.name`"
             label="Identified Area Name"
             attribute="Identified Area Name"
             :value="priorityArea.name"
             @input="valueChanged('name', $event)"
             type="text"
-            @blur="$v.priorityArea.name.$touch"
+            @blur="onNameBlur()"
             :readonly="readonly"
             outlined
           >
           </form-field-validated-input>
 
           <form-field-validated-input
-            name="priorityArea.seacountryName"
+            :name="`priorityAreaSubmission.priorityAreas.$each.${index}.seacountryName`"
             label="Seacountry name"
             attribute="Seacountry name"
             :value="priorityArea.seacountryName"
             @input="valueChanged('seacountryName', $event)"
             type="text"
-            @blur="$v.priorityArea.seacountryName.$touch"
+            @blur="onSeacountryNameBlur()"
             :readonly="readonly"
             outlined
           >
@@ -71,23 +71,23 @@
             class="bg-grey-2 q-pa-sm rounded-borders"
             inline
             clearable
-            name="priorityArea.ecologicalAreaType"
+            :name="`priorityAreaSubmission.priorityAreas.$each.${index}.ecologicalAreaType`"
             label="Significant ecological area type"
             :value="priorityArea.ecologicalAreaType"
             @input="valueChanged('ecologicalAreaType', $event)"
             :options="[...ecologicalAreaNameOptions, 'Other']"
-            @blur="$v.priorityArea.ecologicalAreaType.$touch"
+            @blur="onEcologicalAreaTypeBlur()"
             :readonly="readonly"
           />
 
           <form-field-validated-input
-            name="priorityArea.ecologicalAreaName"
+            :name="`priorityAreaSubmission.priorityAreas.$each.${index}.ecologicalAreaName`"
             label="Ecological area name"
             attribute="Ecological area name"
             :value="priorityArea.ecologicalAreaName"
             @input="valueChanged('ecologicalAreaName', $event)"
             type="text"
-            @blur="$v.priorityArea.ecologicalAreaName.$touch"
+            @blur="onEcologicalAreaNameBlur()"
             :readonly="readonly"
             outlined
           >
@@ -116,7 +116,7 @@
         </div>
       </q-card-section>
     </q-card>
-  </form-wrapper>
+  <!-- </form-wrapper> -->
 </template>
 
 <script>
@@ -135,12 +135,32 @@ export default Vue.extend({
     this.getIntersections();
   },
 
-  props: {
-    priorityArea: {},
-    readonly: true,
-  },
+  // props: {
+  //   priorityArea: {},
+  //   readonly: true,
+  // },
+
+  props: [
+    'priorityArea',
+    'index',
+    'readonly',
+    'validator'
+  ],
 
   methods: {
+    onNameBlur() {
+      this.$v.priorityAreaSubmission.priorityAreas.$each[this.index].name.$touch();
+    },
+    onSeacountryNameBlur() {
+      this.$v.priorityAreaSubmission.priorityAreas.$each[this.index].seacountryName.$touch();
+    },
+    onEcologicalAreaTypeBlur() {
+      this.$v.priorityAreaSubmission.priorityAreas.$each[this.index].ecologicalAreaType.$touch();
+    },
+    onEcologicalAreaNameBlur() {
+      this.$v.priorityAreaSubmission.priorityAreas.$each[this.index].ecologicalAreaName.$touch();
+    },
+
     valueChanged(propertyName, value) {
       this.$emit("priority-area-value-changed", {
         priorityArea: this.priorityArea,
@@ -190,10 +210,10 @@ export default Vue.extend({
       });
     },
 
-    isValid() {
-      this.$v.$touch();
-      return !this.$v.$error;
-    },
+    // isValid() {
+    //   this.$v.$touch();
+    //   return !this.$v.$error;
+    // },
 
     getIntersections() {
       Vue.axios
@@ -213,20 +233,23 @@ export default Vue.extend({
 
   watch: {},
 
-  validations() {
-    return {
-      priorityArea: {
-        name: { required },
-        ecologicalAreaType: {},
-        ecologicalAreaName: {},
-        seacountryName: {},
-      },
-    };
-  },
+  // validations() {
+  //   return {
+  //     priorityArea: {
+  //       name: { required },
+  //       ecologicalAreaType: {},
+  //       ecologicalAreaName: {},
+  //       seacountryName: {},
+  //     },
+  //   };
+  // },
 
   computed: {
     // these are all loaded by the parent component
     ...mapState("priorityAreaSubmission", ["ecologicalAreaNameOptions"]),
+    $v () {
+      return this.validator;
+    },
   },
 
   data() {

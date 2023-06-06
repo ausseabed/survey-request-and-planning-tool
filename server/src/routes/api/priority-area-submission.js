@@ -81,6 +81,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
     .createQueryBuilder("priority_area_submission")
     .select([
       "priority_area_submission.id",
+      "priority_area_submission.submissionName",
       "priority_area_submission.contactPerson",
       "priority_area_submission.contactEmail",
       "priority_area_submission.created",

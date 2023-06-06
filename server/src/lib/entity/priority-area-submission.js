@@ -36,6 +36,13 @@ export class PriorityAreaSubmission {
   @PrimaryGeneratedColumn('uuid')
   id;
 
+  @Column({
+    type: "varchar",
+    nullable: true,
+    name: "submission_name"
+  })
+  submissionName;
+
   @ManyToOne(
     type => Organisation,
     organisation => organisation.priorityAreaSubmissions,

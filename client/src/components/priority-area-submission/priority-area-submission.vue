@@ -153,7 +153,7 @@ const TABS_INFO = [
     saveValidations: {
       priorityAreaSubmission: {
         submissionName: { },
-        submittingOrganisation: { required },
+        submittingOrganisation: { },
         contactPerson: {  },
         contactEmail: {  },
       },

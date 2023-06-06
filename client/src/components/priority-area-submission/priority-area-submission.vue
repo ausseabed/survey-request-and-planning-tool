@@ -595,6 +595,7 @@ export default Vue.extend({
         let validationPaths = pathMap[vp]
         for (const validationPath of validationPaths) {
           const val = _.get(this.$v, validationPath);
+          val.$touch();
           if (val.$error) {
             return false;
           }

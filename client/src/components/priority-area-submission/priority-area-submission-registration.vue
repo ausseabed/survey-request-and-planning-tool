@@ -1,91 +1,90 @@
 <template>
-  <!-- <form-wrapper :validator="$v" class="scroll"> -->
-    <div class="column q-pa-md q-gutter-y-sm scroll">
-      <div v-if="!readonly" class="col-auto">
-        <q-btn no-caps outline color="primary" @click="prefill">
-          Prefill with my registered details
-        </q-btn>
-      </div>
-
-      <form-field-validated-input
-        name="priorityAreaSubmission.submissionName"
-        label="Submission Name"
-        attribute="Submission Name"
-        hint="Name or description of this submission"
-        :value="priorityAreaSubmission.submissionName"
-        @input="
-          updatePriorityAreaSubmissionValue({
-            path: 'submissionName',
-            value: $event,
-          })
-        "
-        type="text"
-        @blur="$v.priorityAreaSubmission.submissionName.$touch"
-        :readonly="readonly"
-      >
-      </form-field-validated-input>
-
-      <form-field-validated-select
-        ref="submittingOrganisation"
-        name="priorityAreaSubmission.submittingOrganisation"
-        label="Submitting organisation"
-        hint="Organisation that is submitting the list or areas of interest"
-        use-input
-        clearable
-        input-debounce="200"
-        @filter="filterOrganisationFunction"
-        :value="priorityAreaSubmission.submittingOrganisation"
-        @input="
-          updatePriorityAreaSubmissionValue({
-            path: 'submittingOrganisation',
-            value: $event,
-          })
-        "
-        :options="organisationsList"
-        option-label="name"
-        option-value="id"
-        @blur="$v.priorityAreaSubmission.submittingOrganisation.$touch"
-        :readonly="readonly"
-      >
-      </form-field-validated-select>
-
-      <form-field-validated-input
-        name="priorityAreaSubmission.contactPerson"
-        label="Contact Person"
-        attribute="Contact Person"
-        hint="Contact person from the commissioning organisation"
-        :value="priorityAreaSubmission.contactPerson"
-        @input="
-          updatePriorityAreaSubmissionValue({
-            path: 'contactPerson',
-            value: $event,
-          })
-        "
-        type="text"
-        @blur="$v.priorityAreaSubmission.contactPerson.$touch"
-        :readonly="readonly"
-      >
-      </form-field-validated-input>
-
-      <form-field-validated-input
-        name="priorityAreaSubmission.contactEmail"
-        label="Contact Email"
-        attribute="Contact Email"
-        hint="Ideally, provide a group email to ensure continuity of the dataset"
-        :value="priorityAreaSubmission.contactEmail"
-        @input="
-          updatePriorityAreaSubmissionValue({
-            path: 'contactEmail',
-            value: $event,
-          })
-        "
-        type="email"
-        @blur="$v.priorityAreaSubmission.contactEmail.$touch"
-        :readonly="readonly"
-      >
-      </form-field-validated-input>
+  <div class="column q-pa-md q-gutter-y-sm scroll">
+    <div v-if="!readonly" class="col-auto">
+      <q-btn no-caps outline color="primary" @click="prefill">
+        Prefill with my registered details
+      </q-btn>
     </div>
-  <!-- </form-wrapper> -->
+
+    <form-field-validated-input
+      name="priorityAreaSubmission.submissionName"
+      label="Submission Name"
+      attribute="Submission Name"
+      hint="Name or description of this submission"
+      :value="priorityAreaSubmission.submissionName"
+      @input="
+        updatePriorityAreaSubmissionValue({
+          path: 'submissionName',
+          value: $event,
+        })
+      "
+      type="text"
+      @blur="$v.priorityAreaSubmission.submissionName.$touch"
+      :readonly="readonly"
+    >
+    </form-field-validated-input>
+
+    <form-field-validated-select
+      ref="submittingOrganisation"
+      name="priorityAreaSubmission.submittingOrganisation"
+      label="Submitting organisation"
+      hint="Organisation that is submitting the list or areas of interest"
+      use-input
+      clearable
+      input-debounce="200"
+      @filter="filterOrganisationFunction"
+      :value="priorityAreaSubmission.submittingOrganisation"
+      @input="
+        updatePriorityAreaSubmissionValue({
+          path: 'submittingOrganisation',
+          value: $event,
+        })
+      "
+      :options="organisationsList"
+      option-label="name"
+      option-value="id"
+      @blur="$v.priorityAreaSubmission.submittingOrganisation.$touch"
+      :readonly="readonly"
+    >
+    </form-field-validated-select>
+
+    <form-field-validated-input
+      name="priorityAreaSubmission.contactPerson"
+      label="Contact Person"
+      attribute="Contact Person"
+      hint="Contact person from the commissioning organisation"
+      :value="priorityAreaSubmission.contactPerson"
+      @input="
+        updatePriorityAreaSubmissionValue({
+          path: 'contactPerson',
+          value: $event,
+        })
+      "
+      type="text"
+      @blur="$v.priorityAreaSubmission.contactPerson.$touch"
+      :readonly="readonly"
+    >
+    </form-field-validated-input>
+
+    <form-field-validated-input
+      name="priorityAreaSubmission.contactEmail"
+      label="Contact Email"
+      attribute="Contact Email"
+      hint="Ideally, provide a group email to ensure continuity of the dataset"
+      :value="priorityAreaSubmission.contactEmail"
+      @input="
+        updatePriorityAreaSubmissionValue({
+          path: 'contactEmail',
+          value: $event,
+        })
+      "
+      type="email"
+      @blur="$v.priorityAreaSubmission.contactEmail.$touch"
+      :readonly="readonly"
+    >
+    </form-field-validated-input>
+  </div>
+
 </template>
 
 <script>
@@ -186,16 +185,6 @@ export default Vue.extend({
   },
 
   watch: {},
-
-  // validations() {
-  //   return {
-  //     priorityAreaSubmission: {
-  //       submittingOrganisation: { required },
-  //       contactPerson: { required },
-  //       contactEmail: { required, email },
-  //     },
-  //   };
-  // },
 
   computed: {
     ...mapGetters("priorityAreaSubmission", {

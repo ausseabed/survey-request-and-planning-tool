@@ -139,15 +139,11 @@ import { DirtyRouteGuard } from "./../mixins/dirty-route-guard";
 
 import * as pasMutTypes from "../../store/modules/priority-area-submission/priority-area-submission-mutation-types";
 
-// // what the route gets changed to after save and continue is clicked
-// const NEXT_ROUTES = {
-//   "priority-area-submission-registration": "priority-area-submission-areas",
-//   "priority-area-submission-areas": "area-of-interest-profiles",
-//   "area-of-interest-profiles": "priority-area-submission-confirmation",
-//   "priority-area-submission-confirmation":
-//     "priority-area-submission-confirmation",
-// };
-
+// The tab layout, and validation rules for all the priority area/NAI tabs
+// is defined here.
+// nextRoute is the route that is navigated to when the user clicks 'save and next'
+// saveValidations are applied when the user clicks the save button
+// submitValidations are applied when the user attempts to publish a priority area
 const TABS_INFO = [
   {
     name: 'priority-area-submission-registration',
@@ -379,12 +375,6 @@ export default Vue.extend({
         return;
       }
 
-      // let pasComp = this.$refs.pasComp;
-      // if (!pasComp.isValid()) {
-      //   this.notifyError("Please review fields");
-      //   return;
-      // }
-
       const isNew = _.isNil(this.priorityAreaSubmission.id);
       this.savePriorityAreaSubmission(this.priorityAreaSubmission)
         .then((pas) => {
@@ -524,27 +514,6 @@ export default Vue.extend({
 
     },
 
-    // recordStateValidationCallback(evt) {
-    //   if (evt != "PUBLISH") {
-    //     return true;
-    //   }
-    //   let pasComp = this.$refs.pasComp;
-    //   if (
-    //     this.$route.name !== "priority-area-submission-confirmation" ||
-    //     !pasComp.isValid()
-    //   ) {
-    //     this.notifyError("Please confirm acknowledgement on confirmation tab");
-    //     return false;
-    //   } else if (
-    //     this.$route.name == "priority-area-submission-confirmation" &&
-    //     !pasComp.acknowledged
-    //   ) {
-    //     this.notifyError("Please confirm acknowledgement");
-    //     return false;
-    //   }
-    //   return true;
-    // },
-
     validationPathsForTab(validations, paths, currentPath) {
       // recuses the validations object to extract full paths to each
       // one of the validations that has been specified for this tab
@@ -652,14 +621,6 @@ export default Vue.extend({
       priorityAreaSubmission: "activePriorityAreaSubmission",
       dirty: "dirty",
     }),
-    // $v() {
-    //   // the dirty route guard wants to call the validation method (touch) to
-    //   // determin if the form is in a valid state. However in this case the
-    //   // form lives in the current child component. This exists solely for the
-    //   // DRG to hook onto.
-    //   let pasComp = this.$refs.pasComp;
-    //   return pasComp.$v;
-    // },
   },
 
   validations() {

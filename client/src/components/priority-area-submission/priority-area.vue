@@ -1,122 +1,121 @@
 <template>
-  <!-- <form-wrapper :validator="$v"> -->
-    <q-card flat bordered class="full-width">
-      <q-card-section class="row q-col-gutter-md">
-        <div class="column col-auto justify-between">
-          <div class="column q-gutter-sm">
-            <q-badge
-              v-if="priorityArea.isNew"
-              color="yellow-6"
-              text-color="black"
-            >
-              New Area of Interest
-            </q-badge>
-            <q-img
-              class="rounded-borders"
-              style="width: 250px; max-height: 250px"
-              :src="`api/priority-area/${priorityArea.id}/thumbnail`"
-              :ratio="1"
-              contain
-            />
-          </div>
-          <div class="column q-pt-xs q-gutter-xs">
-            <sct-btn
-              v-if="!readonly"
-              label="Apply to Next"
-              @click="applyToNextClicked"
-            />
-            <sct-btn
-              v-if="!readonly"
-              label="Apply to All"
-              icon="format_line_spacing"
-              @click="applyToAllClicked"
-            />
-            <sct-btn
-              v-if="!readonly"
-              label="Remove"
-              icon="delete"
-              @click="deleteClicked"
-            />
-          </div>
-        </div>
-
-        <div class="col column q-gutter-xs">
-          <form-field-validated-input
-            :name="`priorityAreaSubmission.priorityAreas.$each.${index}.name`"
-            label="Identified Area Name"
-            attribute="Identified Area Name"
-            :value="priorityArea.name"
-            @input="valueChanged('name', $event)"
-            type="text"
-            @blur="onNameBlur()"
-            :readonly="readonly"
-            outlined
+  <q-card flat bordered class="full-width">
+    <q-card-section class="row q-col-gutter-md">
+      <div class="column col-auto justify-between">
+        <div class="column q-gutter-sm">
+          <q-badge
+            v-if="priorityArea.isNew"
+            color="yellow-6"
+            text-color="black"
           >
-          </form-field-validated-input>
-
-          <form-field-validated-input
-            :name="`priorityAreaSubmission.priorityAreas.$each.${index}.seacountryName`"
-            label="Seacountry name"
-            attribute="Seacountry name"
-            :value="priorityArea.seacountryName"
-            @input="valueChanged('seacountryName', $event)"
-            type="text"
-            @blur="onSeacountryNameBlur()"
-            :readonly="readonly"
-            outlined
-          >
-          </form-field-validated-input>
-
-          <form-field-validated-select
-            class="bg-grey-2 q-pa-sm rounded-borders"
-            inline
-            clearable
-            :name="`priorityAreaSubmission.priorityAreas.$each.${index}.ecologicalAreaType`"
-            label="Significant ecological area type"
-            :value="priorityArea.ecologicalAreaType"
-            @input="valueChanged('ecologicalAreaType', $event)"
-            :options="[...ecologicalAreaNameOptions, 'Other']"
-            @blur="onEcologicalAreaTypeBlur()"
-            :readonly="readonly"
+            New Area of Interest
+          </q-badge>
+          <q-img
+            class="rounded-borders"
+            style="width: 250px; max-height: 250px"
+            :src="`api/priority-area/${priorityArea.id}/thumbnail`"
+            :ratio="1"
+            contain
           />
-
-          <form-field-validated-input
-            :name="`priorityAreaSubmission.priorityAreas.$each.${index}.ecologicalAreaName`"
-            label="Ecological area name"
-            attribute="Ecological area name"
-            :value="priorityArea.ecologicalAreaName"
-            @input="valueChanged('ecologicalAreaName', $event)"
-            type="text"
-            @blur="onEcologicalAreaNameBlur()"
-            :readonly="readonly"
-            outlined
-          >
-          </form-field-validated-input>
-
-          <div class="bg-grey-2 q-pa-sm rounded-borders">
-            <div class="field-label">Intersecting Marine Park boundaries</div>
-            <div
-              v-if="intersections.length == 0"
-              class="column justify-center bg-white"
-              style="min-height: 50px"
-            >
-              <div class="row justify-center">No intersections found</div>
-            </div>
-            <q-list v-else bordered separator class="col bg-white">
-              <q-scroll-area style="height: 200px">
-                <q-item v-for="(ii, index) in intersections" :key="index">
-                  <q-item-section>
-                    <q-item-label>{{ ii[0] }} </q-item-label>
-                    <q-item-label caption>{{ ii[1] }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-scroll-area>
-            </q-list>
-          </div>
         </div>
-      </q-card-section>
-    </q-card>
-  <!-- </form-wrapper> -->
+        <div class="column q-pt-xs q-gutter-xs">
+          <sct-btn
+            v-if="!readonly"
+            label="Apply to Next"
+            @click="applyToNextClicked"
+          />
+          <sct-btn
+            v-if="!readonly"
+            label="Apply to All"
+            icon="format_line_spacing"
+            @click="applyToAllClicked"
+          />
+          <sct-btn
+            v-if="!readonly"
+            label="Remove"
+            icon="delete"
+            @click="deleteClicked"
+          />
+        </div>
+      </div>
+
+      <div class="col column q-gutter-xs">
+        <form-field-validated-input
+          :name="`priorityAreaSubmission.priorityAreas.$each.${index}.name`"
+          label="Identified Area Name"
+          attribute="Identified Area Name"
+          :value="priorityArea.name"
+          @input="valueChanged('name', $event)"
+          type="text"
+          @blur="onNameBlur()"
+          :readonly="readonly"
+          outlined
+        >
+        </form-field-validated-input>
+
+        <form-field-validated-input
+          :name="`priorityAreaSubmission.priorityAreas.$each.${index}.seacountryName`"
+          label="Seacountry name"
+          attribute="Seacountry name"
+          :value="priorityArea.seacountryName"
+          @input="valueChanged('seacountryName', $event)"
+          type="text"
+          @blur="onSeacountryNameBlur()"
+          :readonly="readonly"
+          outlined
+        >
+        </form-field-validated-input>
+
+        <form-field-validated-select
+          class="bg-grey-2 q-pa-sm rounded-borders"
+          inline
+          clearable
+          :name="`priorityAreaSubmission.priorityAreas.$each.${index}.ecologicalAreaType`"
+          label="Significant ecological area type"
+          :value="priorityArea.ecologicalAreaType"
+          @input="valueChanged('ecologicalAreaType', $event)"
+          :options="[...ecologicalAreaNameOptions, 'Other']"
+          @blur="onEcologicalAreaTypeBlur()"
+          :readonly="readonly"
+        />
+
+        <form-field-validated-input
+          :name="`priorityAreaSubmission.priorityAreas.$each.${index}.ecologicalAreaName`"
+          label="Ecological area name"
+          attribute="Ecological area name"
+          :value="priorityArea.ecologicalAreaName"
+          @input="valueChanged('ecologicalAreaName', $event)"
+          type="text"
+          @blur="onEcologicalAreaNameBlur()"
+          :readonly="readonly"
+          outlined
+        >
+        </form-field-validated-input>
+
+        <div class="bg-grey-2 q-pa-sm rounded-borders">
+          <div class="field-label">Intersecting Marine Park boundaries</div>
+          <div
+            v-if="intersections.length == 0"
+            class="column justify-center bg-white"
+            style="min-height: 50px"
+          >
+            <div class="row justify-center">No intersections found</div>
+          </div>
+          <q-list v-else bordered separator class="col bg-white">
+            <q-scroll-area style="height: 200px">
+              <q-item v-for="(ii, index) in intersections" :key="index">
+                <q-item-section>
+                  <q-item-label>{{ ii[0] }} </q-item-label>
+                  <q-item-label caption>{{ ii[1] }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-scroll-area>
+          </q-list>
+        </div>
+      </div>
+    </q-card-section>
+  </q-card>
+
 </template>
 
 <script>
@@ -134,11 +133,6 @@ export default Vue.extend({
   async mounted() {
     this.getIntersections();
   },
-
-  // props: {
-  //   priorityArea: {},
-  //   readonly: true,
-  // },
 
   props: [
     'priorityArea',
@@ -210,11 +204,6 @@ export default Vue.extend({
       });
     },
 
-    // isValid() {
-    //   this.$v.$touch();
-    //   return !this.$v.$error;
-    // },
-
     getIntersections() {
       Vue.axios
         .get(`api/priority-area/${this.priorityArea.id}/intersections`)
@@ -232,17 +221,6 @@ export default Vue.extend({
   },
 
   watch: {},
-
-  // validations() {
-  //   return {
-  //     priorityArea: {
-  //       name: { required },
-  //       ecologicalAreaType: {},
-  //       ecologicalAreaName: {},
-  //       seacountryName: {},
-  //     },
-  //   };
-  // },
 
   computed: {
     // these are all loaded by the parent component

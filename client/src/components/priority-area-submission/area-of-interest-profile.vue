@@ -1,544 +1,543 @@
 <template>
-  <!-- <form-wrapper :validator="$v"> -->
-    <q-card flat bordered class="full-width">
-      <q-card-section>
-        <div class="main-page-sub-title">{{ priorityArea.name }}</div>
-      </q-card-section>
-      <q-card-section class="row q-gutter-md">
-        <div class="column" style="max-width: 250px">
-          <q-img
-            class="rounded-borders"
-            style="width: 250px; max-height: 250px"
-            :src="`api/priority-area/${priorityArea.id}/thumbnail`"
-            :ratio="1"
-            contain
-          />
-          <div class="column q-pt-xs q-gutter-xs">
-            <q-badge color="secondary" text-color="white">
-              Registration details
-            </q-badge>
-            <div class="column q-pl-sm reg-details-text">
-              <div><b>Identified area name:</b> {{ priorityArea.name }}</div>
-              <div>
-                <b>Seacountry name:</b> {{ priorityArea.seacountryName }}
-              </div>
-              <div>
-                <b>Ecological area:</b> {{ priorityArea.ecologicalAreaName }}
-              </div>
+  <q-card flat bordered class="full-width">
+    <q-card-section>
+      <div class="main-page-sub-title">{{ priorityArea.name }}</div>
+    </q-card-section>
+    <q-card-section class="row q-gutter-md">
+      <div class="column" style="max-width: 250px">
+        <q-img
+          class="rounded-borders"
+          style="width: 250px; max-height: 250px"
+          :src="`api/priority-area/${priorityArea.id}/thumbnail`"
+          :ratio="1"
+          contain
+        />
+        <div class="column q-pt-xs q-gutter-xs">
+          <q-badge color="secondary" text-color="white">
+            Registration details
+          </q-badge>
+          <div class="column q-pl-sm reg-details-text">
+            <div><b>Identified area name:</b> {{ priorityArea.name }}</div>
+            <div>
+              <b>Seacountry name:</b> {{ priorityArea.seacountryName }}
+            </div>
+            <div>
+              <b>Ecological area:</b> {{ priorityArea.ecologicalAreaName }}
             </div>
           </div>
-          <div class="column q-pt-xs q-gutter-xs q-pt-md">
-            <sct-btn
-              v-if="!readonly"
-              label="Apply to Next"
-              @click="applyToNextClicked"
-            />
-            <sct-btn
-              v-if="!readonly"
-              label="Apply to All"
-              icon="format_line_spacing"
-              @click="applyToAllClicked"
-            />
-          </div>
         </div>
+        <div class="column q-pt-xs q-gutter-xs q-pt-md">
+          <sct-btn
+            v-if="!readonly"
+            label="Apply to Next"
+            @click="applyToNextClicked"
+          />
+          <sct-btn
+            v-if="!readonly"
+            label="Apply to All"
+            icon="format_line_spacing"
+            @click="applyToAllClicked"
+          />
+        </div>
+      </div>
 
-        <q-list
-          bordered
-          separator
-          class="col rounded-borders"
-          ref="expansionItemList"
+      <q-list
+        bordered
+        separator
+        class="col rounded-borders"
+        ref="expansionItemList"
+      >
+        <q-expansion-item
+          expand-separator
+          label="Purpose"
+          icon="flag"
+          :header-style="{
+            color: getSectionValidation(['purposes']) ? '#000000' : '#ff0000',
+          }"
         >
-          <q-expansion-item
-            expand-separator
-            label="Purpose"
-            icon="flag"
-            :header-style="{
-              color: getSectionValidation(['purposes']) ? '#000000' : '#ff0000',
-            }"
-          >
-            <q-card>
-              <q-card-section v-if="!getSectionValidation(['purposes'])">
-                <div style="color: #ff0000">
-                  Please select at least one purpose.
-                </div>
-              </q-card-section>
-              <q-card-section class="column q-gutter-y-xs">
-                <div>
-                  Please select all that apply to your Area of Interest.
-                </div>
-                <q-tree
-                  :nodes="PURPOSE_DATA"
-                  node-key="key"
-                  :ticked.sync="purposesTicked"
-                  :expanded.sync="purposesExpanded"
-                >
-                  <template v-slot:default-header="prop">
-                    <div class="row justify-between full-width">
-                      <div>{{ prop.node.label }}</div>
-                      <div class="q-gutter-sm" v-if="prop.node.flags">
-                        <q-radio
-                          v-for="flag in prop.node.flags"
-                          :value="getPurposeFlag(prop.node.key)"
-                          @input="setPurposeFlag(prop.node.key, $event)"
-                          :val="flag"
-                          :label="flag"
-                          :key="'flag-' + flag"
-                          dense
-                          size="sm"
-                          :disable="readonly"
-                        />
-                      </div>
-                    </div>
-                  </template>
-                </q-tree>
-
-                <div class="col">
-                  <div>Values</div>
-                  <div
-                    v-if="purposesTicked.length == 0"
-                    class="row justify-center"
-                  >
-                    <div class="text-light">
-                      Select one or more purposes to view associated values.
-                    </div>
-                  </div>
-                  <q-list v-else dense>
-                    <template v-for="purposeGroup of purposeValues">
-                      <q-item-label
-                        v-if="purposeGroup.values.length != 0"
-                        header
-                        :key="purposeGroup.label + '-header'"
-                        style="padding-bottom: 0px"
-                      >
-                        {{ purposeGroup.label }}
-                      </q-item-label>
-                      <q-item
-                        v-for="value in purposeGroup.values"
-                        :key="purposeGroup.label + '-' + value"
-                        tag="label"
-                        v-ripple
-                      >
-                        <q-item-section avatar>
-                          <q-checkbox
-                            size="sm"
-                            :value="priorityArea.purposeValues"
-                            :val="value"
-                            @input="valueChanged('purposeValues', $event)"
-                            :disable="readonly"
-                          />
-                        </q-item-section>
-                        <q-item-section>
-                          <q-item-label>{{ value }} </q-item-label>
-                        </q-item-section>
-                      </q-item>
-                    </template>
-                  </q-list>
-                </div>
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-expansion-item
-            expand-separator
-            label="Ecosystem description"
-            icon="grass"
-            :header-style="{
-              color: getSectionValidation(['ecosystems'])
-                ? '#000000'
-                : '#ff0000',
-            }"
-          >
-            <q-card>
-              <q-card-section v-if="!getSectionValidation(['ecosystems'])">
-                <div style="color: #ff0000">
-                  Please select at least one ecosystem.
-                </div>
-              </q-card-section>
-              <q-card-section class="column q-gutter-y-xs">
-                <div>
-                  Which part(s) of the ecosystem should be targeted for mapping
-                  in the submitted AOI?
-                </div>
-                <q-tree
-                  :nodes="ECOSYSTEM_DATA"
-                  node-key="key"
-                  :ticked.sync="ecosystemsTicked"
-                  :expanded.sync="ecosystemsExpanded"
-                >
-                  <template v-slot:default-body="prop">
-                    <div
-                      v-if="prop.node.description"
-                      class="text-weight-light text-black"
-                    >
-                      {{ prop.node.description }}
-                    </div>
-                  </template>
-                </q-tree>
-
-                <div class="q-pt-md">Ecosystem components</div>
-                <q-list dense>
-                  <q-item
-                    v-for="ecosystemComp of ECOSYSTEM_COMPONENT_DATA"
-                    :key="'key-' + ecosystemComp"
-                    tag="label"
-                    v-ripple
-                  >
-                    <q-item-section avatar>
-                      <q-checkbox
+          <q-card>
+            <q-card-section v-if="!getSectionValidation(['purposes'])">
+              <div style="color: #ff0000">
+                Please select at least one purpose.
+              </div>
+            </q-card-section>
+            <q-card-section class="column q-gutter-y-xs">
+              <div>
+                Please select all that apply to your Area of Interest.
+              </div>
+              <q-tree
+                :nodes="PURPOSE_DATA"
+                node-key="key"
+                :ticked.sync="purposesTicked"
+                :expanded.sync="purposesExpanded"
+              >
+                <template v-slot:default-header="prop">
+                  <div class="row justify-between full-width">
+                    <div>{{ prop.node.label }}</div>
+                    <div class="q-gutter-sm" v-if="prop.node.flags">
+                      <q-radio
+                        v-for="flag in prop.node.flags"
+                        :value="getPurposeFlag(prop.node.key)"
+                        @input="setPurposeFlag(prop.node.key, $event)"
+                        :val="flag"
+                        :label="flag"
+                        :key="'flag-' + flag"
+                        dense
                         size="sm"
-                        :value="priorityArea.ecosystemComponents"
-                        :val="ecosystemComp"
-                        @input="valueChanged('ecosystemComponents', $event)"
                         :disable="readonly"
                       />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{ ecosystemComp }} </q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+                    </div>
+                  </div>
+                </template>
+              </q-tree>
 
-          <q-expansion-item
-            expand-separator
-            label="Data and Methods"
-            icon="scatter_plot"
-            :header-style="{
-              color: getSectionValidation([
-                'dataToCapture',
-                'dataCaptureMethods',
-              ])
-                ? '#000000'
-                : '#ff0000',
-            }"
-          >
-            <q-card>
-              <q-card-section
-                v-if="
-                  !getSectionValidation(['dataToCapture', 'dataCaptureMethods'])
-                "
-              >
-                <div style="color: #ff0000">
-                  Please select at least one data type to capture and preferred
-                  method.
+              <div class="col">
+                <div>Values</div>
+                <div
+                  v-if="purposesTicked.length == 0"
+                  class="row justify-center"
+                >
+                  <div class="text-light">
+                    Select one or more purposes to view associated values.
+                  </div>
                 </div>
-              </q-card-section>
-              <q-card-section class="row q-gutter-x-xs">
-                <div class="col">
-                  <div>Data to Capture</div>
-                  <q-list dense>
+                <q-list v-else dense>
+                  <template v-for="purposeGroup of purposeValues">
+                    <q-item-label
+                      v-if="purposeGroup.values.length != 0"
+                      header
+                      :key="purposeGroup.label + '-header'"
+                      style="padding-bottom: 0px"
+                    >
+                      {{ purposeGroup.label }}
+                    </q-item-label>
                     <q-item
-                      v-for="opt in DATA_OPTIONS"
-                      :key="opt"
+                      v-for="value in purposeGroup.values"
+                      :key="purposeGroup.label + '-' + value"
                       tag="label"
                       v-ripple
                     >
                       <q-item-section avatar>
                         <q-checkbox
                           size="sm"
-                          :value="priorityArea.dataToCapture"
-                          :val="opt"
-                          @input="valueChanged('dataToCapture', $event)"
+                          :value="priorityArea.purposeValues"
+                          :val="value"
+                          @input="valueChanged('purposeValues', $event)"
                           :disable="readonly"
                         />
                       </q-item-section>
                       <q-item-section>
-                        <q-item-label>{{ opt }} </q-item-label>
+                        <q-item-label>{{ value }} </q-item-label>
                       </q-item-section>
                     </q-item>
-                  </q-list>
-                </div>
-                <div class="col">
-                  <div>Preferred Method(s)</div>
-                  <q-list dense>
-                    <template v-for="methodGroup of DATA_AND_METHOD_OPTIONS">
-                      <q-item-label
-                        header
-                        :key="methodGroup.groupName + '-header'"
-                        style="padding-bottom: 0px"
-                      >
-                        {{ methodGroup.groupName }}
-                      </q-item-label>
-                      <q-item
-                        v-for="method in methodGroup.methods"
-                        :key="method.name"
-                        tag="label"
-                        v-ripple
-                      >
-                        <q-item-section avatar>
-                          <q-checkbox
-                            size="sm"
-                            :value="priorityArea.dataCaptureMethods"
-                            :val="method.name"
-                            @input="valueChanged('dataCaptureMethods', $event)"
-                            :disable="
-                              readonly || dataCaptureMethodDisabled(method.name)
-                            "
-                          />
-                        </q-item-section>
-                        <q-item-section>
-                          <q-item-label>{{ method.name }} </q-item-label>
-                        </q-item-section>
-                      </q-item>
-                    </template>
-                  </q-list>
-                </div>
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+                  </template>
+                </q-list>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
 
-          <q-expansion-item
-            expand-separator
-            label="Existing Data Assessment"
-            icon="fact_check"
-          >
-            <q-card>
-              <q-card-section class="q-gutter-y-xs">
-                <div>
-                  Please select all existing data sources you have considered,
-                  and brief note on why this area of interest is not being
-                  serviced to meet your needs.
-                </div>
+        <q-expansion-item
+          expand-separator
+          label="Ecosystem description"
+          icon="grass"
+          :header-style="{
+            color: getSectionValidation(['ecosystems'])
+              ? '#000000'
+              : '#ff0000',
+          }"
+        >
+          <q-card>
+            <q-card-section v-if="!getSectionValidation(['ecosystems'])">
+              <div style="color: #ff0000">
+                Please select at least one ecosystem.
+              </div>
+            </q-card-section>
+            <q-card-section class="column q-gutter-y-xs">
+              <div>
+                Which part(s) of the ecosystem should be targeted for mapping
+                in the submitted AOI?
+              </div>
+              <q-tree
+                :nodes="ECOSYSTEM_DATA"
+                node-key="key"
+                :ticked.sync="ecosystemsTicked"
+                :expanded.sync="ecosystemsExpanded"
+              >
+                <template v-slot:default-body="prop">
+                  <div
+                    v-if="prop.node.description"
+                    class="text-weight-light text-black"
+                  >
+                    {{ prop.node.description }}
+                  </div>
+                </template>
+              </q-tree>
+
+              <div class="q-pt-md">Ecosystem components</div>
+              <q-list dense>
+                <q-item
+                  v-for="ecosystemComp of ECOSYSTEM_COMPONENT_DATA"
+                  :key="'key-' + ecosystemComp"
+                  tag="label"
+                  v-ripple
+                >
+                  <q-item-section avatar>
+                    <q-checkbox
+                      size="sm"
+                      :value="priorityArea.ecosystemComponents"
+                      :val="ecosystemComp"
+                      @input="valueChanged('ecosystemComponents', $event)"
+                      :disable="readonly"
+                    />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ ecosystemComp }} </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          expand-separator
+          label="Data and Methods"
+          icon="scatter_plot"
+          :header-style="{
+            color: getSectionValidation([
+              'dataToCapture',
+              'dataCaptureMethods',
+            ])
+              ? '#000000'
+              : '#ff0000',
+          }"
+        >
+          <q-card>
+            <q-card-section
+              v-if="
+                !getSectionValidation(['dataToCapture', 'dataCaptureMethods'])
+              "
+            >
+              <div style="color: #ff0000">
+                Please select at least one data type to capture and preferred
+                method.
+              </div>
+            </q-card-section>
+            <q-card-section class="row q-gutter-x-xs">
+              <div class="col">
+                <div>Data to Capture</div>
                 <q-list dense>
                   <q-item
-                    v-for="opt in EXISTING_DATA_SOURCE_OPTIONS"
-                    :key="opt.name"
+                    v-for="opt in DATA_OPTIONS"
+                    :key="opt"
                     tag="label"
                     v-ripple
                   >
                     <q-item-section avatar>
                       <q-checkbox
-                        :value="priorityArea.existingDataSources"
-                        :val="opt.name"
-                        @input="valueChanged('existingDataSources', $event)"
+                        size="sm"
+                        :value="priorityArea.dataToCapture"
+                        :val="opt"
+                        @input="valueChanged('dataToCapture', $event)"
                         :disable="readonly"
                       />
                     </q-item-section>
                     <q-item-section>
-                      <q-item-label>{{ opt.name }} </q-item-label>
-                      <q-item-label caption>{{ opt.datatypes }}</q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                      <q-item-label caption>{{ opt.url }}</q-item-label>
+                      <q-item-label>{{ opt }} </q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
-                <div>Reason for Area of Interest to be raised.</div>
-                <q-option-group
-                  dense
-                  class="q-pl-md"
-                  :options="REASON_FOR_AOI_RAISE_OPTIONS"
-                  type="radio"
-                  :value="priorityArea.reasonForAoiRaise"
-                  @input="valueChanged('reasonForAoiRaise', $event)"
-                  :disable="readonly"
-                />
+              </div>
+              <div class="col">
+                <div>Preferred Method(s)</div>
+                <q-list dense>
+                  <template v-for="methodGroup of DATA_AND_METHOD_OPTIONS">
+                    <q-item-label
+                      header
+                      :key="methodGroup.groupName + '-header'"
+                      style="padding-bottom: 0px"
+                    >
+                      {{ methodGroup.groupName }}
+                    </q-item-label>
+                    <q-item
+                      v-for="method in methodGroup.methods"
+                      :key="method.name"
+                      tag="label"
+                      v-ripple
+                    >
+                      <q-item-section avatar>
+                        <q-checkbox
+                          size="sm"
+                          :value="priorityArea.dataCaptureMethods"
+                          :val="method.name"
+                          @input="valueChanged('dataCaptureMethods', $event)"
+                          :disable="
+                            readonly || dataCaptureMethodDisabled(method.name)
+                          "
+                        />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>{{ method.name }} </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-list>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
 
-                <form-field-validated-input
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.existingDataAssessmentComments`"
-                  attribute="Further Comments"
-                  label="Further Comments"
-                  :value="priorityArea.existingDataAssessmentComments"
-                  @input="
-                    valueChanged('existingDataAssessmentComments', $event)
-                  "
-                  @blur="
-                    `$v.priorityArea.priorityAreas.$each.${index}.existingDataAssessmentComments.$touch`
-                  "
-                  type="textarea"
-                  autogrow
-                  :readonly="readonly"
-                  outlined
-                />
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
+        <q-expansion-item
+          expand-separator
+          label="Existing Data Assessment"
+          icon="fact_check"
+        >
+          <q-card>
+            <q-card-section class="q-gutter-y-xs">
+              <div>
+                Please select all existing data sources you have considered,
+                and brief note on why this area of interest is not being
+                serviced to meet your needs.
+              </div>
+              <q-list dense>
+                <q-item
+                  v-for="opt in EXISTING_DATA_SOURCE_OPTIONS"
+                  :key="opt.name"
+                  tag="label"
+                  v-ripple
+                >
+                  <q-item-section avatar>
+                    <q-checkbox
+                      :value="priorityArea.existingDataSources"
+                      :val="opt.name"
+                      @input="valueChanged('existingDataSources', $event)"
+                      :disable="readonly"
+                    />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>{{ opt.name }} </q-item-label>
+                    <q-item-label caption>{{ opt.datatypes }}</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-item-label caption>{{ opt.url }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+              <div>Reason for Area of Interest to be raised.</div>
+              <q-option-group
+                dense
+                class="q-pl-md"
+                :options="REASON_FOR_AOI_RAISE_OPTIONS"
+                type="radio"
+                :value="priorityArea.reasonForAoiRaise"
+                @input="valueChanged('reasonForAoiRaise', $event)"
+                :disable="readonly"
+              />
 
-          <q-expansion-item
-            expand-separator
-            label="Resolution and Standard"
-            icon="grid_on"
-            :header-style="{
-              color: getSectionValidation(['gridSize']) ? '#000000' : '#ff0000',
-            }"
-          >
-            <q-card>
-              <q-card-section class="row q-gutter-x-xs">
+              <form-field-validated-input
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.existingDataAssessmentComments`"
+                attribute="Further Comments"
+                label="Further Comments"
+                :value="priorityArea.existingDataAssessmentComments"
+                @input="
+                  valueChanged('existingDataAssessmentComments', $event)
+                "
+                @blur="
+                  `$v.priorityArea.priorityAreas.$each.${index}.existingDataAssessmentComments.$touch`
+                "
+                type="textarea"
+                autogrow
+                :readonly="readonly"
+                outlined
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          expand-separator
+          label="Resolution and Standard"
+          icon="grid_on"
+          :header-style="{
+            color: getSectionValidation(['gridSize']) ? '#000000' : '#ff0000',
+          }"
+        >
+          <q-card>
+            <q-card-section class="row q-gutter-x-xs">
+              <form-field-validated-option-group
+                class="col"
+                :value="priorityArea.gridSize"
+                @input="valueChanged('gridSize', $event)"
+                :options="GRID_SIZE_OPTIONS"
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.gridSize`"
+                label="Grid Size"
+                @blur="`$v.priorityArea.priorityAreas.$each.${index}.gridSize.$touch`"
+                :readonly="readonly"
+              >
+              </form-field-validated-option-group>
+
+              <div class="column col">
                 <form-field-validated-option-group
-                  class="col"
-                  :value="priorityArea.gridSize"
-                  @input="valueChanged('gridSize', $event)"
-                  :options="GRID_SIZE_OPTIONS"
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.gridSize`"
-                  label="Grid Size"
-                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.gridSize.$touch`"
+                  v-if="priorityArea.dataToCapture.includes('Bathymetry')"
+                  :value="priorityArea.surveyStandard"
+                  @input="valueChanged('surveyStandard', $event)"
+                  :options="SURVEY_STANDARD_OPTIONS"
+                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.surveyStandard`"
+                  label="Bathymetry Survey Standard"
+                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.surveyStandard.$touch`"
                   :readonly="readonly"
                 >
                 </form-field-validated-option-group>
-
-                <div class="column col">
-                  <form-field-validated-option-group
-                    v-if="priorityArea.dataToCapture.includes('Bathymetry')"
-                    :value="priorityArea.surveyStandard"
-                    @input="valueChanged('surveyStandard', $event)"
-                    :options="SURVEY_STANDARD_OPTIONS"
-                    :name="`priorityAreaSubmission.priorityAreas.$each.${index}.surveyStandard`"
-                    label="Bathymetry Survey Standard"
-                    @blur="`$v.priorityArea.priorityAreas.$each.${index}.surveyStandard.$touch`"
-                    :readonly="readonly"
-                  >
-                  </form-field-validated-option-group>
-                  <div
-                    v-if="priorityArea.dataToCapture.includes('Bathymetry')"
-                    class="column q-pa-sm"
-                  >
-                    <div>{{ priorityArea.surveyStandard }}</div>
-                    <div
-                      class="text-weight-light"
-                      v-if="surveyStandardDescription"
-                    >
-                      {{ surveyStandardDescription }}
-                    </div>
-                    <div v-else class="text-weight-light">No description</div>
-                  </div>
-                </div>
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-expansion-item
-            expand-separator
-            label="Data collection timeline and cadence"
-            icon="schedule"
-            :header-style="{
-              color: getSectionValidation([
-                'preferredTimeframe',
-                'collectionCadence',
-              ])
-                ? '#000000'
-                : '#ff0000',
-            }"
-          >
-            <q-card>
-              <q-card-section class="q-gutter-y-xs">
-                <form-field-validated-button-toggle
-                  inline
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.preferredTimeframe`"
-                  label="Preferred Timeframe"
-                  :value="priorityArea.preferredTimeframe"
-                  @input="valueChanged('preferredTimeframe', $event)"
-                  :options="PREFERRED_TIMEFRAME_OPTIONS"
-                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.preferredTimeframe.$touch`"
-                  :readonly="readonly"
-                />
-                <form-field-validated-input
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.timeframeReason`"
-                  attribute="Reason for timeframe"
-                  label="Reason for timeframe"
-                  :value="priorityArea.timeframeReason"
-                  @input="valueChanged('timeframeReason', $event)"
-                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.timeframeReason.$touch`"
-                  type="textarea"
-                  autogrow
-                  :readonly="readonly"
-                  outlined
+                <div
+                  v-if="priorityArea.dataToCapture.includes('Bathymetry')"
+                  class="column q-pa-sm"
                 >
-                </form-field-validated-input>
-                <form-field-validated-button-toggle
-                  inline
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.preferredSeason`"
-                  label="Preferred Season"
-                  :value="priorityArea.preferredSeason"
-                  @input="valueChanged('preferredSeason', $event)"
-                  :options="PREFERRED_SEASON_OPTIONS"
-                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.preferredSeason.$touch`"
-                  :readonly="readonly"
-                />
-                <form-field-validated-button-toggle
-                  inline
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.collectionCadence`"
-                  label="Intended Cadence for Collection"
-                  :value="priorityArea.collectionCadence"
-                  @input="valueChanged('collectionCadence', $event)"
-                  :options="COLLECTION_CADENCE_OPTIONS"
-                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.collectionCadence.$touch`"
-                  :readonly="readonly"
-                />
-                <form-field-validated-input
-                  v-if="
-                    priorityArea.collectionCadence == 'Time Series Desired' ||
-                    priorityArea.collectionCadence ==
-                      'Time Series Established'
-                  "
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.timeSeriesDescription`"
-                  attribute="Time Series Description"
-                  label="Time Series Description"
-                  :value="priorityArea.timeSeriesDescription"
-                  @input="valueChanged('timeSeriesDescription', $event)"
-                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.timeSeriesDescription.$touch`"
-                  type="textarea"
-                  autogrow
-                  :readonly="readonly"
-                  outlined
-                />
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-expansion-item
-            expand-separator
-            label="Perceived Impact and Organisational Priority"
-            icon="hardware"
-          >
-            <q-card>
-              <q-card-section class="q-gutter-y-xs">
-                <form-field-validated-button-toggle
-                  inline
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.perceivedImpact`"
-                  label="Perceived Impact"
-                  :value="priorityArea.perceivedImpact"
-                  @input="valueChanged('perceivedImpact', $event)"
-                  :options="PERCEIVED_IMPACT_OPTIONS"
-                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.perceivedImpact.$touch`"
-                  :readonly="readonly"
-                />
-                <form-field-validated-button-toggle
-                  inline
-                  :name="`priorityAreaSubmission.priorityAreas.$each.${index}.organisationalPriority`"
-                  label="Organisational Priority"
-                  :value="priorityArea.organisationalPriority"
-                  @input="valueChanged('organisationalPriority', $event)"
-                  :options="ORGANISATIONAL_PRIORITY_OPTIONS"
-                  @blur="`$v.priorityArea.priorityAreas.$each.${index}.organisationalPriority.$touch`"
-                  :readonly="readonly"
-                />
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-
-          <q-expansion-item expand-separator label="Pressures" icon="water">
-            <q-card>
-              <q-card-section class="column q-gutter-y-xs">
-                <div>
-                  Please select the appropriate profile within the MERI
-                  framework to identify the focus areas of proposed data
-                  acquisition.
+                  <div>{{ priorityArea.surveyStandard }}</div>
+                  <div
+                    class="text-weight-light"
+                    v-if="surveyStandardDescription"
+                  >
+                    {{ surveyStandardDescription }}
+                  </div>
+                  <div v-else class="text-weight-light">No description</div>
                 </div>
-                <q-tree
-                  :nodes="ACTIVITIES"
-                  node-key="key"
-                  :ticked.sync="pressuresTicked"
-                  :expanded.sync="pressuresExpanded"
-                />
-              </q-card-section>
-            </q-card>
-          </q-expansion-item>
-        </q-list>
-      </q-card-section>
-    </q-card>
-  <!-- </form-wrapper> -->
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          expand-separator
+          label="Data collection timeline and cadence"
+          icon="schedule"
+          :header-style="{
+            color: getSectionValidation([
+              'preferredTimeframe',
+              'collectionCadence',
+            ])
+              ? '#000000'
+              : '#ff0000',
+          }"
+        >
+          <q-card>
+            <q-card-section class="q-gutter-y-xs">
+              <form-field-validated-button-toggle
+                inline
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.preferredTimeframe`"
+                label="Preferred Timeframe"
+                :value="priorityArea.preferredTimeframe"
+                @input="valueChanged('preferredTimeframe', $event)"
+                :options="PREFERRED_TIMEFRAME_OPTIONS"
+                @blur="`$v.priorityArea.priorityAreas.$each.${index}.preferredTimeframe.$touch`"
+                :readonly="readonly"
+              />
+              <form-field-validated-input
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.timeframeReason`"
+                attribute="Reason for timeframe"
+                label="Reason for timeframe"
+                :value="priorityArea.timeframeReason"
+                @input="valueChanged('timeframeReason', $event)"
+                @blur="`$v.priorityArea.priorityAreas.$each.${index}.timeframeReason.$touch`"
+                type="textarea"
+                autogrow
+                :readonly="readonly"
+                outlined
+              >
+              </form-field-validated-input>
+              <form-field-validated-button-toggle
+                inline
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.preferredSeason`"
+                label="Preferred Season"
+                :value="priorityArea.preferredSeason"
+                @input="valueChanged('preferredSeason', $event)"
+                :options="PREFERRED_SEASON_OPTIONS"
+                @blur="`$v.priorityArea.priorityAreas.$each.${index}.preferredSeason.$touch`"
+                :readonly="readonly"
+              />
+              <form-field-validated-button-toggle
+                inline
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.collectionCadence`"
+                label="Intended Cadence for Collection"
+                :value="priorityArea.collectionCadence"
+                @input="valueChanged('collectionCadence', $event)"
+                :options="COLLECTION_CADENCE_OPTIONS"
+                @blur="`$v.priorityArea.priorityAreas.$each.${index}.collectionCadence.$touch`"
+                :readonly="readonly"
+              />
+              <form-field-validated-input
+                v-if="
+                  priorityArea.collectionCadence == 'Time Series Desired' ||
+                  priorityArea.collectionCadence ==
+                    'Time Series Established'
+                "
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.timeSeriesDescription`"
+                attribute="Time Series Description"
+                label="Time Series Description"
+                :value="priorityArea.timeSeriesDescription"
+                @input="valueChanged('timeSeriesDescription', $event)"
+                @blur="`$v.priorityArea.priorityAreas.$each.${index}.timeSeriesDescription.$touch`"
+                type="textarea"
+                autogrow
+                :readonly="readonly"
+                outlined
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          expand-separator
+          label="Perceived Impact and Organisational Priority"
+          icon="hardware"
+        >
+          <q-card>
+            <q-card-section class="q-gutter-y-xs">
+              <form-field-validated-button-toggle
+                inline
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.perceivedImpact`"
+                label="Perceived Impact"
+                :value="priorityArea.perceivedImpact"
+                @input="valueChanged('perceivedImpact', $event)"
+                :options="PERCEIVED_IMPACT_OPTIONS"
+                @blur="`$v.priorityArea.priorityAreas.$each.${index}.perceivedImpact.$touch`"
+                :readonly="readonly"
+              />
+              <form-field-validated-button-toggle
+                inline
+                :name="`priorityAreaSubmission.priorityAreas.$each.${index}.organisationalPriority`"
+                label="Organisational Priority"
+                :value="priorityArea.organisationalPriority"
+                @input="valueChanged('organisationalPriority', $event)"
+                :options="ORGANISATIONAL_PRIORITY_OPTIONS"
+                @blur="`$v.priorityArea.priorityAreas.$each.${index}.organisationalPriority.$touch`"
+                :readonly="readonly"
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item expand-separator label="Pressures" icon="water">
+          <q-card>
+            <q-card-section class="column q-gutter-y-xs">
+              <div>
+                Please select the appropriate profile within the MERI
+                framework to identify the focus areas of proposed data
+                acquisition.
+              </div>
+              <q-tree
+                :nodes="ACTIVITIES"
+                node-key="key"
+                :ticked.sync="pressuresTicked"
+                :expanded.sync="pressuresExpanded"
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+      </q-list>
+    </q-card-section>
+  </q-card>
+
 </template>
 
 <script>
@@ -625,11 +624,6 @@ export default Vue.extend({
 
     this.ECOSYSTEM_COMPONENT_DATA = constants.ECOSYSTEM_COMPONENT_DATA;
   },
-
-  // props: {
-  //   areaOfInterest: {},
-  //   readonly: true,
-  // },
 
   props: [
     'priorityArea',
@@ -833,11 +827,6 @@ export default Vue.extend({
       }
     },
 
-    // isValid() {
-    //   this.$v.$touch();
-    //   return !this.$v.$error;
-    // },
-
     getSectionValidation(attributes) {
       let paVal = this.$v.priorityAreaSubmission.priorityAreas.$each[this.index];
       for (const attribute of attributes) {
@@ -912,46 +901,6 @@ export default Vue.extend({
       },
     },
   },
-
-  // validations() {
-  //   return {
-  //     priorityArea: {
-  //       preferredTimeframe: { required },
-  //       timeframeReason: {},
-  //       preferredSeason: {},
-  //       collectionCadence: { required },
-  //       timeSeriesDescription: {},
-
-  //       perceivedImpact: { required },
-  //       organisationalPriority: { required },
-
-  //       existingDataSources: {},
-  //       reasonForAoiRaise: {},
-  //       existingDataAssessmentComments: {},
-
-  //       gridSize: { required },
-  //       surveyStandard: {},
-
-  //       purposes: {
-  //         required,
-  //         minLength: minLength(1),
-  //       },
-  //       ecosystems: {
-  //         required,
-  //         minLength: minLength(1),
-  //       },
-
-  //       dataToCapture: {
-  //         required,
-  //         minLength: minLength(1),
-  //       },
-  //       dataCaptureMethods: {
-  //         required,
-  //         minLength: minLength(1),
-  //       },
-  //     },
-  //   };
-  // },
 
   computed: {
     pressuresTicked: {

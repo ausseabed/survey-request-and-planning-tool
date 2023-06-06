@@ -433,21 +433,6 @@ export default Vue.extend({
         });
     },
 
-    // isValid() {
-    //   // we perform map, then reduce, so that the `isValid` method
-    //   // is called on all priority area components. Doing the only the reduce
-    //   // will stop calling isValid after the first non-valid component.
-    //   if (_.isNil(this.$refs.priorityAreaComponents)) {
-    //     // if there are no priority areas, then its valid
-    //     return true;
-    //   }
-    //   let allValid = this.$refs.priorityAreaComponents
-    //     .map((comp) => comp.isValid())
-    //     .reduce((sum, next) => sum && next, true);
-
-    //   return allValid;
-    // },
-
     isValid() {
       this.$v.$touch();
       return !this.$v.$error;
@@ -797,12 +782,6 @@ export default Vue.extend({
       }
     },
   },
-
-  // validations() {
-  //   return {
-  //     priorityAreaSubmission: {},
-  //   };
-  // },
 
   computed: {
     ...mapGetters("priorityAreaSubmission", {

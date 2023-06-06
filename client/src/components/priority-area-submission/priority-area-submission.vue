@@ -545,6 +545,55 @@ export default Vue.extend({
     //   return true;
     // },
 
+    validationPathsForTab(validations, paths, currentPath) {
+      // recuses the validations object to extract full paths to each
+      // one of the validations that has been specified for this tab
+      // eg; will build up a list of strings like `priorityAreaSubmission.priorityAreas.$each.ecologicalAreaType`
+      const names = Object.keys(validations);
+      for (const name of names) {
+        let val = _.get(validations, name);
+        if (_.isFunction(val)) {
+          paths.push(currentPath)
+        } else {
+          let np = currentPath.length == 0 ? name : [currentPath, name].join('.')
+          this.validationPathsForTab(val, paths, np)
+        }
+      }
+      if (names.length == 0) {
+        paths.push(currentPath)
+      }
+    },
+
+    validationPathToValidationObjectMap(valdationObject) {
+      let generalToActualPathMap = {}
+      let paramsList = valdationObject.$flattenParams()
+      for (const param of paramsList) {
+        let paramPathComponents = param.path;
+        let filteredPathComponents = [];
+        let lastCompEach = false;
+        for (const pp of paramPathComponents) {
+          if (lastCompEach) {
+            lastCompEach = false;
+          } else {
+            if (pp == '$each') {
+              lastCompEach = true;
+            }
+            filteredPathComponents.push(pp)
+          }
+        }
+        let filteredPathComponentStr = filteredPathComponents.join('.')
+        let actualList = null;
+        if (filteredPathComponentStr in generalToActualPathMap) {
+          actualList = generalToActualPathMap[filteredPathComponentStr]
+        } else {
+          actualList = []
+          generalToActualPathMap[filteredPathComponentStr] = actualList
+        }
+        actualList.push(param.path.join('.'))
+      }
+      return generalToActualPathMap
+    },
+
     tabValid(tabName) {
       const tabInfo = this.tabs.find((tabInfo) => {
         return tabName == tabInfo.name;
@@ -559,18 +608,30 @@ export default Vue.extend({
         return true;
       }
 
-      const validationNames = Object.keys(tabValidations.priorityAreaSubmission)
-      let allValid = validationNames
-        .map((validationName) => {
-          const val = _.get(this.$v.priorityAreaSubmission, validationName);
-          if (!val) {
-            return true;
-          }
-          return !val.$error;
-        })
-        .reduce((sum, next) => sum && next, true);
+      // basic logic for checking if all the data on a tab is valid
+      // 1. get an expanded list of all the validations that are applicable
+      //    to this tab.
+      // 2. get a dict that maps all paths to validators (for all tabs)
+      // 3. Loop through the list from 1. get all the validators from the 
+      //    map generated in 2
+      // 4. if no validators have an error, then the tab is in a valid state
+      const paths = []
+      this.validationPathsForTab(tabValidations, paths, "")
 
-      return allValid;
+      const pathMap = this.validationPathToValidationObjectMap(this.$v)
+      for (const vp of paths) {
+        if (!(vp in pathMap)) {
+          continue;
+        }
+        let validationPaths = pathMap[vp]
+        for (const validationPath of validationPaths) {
+          const val = _.get(this.$v, validationPath);
+          if (val.$error) {
+            return false;
+          }
+        }
+      }
+      return true;
     },
   },
 

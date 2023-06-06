@@ -1,4 +1,4 @@
-FROM node:14.8.0 as builder
+FROM node:16 as builder
 
 # libreoffice is used to convert word documents to pdf (required by
 # libreoffice-convert package)

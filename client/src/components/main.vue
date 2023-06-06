@@ -296,17 +296,19 @@
                   >
                     <div class="row">
                       <q-item-section top>
-                        <q-item-label>{{
-                          _.get(
-                            priorityAreaSubmission,
-                            "submittingOrganisation.name",
-                            "No submitting organisation specified"
-                          )
-                        }}</q-item-label>
+                        <q-item-label>
+                          {{
+                            getPriorityAreaLabel(priorityAreaSubmission)
+                              | truncate(45)
+                          }}
+                        </q-item-label>
                         <q-item-label caption>
                           {{
-                            getPriorityAreaNames(priorityAreaSubmission)
-                              | truncate(90)
+                            _.get(
+                              priorityAreaSubmission,
+                              "submittingOrganisation.name",
+                              "No submitting organisation specified"
+                            )
                           }}
                         </q-item-label>
                       </q-item-section>
@@ -599,8 +601,13 @@ export default Vue.extend({
       this.getSurveyPlans();
     },
 
-    getPriorityAreaNames(priorityAreaSubmission) {
-      // returns a single string containing all the names of the priority
+    getPriorityAreaLabel(priorityAreaSubmission) {
+      // if a submission name has been given, then use it as the label
+      if (!_.isNil(priorityAreaSubmission.submissionName) && priorityAreaSubmission.submissionName.length != 0) {
+        return priorityAreaSubmission.submissionName
+      }
+
+      // otherwise generate a string containing all the names of the priority
       // areas belonging to a submission. String is comma separated.
       if (priorityAreaSubmission.priorityAreas.length == 0) {
         return "No areas provided";

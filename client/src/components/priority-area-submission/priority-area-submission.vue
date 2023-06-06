@@ -151,11 +151,12 @@ import * as pasMutTypes from "../../store/modules/priority-area-submission/prior
 const TABS_INFO = [
   {
     name: 'priority-area-submission-registration',
-    label: ['Organisation Details'],
+    label: ['Registration'],
     route: 'priority-area-submission-registration',
     nextRoute: 'priority-area-submission-areas',
     saveValidations: {
       priorityAreaSubmission: {
+        submissionName: { },
         submittingOrganisation: { required },
         contactPerson: {  },
         contactEmail: {  },
@@ -163,6 +164,7 @@ const TABS_INFO = [
     },
     submitValidations: {
       priorityAreaSubmission: {
+        submissionName: { required },
         submittingOrganisation: { required },
         contactPerson: { required },
         contactEmail: { required, email },

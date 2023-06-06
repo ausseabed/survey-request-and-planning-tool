@@ -7,6 +7,24 @@
         </q-btn>
       </div>
 
+      <form-field-validated-input
+        name="priorityAreaSubmission.submissionName"
+        label="Submission Name"
+        attribute="Submission Name"
+        hint="Name or description of this submission"
+        :value="priorityAreaSubmission.submissionName"
+        @input="
+          updatePriorityAreaSubmissionValue({
+            path: 'submissionName',
+            value: $event,
+          })
+        "
+        type="text"
+        @blur="$v.priorityAreaSubmission.submissionName.$touch"
+        :readonly="readonly"
+      >
+      </form-field-validated-input>
+
       <form-field-validated-select
         ref="submittingOrganisation"
         name="priorityAreaSubmission.submittingOrganisation"

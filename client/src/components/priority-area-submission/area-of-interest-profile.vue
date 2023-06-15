@@ -651,6 +651,7 @@ export default Vue.extend({
           this.$emit("aoi-apply-to-all", {
             propertyName: attrName,
             value: this.priorityArea[attrName],
+            id: this.priorityArea.id,
             limit: limit,
           });
         } else {

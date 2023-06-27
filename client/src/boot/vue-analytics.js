@@ -1,5 +1,5 @@
 import axios from 'axios';
-import VueAnalytics from 'vue-analytics';
+import VueGtag from 'vue-gtag';
 
 // In prod the client code is hosted by nginx as straight js/html. It doesn't
 // have access to any environment variables that could be set in the docker
@@ -7,10 +7,14 @@ import VueAnalytics from 'vue-analytics';
 // a special util handler.
 
 export default ({ router, Vue }) => {
-  Vue.use(VueAnalytics, {
-    id: axios.get('/api/util/analytics-code').then(response => {
-      return response.data
-    }),
-    router
-  });
+  axios.get('/api/util/analytics-code').then(response => {
+    const id = response.data;
+    Vue.use(
+      VueGtag,
+      {
+        config: {id: id}
+      },
+      router
+    )
+  })
 }

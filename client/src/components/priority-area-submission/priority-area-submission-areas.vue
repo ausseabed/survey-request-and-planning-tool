@@ -422,15 +422,6 @@ export default Vue.extend({
         this.taskTickCount = 0;
         this.updateTaskStatus(this.priorityAreaSubmission.uploadTaskId);
       }
-
-      // get the geometry from all the other priority are submissions
-      Vue.axios
-        .get(
-          `api/priority-area-submission/${this.priorityAreaSubmission.id}/geometry?exclude=true`
-        )
-        .then((res) => {
-          this.otherPasGeometry = res.data;
-        });
     },
 
     isValid() {
@@ -732,6 +723,20 @@ export default Vue.extend({
     "task.state": function (newState, oldState) {
       if (newState == "COMPLETED") {
         this.addTaskPriorityAreasToSubmission();
+      }
+    },
+    showOtherPasLayer: function(newShow, oldShow) {
+      if (newShow) {
+        // get the geometry from all the other priority are submissions
+        Vue.axios
+          .get(
+            `api/priority-area-submission/${this.priorityAreaSubmission.id}/geometry?exclude=true`
+          )
+          .then((res) => {
+            this.otherPasGeometry = res.data;
+          });
+      } else {
+        this.otherPasGeometry = undefined;
       }
     },
     userWms: function (newUrl, oldUrl) {

@@ -1,6 +1,7 @@
 const _ = require('lodash');
 import * as Boom from '@hapi/boom';
 import { getConnection } from 'typeorm';
+import { validate as isValidUUID } from 'uuid';
 
 var auth = require('../lib/auth')();
 var logger = require('../lib/logger').logger;
@@ -175,6 +176,8 @@ export function permitCustodianBasedPermission(params) {
       else {
         response.status(403).json({message: "Forbidden"});
       }
+    } else if (!isValidUUID(eid)) {
+      response.status(400).json({message: `Bad entity id. Expected UUID got '${eid}'`});
     } else {
       // In some cases we know up front what the entity type and custodian attrs
       // are. In other cases we will only know when the request comes in

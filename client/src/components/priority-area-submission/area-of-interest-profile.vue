@@ -70,6 +70,7 @@
                 node-key="key"
                 :ticked.sync="purposesTicked"
                 :expanded.sync="purposesExpanded"
+                :no-transition="true"
               >
                 <template v-slot:default-header="prop">
                   <div class="row justify-between full-width">
@@ -163,6 +164,7 @@
                 node-key="key"
                 :ticked.sync="ecosystemsTicked"
                 :expanded.sync="ecosystemsExpanded"
+                :no-transition="true"
               >
                 <template v-slot:default-body="prop">
                   <div
@@ -530,6 +532,7 @@
                 node-key="key"
                 :ticked.sync="pressuresTicked"
                 :expanded.sync="pressuresExpanded"
+                :no-transition="true"
               />
             </q-card-section>
           </q-card>

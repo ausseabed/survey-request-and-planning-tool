@@ -18,7 +18,7 @@
     "js-file-download": "^0.4.5",
     "leaflet": "^1.6.0",
     "openlayers": "^4.6.5",
-    "quasar": "^1.16.0",
+    "quasar": "^1.22.10",
     "readable-timespan": "^1.2.0",
     "shpjs": "^3.4.3",
     "threads": "^0.12.1",

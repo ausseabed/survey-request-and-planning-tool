@@ -326,11 +326,11 @@ export default Vue.extend({
         return;
       }
 
-      this.$refs.recordState.transitionRecordState('SUBMIT').then(sr => {
+      this.$refs.recordState.transitionRecordState('SUBMIT').then(rs => {
         this.notifySuccess('Survey Request submitted');
 
         let nextRouteName = this.getNextRouteName(this.$route.name);
-        this.$router.push({ name: nextRouteName, params: { id: sr.id } });
+        this.$router.push({ name: nextRouteName, params: { id: this.id } });
       }).catch((err) => {
         this.notifyError(`Failed to submit Survey Request`);
       });

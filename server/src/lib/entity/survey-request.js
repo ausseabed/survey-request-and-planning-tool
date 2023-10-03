@@ -92,26 +92,6 @@ export class SurveyRequest {
   additionalFundingAvailable;
 
   @Column({
-      type:"bool",
-      nullable: false,
-      default: false,
-  })
-  hasMoratorium;
-
-  @Column({
-      type:"timestamp with time zone",
-      transformer: new DateTransformer(),
-      nullable: true,
-  })
-  moratoriumDate;
-
-  @Column({
-      type:"varchar",
-      nullable: true,
-  })
-  moratoriumComment;
-
-  @Column({
       type:"varchar",
       nullable: true,
   })

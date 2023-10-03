@@ -374,12 +374,6 @@ export class HippRequestReportGenerator extends ReportGenerator {
       furtherInformation: this.entityAttributeValue('furtherInformation'),
       costBenefit: this.entityAttributeValue('costBenefit'),
       additionalFundingAvailable: this.entityAttributeValue('additionalFundingAvailable'),
-      hasMoratorium: this.entityAttributeValue('hasMoratorium'),
-      moratoriumDate:
-        this.getDateString(
-          this.entityAttributeValue('moratoriumDate'),
-          'DD/MM/YYYY'),
-      moratoriumComment: this.entityAttributeValue('moratoriumComment'),
       areasOfInterest: this.entityAttributeValue('aois'),
     }
 
@@ -401,9 +395,6 @@ export class HippRequestReportGenerator extends ReportGenerator {
       'pointOfContactEmail',
       'businessJustification',
       'costBenefit',
-      'hasMoratorium',
-      'moratoriumDate',
-      'moratoriumComment',
       'recordState.state',
       'recordState.version',
     ]
@@ -445,7 +436,7 @@ export class SurveyPlanReportGenerator extends ReportGenerator {
   getData () {
 
     const data = this.namesDict(this.entity, [
-      'areaOfInterest', 'startDate', 'moratoriumDate', 'techSpec']);
+      'areaOfInterest', 'startDate', 'techSpec']);
 
     data['name'] = this.entityAttributeValue('surveyName');
     data['hasTechSpec'] = !_.isNil(this.entity.techSpec);

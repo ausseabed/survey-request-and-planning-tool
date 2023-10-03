@@ -395,7 +395,6 @@ export default Vue.extend({
             this.notifySuccess("Deleted HIPP Request");
             this.$router.replace({ path: `/` });
           });
-          console.log("delete confirmed");
         });
     },
 
@@ -433,7 +432,6 @@ export default Vue.extend({
     },
 
     stateUpdated({newState, oldState}) {
-      console.log(`old ${oldState ? oldState.state : 'undef'}   new ${newState.state}`)
       if (this.id === 'new') {
         this.stateReadonly = false;
         this.submitted = false;
@@ -526,9 +524,6 @@ export default Vue.extend({
     },
     'id': function (newId, oldId) {
       this.updateActiveSurveyrequest();
-    },
-    'tab': function (newTab, oldTab) {
-      console.log(`new tab = ${newTab}    old = ${oldTab}`);
     },
   },
 

@@ -99,23 +99,6 @@
             </q-tooltip>
           </q-btn>
         </div>
-
-        <div class="row q-gutter-x-lg">
-          <div class="column col-auto">
-            <div class="hint-text">Moratorium</div>
-            <div> {{ surveyRequest.hasMoratorium ? 'yes' : 'no' }} </div>
-          </div>
-
-          <div class="column col-auto" v-if="surveyRequest.hasMoratorium">
-            <div class="hint-text">Moratorium End Date</div>
-            <div> {{ surveyRequest.moratoriumDate   | dateValue | moment("D MMMM YYYY") }} </div>
-          </div>
-
-          <div class="column col" v-if="surveyRequest.hasMoratorium">
-            <div class="hint-text">Moratorium Justification</div>
-            <div class="long-text full-width"> {{ surveyRequest.moratoriumComment }} </div>
-          </div>
-        </div>
       </q-card-section>
 
       <q-card-section

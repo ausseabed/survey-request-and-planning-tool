@@ -10,6 +10,14 @@
         attached file for our consideration.
       </div>
 
+      <div>
+        The Australian Hydrographic Office will generally publish bathymetry
+        data from HIPP surveys at 30m resolution through AusSeabed under a
+        CC-BY licence. If you are interested in accessing data at higher
+        resolution or about other variables, please describe your data needs
+        as part of your Survey Justification.
+      </div>
+
       <form-field-validated-input
         name="surveyRequest.businessJustification"
         attribute="Survey Justification"
@@ -116,57 +124,6 @@
         </div>
       </div>
 
-
-    </q-card-section>
-
-    <q-card-section class="column q-gutter-y-sm">
-      <div class="red-text">
-        The Australian hydrographic Office will release data publicly
-        unless there is an appropriate reason as to why a moratorium on data
-        release should be applied.
-      </div>
-
-      <q-field
-        borderless
-        :readonly="readonly"
-        >
-        <q-checkbox
-          :disable="readonly"
-          class="col-auto"
-          label="Please select if data subject to a moratorium period?"
-          left-label
-          :value="surveyRequest.hasMoratorium"
-          @input="update({path:'surveyRequest.hasMoratorium', value:$event})"
-          />
-      </q-field>
-
-      <form-field-validated-date
-        v-if="surveyRequest.hasMoratorium"
-        name="surveyRequest.moratoriumDate"
-        attribute="Date moratorium ends"
-        label="Moratorium End Date"
-        :date="surveyRequest.moratoriumDate"
-        @updated-date="update({path:'surveyRequest.moratoriumDate', value:$event})"
-        @blur="$v.surveyRequest.moratoriumDate.$touch"
-        :readonly="readonly"
-        hint="(YYYY/MM/DD)"
-        >
-      </form-field-validated-date>
-
-      <form-field-validated-input
-        v-if="surveyRequest.hasMoratorium"
-        name="surveyRequest.moratoriumComment"
-        attribute="Moratorium Justification"
-        label="Moratorium Justification"
-        :value="surveyRequest.moratoriumComment"
-        @input="update({path:'surveyRequest.moratoriumComment', value:$event})"
-        @blur="$v.surveyRequest.moratoriumComment.$touch"
-        type="textarea"
-        autogrow
-        :readonly="readonly"
-        outlined
-        >
-      </form-field-validated-input>
 
     </q-card-section>
 

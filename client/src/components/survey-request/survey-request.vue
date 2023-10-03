@@ -172,9 +172,6 @@ const TABS_INFO = [
         businessJustification: { },
         costBenefit: { },
         additionalFundingAvailable: { },
-        hasMoratorium: { },
-        moratoriumDate: {},
-        moratoriumComment: {},
       }
     },
     submitValidations: {
@@ -182,9 +179,6 @@ const TABS_INFO = [
         businessJustification: { required },
         costBenefit: { required },
         additionalFundingAvailable: { },
-        hasMoratorium: { },
-        moratoriumDate: { },
-        moratoriumComment: { },
       }
     },
   },
@@ -427,9 +421,6 @@ export default Vue.extend({
           businessJustification: undefined,
           costBenefit: undefined,
           additionalFundingAvailable: false,
-          hasMoratorium: false,
-          moratoriumDate: undefined,
-          moratoriumComment: undefined,
           acknowledged: false,
         };
         this.update({path: 'surveyRequest', value: sr})

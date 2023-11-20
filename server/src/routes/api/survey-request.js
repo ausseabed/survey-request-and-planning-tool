@@ -10,7 +10,7 @@ const fs = require('fs')
 import { getConnection } from 'typeorm';
 
 import { asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
-  permitCustodianBasedPermission } from '../utils';
+  permitCustodianBasedPermission, sanitizeForFilename } from '../utils';
 import { SurveyRequest } from '../../lib/entity/survey-request';
 import { SurveyRequestAoi } from '../../lib/entity/survey-request-aoi';
 import { SurveyPlan } from '../../lib/entity/survey-plan';
@@ -192,8 +192,9 @@ router.get(
     throw err;
   }
 
+  const shpFilename = sanitizeForFilename(surveyRequest.name)
   const shpBuilder = shpBuilderFactory('request')
-  const tmpDir = shpBuilder.build(surveyRequest.id, surveyRequest.name)
+  const tmpDir = shpBuilder.build(surveyRequest.id, shpFilename)
 
   res.on('finish', () => {
     // delete the contents of the temp direstory now that the data has been
@@ -214,7 +215,7 @@ router.get(
   });
 
   //set the archive name
-  res.attachment(`${surveyRequest.name}.zip`);
+  res.attachment(`${shpFilename}.zip`);
 
   //this is the streaming magic
   archive.pipe(res);

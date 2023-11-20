@@ -5,6 +5,7 @@ import { validate as isValidUUID } from 'uuid';
 
 var auth = require('../lib/auth')();
 var logger = require('../lib/logger').logger;
+import sanitize from 'sanitize-filename';
 import { User } from '../lib/entity/user';
 
 import { multiPolygon, multiLineString, multiPoint } from "@turf/helpers";
@@ -382,4 +383,19 @@ export function sleep(ms){
   return new Promise(resolve=>{
     setTimeout(resolve,ms)
   })
+}
+
+/**
+ * Make string safe to use as a filename. Special characters (eg; path separators)
+ * will be replaced with a `-` char.
+ * @param {*} stringToSantize
+ * @returns a string suitable to use as a filename
+ */
+export function sanitizeForFilename(stringToSantize) {
+  return sanitize(
+    stringToSantize,
+    {
+      replacement: '-'
+    }
+  );
 }

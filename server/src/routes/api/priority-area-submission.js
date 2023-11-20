@@ -10,7 +10,7 @@ import { getConnection } from 'typeorm';
 
 import {
   asyncMiddleware, isAuthenticated, geojsonToMultiPolygon, hasPermission,
-  permitCustodianBasedPermission
+  permitCustodianBasedPermission, sanitizeForFilename
 } from '../utils';
 import { PriorityAreaSubmission }
   from '../../lib/entity/priority-area-submission';
@@ -233,9 +233,10 @@ router.get(
       throw err;
     }
 
-    const fname = _.isNil(priorityAreaSubmission.submittingOrganisation) ?
+    let fname = _.isNil(priorityAreaSubmission.submittingOrganisation) ?
       priorityAreaSubmission.id :
       priorityAreaSubmission.submittingOrganisation.name.replace(' ', '-');
+    fname = sanitizeForFilename(fname)
 
     const shpBuilder = shpBuilderFactory('priority-area-submission')
     const tmpDir = shpBuilder.build(priorityAreaSubmission.id, fname)

@@ -143,6 +143,22 @@ const featureToPriorityArea = async (feature) => {
   if (_.isNil(pa.name)) {
     pa.name = getParameterCaseInsensitive(feature.properties, 'name');
   }
+  if (_.isNil(pa.name)) {
+    // Special support for data provided by Parks Australia
+    // the 'TitleAll' attribute is to be used as the area of interest name
+    // but only the first part of the string (before the '-')
+    const titleAll = getParameterCaseInsensitive(feature.properties, 'titleall');
+    if (!_.isNil(titleAll)) {
+      // the test dataset provided uses unicode hyphen characters, so we need
+      // to make sure we split the title with either a normal hyphen or the unicode
+      // character
+      const separators = ['-', '–'];
+      const titleTokens = titleAll.split(new RegExp(separators.join('|'),'g'));
+      if (titleTokens.length > 0) {
+        pa.name = titleTokens[0];
+      }
+    }
+  }
   // if no name is provided, then fill the name with an id value
   if (_.isNil(pa.name)) {
     pa.name = getParameterCaseInsensitive(feature.properties, 'id');
@@ -152,6 +168,18 @@ const featureToPriorityArea = async (feature) => {
   }
   if (_.isNil(pa.name)) {
     pa.name = getParameterCaseInsensitive(feature.properties, 'fid');
+  }
+
+  // a Parks Australia specific field
+  const parksPriority = getParameterCaseInsensitive(feature.properties, 'AusSeabedP');
+  if (!_.isNil(parksPriority)) {
+    if (parksPriority.toLowerCase() == 'level 1') {
+      pa.organisationalPriority = 'High'
+    } else if (parksPriority.toLowerCase() == 'level 2') {
+      pa.organisationalPriority = 'Medium'
+    } else if (parksPriority.toLowerCase() == 'level 3') {
+      pa.organisationalPriority = 'Low'
+    }
   }
 
   // set the features geometry

@@ -233,9 +233,9 @@ router.get(
       throw err;
     }
 
-    let fname = _.isNil(priorityAreaSubmission.submittingOrganisation) ?
+    let fname = _.isNil(priorityAreaSubmission.submissionName) ?
       priorityAreaSubmission.id :
-      priorityAreaSubmission.submittingOrganisation.name.replace(' ', '-');
+      priorityAreaSubmission.submissionName;
     fname = sanitizeForFilename(fname)
 
     const shpBuilder = shpBuilderFactory('priority-area-submission')

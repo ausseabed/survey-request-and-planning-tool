@@ -68,6 +68,7 @@
               <q-tree
                 :nodes="PURPOSE_DATA"
                 node-key="key"
+                tick-strategy="strict"
                 :ticked.sync="purposesTicked"
                 :expanded.sync="purposesExpanded"
                 :no-transition="true"
@@ -726,7 +727,6 @@ export default Vue.extend({
 
       this.PURPOSE_DATA = constants.PURPOSE_DATA;
       this.addKeys(undefined, this.PURPOSE_DATA);
-      this.addTickStrategy(this.PURPOSE_DATA);
       this.setActivitiesDisabled(this.readonly, this.PURPOSE_DATA);
       this.purposesExpanded = this.getDefaultExpansion(this.purposesTicked);
 

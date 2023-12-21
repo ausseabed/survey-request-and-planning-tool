@@ -25,7 +25,7 @@
             flat
             bordered
             :multiple="false"
-            accept=".zip,.json"
+            accept=".zip,.json,.geojson,.kml,.gml"
             :max-total-size="30000000"
             :auto-expand="true"
             :auto-upload="true"

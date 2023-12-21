@@ -5,11 +5,10 @@ import { createConnection } from "typeorm";
 var Axios = require('axios');
 var shp = require('shpjs');
 var sharp = require('sharp');
-import simplify from '@turf/simplify';
+import { getFeaturesFromGml, getFeaturesFromKml, getFeaturesFromJson,
+  getFeaturesFromZip } from './worker-utils';
 
-
-
-import { geojsonToFeatureList, getParameterCaseInsensitive } from '../../lib/entity/utils';
+import { getParameterCaseInsensitive } from '../../lib/entity/utils';
 import { sleep } from '../../routes/utils';
 import { Task } from '../../lib/entity/task';
 import { PriorityArea } from '../../lib/entity/priority-area';
@@ -105,22 +104,6 @@ const getExtents = async (connection, paId) => {
   }
   return newExtents
 }
-
-const getFeaturesFromZip = async (data) => {
-  let geojson = shp.parseZip(data);
-  let simplifyOptions = { tolerance: 0.0005, highQuality: false, mutate: true };
-  let simpleGeojson = simplify(geojson, simplifyOptions);
-  let features = geojsonToFeatureList(simpleGeojson);
-  return features;
-};
-
-const getFeaturesFromJson = async (data) => {
-  let geojson = JSON.parse(data);
-  let simplifyOptions = { tolerance: 0.0005, highQuality: false, mutate: true };
-  let simpleGeojson = simplify(geojson, simplifyOptions);
-  let features = geojsonToFeatureList(simpleGeojson);
-  return features;
-};
 
 const setErrorState = async (connection, taskId, errorMessage) => {
   await getConnection().getRepository(Task)
@@ -236,6 +219,22 @@ const doProcessing = async (taskId) => {
     } catch (e) {
       await setErrorState(
         connection, taskId, `Could not extract geometry from json (${e})`);
+      return;
+    }
+  } else if (task.blobFileName.endsWith('.kml')) {
+    try {
+      features = await getFeaturesFromKml(data);
+    } catch (e) {
+      await setErrorState(
+        connection, taskId, `Could not extract geometry from kml (${e})`);
+      return;
+    }
+  } else if (task.blobFileName.endsWith('.gml')) {
+    try {
+      features = await getFeaturesFromGml(data);
+    } catch (e) {
+      await setErrorState(
+        connection, taskId, `Could not extract geometry from gml (${e})`);
       return;
     }
   }

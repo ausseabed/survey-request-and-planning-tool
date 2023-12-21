@@ -16,6 +16,8 @@
   "dependencies": {
     "@babel/runtime": "^7.11.2",
     "@hapi/boom": "^9.1.0",
+    "@mapbox/togeojson": "^0.16.2",
+    "@turf/flip": "^6.5.0",
     "@turf/helpers": "^6.1.4",
     "@turf/simplify": "^5.1.5",
     "@turf/truncate": "^6.0.1",
@@ -33,6 +35,7 @@
     "express-request-proxy": "^2.2.2",
     "formidable": "^1.2.1",
     "fstream": "^1.0.12",
+    "geography-markup-language": "^0.2.0",
     "json-rules-engine": "5.0.3",
     "json2csv": "^5.0.1",
     "jsonwebtoken": "^8.1.0",
@@ -55,6 +58,7 @@
     "typeorm": "^0.2.11",
     "uuid": "^8.3.0",
     "winston": "^3.3.3",
+    "xmldom": "^0.6.0",
     "xstate": "^4.6.0"
   },
   "devDependencies": {

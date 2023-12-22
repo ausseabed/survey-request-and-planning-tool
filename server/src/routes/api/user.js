@@ -149,7 +149,7 @@ router.post(
     user = await getConnection()
       .getRepository(User)
       .findOne(user.id, {
-        select: ['id', 'name', 'email', 'department', 'requestedCustodian'],
+        select: ['id', 'name', 'email', 'department', 'requestedCustodian', 'created', 'lastSeen'],
         relations: ['role', 'custodian'],
       })
 

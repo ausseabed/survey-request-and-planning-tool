@@ -1533,6 +1533,10 @@ export const PURPOSE_DATA = [
                 flags: ["Sci.knowledge", "Intervention"]
             },
             {
+                label: "Protection",
+                flags: ["Sci.knowledge", "Intervention"]
+            },
+            {
                 label: "Restoration",
                 flags: ["Sci.knowledge", "Intervention"]
             },

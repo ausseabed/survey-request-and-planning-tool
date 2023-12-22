@@ -2,20 +2,21 @@
   <q-page :style-fn="heightTweak">
     <div class="row q-pt-sm q-pl-sm q-col-gutter-sm fit">
       <div class="column full-height">
-        <q-card class="column col" style="max-width: 420px">
+        <q-card class="column col" style="max-width: 420px; min-width: 420px;">
           <q-tabs v-model="tab" class="bg-secondary text-white">
             <q-tab name="home" label="Home" icon="home" />
             <q-tab
-              v-if="
-                hasPermission([
-                  'canViewAllSurveyPlans',
-                  'canViewCustodianSurveyPlans',
-                ])
-              "
-              name="survey-plans"
-              label="Plans"
-              icon="layers"
-            />
+              name="priority-areas"
+              icon="app:priority-areas"
+              class="q-tab__label"
+            >
+              <div style="margin-bottom: -4px;">
+                Areas of
+              </div>
+              <div style="margin-top: -4px;">
+                Interest
+              </div>
+            </q-tab>
             <q-tab
               v-if="
                 hasPermission([
@@ -24,14 +25,34 @@
                 ])
               "
               name="survey-requests"
-              label="HIPP"
               icon="device_hub"
-            />
+              class="q-tab__label"
+            >
+              <div style="margin-bottom: -4px;">
+                HIPP
+              </div>
+              <div style="margin-top: -4px;">
+                Requests
+              </div>
+            </q-tab>
             <q-tab
-              name="priority-areas"
-              label="Areas of Interest"
-              icon="app:priority-areas"
-            />
+              v-if="
+                hasPermission([
+                  'canViewAllSurveyPlans',
+                  'canViewCustodianSurveyPlans',
+                ])
+              "
+              name="survey-plans"
+              icon="layers"
+              class="q-tab__label"
+            >
+              <div style="margin-bottom: -4px;">
+                Survey
+              </div>
+              <div style="margin-top: -4px;">
+                Plans
+              </div>
+            </q-tab>
           </q-tabs>
           <div class="fat-spacer bg-secondary"></div>
 

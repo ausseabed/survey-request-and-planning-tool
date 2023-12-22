@@ -45,78 +45,6 @@
         </q-expansion-item>
 
         <q-expansion-item
-          :value="expandedSurveyPlans"
-          :header-class="headerClass"
-          icon="app:survey-plan"
-          label="Survey Plans"
-          caption="Add a new Survey Plan or update existing Survey Plan"
-        >
-          <div class="q-px-md q-pb-sm q-gutter-y-sm column">
-            <div>
-              <div>
-                The survey plan and associated information has been designed to
-                support a number of different activities such as:
-              </div>
-              <ol class="q-my-xs">
-                <li>
-                  Adding an upcoming survey to the AusSeabed “Upcoming Surveys”
-                  coverage layer
-                </li>
-                <li>
-                  Assist a non-expert user to plan their survey and get support
-                  from within the AusSeabed community. Please refer to our FAQ’s
-                  “How to get technical support?” for more information.
-                </li>
-                <li>
-                  Allow a user to plan a survey with specifications and generate
-                  documentation to support a tender process.
-                </li>
-              </ol>
-            </div>
-            <sct-btn
-              class="self-center full-width"
-              label="Add Basic Survey Plan"
-              icon="add"
-              :to="'/survey-plan/new'"
-            >
-              <q-tooltip> Create new basic survey plan </q-tooltip>
-            </sct-btn>
-          </div>
-        </q-expansion-item>
-
-        <q-expansion-item
-          :value="expandedSurveyRequests"
-          :header-class="headerClass"
-          icon="app:survey-request"
-          label="HIPP Requests"
-          caption="Add a new HIPP Request or update existing HIPP Request"
-        >
-          <div class="q-px-md q-pb-sm q-gutter-y-sm column">
-            <div class="q-gutter-y-sm column">
-              <div>
-                The Request has been specifically designed to support the
-                submission of planned survey programs to the Hydroscheme
-                Industry Partnership Program (HIPP).
-              </div>
-              <div>
-                To submit a survey program for consideration to the HIPP please
-                click on “Requests” at the top of this window and either “+ ADD
-                HIPP REQUEST” or select an already existing record in your list
-                to modify.
-              </div>
-            </div>
-            <sct-btn
-              class="self-center full-width"
-              label="Add a HIPP Request"
-              icon="add"
-              :to="'/survey-request/new/registration'"
-            >
-              <q-tooltip> Create a new HIPP Request </q-tooltip>
-            </sct-btn>
-          </div>
-        </q-expansion-item>
-
-        <q-expansion-item
           :value="expandedPriorityAreas"
           :header-class="headerClass"
           icon="app:priority-areas-dark"
@@ -219,6 +147,79 @@
             </sct-btn>
           </div>
         </q-expansion-item>
+
+        <q-expansion-item
+          :value="expandedSurveyRequests"
+          :header-class="headerClass"
+          icon="app:survey-request"
+          label="HIPP Requests"
+          caption="Add a new HIPP Request or update existing HIPP Request"
+        >
+          <div class="q-px-md q-pb-sm q-gutter-y-sm column">
+            <div class="q-gutter-y-sm column">
+              <div>
+                The Request has been specifically designed to support the
+                submission of planned survey programs to the Hydroscheme
+                Industry Partnership Program (HIPP).
+              </div>
+              <div>
+                To submit a survey program for consideration to the HIPP please
+                click on “Requests” at the top of this window and either “+ ADD
+                HIPP REQUEST” or select an already existing record in your list
+                to modify.
+              </div>
+            </div>
+            <sct-btn
+              class="self-center full-width"
+              label="Add a HIPP Request"
+              icon="add"
+              :to="'/survey-request/new/registration'"
+            >
+              <q-tooltip> Create a new HIPP Request </q-tooltip>
+            </sct-btn>
+          </div>
+        </q-expansion-item>
+
+        <q-expansion-item
+          :value="expandedSurveyPlans"
+          :header-class="headerClass"
+          icon="app:survey-plan"
+          label="Survey Plans"
+          caption="Add a new Survey Plan or update existing Survey Plan"
+        >
+          <div class="q-px-md q-pb-sm q-gutter-y-sm column">
+            <div>
+              <div>
+                The survey plan and associated information has been designed to
+                support a number of different activities such as:
+              </div>
+              <ol class="q-my-xs">
+                <li>
+                  Adding an upcoming survey to the AusSeabed “Upcoming Surveys”
+                  coverage layer
+                </li>
+                <li>
+                  Assist a non-expert user to plan their survey and get support
+                  from within the AusSeabed community. Please refer to our FAQ’s
+                  “How to get technical support?” for more information.
+                </li>
+                <li>
+                  Allow a user to plan a survey with specifications and generate
+                  documentation to support a tender process.
+                </li>
+              </ol>
+            </div>
+            <sct-btn
+              class="self-center full-width"
+              label="Add Basic Survey Plan"
+              icon="add"
+              :to="'/survey-plan/new'"
+            >
+              <q-tooltip> Create new basic survey plan </q-tooltip>
+            </sct-btn>
+          </div>
+        </q-expansion-item>
+
       </q-list>
     </div>
   </div>

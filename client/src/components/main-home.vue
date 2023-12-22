@@ -141,7 +141,7 @@
               class="self-center full-width"
               label="Add an Area of Interest"
               icon="add"
-              :to="'/priority-area-submission/new'"
+              :to="'/priority-area-submission/new/registration'"
             >
               <q-tooltip> Add an Area of Interest </q-tooltip>
             </sct-btn>

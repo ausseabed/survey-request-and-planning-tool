@@ -246,7 +246,7 @@ export default Vue.extend({
 
   computed: {
     expandedAbout: function () {
-      return true;
+      return false;
     },
     expandedSurveyPlans: function () {
       return false;

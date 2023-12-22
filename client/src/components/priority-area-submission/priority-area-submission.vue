@@ -5,6 +5,7 @@
       class="column q-px-sm q-pt-sm q-gutter-y-sm fit"
       style="max-width: 900px"
     >
+      <h5 style="margin-bottom: -8px; margin-top: 12px;">{{ priorityAreaSubmission.submissionName }}</h5>
       <record-state
         ref="recordState"
         v-if="priorityAreaSubmission.id"

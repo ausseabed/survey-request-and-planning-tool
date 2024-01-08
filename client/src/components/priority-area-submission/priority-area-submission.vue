@@ -138,6 +138,7 @@ import { errorHandler } from "./../mixins/error-handling";
 import { permission } from "./../mixins/permission";
 import { DirtyRouteGuard } from "./../mixins/dirty-route-guard";
 
+import * as organisationMutTypes from "../../store/modules/organisation/organisation-mutation-types";
 import * as pasMutTypes from "../../store/modules/priority-area-submission/priority-area-submission-mutation-types";
 
 // The tab layout, and validation rules for all the priority area/NAI tabs
@@ -311,11 +312,19 @@ export default Vue.extend({
       "savePriorityAreaSubmission",
       "deletePriorityAreaSubmission",
     ]),
+    ...mapActions("organisation", ["getOrganisations"]),
+
     ...mapMutations("priorityAreaSubmission", {
       setActivePriorityAreaSubmission:
         pasMutTypes.SET_ACTIVE_PRIORITY_AREA_SUBMISSION,
+      updatePriorityAreaSubmissionValue:
+        pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
       setDirty: pasMutTypes.SET_DIRTY,
       restoreState: pasMutTypes.RESTORE,
+    }),
+
+    ...mapMutations("organisation", {
+      setOrganisationFilter: organisationMutTypes.SET_FILTER,
     }),
 
     restore() {
@@ -324,9 +333,13 @@ export default Vue.extend({
       // database, so next time the priority area tab is opened it won't
       // fetch the list of priority areas linked to the task, only those with
       // a direct link to the submission.
-      this.savePriorityAreaSubmission({
-        id: this.priorityAreaSubmission.id,
-      });
+      if (this.id == "new") {
+        // then don't save, as this will create an empty entry (with an id)
+      } else {
+        this.savePriorityAreaSubmission({
+          id: this.priorityAreaSubmission.id,
+        });
+      }
       this.restoreState();
     },
 
@@ -466,6 +479,8 @@ export default Vue.extend({
           citedContactEmail: undefined,
         };
         this.setActivePriorityAreaSubmission(pas);
+        // update submission details with that from active user
+        this.prefill();
         this.setDirty(false);
         this.stateReadonly = false;
       } else {
@@ -478,6 +493,39 @@ export default Vue.extend({
           .catch((_) => {
             this.errorFetching = true;
           });
+      }
+    },
+
+    prefill() {
+      this.updatePriorityAreaSubmissionValue({
+        path: "contactEmail",
+        value: this.currentUser.email,
+      });
+      this.updatePriorityAreaSubmissionValue({
+        path: "contactPerson",
+        value: this.currentUser.name,
+      });
+      if (!_.isNil(this.currentUser.custodian)) {
+        let cust = this.currentUser.custodian;
+
+        this.setOrganisationFilter(cust.name);
+        this.getOrganisations().then((orgsData) => {
+          const orgs = orgsData.data;
+          if (orgs.length > 0) {
+            this.updatePriorityAreaSubmissionValue({
+              path: "submittingOrganisation",
+              value: orgs[0],
+            });
+          } else {
+            this.updatePriorityAreaSubmissionValue({
+              path: "submittingOrganisation",
+              value: undefined,
+            });
+            this.notifyInfo(
+              "Could not match current users custodian to organisation"
+            );
+          }
+        });
       }
     },
 

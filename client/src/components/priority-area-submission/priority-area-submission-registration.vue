@@ -1,11 +1,5 @@
 <template>
   <div class="column q-pa-md q-gutter-y-sm scroll">
-    <div v-if="!readonly" class="col-auto">
-      <q-btn no-caps outline color="primary" @click="prefill">
-        Prefill with my registered details
-      </q-btn>
-    </div>
-
     <form-field-validated-input
       name="priorityAreaSubmission.submissionName"
       label="Submission Name"
@@ -142,40 +136,6 @@ export default Vue.extend({
         return areaNameOpt.toLowerCase().includes(current.toLowerCase());
       });
       return opts;
-    },
-
-    prefill() {
-      this.updatePriorityAreaSubmissionValue({
-        path: "contactEmail",
-        value: this.currentUser.email,
-      });
-      this.updatePriorityAreaSubmissionValue({
-        path: "contactPerson",
-        value: this.currentUser.name,
-      });
-
-      if (!_.isNil(this.currentUser.custodian)) {
-        let cust = this.currentUser.custodian;
-
-        this.setOrganisationFilter(cust.name);
-        this.getOrganisations().then((orgsData) => {
-          const orgs = orgsData.data;
-          if (orgs.length > 0) {
-            this.updatePriorityAreaSubmissionValue({
-              path: "submittingOrganisation",
-              value: orgs[0],
-            });
-          } else {
-            this.updatePriorityAreaSubmissionValue({
-              path: "submittingOrganisation",
-              value: undefined,
-            });
-            this.notifyInfo(
-              "Could not match current users custodian to organisation"
-            );
-          }
-        });
-      }
     },
 
     isValid() {

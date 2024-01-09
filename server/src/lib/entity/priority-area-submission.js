@@ -28,6 +28,7 @@ export const ECOLOGICAL_AREA_SUGGESTIONS = [
   'Ecologically or Biologically Significant Areas',
   'Key Ecological Feature',
   'Ramsar',
+  'Unknown',
 ];
 
 @Entity()

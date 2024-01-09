@@ -21,7 +21,8 @@
     <form-field-validated-select
       ref="submittingOrganisation"
       name="priorityAreaSubmission.submittingOrganisation"
-      label="Submitting organisation"
+      label="Submitting Organisation"
+      attribute="Submitting Organisation"
       hint="Organisation that is submitting the list or areas of interest"
       use-input
       clearable

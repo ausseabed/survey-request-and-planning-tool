@@ -6,17 +6,20 @@
       style="max-width: 900px"
     >
       <h5 style="margin-bottom: -8px; margin-top: 12px;">{{ priorityAreaSubmission.submissionName }}</h5>
-      <record-state
-        ref="recordState"
-        v-if="priorityAreaSubmission.id"
-        entity-type="priority-area-submission"
-        :entity-id="priorityAreaSubmission.id"
-        :disable="dirty"
-        @updated-state="stateUpdated($event)"
-        class="col-auto"
-        :validationCallback="recordStateValidationCallback"
-      >
-      </record-state>
+      <div class="row justify-between items-end">
+        <record-state
+          ref="recordState"
+          v-if="priorityAreaSubmission.id"
+          entity-type="priority-area-submission"
+          :entity-id="priorityAreaSubmission.id"
+          :disable="dirty"
+          @updated-state="stateUpdated($event)"
+          class="col-auto"
+          :validationCallback="recordStateValidationCallback"
+        >
+        </record-state>
+        <div>* denotes mandatory field</div>
+      </div>
 
       <q-card class="col column">
         <q-tabs

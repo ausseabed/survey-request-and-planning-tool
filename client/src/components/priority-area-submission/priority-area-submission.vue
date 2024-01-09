@@ -384,6 +384,16 @@ export default Vue.extend({
       this.validationIntent = 'save';
       this.$v.$touch();
 
+      let pasComp = this.$refs.pasComp;
+      if (pasComp.isActive) {
+        // pasComp could be any one of the tabs, but here we're interested in the
+        // areas of interest tab component. The isActive attribute of this component
+        // indicates if the user has started drawing something. So if they've started
+        // drawing and haven't save it, then we catch it here and tell them to save.
+        this.notifyError("Please click 'SAVE AREA OF INTEREST' before continuing");
+        return;
+      }
+
       if (this.$v.$error) {
         this.notifyError('Please review fields');
         return;

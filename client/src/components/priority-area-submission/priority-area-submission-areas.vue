@@ -558,6 +558,8 @@ export default Vue.extend({
           } else {
             console.error(err);
           }
+        }).finally(() => {
+          this.isActive = false;
         });
 
       this.polygons = [];

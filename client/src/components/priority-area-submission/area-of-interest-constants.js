@@ -1558,6 +1558,9 @@ export const PURPOSE_DATA = [
 
 export const ECOSYSTEM_DATA = [
     {
+        label: "Unknown or no ecosystem target"
+    },
+    {
         label: "Lower slope and abyssal reef and sediments ",
         children: [
             {

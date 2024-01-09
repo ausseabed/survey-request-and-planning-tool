@@ -4,25 +4,27 @@
       <div class="main-page-sub-title">{{ priorityArea.name }}</div>
     </q-card-section>
     <q-card-section class="row q-gutter-md">
-      <div class="column" style="max-width: 250px">
-        <q-img
-          class="rounded-borders"
-          style="width: 250px; max-height: 250px"
-          :src="`api/priority-area/${priorityArea.id}/thumbnail`"
-          :ratio="1"
-          contain
-        />
-        <div class="column q-pt-xs q-gutter-xs">
-          <q-badge color="secondary" text-color="white">
-            Registration details
-          </q-badge>
-          <div class="column q-pl-sm reg-details-text">
-            <div><b>Identified area name:</b> {{ priorityArea.name }}</div>
-            <div>
-              <b>Seacountry name:</b> {{ priorityArea.seacountryName }}
-            </div>
-            <div>
-              <b>Ecological area:</b> {{ priorityArea.ecologicalAreaName }}
+      <div class="column justify-between" style="max-width: 250px">
+        <div>
+          <q-img
+            class="rounded-borders"
+            style="width: 250px; max-height: 250px"
+            :src="`api/priority-area/${priorityArea.id}/thumbnail`"
+            :ratio="1"
+            contain
+          />
+          <div class="column q-pt-xs q-gutter-xs">
+            <q-badge color="secondary" text-color="white">
+              Registration details
+            </q-badge>
+            <div class="column q-pl-sm reg-details-text">
+              <div><b>Identified area name:</b> {{ priorityArea.name }}</div>
+              <div>
+                <b>Seacountry name:</b> {{ priorityArea.seacountryName }}
+              </div>
+              <div>
+                <b>Ecological area:</b> {{ priorityArea.ecologicalAreaName }}
+              </div>
             </div>
           </div>
         </div>

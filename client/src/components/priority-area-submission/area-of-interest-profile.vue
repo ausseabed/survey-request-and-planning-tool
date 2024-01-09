@@ -49,7 +49,7 @@
       >
         <q-expansion-item
           expand-separator
-          label="Purpose"
+          label="Purpose *"
           icon="flag"
           :header-style="{
             color: getSectionValidation(['purposes']) ? '#000000' : '#ff0000',
@@ -141,7 +141,7 @@
 
         <q-expansion-item
           expand-separator
-          label="Ecosystem description"
+          label="Ecosystem Description *"
           icon="grass"
           :header-style="{
             color: getSectionValidation(['ecosystems'])
@@ -205,7 +205,7 @@
 
         <q-expansion-item
           expand-separator
-          label="Data and Methods"
+          label="Data and Methods *"
           icon="scatter_plot"
           :header-style="{
             color: getSectionValidation([
@@ -360,7 +360,7 @@
 
         <q-expansion-item
           expand-separator
-          label="Resolution and Standard"
+          label="Resolution and Standard *"
           icon="grid_on"
           :header-style="{
             color: getSectionValidation(['gridSize']) ? '#000000' : '#ff0000',
@@ -412,7 +412,7 @@
 
         <q-expansion-item
           expand-separator
-          label="Data collection timeline and cadence"
+          label="Data Collection Timeline and Cadence *"
           icon="schedule"
           :header-style="{
             color: getSectionValidation([
@@ -428,7 +428,7 @@
               <form-field-validated-button-toggle
                 inline
                 :name="`priorityAreaSubmission.priorityAreas.$each.${index}.preferredTimeframe`"
-                label="Preferred Timeframe"
+                label="Preferred Timeframe *"
                 :value="priorityArea.preferredTimeframe"
                 @input="valueChanged('preferredTimeframe', $event)"
                 :options="PREFERRED_TIMEFRAME_OPTIONS"
@@ -461,7 +461,7 @@
               <form-field-validated-button-toggle
                 inline
                 :name="`priorityAreaSubmission.priorityAreas.$each.${index}.collectionCadence`"
-                label="Intended Cadence for Collection"
+                label="Intended Cadence for Collection *"
                 :value="priorityArea.collectionCadence"
                 @input="valueChanged('collectionCadence', $event)"
                 :options="COLLECTION_CADENCE_OPTIONS"

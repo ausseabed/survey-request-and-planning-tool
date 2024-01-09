@@ -2,7 +2,7 @@
   <div class="column q-pa-md q-gutter-y-sm scroll">
     <form-field-validated-input
       name="priorityAreaSubmission.submissionName"
-      label="Submission Name"
+      label="Submission Name *"
       attribute="Submission Name"
       hint="Name or description of this submission"
       :value="priorityAreaSubmission.submissionName"
@@ -21,7 +21,7 @@
     <form-field-validated-select
       ref="submittingOrganisation"
       name="priorityAreaSubmission.submittingOrganisation"
-      label="Submitting Organisation"
+      label="Submitting Organisation *"
       attribute="Submitting Organisation"
       hint="Organisation that is submitting the list or areas of interest"
       use-input
@@ -45,7 +45,7 @@
 
     <form-field-validated-input
       name="priorityAreaSubmission.contactPerson"
-      label="Contact Person"
+      label="Contact Person *"
       attribute="Contact Person"
       hint="Contact person from the commissioning organisation"
       :value="priorityAreaSubmission.contactPerson"
@@ -63,7 +63,7 @@
 
     <form-field-validated-input
       name="priorityAreaSubmission.contactEmail"
-      label="Contact Email"
+      label="Contact Email *"
       attribute="Contact Email"
       hint="Ideally, provide a group email to ensure continuity of the dataset"
       :value="priorityAreaSubmission.contactEmail"

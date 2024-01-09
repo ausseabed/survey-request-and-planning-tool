@@ -42,7 +42,7 @@
       <div class="col column q-gutter-xs">
         <form-field-validated-input
           :name="`priorityAreaSubmission.priorityAreas.$each.${index}.name`"
-          label="Identified Area Name"
+          label="Identified Area Name *"
           attribute="Identified Area Name"
           :value="priorityArea.name"
           @input="valueChanged('name', $event)"

@@ -130,6 +130,7 @@ import { errorHandler } from './../mixins/error-handling';
 import { permission } from './../mixins/permission';
 import { DirtyRouteGuard } from './../mixins/dirty-route-guard';
 
+import * as organisationMutTypes from "../../store/modules/organisation/organisation-mutation-types";
 import * as srMutTypes from '../../store/modules/survey-request/survey-request-mutation-types';
 
 
@@ -293,6 +294,9 @@ export default Vue.extend({
     ...mapActions('custodian', [
       'getCustodians',
     ]),
+    ...mapActions('organisation', [
+      'getOrganisations'
+    ]),
     ...mapActions('reportTemplate', [
       'generateReport',
     ]),
@@ -304,9 +308,13 @@ export default Vue.extend({
       'restoreState': srMutTypes.RESTORE,
       'setAcknowledged': srMutTypes.SET_ACKNOWLEDGED,
     }),
+    ...mapMutations("organisation", {
+      setOrganisationFilter: organisationMutTypes.SET_FILTER,
+    }),
 
     fetchData() {
       this.getCustodians();
+      this.getOrganisations();
     },
 
     restore() {
@@ -423,11 +431,45 @@ export default Vue.extend({
           acknowledged: false,
         };
         this.update({path: 'surveyRequest', value: sr})
+        this.prefill();
         this.setDirty(false);
         this.stateReadonly = false;
       } else {
         // id has been included in url, so get and set this survey request
         this.getSurveyRequest({id: this.id});
+      }
+    },
+
+    prefill() {
+      this.update({
+        path: "surveyRequest.pointOfContactEmail",
+        value: this.currentUser.email,
+      });
+      this.update({
+        path: "surveyRequest.requestorName",
+        value: this.currentUser.name,
+      });
+      if (!_.isNil(this.currentUser.custodian)) {
+        let cust = this.currentUser.custodian;
+
+        this.setOrganisationFilter(cust.name);
+        this.getOrganisations().then((orgsData) => {
+          const orgs = orgsData.data;
+          if (orgs.length > 0) {
+            this.update({
+              path: "surveyRequest.organisation",
+              value: orgs[0],
+            });
+          } else {
+            this.updatePriorityAreaSubmissionValue({
+              path: "surveyRequest.organisation",
+              value: undefined,
+            });
+            this.notifyInfo(
+              "Could not match current users custodian to organisation"
+            );
+          }
+        });
       }
     },
 

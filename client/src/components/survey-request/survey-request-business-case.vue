@@ -21,7 +21,7 @@
       <form-field-validated-input
         name="surveyRequest.businessJustification"
         attribute="Survey Justification"
-        label="Survey Justification"
+        label="Survey Justification *"
         :value="surveyRequest.businessJustification"
         @input="update({path:'surveyRequest.businessJustification', value:$event})"
         @blur="$v.surveyRequest.businessJustification.$touch"
@@ -35,7 +35,7 @@
       <form-field-validated-input
         name="surveyRequest.costBenefit"
         attribute="Cost Benefit"
-        label="Cost Benefit"
+        label="Cost Benefit *"
         :value="surveyRequest.costBenefit"
         @input="update({path:'surveyRequest.costBenefit', value:$event})"
         @blur="$v.surveyRequest.costBenefit.$touch"

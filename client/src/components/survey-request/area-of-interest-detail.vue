@@ -29,7 +29,8 @@
           inline
           outlined
           :name="`surveyRequest.aois.$each.${index}.surveyStandard`"
-          label="Survey Standard"
+          label="Survey Standard *"
+          attribute="Survey Standard"
           :value="aoi.surveyStandard"
           @input="valueChanged('surveyStandard',$event)"
           :options="surveyStandards"
@@ -56,7 +57,8 @@
           class="bg-grey-2 q-pa-sm rounded-borders"
           inline
           :name="`surveyRequest.aois.$each.${index}.overallRisk`"
-          label="Overall Risk"
+          label="Overall Risk *"
+          attribute="Overall Risk"
           :value="aoi.overallRisk"
           @input="valueChanged('overallRisk',$event)"
           :options="overallRisks"
@@ -68,7 +70,8 @@
           class="bg-grey-2 q-pa-sm rounded-borders"
           inline
           :name="`surveyRequest.aois.$each.${index}.preferredTimeframe`"
-          label="Preferred Timeframe"
+          label="Preferred Timeframe *"
+          attribute="Preferred Timeframe"
           :value="aoi.preferredTimeframe"
           @input="valueChanged('preferredTimeframe',$event)"
           :options="preferredTimeframes"
@@ -81,7 +84,8 @@
           inline
           multiple
           :name="`surveyRequest.aois.$each.${index}.dataTypesToCapture`"
-          label="Data Types to Capture"
+          label="Data Types to Capture *"
+          attribute="Data Types to Capture"
           :value="aoi.dataTypesToCapture"
           @input="valueChanged('dataTypesToCapture',$event)"
           :options="dataTypes"

@@ -27,7 +27,7 @@
       <div class="col column q-gutter-xs">
         <form-field-validated-input
           :name="`surveyRequest.aois.$each.${index}.name`"
-          label="Area Name"
+          label="Area Name *"
           attribute="Area Name"
           :value="aoi.name"
           @input="valueChanged('name', $event)"

@@ -5,14 +5,13 @@
     <q-card-section class="column q-gutter-y-sm">
       <div>
         A valid HIPP Request requires registration and the addition of at
-        least one requested area. Optional fields are labelled (optional).
-        All other fields are mandatory.
+        least one requested area. Mandatory fields are denoted by an *.
       </div>
 
       <form-field-validated-input
         name="surveyRequest.name"
         attribute="Request Title"
-        label="Request Title"
+        label="Request Title *"
         :value="surveyRequest.name"
         @input="update({path:'surveyRequest.name', value:$event})"
         @blur="$v.surveyRequest.name.$touch"
@@ -25,7 +24,8 @@
       <form-field-validated-select
         ref="organisation"
         name="surveyRequest.organisation"
-        label="Requesting Organisation"
+        attribute="Requesting Organisation"
+        label="Requesting Organisation *"
         use-input
         input-debounce="200"
         autocomplete="new-password"
@@ -73,7 +73,7 @@
       <form-field-validated-input
         name="surveyRequest.requestorName"
         attribute="Contact Person"
-        label="Contact Person"
+        label="Contact Person *"
         :value="surveyRequest.requestorName"
         @input="update({path:'surveyRequest.requestorName', value:$event})"
         @blur="$v.surveyRequest.requestorName.$touch"
@@ -87,7 +87,7 @@
       <form-field-validated-input
         name="surveyRequest.requestorPosition"
         attribute="Contact Person's Role"
-        label="Contact Person's Role (Title)"
+        label="Contact Person's Role (Title) *"
         :value="surveyRequest.requestorPosition"
         @input="update({path:'surveyRequest.requestorPosition', value:$event})"
         @blur="$v.surveyRequest.requestorPosition.$touch"
@@ -99,7 +99,7 @@
 
       <form-field-validated-input
         name="surveyRequest.pointOfContactEmail"
-        label="Contact email"
+        label="Contact email *"
         attribute="Contact email"
         :value="surveyRequest.pointOfContactEmail"
         @input="update({path:'surveyRequest.pointOfContactEmail', value:$event})"
@@ -114,7 +114,7 @@
       <form-field-validated-select
         name="surveyRequest.custodians"
         attribute="System Record Custodians"
-        label="System Record Custodian(s)"
+        label="System Record Custodian(s) *"
         multiple use-chips
         :value="surveyRequest.custodians"
         @input="update({path:'surveyRequest.custodians', value:$event})"

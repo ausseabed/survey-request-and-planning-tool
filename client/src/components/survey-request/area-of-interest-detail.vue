@@ -33,11 +33,28 @@
           attribute="Survey Standard"
           :value="aoi.surveyStandard"
           @input="valueChanged('surveyStandard',$event)"
-          :options="surveyStandards"
+          :options="surveyStandardOptions"
           @blur="`$v.surveyRequest.aois.$each.${index}.surveyStandard.$touch`"
           :readonly="readonly"
           :hide-bottom-space="true"
-        />
+        >
+          <template v-slot:option="scope">
+            <q-item
+              v-bind="scope.itemProps"
+              v-on="scope.itemEvents"
+            >
+              <q-item-section>
+                <q-item-label v-html="scope.opt" />
+                <q-item-label
+                  caption
+                  style="max-width: 400px;"
+                >
+                  {{ getStandardDescription(scope.opt) }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </form-field-validated-select>
         <div
           v-if="aoi.surveyStandard === 'HIPP Precise'"
           class="q-pl-sm hint-text"
@@ -170,6 +187,9 @@ export default Vue.extend({
       );
 
     },
+    getStandardDescription(standardName) {
+      return this.surveyStandards.find((opt) => opt.name == standardName).description;
+    },
   },
 
   watch: {
@@ -186,6 +206,9 @@ export default Vue.extend({
     $v () {
       return this.validator;
     },
+    surveyStandardOptions() {
+      return this.surveyStandards.map((opt) => opt.name);
+    }
   },
 
   data() {

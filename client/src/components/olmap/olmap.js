@@ -91,23 +91,47 @@ var OlMap = function (target, options) {
         function TogglePriorityLayerControl(opt_options) {
           var options = opt_options || {};
 
-          var pa_cbx = document.createElement('input');
-          pa_cbx.type = "checkbox";
-          pa_cbx.id = "strait_cbx";
-          pa_cbx.checked = true;
+          var optionsElement = document.createElement('div');
+          optionsElement.className = 'ol-priority-area ol-control-panel ol-unselectable ol-control';
+          optionsElement.style = 'padding: 8px';
 
-          var element = document.createElement('div');
-          element.className = 'ol-priority-area ol-control-panel ol-unselectable ol-control';
-          element.innerHTML="<b>Priority areas</b>&nbsp;"
-          element.appendChild(pa_cbx);
+          var usCbx = document.createElement('input');
+          usCbx.type = "checkbox";
+          usCbx.id = "strait_cbx";
+          usCbx.checked = false;
+          usCbx.addEventListener(
+            'click', this.handleUpcomingSurveyLayerToggle.bind(this, [usCbx]), false);
+          var usElement = document.createElement('div');
+          usElement.innerHTML="&nbsp;<b>Show upcoming survey layer</b>"
+          usElement.prepend(usCbx);
+          optionsElement.appendChild(usElement);
+
+          var paCbx = document.createElement('input');
+          paCbx.type = "checkbox";
+          paCbx.id = "strait_cbx";
+          paCbx.checked = true;
+          paCbx.addEventListener(
+            'click', this.handlePriorityLayerToggle.bind(this, [paCbx]), false);
+          var paElement = document.createElement('div');
+          paElement.innerHTML="&nbsp;<b>Show published areas of interest</b>"
+          paElement.prepend(paCbx);
+          optionsElement.appendChild(paElement);
+
+          var mpCbx = document.createElement('input');
+          mpCbx.type = "checkbox";
+          mpCbx.id = "strait_cbx";
+          mpCbx.checked = false;
+          mpCbx.addEventListener(
+            'click', this.handleMarineParkLayerToggle.bind(this, [mpCbx]), false);
+          var mpElement = document.createElement('div');
+          mpElement.innerHTML="&nbsp;<b>Show marine parks layer</b>"
+          mpElement.prepend(mpCbx);
+          optionsElement.appendChild(mpElement);
 
           Control.call(this, {
-            element: element,
+            element: optionsElement,
             target: options.target
           });
-
-          pa_cbx.addEventListener(
-            'click', this.handlePriorityLayerToggle.bind(this), false);
         }
 
         if ( Control ) TogglePriorityLayerControl.__proto__ = Control;
@@ -116,8 +140,16 @@ var OlMap = function (target, options) {
         TogglePriorityLayerControl.prototype.constructor = DrawPolygonControl;
 
         TogglePriorityLayerControl.prototype.handlePriorityLayerToggle =
-          function handlePriorityLayerToggle () {
-            doPriorityLayerToggle();
+          function handlePriorityLayerToggle ([cb]) {
+            doPriorityLayerToggle(cb.checked);
+          };
+        TogglePriorityLayerControl.prototype.handleMarineParkLayerToggle =
+          function handleMarineParkLayerToggle ([cb]) {
+            doMarineParkLayerToggle(cb.checked);
+          };
+        TogglePriorityLayerControl.prototype.handleUpcomingSurveyLayerToggle =
+          function handleUpcomingSurveyLayerToggle ([cb]) {
+            doUpcomingSurveyLayerToggle(cb.checked);
           };
 
         return TogglePriorityLayerControl;
@@ -160,6 +192,31 @@ var OlMap = function (target, options) {
         source: priorityAreasMap
       });
 
+      var marineParkMap = new ol.source.ImageWMS({
+        url: MapConstants.WMS_PRIORITY_AREAS,
+        params: {'LAYERS': 'Marine_Parks'},
+        attributions: [new ol.Attribution({
+          html: MapConstants.MAP_ATTRIBUTION_HTML
+        })],
+      });
+      var marineParkLayer = new ol.layer.Image({
+        opacity: 0.35,
+        source: marineParkMap,
+        visible: false
+      });
+
+      var upcomingSurveyMap = new ol.source.ImageWMS({
+        url: MapConstants.WMS_PRIORITY_AREAS,
+        params: {'LAYERS': 'Survey_Plans'},
+        attributions: [new ol.Attribution({
+          html: MapConstants.MAP_ATTRIBUTION_HTML
+        })],
+      });
+      var upcomingSurveyLayer = new ol.layer.Image({
+        opacity: 0.35,
+        source: upcomingSurveyMap,
+        visible: false
+      });
 
       var center = [
         (MapConstants.WMTS_DEFAULT_EXTENT[0] + MapConstants.WMTS_DEFAULT_EXTENT[2] / 2),
@@ -182,6 +239,8 @@ var OlMap = function (target, options) {
             source: baseMap
           }),
           priorityAreasLayer,
+          marineParkLayer,
+          upcomingSurveyLayer,
           new ol.layer.Vector({
             source: source,
             style: new ol.style.Style({
@@ -238,8 +297,16 @@ var OlMap = function (target, options) {
         }
       };
 
-      var doPriorityLayerToggle = (i) => {
-        priorityAreasLayer.setVisible(!priorityAreasLayer.getVisible());
+      var doPriorityLayerToggle = (checked) => {
+        priorityAreasLayer.setVisible(checked);
+      };
+
+      var doMarineParkLayerToggle = (checked) => {
+        marineParkLayer.setVisible(checked);
+      };
+
+      var doUpcomingSurveyLayerToggle = (checked) => {
+        upcomingSurveyLayer.setVisible(checked);
       };
 
       drawInteraction.on('drawend', (event) => {

@@ -958,6 +958,36 @@ export default Vue.extend({
         this.$store.commit(
           'surveyApplication/setSelectedSurveyApplication',
           undefined);
+
+        this.prefill();
+      }
+    },
+
+    prefill() {
+      this.updateSurveyPlan({
+        path: "surveyPlan.email",
+        value: this.currentUser.email,
+      });
+      this.updateSurveyPlan({
+        path: "surveyPlan.contactPerson",
+        value: this.currentUser.name,
+      });
+      if (!_.isNil(this.currentUser.custodian)) {
+        let cust = this.currentUser.custodian;
+        this.setSurveyPlanCustodians([cust]);
+
+        this.setOrganisationFilter(cust.name);
+        this.getOrganisations().then((orgsData) => {
+          const orgs = orgsData.data;
+          if (orgs.length > 0) {
+            this.setSurveyPlanOrganisations([orgs[0]])
+          } else {
+            this.setSurveyPlanOrganisations([orgs[0]])
+            this.notifyInfo(
+              "Could not match current users custodian to organisation"
+            );
+          }
+        });
       }
     },
 

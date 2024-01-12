@@ -198,7 +198,7 @@
 
         <q-card class="full-width">
           <q-card-section>
-            <div class="text-h6">Area of Interest</div>
+            <div class="text-h6">Survey Plan</div>
           </q-card-section>
           <q-card-section class="column">
             <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>

@@ -461,7 +461,7 @@ export default Vue.extend({
               value: orgs[0],
             });
           } else {
-            this.updatePriorityAreaSubmissionValue({
+            this.update({
               path: "surveyRequest.organisation",
               value: undefined,
             });

@@ -25,6 +25,7 @@
             :key="aoi.id"
             :aoi="aoi"
             :index="index"
+            :count="surveyRequest.aois.length"
             :readonly="readonly"
             :validator="validator"
             @aoi-value-changed="aoiValueChanged"

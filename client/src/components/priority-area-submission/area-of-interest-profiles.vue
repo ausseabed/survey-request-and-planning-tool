@@ -30,6 +30,7 @@
         v-for="(aoi, index) of priorityAreaSubmission.priorityAreas"
         :key="aoi.id"
         :index="index"
+        :count="priorityAreaSubmission.priorityAreas.length"
         :priority-area="aoi"
         @aoi-value-changed="aoiValueChanged"
         :readonly="readonly"

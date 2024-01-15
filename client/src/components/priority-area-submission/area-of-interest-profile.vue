@@ -30,12 +30,12 @@
         </div>
         <div class="column q-pt-xs q-gutter-xs q-pt-md">
           <sct-btn
-            v-if="!readonly"
+            v-if="!readonly && count > 1"
             label="Apply to Next"
             @click="applyToNextClicked"
           />
           <sct-btn
-            v-if="!readonly"
+            v-if="!readonly && count > 1"
             label="Apply to All"
             icon="format_line_spacing"
             @click="applyToAllClicked"
@@ -634,6 +634,7 @@ export default Vue.extend({
   props: [
     'priorityArea',
     'index',
+    'count',
     'readonly',
     'validator'
   ],

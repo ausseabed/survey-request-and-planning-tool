@@ -15,7 +15,7 @@
             contain
           />
           <sct-btn
-            v-if="!readonly"
+            v-if="!readonly && count > 1"
             label="Apply to All"
             icon="format_line_spacing"
             @click="applyToAllClicked"
@@ -137,6 +137,7 @@ export default Vue.extend({
   props: [
     'aoi',
     'index',
+    'count',
     'readonly',
     'validator'
   ],

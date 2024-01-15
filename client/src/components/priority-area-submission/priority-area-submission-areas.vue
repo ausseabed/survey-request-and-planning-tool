@@ -333,6 +333,7 @@
               :key="priorityArea.id"
               :priority-area="priorityArea"
               :index="index"
+              :count="priorityAreaSubmission.priorityAreas.length"
               @priority-area-value-changed="priorityAreaValueChanged"
               @priority-area-deleted="priorityAreaDeleted"
               :readonly="readonly"

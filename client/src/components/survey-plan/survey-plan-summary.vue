@@ -62,6 +62,7 @@
 
       <div style="width: 900px; max-width: 90vw;" class="column q-gutter-md no-wrap">
         <record-state
+          ref="recordState"
           v-if="surveyPlan.id"
           class="full-width"
           :entity-type="`survey-plan`"
@@ -656,6 +657,38 @@
           </q-card-section>
         </q-card>
 
+        <div v-if="!readonly" class="full-width row justify-between">
+          <div class="row justify-start q-gutter-sm">
+            <q-btn
+              color="primary"
+              label="Save"
+              icon="save"
+              @click="submit"
+            />
+            <q-btn
+              color="primary"
+              :label="dirty ? 'Exit without saving' : 'Exit'"
+              icon="close"
+              :to="'/'"
+            />
+            <q-btn
+              color="red"
+              label="Delete"
+              icon="delete"
+              :disable="readonly"
+              @click="deleteSurveyPlan"
+            />
+          </div>
+
+          <q-btn
+            :disable="readonly || dirty"
+            color="primary"
+            label="Finalise"
+            @click="finaliseClicked"
+          >
+            <q-tooltip v-if="dirty">Survey Plan must be saved before finalising</q-tooltip>
+          </q-btn>
+        </div>
 
       </div>
     </q-page>
@@ -1137,6 +1170,28 @@ export default Vue.extend({
         this.RESET_SURVEY_PLAN()
         this.$router.replace({ path: `/` });
       }
+    },
+
+    finaliseClicked() {
+      this.validationIntent = 'final';
+      this.$v.$touch();
+
+      if (this.$v.$error) {
+        this.notifyError('Please review fields');
+        return;
+      }
+
+      this.$refs.recordState
+        .transitionRecordState("FINALISE")
+        .then((sp) => {
+          this.notifySuccess("Survey Plan finalised");
+        })
+        .catch((err) => {
+          this.notifyError(
+            `Failed to finalise Survey Plan`,
+            err
+          );
+        });
     },
 
     checkGeometry() {

@@ -80,6 +80,7 @@
         />
 
         <form-field-validated-input
+          v-if="priorityArea.ecologicalAreaType == ecologicalAreaNameOptions[1]"
           :name="`priorityAreaSubmission.priorityAreas.$each.${index}.ecologicalAreaName`"
           label="Ecological area name"
           attribute="Ecological area name"

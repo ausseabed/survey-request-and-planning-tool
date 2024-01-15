@@ -100,6 +100,7 @@
               <q-checkbox
                 :value="surveyPlan.public"
                 @input="update('surveyPlan.public', $event)"
+                :disable="readonly"
                 />
             </q-field>
 
@@ -521,6 +522,7 @@
                         <q-checkbox
                           :value="instrumentSelected(instType)"
                           @input="setSelectedInstrument(instType)"
+                          :disable="readonly"
                           />
                       </q-item-section>
 
@@ -545,7 +547,7 @@
                         <q-checkbox
                           :value="dataCaptureTypeSelected(dataCaptType)"
                           @input="setSelectedDataCaptureType(dataCaptType)"
-                          :disable="dataCaptType.disable"
+                          :disable="dataCaptType.disable || readonly"
                           />
                       </q-item-section>
                       <q-item-section>
@@ -627,6 +629,7 @@
               <q-checkbox
                 :value="surveyPlan.hasMoratorium"
                 @input="update('surveyPlan.hasMoratorium', $event)"
+                :disable="readonly"
                 />
             </q-field>
 

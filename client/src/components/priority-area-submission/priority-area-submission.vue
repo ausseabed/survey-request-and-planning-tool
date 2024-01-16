@@ -65,6 +65,7 @@
             color="primary"
             label="Save"
             icon="save"
+            :disable="stateReadonly"
             @click="saveClicked(false, true)"
           />
           <q-btn

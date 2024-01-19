@@ -28,6 +28,7 @@ const TEMPLATE_ENTITY_DEPENDENCIES_MAP = {
       'organisation',
       'organisations',
       'aois',
+      'recordState',
     ],
     additionalSelects: [
       'aois.thumbnail'
@@ -150,6 +151,22 @@ expressions.filters.formatNumber = function(input) {
     .format(input)
 }
 
+function getDateString(value, formatString) {
+  // converts datetime stored in database but retreived as a int by the
+  // DateTransformer back into a date. Then converts from UTC to Melbourne
+  // time.
+  // Melbourne's UTC offset is +10
+  if (_.isNil(value)) {
+    return undefined
+  }
+  return moment(value).utcOffset(10).format(formatString)
+}
+
+expressions.filters.formatDate = function(input) {
+  if(!input) return input;
+  return getDateString(input, 'DD-MM-YYYY')
+}
+
 export class ReportGenerator {
   constructor(entity, entityType, reportTemplate) {
     this.entity = entity
@@ -246,17 +263,6 @@ export class ReportGenerator {
       res[key] = value;
     }
     return res;
-  }
-
-  getDateString(value, formatString) {
-    // converts datetime stored in database but retreived as a int by the
-    // DateTransformer back into a date. Then converts from UTC to Melbourne
-    // time.
-    // Melbourne's UTC offset is +10
-    if (_.isNil(value)) {
-      return undefined
-    }
-    return moment(value).utcOffset(10).format(formatString)
   }
 
   generate(writeData, res) {

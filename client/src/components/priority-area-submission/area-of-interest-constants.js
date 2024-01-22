@@ -1340,7 +1340,7 @@ export const PURPOSE_DATA = [
             }
         ],
         values: [
-            "Access to Traditional resource areas (fishing, medicinal, ceremonial, spiritual)",
+            "Access to Traditional resource areas (fishing/medicinal/ceremonial/spiritual)",
             "Maintaining and protecting culture",
             "Cultural Wellbeing",
             "Connecting to culture/country",

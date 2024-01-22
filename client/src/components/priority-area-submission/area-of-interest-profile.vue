@@ -68,6 +68,7 @@
                 Please select all that apply to your Area of Interest.
               </div>
               <q-tree
+                ref="purposeTree"
                 :nodes="PURPOSE_DATA"
                 node-key="key"
                 tick-strategy="strict"
@@ -733,6 +734,11 @@ export default Vue.extend({
       this.setActivitiesDisabled(this.readonly, this.PURPOSE_DATA);
       this.purposesExpanded = this.getDefaultExpansion(this.purposesTicked);
 
+      this.purposesTicked = this.purposesTicked.filter((pKey) => {
+        let p = this.findPurpose(pKey, this.PURPOSE_DATA);
+        return !_.isNil(p);
+      });
+
       this.ECOSYSTEM_DATA = constants.ECOSYSTEM_DATA;
       this.addKeys(undefined, this.ECOSYSTEM_DATA);
       this.addTickStrategy(this.ECOSYSTEM_DATA);
@@ -845,6 +851,94 @@ export default Vue.extend({
       }
       return true;
     },
+
+    findPurpose(purposeKey, purposeChildren) {
+      // recursive method to find and return a purpose
+      let found = undefined;
+      for (const purpose of purposeChildren) {
+        if (purpose.key == purposeKey) {
+          return purpose;
+        } else {
+          if (purpose.children) {
+            found = this.findPurpose(purposeKey, purpose.children);
+          }
+        }
+        if (found) {
+          return found;
+        }
+      }
+      return found;
+    },
+
+    removeChildPurposes(purposeSet, childrenToRemove) {
+      // recursive method to remove all child keys from the purposeSet
+      for (const child of childrenToRemove) {
+        purposeSet.delete(child.key);
+        if (child.children) {
+          this.removeChildPurposes(purposeSet, child.children);
+        }
+      }
+    },
+
+    splitPurposeKey(tokens, purposeKey, purposes) {
+      // The keys used in the purpose tree view are made up of the purpose labels
+      // of the full path to that tree node concatenated with '-' characters. This
+      // is how the selection is stored in the database. The simple solution to get
+      // the tokens from the key is to split by the '-' character, however some of
+      // the purpose labels include this '-' character. This function gets around
+      // this problem by only splitting on available labels (so '-' characters) in
+      // labels are ok.
+      for (const purpose of purposes) {
+        if (purposeKey.startsWith(purpose.label + '-')) {
+          tokens.push(purpose.label);
+          let remainingKey = purposeKey.substring((purpose.label + '-').length)
+          this.splitPurposeKey(tokens, remainingKey, purpose.children);
+        } else if (purposeKey.startsWith(purpose.label)) {
+          tokens.push(purpose.label);
+        }
+      }
+    },
+
+    updatePurposes(newPurposes) {
+      // The quasar tree view component doesn't support the check mode that we
+      // need, so the following code updates the list of selected purposes to match
+      // the way we need the selection to work.
+      // - If a leaf node is selected all parent nodes should be selected
+      // - If a parent node is deselected all child nodes should be deselected
+      let adjustedPurposes = new Set(newPurposes);
+
+      let oldPurposes = this.$refs.purposeTree.getTickedNodes()
+      .filter((node) => !_.isNil(node))
+      .map((node) => {
+        return node.key;
+      });
+      let oldSet = new Set(oldPurposes);
+      let newSet = new Set(newPurposes);
+      // use set theory to figure out what has been selected vs unselected
+      let addedSet = newSet.difference(oldSet);
+      let removedSet = oldSet.difference(newSet);
+
+      // we need to select all parent nodes of new selections
+      for (const addedPurpose of addedSet) {
+        let addedTokens = [];
+        this.splitPurposeKey(addedTokens, addedPurpose, this.PURPOSE_DATA);
+        let tokenBasedKey = addedTokens[0];
+        for (const token of addedTokens.slice(1)) {
+          adjustedPurposes.add(tokenBasedKey);
+          tokenBasedKey = tokenBasedKey + '-' + token
+        }
+      }
+
+      // we need to remove all child nodes of deselected nodes
+      for (const removedPurpose of removedSet) {
+        let p = this.findPurpose(removedPurpose, this.PURPOSE_DATA);
+        if (p.children) {
+          this.removeChildPurposes(adjustedPurposes, p.children);
+        }
+      }
+
+      return Array.from(adjustedPurposes);
+    },
   },
 
   watch: {
@@ -931,6 +1025,7 @@ export default Vue.extend({
         return this.priorityArea.purposes;
       },
       set: function (value) {
+        value = this.updatePurposes(value);
         this.valueChanged("purposes", value);
 
         // if a purpose has been unticked, then automatically deselect any
@@ -953,7 +1048,9 @@ export default Vue.extend({
             let pvGroup = this.PURPOSE_DATA.find((p) => {
               return p.values.includes(pv);
             });
-            return this.purposeGroupSelected(pvGroup.label);
+            if (pvGroup) {
+              return this.purposeGroupSelected(pvGroup.label);
+            }
           }
         );
         this.valueChanged("purposeValues", updatedPurposeValues);

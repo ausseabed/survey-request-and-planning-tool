@@ -141,7 +141,7 @@
               class="self-center full-width"
               label="Add an Area of Interest"
               icon="add"
-              :to="'/priority-area-submission/new/registration'"
+              @click="addAoI"
             >
               <q-tooltip> Add an Area of Interest </q-tooltip>
             </sct-btn>
@@ -173,7 +173,7 @@
               class="self-center full-width"
               label="Add a HIPP Request"
               icon="add"
-              :to="'/survey-request/new/registration'"
+              @click="addRequest"
             >
               <q-tooltip> Create a new HIPP Request </q-tooltip>
             </sct-btn>
@@ -240,7 +240,14 @@ export default Vue.extend({
 
   mounted() {},
 
-  methods: {},
+  methods: {
+    addAoI() {
+      this.$emit('add-aoi-clicked');
+    },
+    addRequest() {
+      this.$emit('add-request-clicked');
+    },
+  },
 
   watch: {},
 

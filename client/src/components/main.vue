@@ -58,7 +58,11 @@
 
           <q-tab-panels v-model="tab" animated class="col">
             <q-tab-panel name="home" class="no-padding">
-              <main-home> </main-home>
+              <main-home
+                @add-aoi-clicked="addAoI"
+                @add-request-clicked="addRequest"
+              >
+              </main-home>
             </q-tab-panel>
 
             <q-tab-panel
@@ -268,7 +272,7 @@
                     label="add request"
                     align="right"
                     icon="add"
-                    :to="'/survey-request/new/registration'"
+                    @click="addRequest"
                   >
                     <q-tooltip> Create new HIPP request </q-tooltip>
                   </sct-btn>
@@ -412,7 +416,7 @@
                     label="add submission"
                     align="right"
                     icon="add"
-                    :to="'/priority-area-submission/new/registration'"
+                    @click="addAoI"
                   >
                     <q-tooltip>
                       Create new Area of Interest Submission
@@ -620,6 +624,62 @@ export default Vue.extend({
     fetchSurveyPlans() {
       this.SET_SURVEY_PLAN_LIST_FILTER(undefined);
       this.getSurveyPlans();
+    },
+
+    addAoI() {
+      this.confirmNavigation(
+        "Add Areas of Interest",
+        `You will be directed to submit an Area of Interest. Please note this is
+        not a pathway to submitting a HIPP Request. You may submit your polygon
+        separately through both channels, or just one, depending on your intention.`,
+        "/priority-area-submission/new/registration"
+      )
+    },
+
+    addRequest() {
+      this.confirmNavigation(
+        "Add a HIPP Request",
+        `You will be directed to submit an HIPP Request.  Please note this is
+        not a pathway to submitting an Area of Interest polygon. You may submit
+        your polygon separately through both channels , or just one, depending
+        on your intention.`,
+        "/survey-request/new/registration"
+      )
+    },
+
+    confirmNavigation(title, message, toAddress) {
+      const doNotShowConfirmCookie = `sct-${title}-no-show-confirm`
+      if (this.$q.cookies.get(doNotShowConfirmCookie) != null) {
+        // if user has checked the option not to show in future, then skip
+        // the dialog
+        this.$router.push(toAddress);
+        return;
+      }
+
+      this.$q.dialog({
+        title: title,
+        message: message,
+        ok: 'Continue',
+        cancel: 'Cancel',
+        options: {
+          type: 'checkbox',
+          model: [],
+          // inline: true
+          items: [
+            { label: 'Do not show again', value: 'doNotShow'}
+          ]
+        },
+      }).onOk((optionData) => {
+        if (optionData.includes('doNotShow')) {
+          // we just check if it's set, the value (True) doesn't matter here
+          this.$q.cookies.set(doNotShowConfirmCookie, true);
+        }
+        this.$router.push(toAddress);
+      }).onCancel(() => {
+        //do nothing
+      }).onDismiss(() => {
+        //do nothing
+      });
     },
 
     getPriorityAreaLabel(priorityAreaSubmission) {

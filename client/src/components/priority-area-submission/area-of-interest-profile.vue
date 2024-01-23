@@ -899,24 +899,13 @@ export default Vue.extend({
       }
     },
 
-    updatePurposes(newPurposes) {
+    updatePurposes(newPurposes, addedSet, removedSet) {
       // The quasar tree view component doesn't support the check mode that we
       // need, so the following code updates the list of selected purposes to match
       // the way we need the selection to work.
       // - If a leaf node is selected all parent nodes should be selected
       // - If a parent node is deselected all child nodes should be deselected
       let adjustedPurposes = new Set(newPurposes);
-
-      let oldPurposes = this.$refs.purposeTree.getTickedNodes()
-      .filter((node) => !_.isNil(node))
-      .map((node) => {
-        return node.key;
-      });
-      let oldSet = new Set(oldPurposes);
-      let newSet = new Set(newPurposes);
-      // use set theory to figure out what has been selected vs unselected
-      let addedSet = newSet.difference(oldSet);
-      let removedSet = oldSet.difference(newSet);
 
       // we need to select all parent nodes of new selections
       for (const addedPurpose of addedSet) {
@@ -1025,8 +1014,24 @@ export default Vue.extend({
         return this.priorityArea.purposes;
       },
       set: function (value) {
-        value = this.updatePurposes(value);
+        let oldPurposes = this.$refs.purposeTree.getTickedNodes()
+        .filter((node) => !_.isNil(node))
+        .map((node) => {
+          return node.key;
+        });
+        let oldSet = new Set(oldPurposes);
+        let newSet = new Set(value);
+        // use set theory to figure out what has been selected vs unselected
+        let addedSet = newSet.difference(oldSet);
+        let removedSet = oldSet.difference(newSet);
+
+        value = this.updatePurposes(value, addedSet, removedSet);
         this.valueChanged("purposes", value);
+
+        // update what nodes are expanded based on the tick selection
+        addedSet.forEach((tickedKey) => {
+          this.purposesExpanded.push(tickedKey);
+        });
 
         // if a purpose has been unticked, then automatically deselect any
         // associate flag that has been selected.

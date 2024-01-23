@@ -2,20 +2,27 @@
   <div class="scroll">
     <div class="column q-px-md q-gutter-y-sm">
       <div class="column q-gutter-y-sm">
-        <div v-if="!readonly" class="col">
+        <div v-if="!readonly" class="col q-gutter-sm">
           <div>
             This tool allows users to create an Area of Interest (AOI)
-            submission by either uploading a zipped shapefile of polygons
-            identified by an Area of Interest name (‘A_NAME’) or using the map
-            window to draw a polygon. Submissions can be made with either a
-            single polygon or multiple polygons but should be constrained to a
-            single geographic area with new submissions being used for different
-            geographic areas. Users can toggle preloaded layers on and off or
-            add a custom web map service to assist with their planning.
+            submission by either:
           </div>
           <div>
-            Subsequent forms build the associated metadata required for each
-            AOI. For more information please refer to the help file.
+            Uploading a zipped shapefile of polygons which include, at a minimum,
+            ingestible fields: Area of Interest name ('NAME') and assigned priority
+            ('PRIORITY') -  (High, Medium, Low, or NA). Supported formats: .shp,
+            GeoJSON, KML, GML.
+          </div>
+          <div>
+            Or using the map window to draw a polygon. Submissions can be made with
+            either a single polygon or multiple polygons but should be constrained
+            to a single geographic area with new submissions being used for different
+            geographic areas. Users can toggle preloaded layers on and off or add a
+            custom web map service to assist with their planning.
+          </div>
+          <div>
+            Subsequent forms within the tool build the associated metadata required
+            for each AOI. For more information please refer to the help file.
           </div>
         </div>
         <div v-if="!readonly" class="row q-gutter-x-md">

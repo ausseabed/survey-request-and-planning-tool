@@ -165,6 +165,29 @@ const featureToPriorityArea = async (feature) => {
     }
   }
 
+  // organisation priority
+  let orgPriority = getParameterCaseInsensitive(feature.properties, 'PRIORITY');
+  // attempt to catch most of the ways a user might provide priorities
+  // on the left is the user provided value, right is what it gets
+  // mapped to for consistency in the SCT database
+  const validPrioritiesMap = {
+    'high': 'High',
+    'medium': 'Medium',
+    'low': 'Low',
+    'na': 'NA',
+    'n/a': 'NA',
+    'none': 'NA',
+    '1': 'High',
+    '2': 'Medium',
+    '3': 'Low',
+    '0': 'NA',
+  }
+  if (!_.isNil(orgPriority) && orgPriority in validPrioritiesMap) {
+    orgPriority = orgPriority.toLowerCase()
+    let validPriority = validPrioritiesMap[orgPriority]
+    pa.organisationalPriority = validPriority
+  }
+
   // set the features geometry
   pa.geom = feature.geometry;
 

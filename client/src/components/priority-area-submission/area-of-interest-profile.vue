@@ -1042,6 +1042,13 @@ export default Vue.extend({
           this.purposesExpanded.push(tickedKey);
         });
 
+        // collapse nodes that have been unselected
+        removedSet.forEach((untickedKey) => {
+          this.purposesExpanded = this.purposesExpanded.filter((nodeKey) => {
+            return nodeKey != untickedKey;
+          })
+        });
+
         // if a purpose has been unticked, then automatically deselect any
         // associate flag that has been selected.
         let updatedPurposeFlags = this.priorityArea.purposeFlags.filter(

@@ -94,6 +94,15 @@
                     </div>
                   </div>
                 </template>
+                <template v-slot:default-body="prop">
+                  <div
+                    class="text-weight-light text-black"
+                    v-if="prop.node.children"
+                    style="padding-left: 52px"
+                  >
+                    Additional details are optional
+                  </div>
+                </template>
               </q-tree>
 
               <div class="col">
@@ -1100,4 +1109,13 @@ export default Vue.extend({
 .section-validation-fail {
   backgroundColor: '#ff0000';
 }
+
+.q-tree {
+  &::v-deep {
+    .q-tree__node-body {
+      padding: 0px;
+    }
+  }
+}
+
 </style>

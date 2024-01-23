@@ -1,6 +1,7 @@
 import simplify from '@turf/simplify';
 var tj = require('@mapbox/togeojson');
 import { DOMParser } from 'xmldom';
+var shp = require('shpjs');
 import { findGeometries, Geometry } from "geography-markup-language";
 import { featureCollection } from "@turf/helpers";
 import flip from "@turf/flip";

@@ -305,15 +305,33 @@
 
         <q-expansion-item
           expand-separator
-          label="Existing Data Assessment"
+          label="Existing Data Assessment *"
           icon="fact_check"
+          :header-style="{
+            color: getSectionValidation([
+              'existingDataSources',
+              'reasonForAoiRaise',
+            ])
+              ? '#000000'
+              : '#ff0000',
+          }"
         >
           <q-card>
+            <q-card-section
+              v-if="
+                !getSectionValidation(['existingDataSources', 'reasonForAoiRaise'])
+              "
+            >
+              <div style="color: #ff0000">
+                Please check which existing data sources have been considered, and select
+                a reason for why this Area of Intereset submission is being raised.
+              </div>
+            </q-card-section>
             <q-card-section class="q-gutter-y-xs">
               <div>
                 Please select all existing data sources you have considered,
                 and brief note on why this area of interest is not being
-                serviced to meet your needs.
+                serviced to meet your needs. *
               </div>
               <q-list dense>
                 <q-item
@@ -339,7 +357,7 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-              <div>Reason for Area of Interest to be raised.</div>
+              <div>Reason for Area of Interest to be raised. *</div>
               <q-option-group
                 dense
                 class="q-pl-md"

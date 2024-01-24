@@ -250,8 +250,8 @@ const TABS_INFO = [
             perceivedImpact: { required },
             organisationalPriority: { required },
 
-            existingDataSources: {},
-            reasonForAoiRaise: {},
+            existingDataSources: { required, minLength: minLength(1) },
+            reasonForAoiRaise: { required, minLength: minLength(1) },
             existingDataAssessmentComments: {},
 
             gridSize: { required },

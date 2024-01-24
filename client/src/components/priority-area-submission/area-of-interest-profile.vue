@@ -521,8 +521,16 @@
 
         <q-expansion-item
           expand-separator
-          label="Perceived Impact and Organisational Priority"
+          label="Perceived Impact and Organisational Priority *"
           icon="hardware"
+          :header-style="{
+            color: getSectionValidation([
+              'perceivedImpact',
+              'organisationalPriority',
+            ])
+              ? '#000000'
+              : '#ff0000',
+          }"
         >
           <q-card>
             <q-card-section class="q-gutter-y-xs">
@@ -539,7 +547,7 @@
               <form-field-validated-button-toggle
                 inline
                 :name="`priorityAreaSubmission.priorityAreas.$each.${index}.organisationalPriority`"
-                label="Organisational Priority"
+                label="Organisational Priority *"
                 :value="priorityArea.organisationalPriority"
                 @input="valueChanged('organisationalPriority', $event)"
                 :options="ORGANISATIONAL_PRIORITY_OPTIONS"
@@ -738,13 +746,6 @@ export default Vue.extend({
     },
 
     setDefaults() {
-      if (this.priorityArea.organisationalPriority == undefined) {
-        this.valueChanged(
-          "organisationalPriority",
-          this.ORGANISATIONAL_PRIORITY_OPTIONS[0]
-        );
-        this.setDirty(false);
-      }
       if (this.priorityArea.perceivedImpact == undefined) {
         this.valueChanged("perceivedImpact", this.PERCEIVED_IMPACT_OPTIONS[0]);
         this.setDirty(false);

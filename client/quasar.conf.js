@@ -88,7 +88,9 @@ module.exports = function (ctx) {
         'QBtnToggle',
         'QTree',
         'QRadio',
-        'QToggle'
+        'QToggle',
+        'QTimeline',
+        'QTimelineEntry',
       ],
 
       directives: [

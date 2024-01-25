@@ -168,6 +168,7 @@
                 HIPP REQUEST” or select an already existing record in your list
                 to modify.
               </div>
+              <hipp-timeline></hipp-timeline>
             </div>
             <sct-btn
               class="self-center full-width"
@@ -233,8 +234,14 @@ const _ = require("lodash");
 import { errorHandler } from "./mixins/error-handling";
 import { permission } from "./mixins/permission";
 
+import HippTimeline from './survey-request/hipp-timeline';
+
 export default Vue.extend({
   name: `MainHome`,
+
+  components: {
+    'hipp-timeline': HippTimeline,
+  },
 
   mixins: [errorHandler, permission],
 

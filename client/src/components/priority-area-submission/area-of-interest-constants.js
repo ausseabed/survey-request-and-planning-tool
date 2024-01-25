@@ -1749,6 +1749,7 @@ export const ECOSYSTEM_DATA = [
 ];
 
 export const ECOSYSTEM_COMPONENT_DATA = [
+    "Unknown or no ecosystem component target",
     "Benthic and cryptic fish",
     "Demersal fish",
     "Forest",

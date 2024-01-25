@@ -192,7 +192,7 @@
               <div class="q-pt-md">Ecosystem components</div>
               <q-list dense>
                 <q-item
-                  v-for="ecosystemComp of ECOSYSTEM_COMPONENT_DATA"
+                  v-for="ecosystemComp of ecosystemComponentData"
                   :key="'key-' + ecosystemComp"
                   tag="label"
                   v-ripple
@@ -202,7 +202,7 @@
                       size="sm"
                       :value="priorityArea.ecosystemComponents"
                       :val="ecosystemComp"
-                      @input="valueChanged('ecosystemComponents', $event)"
+                      @input="setEcosystemComponents($event)"
                       :disable="readonly"
                     />
                   </q-item-section>
@@ -957,6 +957,15 @@ export default Vue.extend({
 
       return Array.from(adjustedPurposes);
     },
+
+    setEcosystemComponents(selectedEcosystemComponents) {
+      // clear all other selected ecosystem components if the unknown option
+      // has been checked
+      if (selectedEcosystemComponents.includes("Unknown or no ecosystem component target")) {
+        selectedEcosystemComponents = ["Unknown or no ecosystem component target"];
+      }
+      this.valueChanged('ecosystemComponents', selectedEcosystemComponents);
+    }
   },
 
   watch: {
@@ -1051,6 +1060,18 @@ export default Vue.extend({
           return [unknownOption];
         } else {
           return this.ECOSYSTEM_DATA;
+        }
+      }
+    },
+    ecosystemComponentData: {
+      get: function () {
+        if (this.priorityArea.ecosystemComponents.includes('Unknown or no ecosystem component target')) {
+          let unknownOption = this.ECOSYSTEM_COMPONENT_DATA.find((v) => {
+            return v == 'Unknown or no ecosystem component target';
+          });
+          return [unknownOption];
+        } else {
+          return this.ECOSYSTEM_COMPONENT_DATA;
         }
       }
     },

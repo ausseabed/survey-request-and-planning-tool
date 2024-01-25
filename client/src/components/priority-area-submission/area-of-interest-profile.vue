@@ -748,7 +748,6 @@ export default Vue.extend({
     setDefaults() {
       if (this.priorityArea.perceivedImpact == undefined) {
         this.valueChanged("perceivedImpact", this.PERCEIVED_IMPACT_OPTIONS[0]);
-        this.setDirty(false);
       }
 
       this.ACTIVITIES = constants.ACTIVITIES;
@@ -772,6 +771,8 @@ export default Vue.extend({
       this.addTickStrategy(this.ECOSYSTEM_DATA);
       this.setActivitiesDisabled(this.readonly, this.ECOSYSTEM_DATA);
       this.ecosystemsExpanded = this.getDefaultExpansion(this.ecosystemsTicked);
+
+      this.setDirty(false);
     },
 
     setExpanded(expanded) {

@@ -173,7 +173,7 @@
                 in the submitted AOI?
               </div>
               <q-tree
-                :nodes="ECOSYSTEM_DATA"
+                :nodes="ecosystemData"
                 node-key="key"
                 :ticked.sync="ecosystemsTicked"
                 :expanded.sync="ecosystemsExpanded"
@@ -1035,8 +1035,24 @@ export default Vue.extend({
         return this.priorityArea.ecosystems;
       },
       set: function (value) {
+        if (value.includes('Unknown or no ecosystem target')) {
+          // clear the list of all other selections if unknown is selected
+          value = ['Unknown or no ecosystem target'];
+        }
         this.valueChanged("ecosystems", value);
       },
+    },
+    ecosystemData: {
+      get: function () {
+        if (this.ecosystemsTicked.includes('Unknown or no ecosystem target')) {
+          let unknownOption = this.ECOSYSTEM_DATA.find((v) => {
+            return v.label == 'Unknown or no ecosystem target';
+          });
+          return [unknownOption];
+        } else {
+          return this.ECOSYSTEM_DATA;
+        }
+      }
     },
     purposesTicked: {
       get: function () {

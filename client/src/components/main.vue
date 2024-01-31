@@ -267,14 +267,22 @@
                 class="full-width column"
               >
                 <q-separator style="height: 1px" />
-                <div class="row justify-end q-py-sm q-mx-md">
+                <div class="row justify-between q-gutter-x-sm q-pa-sm">
                   <sct-btn
-                    label="add request"
-                    align="right"
+                    class="col-grow "
+                    label="HydroScheme"
+                    target="_blank"
+                    href="https://www.hydro.gov.au/NHP/"
+                  >
+                    <q-tooltip> Australian Hydrographic Office - National Hydrography </q-tooltip>
+                  </sct-btn>
+                  <sct-btn
+                    class="col-grow"
+                    label="Add Request"
                     icon="add"
                     @click="addRequest"
                   >
-                    <q-tooltip> Create new HIPP request </q-tooltip>
+                    <q-tooltip> Create a new HIPP Request </q-tooltip>
                   </sct-btn>
                 </div>
               </div>

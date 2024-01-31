@@ -169,14 +169,24 @@
                 to modify.
               </div>
             </div>
-            <sct-btn
-              class="self-center full-width"
-              label="Add a HIPP Request"
-              icon="add"
-              @click="addRequest"
-            >
-              <q-tooltip> Create a new HIPP Request </q-tooltip>
-            </sct-btn>
+            <div class="row justify-between q-gutter-x-sm">
+              <sct-btn
+                class="col-grow "
+                label="HydroScheme"
+                target="_blank"
+                href="https://www.hydro.gov.au/NHP/"
+              >
+                <q-tooltip> Australian Hydrographic Office - National Hydrography </q-tooltip>
+              </sct-btn>
+              <sct-btn
+                class="col-grow"
+                label="Add a HIPP Request"
+                icon="add"
+                @click="addRequest"
+              >
+                <q-tooltip> Create a new HIPP Request </q-tooltip>
+              </sct-btn>
+            </div>
           </div>
         </q-expansion-item>
 

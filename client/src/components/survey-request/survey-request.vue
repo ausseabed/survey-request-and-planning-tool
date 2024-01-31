@@ -28,6 +28,9 @@
         </div>
       </div>
       <div>
+        <hipp-timeline-small></hipp-timeline-small>
+      </div>
+      <div>
         The HydroScheme Industry Partnership Program (HIPP) is an enduring partnership, with a request timeframe domain of 5-10 years. It aims to boost Australia's hydrographic industry capability allowing partners to acquire maritime survey data for the production of digital maps of Australia's seas and coastal areas. <b>The information collected within this submission is not made publicly available.</b>
       </div>
 
@@ -133,6 +136,7 @@ import { DirtyRouteGuard } from './../mixins/dirty-route-guard';
 import * as organisationMutTypes from "../../store/modules/organisation/organisation-mutation-types";
 import * as srMutTypes from '../../store/modules/survey-request/survey-request-mutation-types';
 
+import HippTimelineSmall from './hipp-timeline-small';
 
 const TABS_INFO = [
   {
@@ -277,6 +281,10 @@ const TABS_INFO = [
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
+
+  components: {
+    'hipp-timeline-small': HippTimelineSmall,
+  },
 
   async mounted() {
     const id = this.$route.params.id;

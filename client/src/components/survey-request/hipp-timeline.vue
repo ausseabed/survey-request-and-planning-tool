@@ -2,7 +2,7 @@
   <q-timeline color="secondary">
 
     <q-timeline-entry heading class="app-big-heading">
-      HIPP Timeline
+      Annual SCT Timeline
     </q-timeline-entry>
 
     <q-timeline-entry

@@ -168,7 +168,6 @@
                 HIPP REQUEST” or select an already existing record in your list
                 to modify.
               </div>
-              <hipp-timeline></hipp-timeline>
             </div>
             <sct-btn
               class="self-center full-width"
@@ -222,6 +221,7 @@
         </q-expansion-item>
 
       </q-list>
+      <div class="q-pl-lg"><hipp-timeline></hipp-timeline></div>
     </div>
   </div>
 </template>

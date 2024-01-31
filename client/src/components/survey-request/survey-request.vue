@@ -28,7 +28,7 @@
         </div>
       </div>
       <div>
-        The HydroScheme Industry Partnership Program (HIPP) is an enduring partnership, with a request timeframe domain of 5-10 years. It aims to boost Australia's hydrographic industry capability allowing partners to acquire maritime survey data for the production of digital maps of Australia's seas and coastal areas. <b>This information is not made publicly available.</b>
+        The HydroScheme Industry Partnership Program (HIPP) is an enduring partnership, with a request timeframe domain of 5-10 years. It aims to boost Australia's hydrographic industry capability allowing partners to acquire maritime survey data for the production of digital maps of Australia's seas and coastal areas. <b>The information collected within this submission is not made publicly available.</b>
       </div>
 
       <q-card class="col column">

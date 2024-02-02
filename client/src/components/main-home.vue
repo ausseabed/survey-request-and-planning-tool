@@ -159,7 +159,8 @@
             <div class="q-gutter-y-sm column">
               <div>
                 The Request has been specifically designed to support the
-                submission of planned survey programs to the Hydroscheme
+                submission of planned survey programs to the 
+                <a href="https://www.hydro.gov.au/NHP/" target="_blank">Hydroscheme</a>
                 Industry Partnership Program (HIPP).
               </div>
               <div>

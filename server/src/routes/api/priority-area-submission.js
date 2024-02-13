@@ -358,7 +358,13 @@ router.post(
     delete pas.deleted;
 
     pas.lastModified = Date.now();
-    pas.custodian = req.user.custodian;
+    if (isNew) {
+      // only set the custodian if this is a new record. Otherwise editing
+      // will change the custodian and may lock out the original custodian.
+      pas.custodian = req.user.custodian;
+    } else {
+      delete pas.custodian;
+    }
 
     // Remove the link between the upload processing task and this PAS. It is
     // assumed that by saving the user has reviewed all processed priority areas

@@ -78,6 +78,14 @@
       :readonly="readonly"
     >
     </form-field-validated-input>
+
+    <div
+      v-if="priorityAreaSubmission.custodian"
+      style="padding-top: 12px; padding-bottom: 8px;"
+    >
+      <div class="hint-text">Submission Custodian</div>
+      <div>{{ priorityAreaSubmission.custodian.name }}</div>
+    </div>
   </div>
 
 </template>

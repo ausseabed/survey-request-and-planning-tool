@@ -1506,6 +1506,10 @@ export const PURPOSE_DATA = [
             {
                 label: "Environmental economic accounting",
                 flags: ["Prospective", "Existing"]
+            },
+            {
+                label: "Precompetitive Geoscience",
+                flags: undefined
             }
         ],
         values: [

@@ -171,16 +171,23 @@ router.get(
   ],
   asyncMiddleware(async function (req, res) {
 
-  let plan = await getConnection()
-  .getRepository(SurveyPlan)
-  .findOne(
-    req.params.id,
-    {
-      relations: [
-        "custodians",
-      ]
-    }
-  );
+  const plan = await getConnection()
+  .createQueryBuilder()
+  .select(
+    [
+      `jsonb_build_object(
+        'type', 'Feature',
+        'id', id,
+        'geometry', ST_AsGeoJSON(area_of_interest)::jsonb,
+        'properties', jsonb_build_object('id', id, 'surveyName', "surveyName")
+      ) as geojson`,
+      `"surveyName" as surveyName`,
+      `deleted as deleted`
+    ]
+  )
+  .from(SurveyPlan)
+  .where(`"id" = :id`, { id: req.params.id })
+  .getRawOne();
 
   if (!plan || plan.deleted) {
     let err = Boom.notFound(
@@ -188,19 +195,17 @@ router.get(
     throw err;
   }
 
-  const aoiMultipolygon = plan.areaOfInterest;
-
-  const collection = geometryCollection([
-    aoiMultipolygon,
+  const collection = featureCollection([
+    plan.geojson,
   ]);
 
   let filename = _.isNil(plan.surveyName) ? 'plan' : plan.surveyName
   filename = filename.replace(/[^a-zA-Z0-9 ]*/g, "")   // remove special chars
   filename = filename.replace(/ /g, "-")   // replace spaces with dash
   filename = `${filename}-asb-rapt-download.json`;
-  // res.set(
-  //   'Content-disposition', `attachment; filename=${filename}`);
-  return res.json(collection.geometry);
+  res.set(
+    'Content-disposition', `attachment; filename=${filename}`);
+  return res.json(collection);
 }));
 
 

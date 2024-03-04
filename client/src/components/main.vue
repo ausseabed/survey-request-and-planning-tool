@@ -812,7 +812,7 @@ export default Vue.extend({
 
     styleFunction(sr) {
       return (f) => {
-        const srid = f.geometry.properties.id;
+        const srid = (_.isNil(f.geometry.properties) ? f.id : f.geometry.properties.id )
         return {
           weight: 2,
           color:

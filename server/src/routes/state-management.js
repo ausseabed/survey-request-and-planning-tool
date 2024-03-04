@@ -38,6 +38,14 @@ const planStates = {
           custodianPermission: 'canReviseCustodianRecordState',
         },
       },
+      ARCHIVE: {
+        target: 'archived',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canReviseAllRecordState',
+          custodianPermission: 'canReviseCustodianRecordState',
+        },
+      }
     },
     entry: ['makeReadonly'],
     exit: ['logAction'],
@@ -56,6 +64,21 @@ const planStates = {
       }
     },
     entry: ['makeWriteable'],
+    exit: ['logAction'],
+  },
+  archived: {
+    on: {
+      RESTORE: {
+        target: 'draft',
+        cond: {
+          type: 'userPermissionGuard',
+          allPermission: 'canReviseAllRecordState',
+          custodianPermission: 'canReviseCustodianRecordState',
+        },
+        actions: [],
+      }
+    },
+    entry: ['makeReadonly'],
     exit: ['logAction'],
   },
 }

@@ -794,7 +794,6 @@ import { DirtyRouteGuard } from './../mixins/dirty-route-guard'
 import { permission } from './../mixins/permission'
 import { errorHandler } from './../mixins/error-handling'
 import * as types from '../../store/modules/tech-spec/tech-spec-mutation-types'
-const uuidv4 = require('uuid/v4');
 
 const timespan = require('readable-timespan');
 timespan.set({

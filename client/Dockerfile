@@ -24,7 +24,7 @@ RUN ls -al /code/node_modules
 
 RUN npm install && npm run build
 
-FROM nginx:1.13.9 as nginx
+FROM nginx:1.25.4 as nginx
 
 # Set up Nginx
 ADD build/nginx-www.conf /etc/nginx/nginx.conf

@@ -1,3 +1,13 @@
+# When run in dev mode only the first stage of this docker file is utilised.
+# In prod mode the first stage builds the quasar app and copies the dist
+# artifacts into the nginx container where it's hosted as simple static 
+# files.
+#
+# The nginx container is quite up to date, but the node:12 image is now somewhat
+# dated. SCT uses quasar v1 (VueJS 2) and migrating to a newer version of nodeJS
+# is not possible withough upgrading to quasar v2 (VueJS 3), which is a significant
+# undertaking.
+
 FROM node:12 as builder
 
 ENV APPDIR=/code

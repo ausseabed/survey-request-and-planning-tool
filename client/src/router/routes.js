@@ -17,7 +17,6 @@ import SurveyFile from 'components/survey-file.vue'
 import SurveyPlanDeliverables from 'components/survey-plan/survey-plan-deliverables.vue'
 import SurveyPlanMain from 'components/survey-plan/survey-plan-main.vue'
 import SurveyPlanSummary from 'components/survey-plan/survey-plan-summary.vue'
-import SurveyPlanTechnicalSpecification from 'components/survey-plan/survey-plan-technical-specification.vue'
 import SurveyRequest from 'components/survey-request/survey-request.vue'
 import SurveyRequestAreasOfInterest from 'components/survey-request/survey-request-areas-of-interest.vue'
 import SurveyRequestBusinessCase from 'components/survey-request/survey-request-business-case.vue'
@@ -102,10 +101,6 @@ const routes = [
       {
         path: 'summary',
         component: SurveyPlanSummary,
-      },
-      {
-        path: 'specifications',
-        component: SurveyPlanTechnicalSpecification,
       },
       {
         path: 'deliverables',

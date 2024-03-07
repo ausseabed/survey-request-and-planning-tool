@@ -133,7 +133,7 @@ MAP
             full outer join (
               SELECT survey_plan.id as id, string_agg(DISTINCT data_capture_type.name, ', ') as dctname FROM survey_plan LEFT JOIN survey_plan_data_capture_types_data_capture_type ON survey_plan.id = survey_plan_data_capture_types_data_capture_type.\"surveyPlanId\" INNER JOIN data_capture_type ON survey_plan_data_capture_types_data_capture_type.\"dataCaptureTypeId\" = data_capture_type.id GROUP BY survey_plan.id
             ) dctmerge on dctmerge.id = sp.id
-            WHERE sp.deleted = false AND sp.public = true AND rs.state = 'finalised'
+            WHERE sp.deleted = false AND sp.public = true AND rs.state = 'finalised' AND sp.status != 'Abandoned'
           ) as subquery using unique spid"
     CLASS
       NAME "Complete"

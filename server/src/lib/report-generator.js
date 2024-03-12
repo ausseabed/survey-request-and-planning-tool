@@ -4,7 +4,7 @@ var expressions= require('angular-expressions')
 import * as Boom from '@hapi/boom';
 var Docxtemplater = require('docxtemplater')
 import { getConnection } from 'typeorm';
-var ImageModule = require('docxtemplater-image-module-free')
+var ImageModule = require('@slosarek/docxtemplater-image-module-free')
 var InspectModule = require("docxtemplater/js/inspect-module")
 var PizZip = require('pizzip')
 var moment = require('moment')

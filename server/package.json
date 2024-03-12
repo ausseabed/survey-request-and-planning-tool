@@ -32,7 +32,7 @@
     "docxtemplater": "^3.10.1",
     "docxtemplater-image-module-free": "^1.1.1",
     "express": "4.18.3",
-    "express-request-proxy": "^2.2.2",
+    "express-http-proxy": "^2.0.0",
     "formidable": "^1.2.1",
     "fstream": "^1.0.12",
     "geography-markup-language": "^0.2.0",

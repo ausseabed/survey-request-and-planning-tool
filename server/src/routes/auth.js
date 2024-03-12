@@ -1,7 +1,6 @@
 ﻿var express = require('express');
 var logger = require('../lib/logger').logger;
 var logIdGen = require('../lib/logger').logId;
-var Request = require('request');
 var Axios = require('axios');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');

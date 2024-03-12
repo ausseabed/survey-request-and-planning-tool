@@ -14,7 +14,7 @@
     "name": "Lachlan Hurst"
   },
   "dependencies": {
-    "@babel/runtime": "^7.11.2",
+    "@babel/runtime": "^7.24.0",
     "@hapi/boom": "^9.1.0",
     "@mapbox/togeojson": "^0.16.2",
     "@slosarek/docxtemplater-image-module-free": "^1.2.0",

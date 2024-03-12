@@ -1,3 +1,5 @@
+# node 20 will be maintained through till April 2026
+# this image uses debian bookworm, supported through till June 2028
 FROM node:20 as builder
 
 # libreoffice is used to convert word documents to pdf (required by

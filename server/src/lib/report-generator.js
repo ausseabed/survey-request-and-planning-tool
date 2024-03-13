@@ -202,6 +202,7 @@ export class ReportGenerator {
         data['recordState'] = {
           'state': 'draft',
           'version': 0,
+          'created': undefined,
         }
       } else {
         data['recordState'] = this.entity.recordState
@@ -402,6 +403,7 @@ export class HippRequestReportGenerator extends ReportGenerator {
       'costBenefit',
       'recordState.state',
       'recordState.version',
+      'recordState.created',
     ]
     return rawFields
   }

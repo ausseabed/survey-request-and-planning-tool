@@ -9,7 +9,6 @@ var InspectModule = require("docxtemplater/js/inspect-module")
 var PizZip = require('pizzip')
 var moment = require('moment')
 const { Parser } = require('json2csv')
-var sharp = require('sharp')
 
 import * as ReferenceSystems from './reference-system'
 import { SurveyRequest } from './entity/survey-request'

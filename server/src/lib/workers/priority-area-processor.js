@@ -3,7 +3,6 @@ import * as Boom from '@hapi/boom';
 import { getConnection } from 'typeorm';
 import { createConnection } from "typeorm";
 var Axios = require('axios');
-var shp = require('shpjs');
 var sharp = require('sharp');
 import { getFeaturesFromGml, getFeaturesFromKml, getFeaturesFromJson,
   getFeaturesFromZip } from './worker-utils';

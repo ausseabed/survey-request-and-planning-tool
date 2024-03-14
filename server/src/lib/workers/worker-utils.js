@@ -16,7 +16,7 @@ export const processGeojson = (geojson) => {
 };
   
 export const getFeaturesFromZip = async (data) => {
-  let geojson = shp.parseZip(data);
+  let geojson = await shp.parseZip(data);
   return processGeojson(geojson);
 };
   

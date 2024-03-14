@@ -22,7 +22,7 @@ const router = express.Router()
 async function processMarineParkData(data, filename) {
   console.log(`processing ${filename}`);
 
-  let geojson = shp.parseZip(data);
+  let geojson = await shp.parseZip(data);
   let features = geojsonToFeatureList(geojson);
 
   let pasQuery = await getConnection()

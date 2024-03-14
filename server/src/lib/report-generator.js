@@ -1,5 +1,4 @@
 import _ from 'lodash'
-var Axios = require('axios')
 var expressions= require('angular-expressions')
 import * as Boom from '@hapi/boom';
 var Docxtemplater = require('docxtemplater')

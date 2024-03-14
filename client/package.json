@@ -14,7 +14,7 @@
     "@quasar/extras": "^1.16.9",
     "@turf/helpers": "^6.5.0",
     "@turf/simplify": "^5.1.5",
-    "axios": "^0.21.2",
+    "axios": "^1.6.7",
     "js-file-download": "^0.4.12",
     "leaflet": "^1.6.0",
     "openlayers": "^4.6.5",

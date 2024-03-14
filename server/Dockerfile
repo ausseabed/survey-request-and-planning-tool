@@ -30,8 +30,4 @@ ADD ssh_keys $APPDIR/ssh_keys
 # Do the package install and build in one step to reduce size of Docker image
 RUN yarn install && yarn run build
 
-# sharp requires this special "--ignore-engines" arg to install correctly
-# it would be inappropriate to apply this to all dependencies
-RUN yarn add sharp --ignore-engines
-
 CMD bash -c "typeorm migration:run && yarn run start"

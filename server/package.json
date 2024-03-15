@@ -34,7 +34,7 @@
     "docxtemplater": "^3.10.1",
     "express": "4.18.3",
     "express-http-proxy": "^2.0.0",
-    "formidable": "^1.2.1",
+    "formidable": "^3.5.1",
     "fstream": "^1.0.12",
     "geography-markup-language": "^0.2.0",
     "json-rules-engine": "5.0.3",

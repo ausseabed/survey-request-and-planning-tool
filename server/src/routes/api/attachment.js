@@ -228,14 +228,14 @@ router.get(
 
 async function saveFile(file, entity, attachRepo) {
   let attachment = new Attachment();
-  attachment.fileName = file.name;
+  attachment.fileName = file.originalFilename;
   // UTC milliseconds (converted to date by TypeORM transformer)
   attachment.created = Date.now();
 
   const storage = "db";
   attachment.storage = storage;
 
-  const data = fs.readFileSync(file.path);
+  const data = fs.readFileSync(file.filepath);
   attachment.blob = data;
 
   attachment = await getConnection()
@@ -276,8 +276,7 @@ router.put(
 
   const attachRepo = getConnection().getRepository(attachDetails.attachment)
 
-
-  new formidable.IncomingForm().parse(req)
+  const form = formidable({})
   .on('field', (name, field) => {
     console.log('Field', name, field)
   })
@@ -295,6 +294,7 @@ router.put(
   .on('end', () => {
 
   })
+  await form.parse(req)
 }));
 
 

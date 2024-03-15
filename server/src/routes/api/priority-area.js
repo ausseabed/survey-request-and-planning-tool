@@ -173,13 +173,13 @@ router.put(
     task.statusMessage = "Initialising...";
     let fields = {};
 
-    new formidable.IncomingForm().parse(req)
+    const form = formidable({})
       .on('field', (name, field) => {
         fields[name] = field;
       })
       .on('file', async (name, file) => {
-        task.blobFileName = file.name;
-        const data = fs.readFileSync(file.path);
+        task.blobFileName = file.originalFilename;
+        const data = fs.readFileSync(file.filepath);
         task.blob = data;
       })
       .on('aborted', () => {
@@ -227,6 +227,8 @@ router.put(
         });
         res.json({ taskId: taskId });
       });
+
+    await form.parse(req)
 
   }));
 

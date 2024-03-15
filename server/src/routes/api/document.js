@@ -138,13 +138,13 @@ router.put(
   doc.storage = 'db'
   doc.mimeType = 'application/pdf'
 
-  new formidable.IncomingForm().parse(req)
+  const form = formidable({})
   .on('field', (name, field) => {
     doc[name] = field
   })
   .on('file', async (name, file) => {
-    doc.fileName = file.name
-    const data = fs.readFileSync(file.path)
+    doc.fileName = file.originalFilename
+    const data = fs.readFileSync(file.filepath)
     doc.blob = data
   })
   .on('aborted', () => {
@@ -158,6 +158,9 @@ router.put(
     await saveAndUpdateDocument(doc)
     res.end();
   })
+
+  await form.parse(req)
+
 }));
 
 

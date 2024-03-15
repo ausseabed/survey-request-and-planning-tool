@@ -72,13 +72,13 @@ router.put(
     let data = undefined;
     let filename = undefined;
 
-    new formidable.IncomingForm().parse(req)
+    const form = formidable({})
       .on('field', (name, field) => {
         doc[name] = field
       })
       .on('file', async (name, file) => {
-        filename = file.name
-        data = fs.readFileSync(file.path)
+        filename = file.originalFilename
+        data = fs.readFileSync(file.filepath)
       })
       .on('aborted', () => {
         console.error('Request aborted by the user')
@@ -91,6 +91,9 @@ router.put(
         await processMarineParkData(data, filename);
         res.end();
       })
+
+    await form.parse(req)
+
   }));
 
 

@@ -280,13 +280,13 @@ router.put(
   // refer: https://stackoverflow.com/questions/4212861/what-is-a-correct-mime-type-for-docx-pptx-etc
   rt.mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 
-  new formidable.IncomingForm().parse(req)
+  const form = formidable({})
   .on('field', (name, field) => {
     rt[name] = field
   })
   .on('file', async (name, file) => {
-    rt.fileName = file.name
-    const data = fs.readFileSync(file.path)
+    rt.fileName = file.originalFilename
+    const data = fs.readFileSync(file.filepath)
     validateData(data, rt)
     rt.blob = data
   })
@@ -301,6 +301,9 @@ router.put(
     await saveAndUpdateReportType(rt)
     res.end();
   })
+
+  await form.parse(req)
+
 }));
 
 

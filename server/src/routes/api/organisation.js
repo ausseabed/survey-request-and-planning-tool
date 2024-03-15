@@ -249,7 +249,7 @@ async function processOrganisationCsv(file) {
   return new Promise(async (resolve, reject) => {
     try {
 
-      const filename = file.name;
+      const filename = file.originalFilename;
 
       const resObj = {
         success: false,
@@ -283,7 +283,7 @@ async function processOrganisationCsv(file) {
           console.log(resObj);
           resolve(resObj)
       });
-      await fs.createReadStream(file.path).pipe(parser);
+      await fs.createReadStream(file.filepath).pipe(parser);
 
     } catch(error) {
       return reject(error);
@@ -299,7 +299,7 @@ router.put(
   [isAuthenticated, permitPermission('canEditOrganisation')],
   asyncMiddleware(async function (req, res) {
 
-  new formidable.IncomingForm().parse(req)
+  const form = formidable({})
   .on('field', (name, field) => {
     console.log('Field', name, field)
   })
@@ -317,6 +317,9 @@ router.put(
   .on('end', () => {
 
   })
+
+  await form.parse(req)
+
 }));
 
 

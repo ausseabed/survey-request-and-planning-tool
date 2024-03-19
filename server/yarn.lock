@@ -1313,10 +1313,10 @@ aggregate-error@^4.0.0:
     clean-stack "^4.0.0"
     indent-string "^5.0.0"
 
-angular-expressions@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/angular-expressions/-/angular-expressions-1.1.2.tgz#9115a9f36c252ac83246bc49cb26802f84bf622f"
-  integrity sha512-nTu8idKKtQeUGSY+Wk0x/jhM+m0fnqK7XlYdLmfKLqcrn3TRbkGqxID4pfste3qPJq7zQeliGIlIY3VivC/rpQ==
+angular-expressions@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/angular-expressions/-/angular-expressions-1.2.1.tgz#b0647a01ed564fa1a6a1b8400f3d50633208d452"
+  integrity sha512-pUnlViwIJ0L3KXh1a5gJGuMuGvxwbTbxkGINt7F6259p5UtksRpQ9Q5GhYb6VyfVfKtR65QAJgDhml3zpgmFuA==
 
 ansi-regex@^2.0.0:
   version "2.1.1"

@@ -15,7 +15,7 @@
     "@turf/area": "^6.5.0",
     "@turf/helpers": "^6.5.0",
     "@turf/simplify": "^5.1.5",
-    "axios": "^0.21.2",
+    "axios": "^1.6.8",
     "js-file-download": "^0.4.12",
     "leaflet": "^1.6.0",
     "quasar": "^1.22.10",

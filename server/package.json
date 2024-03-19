@@ -22,7 +22,7 @@
     "@turf/helpers": "^6.5.0",
     "@turf/simplify": "^5.1.5",
     "@turf/truncate": "^6.0.1",
-    "@turf/union": "^6.0.3",
+    "@turf/union": "^6.5.0",
     "@xmldom/xmldom": "^0.8.10",
     "angular-expressions": "^1.1.2",
     "archiver": "^7.0.1",

@@ -203,7 +203,116 @@
             <div class="text-h6">Survey Plan</div>
           </q-card-section>
           <q-card-section class="column">
-            <div ref="mapDiv" id="mapDiv" style="height:350px;"></div>
+            <l-map
+              style="min-height: 400px"
+              class="col rounded-borders"
+              ref="surveyPlanMap"
+              :zoom="zoom"
+              :center="center"
+              :options="{ attributionControl: false }"
+              @click="mapClicked"
+            >
+              <l-wms-tile-layer
+                :base-url="mapBaseUrl"
+                layers="World_Bathymetry_Image"
+                name="WorldBathymetry Image"
+                layer-type="base"
+              >
+              </l-wms-tile-layer>
+              <l-wms-tile-layer
+                v-if="showSurveyLayer"
+                base-url="map/wms"
+                layers="Survey_Plans"
+                name="Upcoming Surveys"
+                :transparent="true"
+                :opacity="0.5"
+                format="image/png"
+              >
+              </l-wms-tile-layer>
+              <l-wms-tile-layer
+                v-if="showAoiLayer"
+                base-url="map/wms"
+                layers="areas_of_interest"
+                name="areas_of_interest"
+                :transparent="true"
+                :opacity="0.5"
+                format="image/png"
+              >
+              </l-wms-tile-layer>
+              <l-wms-tile-layer
+                v-if="showMarineParksLayer"
+                base-url="map/wms"
+                layers="Marine_Parks"
+                name="Marine Parks"
+                :transparent="true"
+                :opacity="0.5"
+                format="image/png"
+              >
+              </l-wms-tile-layer>
+              <l-geo-json
+                v-if="higlightedIntersectingSurveyPlan"
+                :geojson="higlightedIntersectingSurveyPlan"
+                :optionsStyle="higlightedIntersectingSurveyPlanMapStyle"
+              />
+              <l-geo-json
+                v-if="intersectingSurveyPlans"
+                :geojson="intersectingSurveyPlans"
+                :optionsStyle="intersectingSurveyPlansMapStyle"
+              />
+              <l-geo-json
+                v-if="surveyPlan.areaOfInterest"
+                ref="surveyPlanLayer"
+                :geojson="surveyPlan.areaOfInterest"
+                :optionsStyle="surveyPlanMapStyle"
+                
+              />
+              <l-layer-group ref="popz">
+                <l-popup
+                  :latLng="sfgLatLng"
+                  :options="{ maxWidth: 300, minWidth: 100 }"
+                >
+                  <span>{{ sfgText[0] }}</span> <br />
+                  <span>{{ sfgText[1] }}</span>
+                </l-popup>
+              </l-layer-group>
+              <template v-if="sfg">
+                <l-geo-json :geojson="sfg" :optionsStyle="sfgStyle">
+                </l-geo-json>
+              </template>
+
+              <l-control position="bottomleft">
+                <div class="column text-white">
+                  <q-checkbox
+                    v-model="showSurveyLayer"
+                    label="Show upcoming survey layer"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                  <q-checkbox
+                    v-model="showAoiLayer"
+                    label="Show published areas of interest"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                  <q-checkbox
+                    v-model="showMarineParksLayer"
+                    label="Show marine parks layer"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                  <q-checkbox
+                    v-model="showOtherPasLayer"
+                    label="Show my organisation submissions"
+                    size="xs"
+                    dark
+                  >
+                  </q-checkbox>
+                </div>
+              </l-control>
+            </l-map>
 
             <div class="row">
               <template v-if="!readonly">
@@ -213,7 +322,7 @@
                 </div>
                 <div v-else
                   class="q-body-1 text-faded col">
-                  Drag and drop shapefile or geojson onto map. Note: Shapefiles must be uploaded as a single zip file including all shapefile 'sidecar' files.
+                  Click the upload button to load the survey plan area. Note: Shapefiles must be uploaded as a single zip file including all shapefile 'sidecar' files.
                 </div>
               </template>
               <template v-else>
@@ -722,12 +831,22 @@ timespan.set({
   millisecond: false
 });
 
-import axios from 'axios';
-const path = require('path');
-
 import { required, email, minLength } from 'vuelidate/lib/validators';
 
-import OlMap from './../olmap/olmap';
+var shp = require('shpjs');
+import simplify from '@turf/simplify';
+import { latLng, Util } from "leaflet";
+import {
+  LMap,
+  LWMSTileLayer,
+  LControlLayers,
+  LLayerGroup,
+  LPopup,
+} from "vue2-leaflet";
+import area from '@turf/area';
+
+import * as MapConstants from "../olmap/map-constants";
+import { surveyPlan } from 'src/store/modules/survey-plan/survey-plan-getters';
 
 // custom validators
 const validDataCaptureType = (value, vm) => {
@@ -776,7 +895,13 @@ const otherSurveyPurpose = {
 
 export default Vue.extend({
   mixins: [DirtyRouteGuard, errorHandler, permission],
+
   components: {
+    LMap,
+    LControlLayers,
+    LLayerGroup,
+    LPopup,
+    "l-wms-tile-layer": LWMSTileLayer,
   },
 
   beforeMount() {
@@ -784,31 +909,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    var olmap = OlMap(this.$refs.mapDiv, {
-      basemap: "osm"
-    })
-    olmap.initMap(false);
-    this.map = olmap;
-    this.map.onAdd = (geojson) => {
-      this.setAoi(geojson);
-    }
-    this.map.onFileAddStart = () => {
-      this.addingFile = true;
-    }
-    this.map.onFileAddDone = () => {
-      this.addingFile = false;
-    }
-    this.map.onFileAddBad = (msg) => {
-      this.$q.dialog({
-        title: 'Error adding file',
-        message: msg,
-        ok: 'Ok'
-      })
-    }
-
     this.fetchData();
-
-    if (this.aoiUrl) { this.map.addGeojsonUrl(this.aoiUrl) }
   },
 
   methods: {
@@ -936,7 +1037,6 @@ export default Vue.extend({
 
     fetchData () {
       this.matchingProjMetas = undefined;
-      this.map.clear();
 
       this.setSurveyApplicationGroupNameOther(undefined)
       this.setSurveyApplicationNameOther(undefined)
@@ -973,10 +1073,6 @@ export default Vue.extend({
               this.setSelectedSurveyApplication(
                 surveyPlan.surveyApplication);
             }
-          }
-
-          if (!_.isNil(surveyPlan.areaOfInterest)) {
-            this.map.addGeojsonFeature(surveyPlan.areaOfInterest);
           }
         });
       } else {
@@ -1209,7 +1305,7 @@ export default Vue.extend({
           f.id = mpm.id;
           return f;
         });
-        this.map.setGeojsonFeatureIntersecting(areaOfInterests);
+        this.intersectingSurveyPlans = areaOfInterests
       })
       .catch((e) => {
         this.notify('negative', 'Error uploading Aoi to server.')
@@ -1219,14 +1315,72 @@ export default Vue.extend({
     clearIntersectionCheckResults() {
       this.intersectionCheckRun = false;
       this.matchingProjMetas = undefined;
-      this.map.setGeojsonFeatureIntersecting([]);
+      this.intersectingSurveyPlans = undefined;
     },
 
     selectAreaOfInterestFile () {
       this.$refs.fileInput.click();
     },
     setAreaOfInterestFile (event) {
-      this.map.addFile(event.target.files[0]);
+      this.addFile(event.target.files[0]);
+    },
+    onFileAddStart() {
+      this.addingFile = true;
+    },
+    onFileAddDone() {
+      this.addingFile = false;
+    },
+    onFileAddBad(msg) {
+      this.notifyError(msg);
+    },
+    onAdd(geojson) {
+      console.log(geojson);
+    },
+    addFile (file) {
+      this.onFileAddStart();
+
+      var ext = file.name.split('.').pop();
+      var features = null;
+      if (ext == 'zip') {
+        var reader = new FileReader();
+        reader.onload = (function (e) {
+          shp(e.target.result).then(function (geojson) {
+
+            var smplOptions = {tolerance: 0.0005, highQuality: false};
+            geojson = simplify(geojson, smplOptions);
+
+            console.log(geojson)
+
+            this.update('surveyPlan.areaOfInterest', geojson)
+
+            this.onFileAddDone();
+
+          }.bind(this));
+        }).bind(this);
+        reader.readAsArrayBuffer(file);
+      } else if (ext == 'json' || ext == 'geojson') {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const jsonObj = JSON.parse(event.target.result);
+          features = jsonObj;
+          var olf = (new ol.format.GeoJSON()).readFeatures(features);
+
+          this.addFeatures(this.source, olf);
+          this.onAdd(features);
+          this.onFileAddDone();
+        };
+        reader.readAsText(file);
+      } else {
+        // then we don't know what the file is, or how to support it so let the
+        // user know.
+        let msg = "Supported formats are geojson (.json, .geojson) and zipped shapefiles (.zip)"
+        if (ext == 'shp') {
+          msg = "To upload a shapefile please include the shapefile and associated 'sidecar' (.shx, .prj, .dbx, etc) files into a single zip file."
+        }
+
+        this.onFileAddDone();
+        this.onFileAddBad(msg);
+      }
     },
 
     getFormData() {
@@ -1277,11 +1431,19 @@ export default Vue.extend({
 
     mouseleaveMatchingProjMeta() {
       //clears selection in map
-      this.map.highlightFeatureId(undefined);
+      this.higlightedIntersectingSurveyPlan = undefined;
+      // this.map.highlightFeatureId(undefined);
     },
 
     mouseoverMatchingProjMeta(matchingProjMeta) {
-      this.map.highlightFeatureId(matchingProjMeta.id);
+      // debugger
+      let newHighlightedItem = undefined;
+      for (const f of this.intersectingSurveyPlans) {
+        if (f.id == matchingProjMeta.id) {
+          newHighlightedItem = f
+        }
+      }
+      this.higlightedIntersectingSurveyPlan = newHighlightedItem
     },
 
     stateUpdated({newState, oldState}) {
@@ -1315,6 +1477,91 @@ export default Vue.extend({
       })
     },
 
+    getFeatureInfoUrl: function (latlng, layerName) {
+      // Construct a GetFeatureInfo request URL given a point
+      const mapObject = this.$refs.surveyPlanMap.mapObject;
+
+      const lBounds = mapObject.getBounds();
+      const wmsBounds = [
+        lBounds.getSouth(),
+        lBounds.getWest(),
+        lBounds.getNorth(),
+        lBounds.getEast(),
+      ];
+
+      var point = mapObject.latLngToContainerPoint(latlng, mapObject.getZoom()),
+        size = mapObject.getSize(),
+        params = {
+          request: "GetFeatureInfo",
+          service: "WMS",
+          crs: "EPSG:4326",
+          styles: "",
+          version: "1.3.0",
+          bbox: wmsBounds,
+          height: size.y,
+          width: size.x,
+          layers: layerName,
+          query_layers: layerName,
+          info_format: "application/json",
+        };
+
+      params[params.version === "1.3.0" ? "i" : "x"] = point.x;
+      params[params.version === "1.3.0" ? "j" : "y"] = point.y;
+
+      const featureUrl =
+        "map/wms" + Util.getParamString(params, "map/wms", true);
+
+      return featureUrl;
+    },
+
+    mapClicked(e) {
+      this.sfg = undefined;
+
+      let layerName = undefined;
+      if (this.showSurveyLayer) {
+        layerName = "Survey_Plans";
+      } else if (this.showAoiLayer) {
+        layerName = "areas_of_interest";
+      } else if (this.showMarineParksLayer) {
+        layerName = "Marine_Parks";
+      }
+
+      this.sfgLatLng = e.latlng;
+
+      const featureInfoUrl = this.getFeatureInfoUrl(e.latlng, layerName);
+      Vue.axios.get(featureInfoUrl).then((res) => {
+        if (res.data.features.length == 0) {
+          this.sfg = undefined;
+          this.$refs.popz.mapObject.closePopup();
+        } else {
+          this.sfg = res.data;
+          const aFeature = res.data.features[0];
+          if (layerName == "Survey_Plans") {
+            this.sfgText = [
+              aFeature.properties.Commissioning_Organisations,
+              aFeature.properties.Contact_email,
+            ];
+          } else if (layerName == "areas_of_interest") {
+            this.sfgText = [
+              aFeature.properties.Submitting_Organisation,
+              aFeature.properties.Contact_email,
+            ];
+          } else if (layerName == "Marine_Parks") {
+            this.sfgText = [
+              aFeature.properties.netname,
+              aFeature.properties.resname,
+            ];
+          }
+          this.$refs.popz.mapObject.openPopup(this.sfgLatLng);
+        }
+      });
+    },
+
+    geometrySet(info) {
+      const layerBounds = info.getBounds().pad(0.2);
+      const map = this.$refs.surveyPlanMap;
+      map.setBounds(layerBounds);
+    },
   },
 
   computed: {
@@ -1387,10 +1634,10 @@ export default Vue.extend({
     },
 
     calculatedArea: function() {
-      if (_.isNil(this.map)) {
+      if (_.isNil(this.surveyPlan.areaOfInterest)) {
         return undefined
       } else {
-        let calcArea = this.map.getArea()
+        let calcArea = area(this.surveyPlan.areaOfInterest)
         let strArea = undefined
         if (calcArea > 10000) {
           strArea = `${Math.round(calcArea / 1000000 * 100) / 100} km²`
@@ -1464,6 +1711,23 @@ export default Vue.extend({
       }
       return this.tmpMoratoriumDateEntry
     },
+
+    mapBaseUrl() {
+      return MapConstants.LEAFLET_BASE_LAYER;
+    },
+
+    center() {
+      var center = latLng(
+        (MapConstants.WMTS_DEFAULT_EXTENT[1] +
+          MapConstants.WMTS_DEFAULT_EXTENT[3]) /
+          2,
+        (MapConstants.WMTS_DEFAULT_EXTENT[0] +
+          MapConstants.WMTS_DEFAULT_EXTENT[2]) /
+          2
+      );
+      return center;
+    },
+
   },
 
   validations() {
@@ -1536,11 +1800,14 @@ export default Vue.extend({
       }
     },
     'areaOfInterest': function (newAoi, oldAoi) {
-      this.map.clear();
-      if (newAoi) {
-        this.map.addGeojsonFeature(newAoi);
-        this.map.fit();
-      }
+      // need to use setTimeout as this watched is called before the layer
+      // is updated, therefore the bounds get set to the last geom
+      setTimeout(() => {
+        if (newAoi) {
+          let aoiBounds = this.$refs.surveyPlanLayer.getBounds().pad(0.2)
+          this.$refs.surveyPlanMap.fitBounds(aoiBounds)
+        }
+      });
       this.matchingProjMetas = [];
     },
     'selectedSurveyApplicationGroup': function (newAoi, oldAoi) {
@@ -1570,7 +1837,25 @@ export default Vue.extend({
     return {
       addingFile: false,
       intersectionCheckRun: false,
-      map: null,
+      // map: null,
+
+      zoom: 3,
+      intersectingSurveyPlansMapStyle: { color: "red", weight: 1 },
+      intersectingSurveyPlans: undefined,
+      higlightedIntersectingSurveyPlanMapStyle: { color: "red", weight: 3 },
+      higlightedIntersectingSurveyPlan: undefined,
+      surveyPlanMapStyle: { color: "yellow", weight: 2 },
+      sfgStyle: { color: "orange", weight: 2 },
+      sfgText: ["", ""],
+      sfgLatLng: undefined,
+      sfg: undefined,
+      showSurveyLayer: true,
+      showAoiLayer: false,
+      showMarineParksLayer: false,
+      showOtherPasLayer: false,
+      showOrganisationSubmissionsLayer: false,
+      uploadEnabled: true,
+
       custodianSearchTerms: '',
       matchingProjMetas:undefined,
       stateReadonly: true,

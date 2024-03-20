@@ -7,7 +7,7 @@
             <q-tab name="home" label="Home" icon="home" />
             <q-tab
               name="priority-areas"
-              icon="app:priority-areas"
+              :icon="'img:' + require('assets/priority-areas.svg')"
               class="q-tab__label"
             >
               <div style="margin-bottom: -4px;">

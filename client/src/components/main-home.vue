@@ -47,7 +47,7 @@
         <q-expansion-item
           :value="expandedPriorityAreas"
           :header-class="headerClass"
-          icon="app:priority-areas-dark"
+          :icon="'img:' + require('assets/priority-areas-dark.svg')"
           label="Areas of Interest"
           caption="Create or update an Area of Interest"
         >

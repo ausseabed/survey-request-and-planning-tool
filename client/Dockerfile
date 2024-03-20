@@ -8,7 +8,7 @@
 # is not possible withough upgrading to quasar v2 (VueJS 3), which is a significant
 # undertaking.
 
-FROM node:12 as builder
+FROM node:16 as builder
 
 ENV APPDIR=/code
 WORKDIR $APPDIR
@@ -19,7 +19,7 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
 
 # install quasar command line interface
-RUN npm install -g @quasar/cli@1.4.0
+RUN npm install -g @quasar/cli@2.4.0
 
 # And npm bits
 ADD package.json package-lock.json babel.config.js .postcssrc.js quasar.conf.js $APPDIR/

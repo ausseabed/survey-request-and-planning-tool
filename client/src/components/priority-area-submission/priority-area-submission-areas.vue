@@ -204,7 +204,7 @@
                     size="sm"
                     color="white"
                     padding="xs"
-                    :icon="isActive ? 'app:pan' : 'app:draw'"
+                    :icon="isActive ? 'img:' + require('assets/pan_tool_black_24dp.svg') : 'img:' + require('assets/draw_black_24dp.svg')"
                     @click="flipActive"
                   >
                     <q-tooltip>

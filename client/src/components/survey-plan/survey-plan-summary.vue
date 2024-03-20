@@ -1432,11 +1432,9 @@ export default Vue.extend({
     mouseleaveMatchingProjMeta() {
       //clears selection in map
       this.higlightedIntersectingSurveyPlan = undefined;
-      // this.map.highlightFeatureId(undefined);
     },
 
     mouseoverMatchingProjMeta(matchingProjMeta) {
-      // debugger
       let newHighlightedItem = undefined;
       for (const f of this.intersectingSurveyPlans) {
         if (f.id == matchingProjMeta.id) {
@@ -1837,8 +1835,6 @@ export default Vue.extend({
     return {
       addingFile: false,
       intersectionCheckRun: false,
-      // map: null,
-
       zoom: 3,
       intersectingSurveyPlansMapStyle: { color: "red", weight: 1 },
       intersectingSurveyPlans: undefined,
@@ -1855,7 +1851,6 @@ export default Vue.extend({
       showOtherPasLayer: false,
       showOrganisationSubmissionsLayer: false,
       uploadEnabled: true,
-
       custodianSearchTerms: '',
       matchingProjMetas:undefined,
       stateReadonly: true,

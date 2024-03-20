@@ -1345,28 +1345,21 @@ export default Vue.extend({
         var reader = new FileReader();
         reader.onload = (function (e) {
           shp(e.target.result).then(function (geojson) {
-
             var smplOptions = {tolerance: 0.0005, highQuality: false};
             geojson = simplify(geojson, smplOptions);
-
-            console.log(geojson)
-
             this.update('surveyPlan.areaOfInterest', geojson)
-
             this.onFileAddDone();
-
           }.bind(this));
         }).bind(this);
         reader.readAsArrayBuffer(file);
       } else if (ext == 'json' || ext == 'geojson') {
         const reader = new FileReader();
+        debugger
         reader.onload = (event) => {
           const jsonObj = JSON.parse(event.target.result);
-          features = jsonObj;
-          var olf = (new ol.format.GeoJSON()).readFeatures(features);
-
-          this.addFeatures(this.source, olf);
-          this.onAdd(features);
+          let smplOptions = {tolerance: 0.0005, highQuality: false};
+          let geojson = simplify(jsonObj, smplOptions);
+          this.update('surveyPlan.areaOfInterest', geojson)
           this.onFileAddDone();
         };
         reader.readAsText(file);

@@ -8,7 +8,7 @@
 # is not possible withough upgrading to quasar v2 (VueJS 3), which is a significant
 # undertaking.
 
-FROM node:16 as builder
+FROM node:20 as builder
 
 ENV APPDIR=/code
 WORKDIR $APPDIR

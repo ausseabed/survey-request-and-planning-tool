@@ -109,17 +109,15 @@ module.exports = function (ctx) {
       // lang: 'de' // Quasar language
     },
 
-    supportIE: false,
-
     build: {
       env: ctx.dev ? {
-        NODE_ENV: JSON.stringify('development'),
-        PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
-        DESCRIPTION: JSON.stringify(require('./package.json').description)
+        NODE_ENV: 'development',
+        PRODUCT_NAME: require('./package.json').productName,
+        DESCRIPTION: require('./package.json').description
       } : {
-        NODE_ENV: JSON.stringify('production'),
-        PRODUCT_NAME: JSON.stringify(require('./package.json').productName),
-        DESCRIPTION: JSON.stringify(require('./package.json').description)
+        NODE_ENV: 'production',
+        PRODUCT_NAME: require('./package.json').productName,
+        DESCRIPTION: require('./package.json').description
       },
       scopeHoisting: true,
       vueRouterMode: 'history',

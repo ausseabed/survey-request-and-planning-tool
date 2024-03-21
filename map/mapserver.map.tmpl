@@ -177,6 +177,87 @@ MAP
   END
 
 
+  LAYER
+    NAME "Survey_Plans_HIPP"
+    METADATA
+      "wfs_title"         "Survey Plans HIPP" ##REQUIRED
+      "wfs_srs"           "EPSG:4326" ## REQUIRED
+      "gml_include_items" "all" ## Optional (serves all attributes for layer)
+      "gml_featureid"     "id" ## REQUIRED
+      "wfs_enable_request" "*"
+      wms_enable_request "*"
+      "ows_enable_request" "*"
+      wms_getfeature_formatlist "application/json,application/geojson"
+      wfs_getfeature_formatlist "application/json,application/geojson,json,text/xml,csv,SHAPE-ZIP,kml,application/vnd.google-earth.kml xml"
+    END
+    STATUS ON
+    TEMPLATE "dummy.js"
+    TYPE POLYGON
+    CONNECTIONTYPE postgis
+
+    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
+    DATA "area_of_interest from (
+            select sp.id as spid, commorgs.orgname as \"Commissioning_Organisations\" ,sp.status, sp.\"startDate\" as \"Start_Date\", sp.\"endDate\" as \"End_Date\", sp.\"contactPerson\" as \"Contact_Person\", sp.email as \"Contact_email\",sp.comment as \"Comments\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\" as \"Survey_Name\", sa.group as \"Category\", sa.name as \"Purpose\", instmerge.instname as \"Instrument_Types\", dctmerge.dctname as \"Data_Capture_Types\"
+            from survey_plan sp
+            join survey_application sa on sp.\"surveyApplicationId\" = sa.id
+            join record_state rs on sp.\"recordStateId\" = rs.id
+            join survey_plan_organisations_organisation AS spoo ON spoo.\"surveyPlanId\" = sp.id
+            join organisation as org on org.id = spoo.\"organisationId\"
+            full outer join (
+              SELECT survey_plan.id as id, string_agg(DISTINCT organisation.name, ', ') as orgname FROM survey_plan LEFT JOIN survey_plan_organisations_organisation ON survey_plan.id = survey_plan_organisations_organisation.\"surveyPlanId\" INNER JOIN organisation ON survey_plan_organisations_organisation.\"organisationId\" = organisation.id GROUP BY survey_plan.id
+            ) commorgs on commorgs.id = sp.id
+            full outer join (
+              SELECT survey_plan.id as id, string_agg(DISTINCT custodian.name, ', ') as custname FROM survey_plan LEFT JOIN survey_plan_custodians_custodian ON survey_plan.id = survey_plan_custodians_custodian.\"surveyPlanId\" INNER JOIN custodian ON survey_plan_custodians_custodian.\"custodianId\" = custodian.id GROUP BY survey_plan.id
+            ) custmerge on custmerge.id = sp.id
+            full outer join (
+              SELECT survey_plan.id as id, string_agg(DISTINCT instrument_type.name, ', ') as instname FROM survey_plan LEFT JOIN survey_plan_instrument_types_instrument_type ON survey_plan.id = survey_plan_instrument_types_instrument_type.\"surveyPlanId\" INNER JOIN instrument_type ON survey_plan_instrument_types_instrument_type.\"instrumentTypeId\" = instrument_type.id GROUP BY survey_plan.id
+            ) instmerge on instmerge.id = sp.id
+            full outer join (
+              SELECT survey_plan.id as id, string_agg(DISTINCT data_capture_type.name, ', ') as dctname FROM survey_plan LEFT JOIN survey_plan_data_capture_types_data_capture_type ON survey_plan.id = survey_plan_data_capture_types_data_capture_type.\"surveyPlanId\" INNER JOIN data_capture_type ON survey_plan_data_capture_types_data_capture_type.\"dataCaptureTypeId\" = data_capture_type.id GROUP BY survey_plan.id
+            ) dctmerge on dctmerge.id = sp.id
+            WHERE sp.deleted = false AND sp.public = true AND rs.state = 'finalised' AND sp.status != 'Abandoned' AND org.name = 'Australian Hydrographic Office (HIPP)'
+          ) as subquery using unique spid"
+    CLASS
+      NAME "Complete"
+      EXPRESSION ('[status]' = "Complete")
+      STYLE
+        OUTLINECOLOR '#11A579'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#11A579'
+        OPACITY 30
+      END
+    END
+
+    CLASS
+      NAME "Scheduled"
+      EXPRESSION ('[status]' = "Scheduled")
+      STYLE
+        OUTLINECOLOR '#E68310'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#E68310'
+        OPACITY 30
+      END
+    END
+
+    CLASS
+      NAME "Planning"
+      EXPRESSION ('[status]' = "Planning")
+      STYLE
+        OUTLINECOLOR '#CF1C90'
+        WIDTH 2
+      END
+      STYLE
+        COLOR '#CF1C90'
+        OPACITY 30
+      END
+    END
+
+  END
+
 
   LAYER
     NAME "Priority_Area_Submissions"

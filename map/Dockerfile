@@ -1,4 +1,4 @@
-FROM camptocamp/mapserver:7.2
+FROM camptocamp/mapserver:7.6
 LABEL maintainer="lhurst@frontiersi.com.au"
 
 COPY mapserver.map.tmpl /etc/mapserver/

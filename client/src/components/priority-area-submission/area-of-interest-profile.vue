@@ -56,8 +56,9 @@
           :header-style="{
             color: getSectionValidation(['purposes']) ? '#000000' : '#ff0000',
           }"
+          v-model="sectionsExpanded.purpose"
         >
-          <q-card>
+          <q-card v-if="sectionsExpanded.purpose">
             <q-card-section v-if="!getSectionValidation(['purposes'])">
               <div style="color: #ff0000">
                 Please select at least one purpose.
@@ -160,8 +161,9 @@
               ? '#000000'
               : '#ff0000',
           }"
+          v-model="sectionsExpanded.ecosystemDescription"
         >
-          <q-card>
+          <q-card v-if="sectionsExpanded.ecosystemDescription">
             <q-card-section v-if="!getSectionValidation(['ecosystems'])">
               <div style="color: #ff0000">
                 Please select at least one ecosystem.
@@ -227,8 +229,9 @@
               ? '#000000'
               : '#ff0000',
           }"
+          v-model="sectionsExpanded.dataAndMethods"
         >
-          <q-card>
+          <q-card v-if="sectionsExpanded.dataAndMethods">
             <q-card-section
               v-if="
                 !getSectionValidation(['dataToCapture', 'dataCaptureMethods'])
@@ -315,8 +318,9 @@
               ? '#000000'
               : '#ff0000',
           }"
+          v-model="sectionsExpanded.existingDataAssessment"
         >
-          <q-card>
+          <q-card v-if="sectionsExpanded.existingDataAssessment">
             <q-card-section
               v-if="
                 !getSectionValidation(['existingDataSources', 'reasonForAoiRaise'])
@@ -395,8 +399,9 @@
           :header-style="{
             color: getSectionValidation(['gridSize']) ? '#000000' : '#ff0000',
           }"
+          v-model="sectionsExpanded.resolutionAndStandard"
         >
-          <q-card>
+          <q-card v-if="sectionsExpanded.resolutionAndStandard">
             <q-card-section class="row q-gutter-x-xs">
               <form-field-validated-option-group
                 class="col"
@@ -452,8 +457,9 @@
               ? '#000000'
               : '#ff0000',
           }"
+          v-model="sectionsExpanded.dataCollectionTimeline"
         >
-          <q-card>
+          <q-card v-if="sectionsExpanded.dataCollectionTimeline">
             <q-card-section class="q-gutter-y-xs">
               <form-field-validated-button-toggle
                 inline
@@ -531,8 +537,9 @@
               ? '#000000'
               : '#ff0000',
           }"
+          v-model="sectionsExpanded.perceivedImpact"
         >
-          <q-card>
+          <q-card v-if="sectionsExpanded.perceivedImpact">
             <q-card-section class="q-gutter-y-xs">
               <form-field-validated-button-toggle
                 inline
@@ -558,8 +565,13 @@
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item expand-separator label="Pressures" icon="water">
-          <q-card>
+        <q-expansion-item
+          expand-separator
+          label="Pressures"
+          icon="water"
+          v-model="sectionsExpanded.pressures"
+        >
+          <q-card v-if="sectionsExpanded.pressures">
             <q-card-section class="column q-gutter-y-xs">
               <div>
                 Please select the appropriate profile within the MERI
@@ -1080,6 +1092,9 @@ export default Vue.extend({
         return this.priorityArea.purposes;
       },
       set: function (value) {
+        if (!this.sectionsExpanded.purpose) {
+          return
+        }
         let oldPurposes = this.$refs.purposeTree.getTickedNodes()
         .filter((node) => !_.isNil(node))
         .map((node) => {
@@ -1157,6 +1172,16 @@ export default Vue.extend({
       purposesExpanded: [],
       pressuresExpanded: [],
       ecosystemsExpanded: [],
+      sectionsExpanded: {
+        purpose: false,
+        ecosystemDescription: false,
+        dataAndMethods: false,
+        existingDataAssessment: false,
+        resolutionAndStandard: false,
+        pressures: false,
+        dataCollectionTimeline: false,
+        perceivedImpact: false,
+      },
     };
   },
 });

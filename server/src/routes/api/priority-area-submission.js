@@ -68,6 +68,25 @@ const PRIORITY_AREA_SUBMISSION_RELATIONS = [
   'priorityAreas',
 ];
 
+async function getPriorityAreaSubmission(id) {
+  // function a little more complicated that a simple `.findOne` as we
+  // need to support ordering of the area of interests
+  let pas = await getConnection()
+  .getRepository(PriorityAreaSubmission)
+  .createQueryBuilder("priority_area_submission")
+  .leftJoinAndSelect("priority_area_submission.submittingOrganisation", "organisation")
+  .leftJoinAndSelect("priority_area_submission.custodian", "custodian")
+  .leftJoinAndSelect("priority_area_submission.recordState", "record_state")
+  .leftJoinAndSelect("priority_area_submission.priorityAreas", "priority_area")
+  .where("priority_area_submission.id = :id", { id: id })
+  .orderBy({
+      'priority_area.created': 'DESC'
+  })
+  .getOne();
+
+  return pas;
+}
+
 // Gets a list of PriorityAreaSubmissions
 router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   let { start, limit, filter } = req.query;
@@ -289,14 +308,7 @@ router.get(
   ],
   asyncMiddleware(async function (req, res) {
 
-    let pas = await getConnection()
-      .getRepository(PriorityAreaSubmission)
-      .findOne(
-        req.params.id,
-        {
-          relations: PRIORITY_AREA_SUBMISSION_RELATIONS
-        }
-      );
+    let pas = await getPriorityAreaSubmission(req.params.id);
 
     if (!pas) {
       let err = Boom.notFound(
@@ -400,14 +412,7 @@ router.post(
     });
 
     // because the saved version of custodian doesn't include all attribs
-    pas = await getConnection()
-      .getRepository(PriorityAreaSubmission)
-      .findOne(
-        pas.id,
-        {
-          relations: PRIORITY_AREA_SUBMISSION_RELATIONS
-        }
-      );
+    pas = await getPriorityAreaSubmission(pas.id);
 
     return res.json(pas);
   }));

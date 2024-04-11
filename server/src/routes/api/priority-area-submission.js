@@ -384,6 +384,14 @@ router.post(
     // included in the post body).
     pas.uploadTaskId = null;
 
+    // clear out the created dates from each priority area. These are set
+    // when the PA is created, and should never be updated
+    if (!_.isNil(pas.priorityAreas)) {
+      for (let pa of pas.priorityAreas) {
+        delete pa.created;
+      }
+    }
+
     await getConnection().transaction(async transactionalEntityManager => {
       if (isNew) {
         // if it's new it won;t have an id, so we need to save it so we have

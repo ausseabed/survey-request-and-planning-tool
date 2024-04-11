@@ -133,6 +133,9 @@ router.get(
   ],
   asyncMiddleware(async function (req, res) {
 
+  let { simplify } = req.query;
+  simplify = _.isNil(simplify) || !(simplify === 'true') ? false : true;
+
   let sr = await getConnection()
   .getRepository(SurveyRequest)
   .findOne(req.params.id);
@@ -143,12 +146,14 @@ router.get(
     throw err;
   }
 
+  const geom_select = simplify ? `ST_Simplify(geom, 0.05)` : `geom`
+
   const sr2 = await getConnection()
   .createQueryBuilder()
   .select([`ST_AsGeoJSON(ST_Collect("extent")) as geojson`])
   .from(subQuery => {
     return subQuery
-      .select(`geom`, 'extent')
+      .select(geom_select, 'extent')
       .addSelect(`name`, 'name')
       .from('survey_request_aoi')
       .where(`"survey_request_id" = :id`, { id: req.params.id });

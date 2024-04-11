@@ -784,7 +784,7 @@ export default Vue.extend({
       if (!_.isNil(featureUrlName) && !_.isNil(featureList)) {
         entityList.forEach((sr) => {
           Vue.axios
-            .get(`api/${featureUrlName}/${sr.id}/geometry`)
+            .get(`api/${featureUrlName}/${sr.id}/geometry?simplify=true`)
             .then((res) => {
               const geojson = res.data;
               if (!_.isNil(geojson) && geojson.length != 0) {

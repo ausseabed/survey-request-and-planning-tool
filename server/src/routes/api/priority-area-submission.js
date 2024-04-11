@@ -168,8 +168,9 @@ router.get(
     // the exclude query string parameter allows the requestor to specify they want
     // the geometry of all submissions excluding this submission, but only ones that 
     // share the same submitting organisations.
-    let { exclude } = req.query;
+    let { exclude, simplify } = req.query;
     exclude = _.isNil(exclude) || !(exclude === 'true') ? false : true;
+    simplify = _.isNil(simplify) || !(simplify === 'true') ? false : true;
 
     let pas = await getConnection()
       .getRepository(PriorityAreaSubmission)
@@ -189,13 +190,14 @@ router.get(
     }
 
     const wqs = exclude ? `priority_area_submission.id != :id` : `priority_area_submission.id = :id`
+    const geom_select = simplify ? `ST_Simplify(geom, 0.05)` : `geom`
 
     const pas2 = await getConnection()
       .createQueryBuilder()
       .select([`ST_AsGeoJSON(ST_Collect("extent")) as geojson`])
       .from(subQuery => {
         return subQuery
-          .select(`geom`, 'extent')
+          .select(geom_select, 'extent')
           .addSelect(`name`, 'name')
           .from('priority_area')
           .leftJoinAndSelect(

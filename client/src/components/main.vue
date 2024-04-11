@@ -350,6 +350,18 @@
                         <q-item-label caption>{{
                           priorityAreaSubmission.lastModified | dateString
                         }}</q-item-label>
+                        <q-icon
+                          :name="
+                            recordStateDetails(priorityAreaSubmission.recordState).icon
+                          "
+                        >
+                          <q-tooltip>
+                            {{
+                              recordStateDetails(priorityAreaSubmission.recordState)
+                                .label
+                            }}
+                          </q-tooltip>
+                        </q-icon>
                       </q-item-section>
                     </div>
                     <q-item-section>

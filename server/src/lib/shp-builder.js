@@ -89,6 +89,7 @@ export class RequestShpBuilder extends ShpBuilder {
       'sr.\"additionalFundingAvailable\" as SR_ADD_FUN',
       'sr.\"riskIssues\" as SR_RISK',
       'sr.\"furtherInformation\" as SR_F_INFO',
+      'date(rs.created) as SR_SUB_DAT',
       'sra.name as SRA_NAME',
       'sra.survey_standard as SRA_STD',
       'sra.overall_risk as SRA_RISK',
@@ -100,6 +101,7 @@ export class RequestShpBuilder extends ShpBuilder {
     let q = '' +
       `SELECT ${selects.join(', ')} FROM survey_request_aoi sra ` +
       'JOIN survey_request sr ON sr.id = sra.survey_request_id ' +
+      'LEFT OUTER JOIN record_state rs ON rs.id = sr.\"recordStateId\" ' +
       'LEFT OUTER JOIN organisation rorg ON rorg.id = sr.organisation_id ' +
       `full outer join (SELECT survey_request.id as id, string_agg(DISTINCT organisation.name, ', ') as orgname FROM survey_request LEFT JOIN survey_request_organisations_organisation ON survey_request.id = survey_request_organisations_organisation.\"surveyRequestId\" INNER JOIN organisation ON survey_request_organisations_organisation.\"organisationId\" = organisation.id GROUP BY survey_request.id) collab_orgs on collab_orgs.id = sr.id ` +
       `full outer join (SELECT survey_request.id as id, string_agg(DISTINCT custodian.name, ', ') as custname FROM survey_request LEFT JOIN survey_request_custodians_custodian ON survey_request.id = survey_request_custodians_custodian.\"surveyRequestId\" INNER JOIN custodian ON survey_request_custodians_custodian.\"custodianId\" = custodian.id GROUP BY survey_request.id) custs on custs.id = sr.id ` +

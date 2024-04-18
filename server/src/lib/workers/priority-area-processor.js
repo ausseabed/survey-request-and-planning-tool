@@ -152,6 +152,34 @@ const featureToPriorityArea = async (feature) => {
     pa.name = getParameterCaseInsensitive(feature.properties, 'fid');
   }
 
+  // Support ingesting the same fields that we export to the shp download. This
+  // needs to match what we have specified in the PriorityAreaShpBuilder
+  // defined in shp-builder.js
+  pa.seacountryName = getParameterCaseInsensitive(feature.properties, 'A_SEA_NAME');
+  pa.ecologicalAreaName = getParameterCaseInsensitive(feature.properties, 'A_ECO_NAME');
+  pa.ecologicalAreaType = getParameterCaseInsensitive(feature.properties, 'A_ECO_TYPE');
+
+  pa.preferredTimeframe = getParameterCaseInsensitive(feature.properties, 'A_PREFTIME');
+  pa.timeframeReason = getParameterCaseInsensitive(feature.properties, 'A_TF_REAS');
+  pa.preferredSeason = getParameterCaseInsensitive(feature.properties, 'A_PREF_SEA');
+  pa.collectionCadence = getParameterCaseInsensitive(feature.properties, 'A_COLL_CAD');
+  pa.timeSeriesDescription = getParameterCaseInsensitive(feature.properties, 'A_TS_DESC');
+  pa.perceivedImpact = getParameterCaseInsensitive(feature.properties, 'A_IMPACT');
+  pa.organisationalPriority = getParameterCaseInsensitive(feature.properties, 'A_ORG_PRIO');
+  pa.existingDataSources = getParameterCaseInsensitive(feature.properties, 'A_DATA_SRC');
+  pa.reasonForAoiRaise = getParameterCaseInsensitive(feature.properties, 'A_REASON');
+  pa.existingDataAssessmentComments = getParameterCaseInsensitive(feature.properties, 'A_DATA_COM');
+  pa.gridSize = getParameterCaseInsensitive(feature.properties, 'A_GRIDSIZE');
+  pa.surveyStandard = getParameterCaseInsensitive(feature.properties, 'A_STANDARD');
+  pa.dataToCapture = getParameterCaseInsensitive(feature.properties, 'A_DATA');
+  pa.dataCaptureMethods = getParameterCaseInsensitive(feature.properties, 'A_DATAMETH');
+  pa.pressures = getParameterCaseInsensitive(feature.properties, 'A_PRESSURE');
+  pa.purposes = getParameterCaseInsensitive(feature.properties, 'A_PURPOSES');
+  pa.purposeFlags = getParameterCaseInsensitive(feature.properties, 'A_PURFLAGS');
+  pa.purposeValues = getParameterCaseInsensitive(feature.properties, 'A_PURVALS');
+  pa.ecosystems = getParameterCaseInsensitive(feature.properties, 'A_ECOSYSTS');
+  pa.ecosystemComponents = getParameterCaseInsensitive(feature.properties, 'A_ECOCOMPS');
+
   // a Parks Australia specific field
   const parksPriority = getParameterCaseInsensitive(feature.properties, 'AusSeabedP');
   if (!_.isNil(parksPriority)) {

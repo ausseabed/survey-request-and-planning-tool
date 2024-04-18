@@ -115,7 +115,7 @@ MAP
     TYPE POLYGON
     CONNECTIONTYPE postgis
 
-    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
+    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DB" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
     DATA "area_of_interest from (
             select sp.id as spid, commorgs.orgname as \"Commissioning_Organisations\" ,sp.status, sp.\"startDate\" as \"Start_Date\", sp.\"endDate\" as \"End_Date\", sp.\"contactPerson\" as \"Contact_Person\", sp.email as \"Contact_email\",sp.comment as \"Comments\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\" as \"Survey_Name\", sa.group as \"Category\", sa.name as \"Purpose\", instmerge.instname as \"Instrument_Types\", dctmerge.dctname as \"Data_Capture_Types\"
             from survey_plan sp
@@ -195,7 +195,7 @@ MAP
     TYPE POLYGON
     CONNECTIONTYPE postgis
 
-    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
+    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DB" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
     DATA "area_of_interest from (
             select sp.id as spid, commorgs.orgname as \"Commissioning_Organisations\" ,sp.status, sp.\"startDate\" as \"Start_Date\", sp.\"endDate\" as \"End_Date\", sp.\"contactPerson\" as \"Contact_Person\", sp.email as \"Contact_email\",sp.comment as \"Comments\" ,sp.area_of_interest as area_of_interest, sp.\"surveyName\" as \"Survey_Name\", sa.group as \"Category\", sa.name as \"Purpose\", instmerge.instname as \"Instrument_Types\", dctmerge.dctname as \"Data_Capture_Types\"
             from survey_plan sp
@@ -277,7 +277,7 @@ MAP
     TYPE POLYGON
     CONNECTIONTYPE postgis
 
-    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
+    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DB" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
 
     DATA "geom from (
             select 
@@ -395,7 +395,7 @@ MAP
     TYPE POLYGON
     CONNECTIONTYPE postgis
 
-    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DATABASE" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
+    CONNECTION "user={{ getenv "POSTGRES_USER" }} password={{ getenv "POSTGRES_PASSWORD" }} dbname={{ getenv "POSTGRES_DB" }} host={{ getenv "POSTGRES_HOSTNAME" }} port={{ getenv "POSTGRES_PORT" }}"
 
     DATA "geom from (
             select mp.id as mpid ,mp.netname as netname, mp.resname as resname, mp.zonename as zonename, mp.zoneuicn as zoneuicn, mp.polygonid as polygonid, mp.geometry as geom

@@ -15,6 +15,7 @@ export class activateGdal1557815878510 implements MigrationInterface {
       if (isRdsMode) {
           console.log("Running in RDS mode - skipping system-level DB parameters migration")
       } else {
+          await queryRunner.query(`CREATE EXTENSION postgis_raster`);
           await queryRunner.query(`SET postgis.gdal_enabled_drivers = 'ENABLE_ALL'`);
           await queryRunner.query(`ALTER DATABASE "postgres" SET postgis.gdal_enabled_drivers TO 'GTiff PNG JPEG'`);
       }

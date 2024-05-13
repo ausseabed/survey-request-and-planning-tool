@@ -6,7 +6,7 @@
           <q-tabs v-model="tab" class="bg-secondary text-white">
             <q-tab name="home" label="Home" icon="home" />
             <q-tab
-              name="priority-areas"
+              name="areas-of-interest"
               :icon="'img:' + require('assets/priority-areas.svg')"
               class="q-tab__label"
             >
@@ -24,7 +24,7 @@
                   'canViewCustodianSurveyRequests',
                 ])
               "
-              name="survey-requests"
+              name="hipp-requests"
               icon="device_hub"
               class="q-tab__label"
             >
@@ -187,7 +187,7 @@
                   'canViewCustodianSurveyRequests',
                 ])
               "
-              name="survey-requests"
+              name="hipp-requests"
               class="column col-auto no-padding"
             >
               <q-scroll-area class="col">
@@ -295,7 +295,7 @@
                   'canViewCustodianPriorityAreaSubmissions',
                 ])
               "
-              name="priority-areas"
+              name="areas-of-interest"
               class="column col-auto no-padding"
             >
               <div class="col-auto q-py-sm q-mx-md app-big-heading">
@@ -526,7 +526,7 @@
               </l-geo-json>
             </template>
 
-            <template v-if="tab === 'survey-requests'">
+            <template v-if="tab === 'hipp-requests'">
               <l-geo-json
                 v-for="sr in surveyRequestFeatures"
                 :key="sr.id"
@@ -537,7 +537,7 @@
               </l-geo-json>
             </template>
 
-            <template v-if="tab === 'priority-areas'">
+            <template v-if="tab === 'areas-of-interest'">
               <l-geo-json
                 v-for="pas in priorityAreaSubmissionFeatures"
                 :key="pas.id"
@@ -616,9 +616,24 @@ export default Vue.extend({
   },
 
   beforeMount() {
-    this.fetchSurveyPlans();
-    this.getSurveyRequests();
-    this.getPriorityAreaSubmissions();
+    if (!this.tab) {
+      this.tab = "home"
+    }
+
+    Promise.all([
+      this.fetchSurveyPlans(),
+      this.getSurveyRequests(),
+      this.getPriorityAreaSubmissions()
+    ]).then(() => {
+      // the map features fetched are based on the ids returns by the
+      // above requests, we must therefore wait for them to return
+      // before fetching the map features
+      if (this.tab == "home") {
+        // do nothing, as there's no geometry shown when on the home tab
+      } else {
+        this.fetchMapFeatures(this.tab);
+      }
+    })
   },
 
   mounted() {
@@ -643,7 +658,7 @@ export default Vue.extend({
 
     fetchSurveyPlans() {
       this.SET_SURVEY_PLAN_LIST_FILTER(undefined);
-      this.getSurveyPlans();
+      return this.getSurveyPlans();
     },
 
     addAoI() {
@@ -777,12 +792,12 @@ export default Vue.extend({
         featureList = this.surveyPlanFeatures;
         entityList = this.surveyPlans;
         nameProp = "surveyName";
-      } else if (tabName === "survey-requests") {
+      } else if (tabName === "hipp-requests") {
         featureUrlName = "survey-request";
         featureList = this.surveyRequestFeatures;
         entityList = this.surveyRequests;
         nameProp = "name";
-      } else if (tabName === "priority-areas") {
+      } else if (tabName === "areas-of-interest") {
         featureUrlName = "priority-area-submission";
         featureList = this.priorityAreaSubmissionFeatures;
         entityList = this.priorityAreaSubmissions;
@@ -899,11 +914,20 @@ export default Vue.extend({
         ],
       ];
     },
+
+    // tab state is persisted by the t parameter in the query string
+    tab: {
+      get() {
+        return this.$route.query.t;
+      },
+      set(newValue) {
+        this.$router.push({ ...this.$router.currentRoute, query: { t: newValue } })
+      }
+    }
   },
 
   data() {
     return {
-      tab: undefined,
       activeId: undefined,
       lastSelectedFeatureIds: [],
       zoom: 4,
@@ -918,12 +942,6 @@ export default Vue.extend({
   },
 
   watch: {
-    userRole: {
-      immediate: true,
-      handler(newRole, oldRole) {
-        this.tab = "home";
-      },
-    },
     tab: {
       handler(newTab, oldTab) {
         this.fetchMapFeatures(newTab);

@@ -3,7 +3,7 @@ const { spawnSync } = require('child_process')
 
 export function shpBuilderFactory(entityName) {
   const props = [
-    process.env.POSTGRES_DATABASE,
+    process.env.POSTGRES_DB,
     process.env.POSTGRES_USER,
     process.env.POSTGRES_PASSWORD,
     process.env.POSTGRES_HOSTNAME,

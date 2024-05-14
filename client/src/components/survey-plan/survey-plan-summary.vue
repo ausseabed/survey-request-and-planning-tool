@@ -72,7 +72,15 @@
           @updated-state="stateUpdated($event)"
           >
         </record-state>
-        <div v-if="!surveyPlan.id" class="text-h5"> New Plan </div>
+        <div v-if="!surveyPlan.id">
+          <div class=q-pa-xl>
+            In order to maximise collaborations, reduce cost, and minimise overlapping
+            efforts, we encourage you to check the coverage layer on the
+            <a href="https://portal.ga.gov.au/persona/marine" target="_blank"> AusSeabed Marine Data
+            Portal</a>
+          </div>
+          <div class="text-h5"> New Plan </div>
+        </div>
         <q-card class="full-width">
           <q-card-section>
             <div class="text-h6"> Basic </div>

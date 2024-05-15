@@ -90,7 +90,7 @@
             color="primary"
             :label="dirty ? 'Exit without saving' : 'Exit'"
             icon="close"
-            :to="'/'"
+            :to="'/?t=hipp-requests'"
           />
           <q-btn
             v-if="userCanEdit"

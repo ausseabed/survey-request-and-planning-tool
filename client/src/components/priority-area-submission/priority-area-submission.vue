@@ -72,7 +72,7 @@
             color="primary"
             :label="dirty ? 'Exit without saving' : 'Exit'"
             icon="close"
-            :to="'/'"
+            :to="'/?t=areas-of-interest'"
           />
           <q-btn
             color="red"

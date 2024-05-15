@@ -789,7 +789,7 @@
               color="primary"
               :label="dirty ? 'Exit without saving' : 'Exit'"
               icon="close"
-              :to="'/'"
+              :to="'/?t=survey-plans'"
             />
             <q-btn
               color="red"

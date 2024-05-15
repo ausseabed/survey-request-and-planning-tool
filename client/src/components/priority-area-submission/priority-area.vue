@@ -23,13 +23,21 @@
             v-if="!readonly && count > 1"
             label="Apply to Next"
             @click="applyToNextClicked"
-          />
+          >
+            <q-tooltip>
+              Copy the metadata from this record to the next
+            </q-tooltip>
+          </sct-btn>
           <sct-btn
             v-if="!readonly && count > 1"
             label="Apply to All"
             icon="format_line_spacing"
             @click="applyToAllClicked"
-          />
+          >
+            <q-tooltip>
+              Copy the metadata from this record to all other records in this submission
+            </q-tooltip>
+          </sct-btn>
           <sct-btn
             v-if="!readonly"
             label="Remove"

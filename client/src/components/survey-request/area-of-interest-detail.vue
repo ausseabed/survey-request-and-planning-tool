@@ -19,7 +19,11 @@
             label="Apply to All"
             icon="format_line_spacing"
             @click="applyToAllClicked"
-          />
+          >
+            <q-tooltip>
+              Copy the metadata from this record to all other records in this submission
+            </q-tooltip>
+          </sct-btn>
         </div>
       </div>
 

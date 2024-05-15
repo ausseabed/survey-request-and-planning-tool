@@ -306,6 +306,14 @@
         <div class="column q-gutter-y-xs">
           <div class="row justify-between items-center">
             <div class="main-page-sub-title">Areas of Interest</div>
+            <q-btn
+              v-if="_.get(priorityAreaSubmission, 'priorityAreas.length') > 0"
+              @click="onDeleteAll"
+              round flat icon="delete_sweep">
+              <q-tooltip>
+                Delete all areas
+              </q-tooltip>
+            </q-btn>
           </div>
 
           <div v-if="loadingPriorityAreaData" class="column">
@@ -416,6 +424,7 @@ export default Vue.extend({
     ...mapMutations("priorityAreaSubmission", {
       addPriorityAreas: pasMutTypes.ADD_PRIORITY_AREAS,
       removePriorityArea: pasMutTypes.REMOVE_PRIORITY_AREA,
+      removeAllAoi: pasMutTypes.REMOVE_ALL_PRIORITY_AREAS,
       updatePriorityAreaSubmissionValue:
         pasMutTypes.UPDATE_ACTIVE_PRIORITY_AREA_SUBMISSION_VALUE,
       setDirty: pasMutTypes.SET_DIRTY,
@@ -446,6 +455,19 @@ export default Vue.extend({
 
     priorityAreaDeleted({ priorityArea }) {
       this.removePriorityArea(priorityArea.id);
+    },
+
+    onDeleteAll() {
+      this.$q
+      .dialog({
+        title: "Delete all areas",
+        message: `All requested areas will be removed from this submission. Submission details will not be deleted.`,
+        ok: "Delete",
+        cancel: "Cancel",
+      })
+      .onOk(() => {
+        this.removeAllAoi();
+      });
     },
 
     uploadedPriorityAreas(info) {

@@ -109,15 +109,25 @@
       <div class="column q-gutter-y-xs">
         <div class="row justify-between items-center">
           <div class="main-page-sub-title">Requested Areas</div>
-          <q-btn
-            v-if="_.get(surveyRequest, 'aois.length') > 0"
-            type="a"
-            :href="`/api/survey-request/${surveyRequest.id}/shp`"
-            round flat icon="cloud_download">
-            <q-tooltip>
-              Download all requested areas
-            </q-tooltip>
-          </q-btn>
+          <div>
+            <q-btn
+              v-if="_.get(surveyRequest, 'aois.length') > 0"
+              @click="onDeleteAll"
+              round flat icon="delete_sweep">
+              <q-tooltip>
+                Delete all areas
+              </q-tooltip>
+            </q-btn>
+            <q-btn
+              v-if="_.get(surveyRequest, 'aois.length') > 0"
+              type="a"
+              :href="`/api/survey-request/${surveyRequest.id}/shp`"
+              round flat icon="cloud_download">
+              <q-tooltip>
+                Download all requested areas
+              </q-tooltip>
+            </q-btn>
+          </div>
         </div>
 
         <div v-if="loadingAreaOfInterestData" class="column">
@@ -192,6 +202,7 @@ export default Vue.extend({
       'updateSurveyRequest': srMutTypes.UPDATE_HIPP_REQUEST,
       'addAois': srMutTypes.ADD_AOIS,
       'removeAoi': srMutTypes.REMOVE_AOI,
+      'removeAllAoi': srMutTypes.REMOVE_ALL_AOI,
     }),
 
     fetchData() {
@@ -214,6 +225,19 @@ export default Vue.extend({
 
     aoiDeleted({aoi}) {
       this.removeAoi(aoi.id);
+    },
+
+    onDeleteAll() {
+      this.$q
+      .dialog({
+        title: "Delete all areas",
+        message: `All requested areas will be removed from this submission. Submission details will not be deleted.`,
+        ok: "Delete",
+        cancel: "Cancel",
+      })
+      .onOk(() => {
+        this.removeAllAoi();
+      });
     },
 
     uploadedAreas(info) {

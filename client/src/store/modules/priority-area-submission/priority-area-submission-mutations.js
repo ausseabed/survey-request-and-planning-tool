@@ -112,6 +112,13 @@ const mutations = {
     state.activePriorityAreaSubmission.priorityAreas.splice(index, 1);
   },
 
+  [types.REMOVE_ALL_PRIORITY_AREAS](state) {
+    state.dirty = true;
+    state.activePriorityAreaSubmission.priorityAreas.splice(
+      0, state.activePriorityAreaSubmission.priorityAreas.length
+    );
+  },
+
   [types.SET_PREFERRED_TIMEFRAME_OPTIONS](state, options) {
     state.preferredTimeframeOptions = options;
   },

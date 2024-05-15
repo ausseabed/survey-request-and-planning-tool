@@ -89,6 +89,11 @@ const mutations = {
     state.surveyRequest.aois.splice(index, 1);
   },
 
+  [types.REMOVE_ALL_AOI] (state) {
+    state.dirty = true;
+    state.surveyRequest.aois.splice(0, state.surveyRequest.aois.length);
+  },
+
   [types.SET_RESTORE_SURVEY_REQUEST] (state, surveyRequest) {
     state.restoreSurveyRequest = _.cloneDeep(surveyRequest);
   },

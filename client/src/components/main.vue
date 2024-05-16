@@ -172,8 +172,26 @@
                 class="full-width column"
               >
                 <q-separator style="height: 1px" />
-                <div class="row justify-end q-py-sm q-mx-md">
-                  <sct-btn label="add plan" icon="add" :to="'/survey-plan/new'">
+                <div class="row justify-between q-gutter-x-sm q-pa-sm">
+                  <sct-btn
+                    label="Go to data portal"
+                    align="right"
+                    icon="public"
+                    type="a"
+                    href="https://portal.ga.gov.au/restore/264ef8e2-b752-4278-a095-47fc6f073d8c"
+                    target="_blank"
+                    class="col-grow"
+                  >
+                    <q-tooltip max-height="160px" >
+                      View AoI submissions on AusSeabed <br/>Marine Data Portal
+                    </q-tooltip>
+                  </sct-btn>
+                  <sct-btn
+                    label="add plan"
+                    icon="add"
+                    :to="'/survey-plan/new'"
+                    class="col-grow"
+                  >
                     <q-tooltip> Create new survey plan </q-tooltip>
                   </sct-btn>
                 </div>

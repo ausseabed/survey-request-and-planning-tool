@@ -145,7 +145,7 @@
                 layers="Survey_Plans"
                 name="Upcoming Surveys"
                 :transparent="true"
-                :opacity="0.5"
+                :opacity="0.7"
                 format="image/png"
               >
               </l-wms-tile-layer>
@@ -155,7 +155,7 @@
                 layers="areas_of_interest"
                 name="areas_of_interest"
                 :transparent="true"
-                :opacity="0.5"
+                :opacity="0.7"
                 format="image/png"
               >
               </l-wms-tile-layer>
@@ -165,7 +165,7 @@
                 layers="Marine_Parks"
                 name="Marine Parks"
                 :transparent="true"
-                :opacity="0.5"
+                :opacity="0.7"
                 format="image/png"
               >
               </l-wms-tile-layer>
@@ -175,7 +175,7 @@
                 :layers="userWmsLayer.value"
                 :name="userWmsLayer.value"
                 :transparent="true"
-                :opacity="0.5"
+                :opacity="0.7"
                 format="image/png"
                 ref="userWmsMapLayer"
               >

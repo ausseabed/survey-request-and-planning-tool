@@ -14,5 +14,6 @@ jobs:
       image-name: ausseabed-staging-sct-api
       aws-region: ap-southeast-2
       aws-account-id: 288871573946
+    secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_SECRET_ACCESS_KEY }}

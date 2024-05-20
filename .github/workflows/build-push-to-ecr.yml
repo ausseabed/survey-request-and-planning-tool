@@ -23,6 +23,10 @@ on:
       AWS_SECRET_ACCESS_KEY:
         required: true
 
+env:
+  AWS_REGION: ${{ inputs.aws-region }}
+  AWS_ACCOUNT_ID: ${{ inputs.aws-account-id }}
+
 jobs:
   build-and-push:
     name: Build Docker image and push to ECR

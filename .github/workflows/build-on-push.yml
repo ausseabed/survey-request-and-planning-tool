@@ -7,11 +7,17 @@ on:
 
 jobs:
   build-and-push:
+    strategy:
+      matrix:
+        build-details:
+          - {path: server, image-name: ausseabed-staging-sct-api}
+          - {path: client, image-name: ausseabed-staging-sct-www}
+          - {path: map, image-name: ausseabed-staging-sct-mapserver}
     name: API Build and push develop to staging ECR
     uses: ./.github/workflows/build-push-to-ecr.yml
     with:
-      path: server
-      image-name: ausseabed-staging-sct-api
+      path: ${{ matrix.build-details.path }}
+      image-name: ${{ matrix.build-details.image-name }}
     secrets:
       aws-access-key-id: ${{ secrets.STAGING_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.STAGING_SECRET_ACCESS_KEY }}

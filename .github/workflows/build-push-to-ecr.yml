@@ -11,21 +11,15 @@ on:
       image-name:
         required: true
         type: string
+    secrets:
+      aws-access-key-id:
+        required: true
+      aws-secret-access-key:
+        required: true
       aws-region:
         required: true
-        type: string
       aws-account-id:
         required: true
-        type: string
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-
-env:
-  AWS_REGION: ${{ inputs.aws-region }}
-  AWS_ACCOUNT_ID: ${{ inputs.aws-account-id }}
 
 jobs:
   build-and-push:
@@ -71,17 +65,17 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with: 
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ inputs.aws-region }}
+        aws-access-key-id: ${{ secrets.aws-access-key-id }}
+        aws-secret-access-key: ${{ secrets.aws-secret-access-key }}
+        aws-region: ${{ secrets.aws-region }}
     
     - name: Login to Amazon ECR
       id: login-ecr
-      run: aws ecr get-login-password --region ${{ inputs.aws-region }} | docker login --username AWS --password-stdin ${{ inputs.aws-account-id }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com
+      run: aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com
 
     - name: Tag and Push Docker image to ECR
       env: 
         NEW_TAG: ${{ steps.tag_docker_image.outputs.NEW_TAG }}
       run: |
-        docker tag ${{ inputs.image-name }}:${NEW_TAG} ${{ inputs.aws-account-id }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
-        docker push ${{ inputs.aws-account-id }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
+        docker tag ${{ inputs.image-name }}:${NEW_TAG} ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
+        docker push ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}

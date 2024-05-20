@@ -77,11 +77,11 @@ jobs:
     
     - name: Login to Amazon ECR
       id: login-ecr
-      run: aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com
+      run: aws ecr get-login-password --region ${{ inputs.aws-region }} | docker login --username AWS --password-stdin ${{ inputs.aws-account-id }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com
 
     - name: Tag and Push Docker image to ECR
       env: 
         NEW_TAG: ${{ steps.tag_docker_image.outputs.NEW_TAG }}
       run: |
-        docker tag ${{ inputs.image-name }}:${NEW_TAG} ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
-        docker push ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
+        docker tag ${{ inputs.image-name }}:${NEW_TAG} ${{ inputs.aws-account-id }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
+        docker push ${{ inputs.aws-account-id }}.dkr.ecr.${{ inputs.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}

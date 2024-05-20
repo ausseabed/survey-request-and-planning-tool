@@ -61,7 +61,7 @@ jobs:
         else
           NEW_TAG="${GIT_RELEASE}"
         fi
-        docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${NEW_TAG}
+        docker tag ${{ inputs.image-name }} ${{ inputs.image-name }}:${NEW_TAG}
         echo "::set-output name=NEW_TAG::${NEW_TAG}"
 
     - name: Configure AWS credentials
@@ -73,11 +73,11 @@ jobs:
     
     - name: Login to Amazon ECR
       id: login-ecr
-      run: aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+      run: aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com
 
     - name: Tag and Push Docker image to ECR
       env: 
         NEW_TAG: ${{ steps.tag_docker_image.outputs.NEW_TAG }}
       run: |
-        docker tag ${IMAGE_NAME}:${NEW_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${NEW_TAG}
-        docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}:${NEW_TAG}
+        docker tag ${{ inputs.image-name }}:${NEW_TAG} ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
+        docker push ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}

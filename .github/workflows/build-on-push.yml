@@ -8,7 +8,7 @@ on:
 jobs:
   build-and-push:
     name: API Build and push develop to staging ECR
-    uses: ausseabed/ausseabed/survey-request-and-planning-tool/.github/workflows/build-push-to-ecr.yml
+    uses: ./.github/workflows/build-push-to-ecr.yml
     with:
       path: api
       image-name: ausseabed-staging-sct-api

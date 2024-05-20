@@ -79,3 +79,7 @@ jobs:
       run: |
         docker tag ${{ inputs.image-name }}:${NEW_TAG} ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
         docker push ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${NEW_TAG}
+        docker tag ${{ inputs.image-name }}:${NEW_TAG} ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${{ github.sha }}
+        docker push ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:${{ github.sha }}
+        docker tag ${{ inputs.image-name }}:${NEW_TAG} ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:latest
+        docker push ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws-region }}.amazonaws.com/${{ inputs.image-name }}:latest

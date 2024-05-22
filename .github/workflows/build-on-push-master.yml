@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-push:
-  name: API Build and push develop to prod ECR
+    name: API Build and push develop to prod ECR
     strategy:
       matrix:
         build-details:

@@ -1,0 +1,25 @@
+name: Build on push master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push:
+  name: API Build and push develop to prod ECR
+    strategy:
+      matrix:
+        build-details:
+          - {path: server, image-name: ausseabed-prod-sct-api}
+          - {path: client, image-name: ausseabed-prod-sct-www}
+          - {path: map, image-name: ausseabed-prod-sct-mapserver}
+    uses: ./.github/workflows/build-push-to-ecr.yml
+    with:
+      path: ${{ matrix.build-details.path }}
+      image-name: ${{ matrix.build-details.image-name }}
+    secrets:
+      aws-access-key-id: ${{ secrets.PROD_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.PROD_SECRET_ACCESS_KEY }}
+      aws-region: ${{ secrets.PROD_AWS_REGION }}
+      aws-account-id: ${{ secrets.PROD_AWS_ACCOUNT_ID }}

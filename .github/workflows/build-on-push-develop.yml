@@ -1,4 +1,4 @@
-name: Build on push
+name: Build on push develop
 
 on:
   push:
@@ -7,13 +7,13 @@ on:
 
 jobs:
   build-and-push:
+    name: API Build and push develop to staging ECR
     strategy:
       matrix:
         build-details:
           - {path: server, image-name: ausseabed-staging-sct-api}
           - {path: client, image-name: ausseabed-staging-sct-www}
           - {path: map, image-name: ausseabed-staging-sct-mapserver}
-    name: API Build and push develop to staging ECR
     uses: ./.github/workflows/build-push-to-ecr.yml
     with:
       path: ${{ matrix.build-details.path }}

@@ -9,20 +9,18 @@
       subtitle="End of February"
       icon="event"
     >
-      <div style="">HIPP Request Submission deadline</div>
+      <ul style="padding-left: 24px">
+        <li>
+          AHO HIPP Request Submission deadline
+        </li>
+        <li>
+          Final date for Areas of Interest submissions to AusSeabed SCT for inclusion in Heat Map
+        </li>
+      </ul>
     </q-timeline-entry>
 
     <q-timeline-entry
-      subtitle="End of March"
-      icon="today"
-    >
-      <div>
-        Final date for Areas of Interest submission to SCT
-      </div>
-    </q-timeline-entry>
-
-    <q-timeline-entry
-      subtitle="End of April"
+      subtitle="Mid March"
       icon="map"
     >
       <div>

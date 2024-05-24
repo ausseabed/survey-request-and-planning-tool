@@ -827,32 +827,59 @@ export default Vue.extend({
       // for each one; differences being the url and what property holds
       // the name value
       if (!_.isNil(featureUrlName) && !_.isNil(featureList)) {
-        entityList.forEach((sr) => {
-          Vue.axios
-            .get(`api/${featureUrlName}/${sr.id}/geometry?simplify=true`)
-            .then((res) => {
-              const geojson = res.data;
-              if (!_.isNil(geojson) && geojson.length != 0) {
-                geojson.properties = {
-                  id: sr.id,
-                  name: _.get(sr, nameProp),
-                };
-                const existingIndex = featureList.findIndex((esr) => {
-                  return esr.sr.id === sr.id;
-                });
-                const nf = {
-                  geojson: geojson,
-                  sr: sr,
-                };
-                if (existingIndex == -1) {
-                  featureList.push(nf);
-                } else {
-                  this.$set(featureList, existingIndex, nf);
-                }
-              }
-            });
-        });
+        this.batchGeometryRequests([...entityList], featureUrlName, featureList, nameProp);
       }
+    },
+
+    batchGeometryRequests(entityList, featureUrlName, featureList, nameProp) {
+      // this function makes requests for geojson features in batches (of 10)
+      // the reason for doing so is that the UI becomes unresponsive until
+      // all pending responses are returned. By batching the UI has a chance
+      // to update in between each request batch. 
+      if (entityList.length == 0) {
+        return;
+      }
+
+      let shiftCount = 0;
+      let sr = undefined;
+      let promises = []
+      while (!_.isNil(sr = entityList.shift()) && shiftCount < 10) {
+        shiftCount++;
+        let srv = sr;
+        let promise = Vue.axios
+          .get(`api/${featureUrlName}/${srv.id}/geometry?simplify=true`)
+          .then((res) => {
+            const geojson = res.data;
+            if (!_.isNil(geojson) && geojson.length != 0) {
+              geojson.properties = {
+                id: srv.id,
+                name: _.get(srv, nameProp),
+              };
+              const existingIndex = featureList.findIndex((esr) => {
+                return esr.sr.id === srv.id;
+              });
+              const nf = {
+                geojson: geojson,
+                sr: srv,
+              };
+              if (existingIndex == -1) {
+                featureList.push(nf);
+              } else {
+                this.$set(featureList, existingIndex, nf);
+              }
+            }
+          }).catch(function(error) {
+              console.log(error.message);
+          });
+        promises.push(promise);
+      }
+
+      Promise.all(promises).then(() => {
+        setTimeout(
+          this.batchGeometryRequests(entityList, featureUrlName, featureList, nameProp),
+          0
+        );
+      })
     },
 
     styleFunction(sr) {

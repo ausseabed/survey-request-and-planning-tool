@@ -904,7 +904,10 @@ export default Vue.extend({
     },
 
     batchGeometryRequests(entityList, featureUrlName, featureList, nameProp) {
-      console.log("len = " + featureList.length)
+      // this function makes requests for geojson features in batches (of 10)
+      // the reason for doing so is that the UI becomes unresponsive until
+      // all pending responses are returned. By batching the UI has a chance
+      // to update in between each request batch. 
       if (entityList.length == 0) {
         return;
       }
@@ -924,19 +927,13 @@ export default Vue.extend({
                 id: srv.id,
                 name: _.get(srv, nameProp),
               };
-              console.log(shiftCount + " " + srv.id)
               const existingIndex = featureList.findIndex((esr) => {
-                // if (esr.sr.id === sr.id) {
-                //   console.log(esr.sr.id + " " + sr.id)
-                // }
                 return esr.sr.id === srv.id;
               });
               const nf = {
                 geojson: geojson,
                 sr: srv,
               };
-              // debugger
-              // featureList.push(nf);
               if (existingIndex == -1) {
                 featureList.push(nf);
               } else {
@@ -955,33 +952,6 @@ export default Vue.extend({
           0
         );
       })
-
-
-      // entityList.forEach((sr) => {
-      //   Vue.axios
-      //     .get(`api/${featureUrlName}/${sr.id}/geometry?simplify=true`)
-      //     .then((res) => {
-      //       const geojson = res.data;
-      //       if (!_.isNil(geojson) && geojson.length != 0) {
-      //         geojson.properties = {
-      //           id: sr.id,
-      //           name: _.get(sr, nameProp),
-      //         };
-      //         const existingIndex = featureList.findIndex((esr) => {
-      //           return esr.sr.id === sr.id;
-      //         });
-      //         const nf = {
-      //           geojson: geojson,
-      //           sr: sr,
-      //         };
-      //         if (existingIndex == -1) {
-      //           featureList.push(nf);
-      //         } else {
-      //           this.$set(featureList, existingIndex, nf);
-      //         }
-      //       }
-      //     });
-      // });
     },
 
     styleFunction(sr) {

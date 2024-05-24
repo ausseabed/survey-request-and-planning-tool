@@ -316,9 +316,64 @@
               name="areas-of-interest"
               class="column col-auto no-padding"
             >
-              <div class="col-auto q-py-sm q-mx-md app-big-heading">
-                Submissions
-              </div>
+
+              <q-expansion-item
+                expand-separator
+                label="Submissions"
+                header-class="app-big-heading"
+                expand-icon="filter_list"
+              >
+                <q-card>
+                  <q-separator style="height: 1px" />
+                  <div class="column q-px-md q-pb-sm">
+                    <div class="row q-gutter-x-sm items-center">
+                      <div class="text-grey">
+                        Sort by
+                      </div>
+                      <q-select borderless dense options-dense v-model="aoiSortBy" :options="AOI_SORT_OPTIONS"/>
+                      <div class="text-grey">
+                        order
+                      </div>
+                      <q-checkbox
+                        v-model="aoiSortAscending"
+                        checked-icon="arrow_upward"
+                        unchecked-icon="arrow_downward"
+                        dense size="lg"
+                      />
+                    </div>
+
+                    <div class="row q-gutter-x-sm items-center" style="margin-top: -8px">
+                      <div class="text-grey">
+                        Filter by
+                      </div>
+                      <q-select borderless dense options-dense v-model="aoiFilterBy" :options="AOI_FILTER_OPTIONS"/>
+                      <template v-if="aoiFilterSelectionOptions.length != 0">
+                        <div class="text-grey">
+                          options
+                        </div>
+                        <q-select
+                          borderless dense options-dense multiple
+                          v-model="aoiFilterSelections"
+                          :options="aoiFilterSelectionOptions"
+                        >
+                          <template v-slot:option="{ itemProps, itemEvents, opt, selected, toggleOption }">
+                            <q-item
+                              v-bind="itemProps"
+                              v-on="itemEvents"
+                            >
+                              <q-item-section >
+                                <q-checkbox :label="opt" :value="selected" @input="toggleOption(opt)" />
+                              </q-item-section>
+                            </q-item>
+                          </template>
+                        </q-select>
+                      </template>
+                    </div>
+
+                  </div>
+                </q-card>
+              </q-expansion-item>
+
               <q-separator style="height: 1px" />
 
               <q-scroll-area class="col">
@@ -333,7 +388,7 @@
                 >
                   <q-item
                     clickable
-                    v-for="priorityAreaSubmission in priorityAreaSubmissions"
+                    v-for="priorityAreaSubmission in priorityAreaSubmissionsFilteredSorted"
                     :id="'list-item-' + priorityAreaSubmission.id"
                     :key="priorityAreaSubmission.id"
                     @mouseover="mouseoverListItem(priorityAreaSubmission, true)"
@@ -620,6 +675,23 @@ const defaultBounds = latLngBounds(
   )
 );
 
+// mapping from a nice displayable name, to the priority area submission
+// value that should be filtered or sorted on
+const AOI_SORT_OPTIONS = [
+  {label: "Submission name", value: "submissionName"},
+  {label: "Date created", value: "created"},
+  {label: "Date last modified", value: "lastModified"},
+  {label: "Record state", value: "recordState.state"},
+  {label: "Submitting organisation", value: "submittingOrganisation.name"}
+]
+
+const AOI_FILTER_OPTIONS = [
+  {label: "No filter", value: null},
+  {label: "Record state", value: "recordState.state"},
+  {label: "Submitting organisation", value: "submittingOrganisation.name"},
+  {label: "Record custodian", value: "custodian.name"}
+]
+
 export default Vue.extend({
   mixins: [errorHandler, permission],
   components: {
@@ -832,10 +904,7 @@ export default Vue.extend({
     },
 
     batchGeometryRequests(entityList, featureUrlName, featureList, nameProp) {
-      // this function makes requests for geojson features in batches (of 10)
-      // the reason for doing so is that the UI becomes unresponsive until
-      // all pending responses are returned. By batching the UI has a chance
-      // to update in between each request batch. 
+      console.log("len = " + featureList.length)
       if (entityList.length == 0) {
         return;
       }
@@ -855,13 +924,19 @@ export default Vue.extend({
                 id: srv.id,
                 name: _.get(srv, nameProp),
               };
+              console.log(shiftCount + " " + srv.id)
               const existingIndex = featureList.findIndex((esr) => {
+                // if (esr.sr.id === sr.id) {
+                //   console.log(esr.sr.id + " " + sr.id)
+                // }
                 return esr.sr.id === srv.id;
               });
               const nf = {
                 geojson: geojson,
                 sr: srv,
               };
+              // debugger
+              // featureList.push(nf);
               if (existingIndex == -1) {
                 featureList.push(nf);
               } else {
@@ -880,6 +955,33 @@ export default Vue.extend({
           0
         );
       })
+
+
+      // entityList.forEach((sr) => {
+      //   Vue.axios
+      //     .get(`api/${featureUrlName}/${sr.id}/geometry?simplify=true`)
+      //     .then((res) => {
+      //       const geojson = res.data;
+      //       if (!_.isNil(geojson) && geojson.length != 0) {
+      //         geojson.properties = {
+      //           id: sr.id,
+      //           name: _.get(sr, nameProp),
+      //         };
+      //         const existingIndex = featureList.findIndex((esr) => {
+      //           return esr.sr.id === sr.id;
+      //         });
+      //         const nf = {
+      //           geojson: geojson,
+      //           sr: sr,
+      //         };
+      //         if (existingIndex == -1) {
+      //           featureList.push(nf);
+      //         } else {
+      //           this.$set(featureList, existingIndex, nf);
+      //         }
+      //       }
+      //     });
+      // });
     },
 
     styleFunction(sr) {
@@ -911,6 +1013,52 @@ export default Vue.extend({
     ...mapGetters("surveyPlan", ["surveyPlans"]),
     ...mapGetters("surveyRequest", ["surveyRequests"]),
     ...mapGetters("priorityAreaSubmission", ["priorityAreaSubmissions"]),
+
+    priorityAreaSubmissionsFilteredSorted() {
+      // clone the list so we don't mess with the one in the vuex state store
+      let l = [...this.priorityAreaSubmissions];
+
+      // only filter if a filter by property has been selected, and that there's valid options selected
+      if (!_.isNil(this.aoiFilterBy.value) && !_.isNil(this.aoiFilterSelections) && this.aoiFilterSelections.length > 0 ) {
+        l = l.filter((pas) => {
+          let val = _.get(pas, this.aoiFilterBy.value);
+          return this.aoiFilterSelections.includes(val);
+        })
+      }
+
+      // sort the list based on sort by selection
+      l.sort((a,b) => {
+        if (_.isNil(a)) {
+          return -1;
+        }
+        let val_a = _.get(
+          a,
+          this.aoiSortBy.value
+        )
+        let val_b = _.get(
+          b,
+          this.aoiSortBy.value
+        )
+        return (val_a < val_b) ? -1 : 1
+      });
+      // reverse the sort order based on if the user has selected ascending order or not
+      if (this.aoiSortAscending) {
+        l.reverse();
+      }
+      return l;
+    },
+
+    aoiFilterSelectionOptions() {
+      if (_.isNil(this.aoiFilterBy.value)) {
+        return []
+      }
+      let opts = new Set()
+      this.priorityAreaSubmissions.forEach((pas) => {
+        opts.add(_.get(pas, this.aoiFilterBy.value))
+      });
+      let sortedOpts = Array.from(opts).sort()
+      return sortedOpts
+    },
 
     mapBaseUrl() {
       return MapConstants.LEAFLET_BASE_LAYER;
@@ -983,6 +1131,12 @@ export default Vue.extend({
       surveyPlanFeatures: [],
       surveyRequestFeatures: [],
       priorityAreaSubmissionFeatures: [],
+      aoiSortBy: AOI_SORT_OPTIONS.find((o) => o.value == "lastModified"),
+      aoiSortAscending: true,
+      AOI_SORT_OPTIONS,
+      aoiFilterBy: AOI_FILTER_OPTIONS[0],
+      aoiFilterSelections: null,
+      AOI_FILTER_OPTIONS
     };
   },
 
@@ -992,6 +1146,16 @@ export default Vue.extend({
         this.fetchMapFeatures(newTab);
       },
     },
+
+    aoiFilterBy: {
+      handler(n, o) {
+        // we need to clear out the list of selected filter options
+        // as these options change when the filter by prop is
+        // changed by the user
+        this.aoiFilterSelections = null;
+      }
+    }
+
   },
 });
 </script>

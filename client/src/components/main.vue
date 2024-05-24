@@ -612,7 +612,7 @@
 
             <template v-if="tab === 'areas-of-interest'">
               <l-geo-json
-                v-for="pas in priorityAreaSubmissionFeatures"
+                v-for="pas in priorityAreaSubmissionFeaturesFiltered"
                 :key="pas.id"
                 :geojson="pas.geojson"
                 :options="options"
@@ -1016,6 +1016,19 @@ export default Vue.extend({
         l.reverse();
       }
       return l;
+    },
+
+    priorityAreaSubmissionFeaturesFiltered() {
+      let filteredIds = new Set();
+      // use the existing function to get a filtered list of all the AoI submission ids
+      // and use it to filter the list of features displayed in the map
+      this.priorityAreaSubmissionsFilteredSorted.forEach((pas) => {
+        filteredIds.add(pas.id);
+      });
+      let filteredFeatures = this.priorityAreaSubmissionFeatures.filter((pasFeature) => {
+        return filteredIds.has(pasFeature.sr.id);
+      });
+      return filteredFeatures;
     },
 
     aoiFilterSelectionOptions() {

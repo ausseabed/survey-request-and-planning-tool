@@ -75,6 +75,66 @@
               name="survey-plans"
               class="column col-auto no-padding"
             >
+
+            <q-expansion-item
+                expand-separator
+                label="Survey Plans"
+                header-class="app-big-heading"
+                expand-icon="filter_list"
+              >
+                <q-card>
+                  <q-separator style="height: 1px" />
+                  <div class="column q-px-md q-pb-sm">
+                    <div class="row q-gutter-x-sm items-center">
+                      <div class="text-grey">
+                        Sort by
+                      </div>
+                      <q-select borderless dense options-dense v-model="planSortBy" :options="PLAN_SORT_OPTIONS"/>
+                      <div class="text-grey">
+                        order
+                      </div>
+                      <q-checkbox
+                        v-model="planSortAscending"
+                        checked-icon="arrow_upward"
+                        unchecked-icon="arrow_downward"
+                        dense size="lg"
+                      />
+                    </div>
+
+                    <div class="row q-gutter-x-sm items-center" style="margin-top: -8px">
+                      <div class="text-grey">
+                        Filter by
+                      </div>
+                      <q-select borderless dense options-dense v-model="planFilterBy" :options="PLAN_FILTER_OPTIONS"/>
+                      <template v-if="planFilterSelectionOptions.length != 0">
+                        <div class="text-grey">
+                          options
+                        </div>
+                        <q-select
+                          borderless dense options-dense multiple
+                          v-model="planFilterSelections"
+                          :options="planFilterSelectionOptions"
+                        >
+                          <template v-slot:option="{ itemProps, itemEvents, opt, selected, toggleOption }">
+                            <q-item
+                              v-bind="itemProps"
+                              v-on="itemEvents"
+                            >
+                              <q-item-section >
+                                <q-checkbox :label="opt" :value="selected" @input="toggleOption(opt)" />
+                              </q-item-section>
+                            </q-item>
+                          </template>
+                        </q-select>
+                      </template>
+                    </div>
+
+                  </div>
+                </q-card>
+              </q-expansion-item>
+
+              <q-separator style="height: 1px" />
+
               <!-- <q-card-section class="column col" style="padding:0px"> -->
               <q-scroll-area class="col">
                 <q-list
@@ -85,7 +145,7 @@
                 >
                   <q-item
                     clickable
-                    v-for="surveyPlan in surveyPlans"
+                    v-for="surveyPlan in plansFilteredSorted"
                     :id="'list-item-' + surveyPlan.id"
                     :key="surveyPlan.id"
                     @mouseover="mouseoverListItem(surveyPlan, true)"
@@ -215,6 +275,66 @@
               name="hipp-requests"
               class="column col-auto no-padding"
             >
+
+              <q-expansion-item
+                expand-separator
+                label="HIPP Requests"
+                header-class="app-big-heading"
+                expand-icon="filter_list"
+              >
+                <q-card>
+                  <q-separator style="height: 1px" />
+                  <div class="column q-px-md q-pb-sm">
+                    <div class="row q-gutter-x-sm items-center">
+                      <div class="text-grey">
+                        Sort by
+                      </div>
+                      <q-select borderless dense options-dense v-model="requestSortBy" :options="REQUEST_SORT_OPTIONS"/>
+                      <div class="text-grey">
+                        order
+                      </div>
+                      <q-checkbox
+                        v-model="requestSortAscending"
+                        checked-icon="arrow_upward"
+                        unchecked-icon="arrow_downward"
+                        dense size="lg"
+                      />
+                    </div>
+
+                    <div class="row q-gutter-x-sm items-center" style="margin-top: -8px">
+                      <div class="text-grey">
+                        Filter by
+                      </div>
+                      <q-select borderless dense options-dense v-model="requestFilterBy" :options="REQUEST_FILTER_OPTIONS"/>
+                      <template v-if="requestFilterSelectionOptions.length != 0">
+                        <div class="text-grey">
+                          options
+                        </div>
+                        <q-select
+                          borderless dense options-dense multiple
+                          v-model="requestFilterSelections"
+                          :options="requestFilterSelectionOptions"
+                        >
+                          <template v-slot:option="{ itemProps, itemEvents, opt, selected, toggleOption }">
+                            <q-item
+                              v-bind="itemProps"
+                              v-on="itemEvents"
+                            >
+                              <q-item-section >
+                                <q-checkbox :label="opt" :value="selected" @input="toggleOption(opt)" />
+                              </q-item-section>
+                            </q-item>
+                          </template>
+                        </q-select>
+                      </template>
+                    </div>
+
+                  </div>
+                </q-card>
+              </q-expansion-item>
+
+              <q-separator style="height: 1px" />
+
               <q-scroll-area class="col">
                 <q-list
                   v-if="surveyRequests && surveyRequests.length > 0"
@@ -224,7 +344,7 @@
                 >
                   <q-item
                     clickable
-                    v-for="surveyRequest in surveyRequests"
+                    v-for="surveyRequest in requestsFilteredSorted"
                     :id="'list-item-' + surveyRequest.id"
                     :key="surveyRequest.id"
                     @mouseover="mouseoverListItem(surveyRequest, true)"
@@ -606,7 +726,7 @@
 
             <template v-if="tab === 'survey-plans'">
               <l-geo-json
-                v-for="sp in surveyPlanFeatures"
+                v-for="sp in planFeaturesFiltered"
                 :key="sp.id"
                 :geojson="sp.geojson"
                 :options="options"
@@ -617,7 +737,7 @@
 
             <template v-if="tab === 'hipp-requests'">
               <l-geo-json
-                v-for="sr in surveyRequestFeatures"
+                v-for="sr in requestFeaturesFiltered"
                 :key="sr.id"
                 :geojson="sr.geojson"
                 :options="options"
@@ -706,6 +826,54 @@ const AOI_FILTER_OPTIONS = [
   {label: "Record state", value: "recordState.state"},
   {label: "Submitting organisation", value: "submittingOrganisation.name"},
   {label: "Record custodian", value: "custodian.name"}
+]
+
+const REQUEST_SORT_OPTIONS = [
+  {label: "Request name", value: "name"},
+  {label: "Record state date", value: "recordState.created"},
+  {label: "Record state", value: "recordState.state"},
+  {label: "Requesting organisation", value: "organisation.name"}
+]
+
+const REQUEST_FILTER_OPTIONS = [
+  {label: "No filter", value: null},
+  {label: "Record state", value: "recordState.state"},
+  {label: "Requesting organisation", value: "organisation.name"},
+  {
+    label: "Record custodian",
+    value: "custodians[].name",
+    valueFunction: (sr) => {
+      return sr.custodians.map((c) => c.name);
+    }
+  }
+]
+
+const PLAN_SORT_OPTIONS = [
+  {label: "Survey name", value: "surveyName"},
+  {label: "Survey status", value: "status"},
+  {label: "Survey start date", value: "startDate"},
+  {label: "Record state", value: "recordState.state"},
+  {label: "Record state date", value: "recordState.created"}
+]
+
+const PLAN_FILTER_OPTIONS = [
+  {label: "No filter", value: null},
+  {label: "Survey status", value: "status"},
+  {label: "Record state", value: "recordState.state"},
+  {
+    label: "Commissioning organisation",
+    value: "organisations[].name",
+    valueFunction: (sr) => {
+      return sr.organisations.map((c) => c.name);
+    }
+  },
+  {
+    label: "Record custodian",
+    value: "custodians[].name",
+    valueFunction: (sr) => {
+      return sr.custodians.map((c) => c.name);
+    }
+  }
 ]
 
 export default Vue.extend({
@@ -993,22 +1161,43 @@ export default Vue.extend({
       const map = this.$refs.map;
       map.mapObject.flyToBounds(defaultBounds, { duration: 0.2 });
     },
-  },
 
-  computed: {
-    ...mapGetters("surveyPlan", ["surveyPlans"]),
-    ...mapGetters("surveyRequest", ["surveyRequests"]),
-    ...mapGetters("priorityAreaSubmission", ["priorityAreaSubmissions"]),
+    filterSelectionOptions(filterBy, listToFilter) {
+      if (_.isNil(filterBy.value) ) {
+        return []
+      }
+      let opts = new Set()
+      listToFilter.forEach((itemToFilter) => {
+        if (!_.isNil(filterBy.valueFunction)) {
+          let values = filterBy.valueFunction(itemToFilter)
+          values.forEach(val => opts.add(val))
+        } else if (!_.isNil(filterBy.value)) {
+          opts.add(_.get(itemToFilter, filterBy.value))
+        }
+      });
+      let sortedOpts = Array.from(opts).sort()
+      return sortedOpts
+    },
 
-    priorityAreaSubmissionsFilteredSorted() {
+    filteredSortedList(list, filterBy, filterSelections, sortBy, sortAscending) {
       // clone the list so we don't mess with the one in the vuex state store
-      let l = [...this.priorityAreaSubmissions];
+      let l = [...list];
 
       // only filter if a filter by property has been selected, and that there's valid options selected
-      if (!_.isNil(this.aoiFilterBy.value) && !_.isNil(this.aoiFilterSelections) && this.aoiFilterSelections.length > 0 ) {
+      if (!_.isNil(filterBy.value) && !_.isNil(filterSelections) && filterSelections.length > 0 ) {
         l = l.filter((pas) => {
-          let val = _.get(pas, this.aoiFilterBy.value);
-          return this.aoiFilterSelections.includes(val);
+          if (!_.isNil(filterBy.valueFunction)) {
+            let values = filterBy.valueFunction(pas);
+            for (const fs of filterSelections) {
+              if (values.includes(fs)) {
+                return true;
+              }
+            }
+            return false;
+          } else if (!_.isNil(filterBy.value)) {
+            let val = _.get(pas, filterBy.value);
+            return filterSelections.includes(val);
+          }
         })
       }
 
@@ -1019,7 +1208,7 @@ export default Vue.extend({
         }
         let val_a = undefined;
         let val_b = undefined;
-        if (this.aoiSortBy.value === "submissionName") {
+        if (sortBy.value === "submissionName") {
           // special case as many of the records don't have a submission name and
           // instead use the `getPriorityAreaLabel` function to define what is
           // shown as the submission name in the list
@@ -1028,11 +1217,11 @@ export default Vue.extend({
         } else {
           val_a = _.get(
             a,
-            this.aoiSortBy.value
+            sortBy.value
           );
           val_b = _.get(
             b,
-            this.aoiSortBy.value
+            sortBy.value
           );
         }
 
@@ -1045,35 +1234,93 @@ export default Vue.extend({
         }
       });
       // reverse the sort order based on if the user has selected ascending order or not
-      if (!this.aoiSortAscending) {
+      if (!sortAscending) {
         l.reverse();
       }
       return l;
     },
 
-    priorityAreaSubmissionFeaturesFiltered() {
+    featuresFiltered(filteredSortedList, featuresList) {
       let filteredIds = new Set();
-      // use the existing function to get a filtered list of all the AoI submission ids
-      // and use it to filter the list of features displayed in the map
-      this.priorityAreaSubmissionsFilteredSorted.forEach((pas) => {
+      filteredSortedList.forEach((pas) => {
         filteredIds.add(pas.id);
       });
-      let filteredFeatures = this.priorityAreaSubmissionFeatures.filter((pasFeature) => {
+      let filteredFeatures = featuresList.filter((pasFeature) => {
         return filteredIds.has(pasFeature.sr.id);
       });
       return filteredFeatures;
     },
 
+  },
+
+
+
+  computed: {
+    ...mapGetters("surveyPlan", ["surveyPlans"]),
+    ...mapGetters("surveyRequest", ["surveyRequests"]),
+    ...mapGetters("priorityAreaSubmission", ["priorityAreaSubmissions"]),
+
+    priorityAreaSubmissionsFilteredSorted() {
+      return this.filteredSortedList(
+        this.priorityAreaSubmissions,
+        this.aoiFilterBy,
+        this.aoiFilterSelections,
+        this.aoiSortBy,
+        this.aoiSortAscending
+      );
+    },
+
+    requestsFilteredSorted() {
+      return this.filteredSortedList(
+        this.surveyRequests,
+        this.requestFilterBy,
+        this.requestFilterSelections,
+        this.requestSortBy,
+        this.requestSortAscending
+      )
+    },
+
+    plansFilteredSorted() {
+      return this.filteredSortedList(
+        this.surveyPlans,
+        this.planFilterBy,
+        this.planFilterSelections,
+        this.planSortBy,
+        this.planSortAscending
+      )
+    },
+
+    priorityAreaSubmissionFeaturesFiltered() {
+      return this.featuresFiltered(
+        this.priorityAreaSubmissionsFilteredSorted,
+        this.priorityAreaSubmissionFeatures
+      );
+    },
+
+    requestFeaturesFiltered() {
+      return this.featuresFiltered(
+        this.requestsFilteredSorted,
+        this.surveyRequestFeatures
+      );
+    },
+
+    planFeaturesFiltered() {
+      return this.featuresFiltered(
+        this.plansFilteredSorted,
+        this.surveyPlanFeatures
+      );
+    },
+
     aoiFilterSelectionOptions() {
-      if (_.isNil(this.aoiFilterBy.value)) {
-        return []
-      }
-      let opts = new Set()
-      this.priorityAreaSubmissions.forEach((pas) => {
-        opts.add(_.get(pas, this.aoiFilterBy.value))
-      });
-      let sortedOpts = Array.from(opts).sort()
-      return sortedOpts
+      return this.filterSelectionOptions(this.aoiFilterBy, this.priorityAreaSubmissions);
+    },
+
+    requestFilterSelectionOptions() {
+      return this.filterSelectionOptions(this.requestFilterBy, this.surveyRequests);
+    },
+
+    planFilterSelectionOptions() {
+      return this.filterSelectionOptions(this.planFilterBy, this.surveyPlans);
     },
 
     mapBaseUrl() {
@@ -1147,12 +1394,27 @@ export default Vue.extend({
       surveyPlanFeatures: [],
       surveyRequestFeatures: [],
       priorityAreaSubmissionFeatures: [],
+
       aoiSortBy: AOI_SORT_OPTIONS.find((o) => o.value == "lastModified"),
       aoiSortAscending: false,
       AOI_SORT_OPTIONS,
       aoiFilterBy: AOI_FILTER_OPTIONS[0],
       aoiFilterSelections: null,
-      AOI_FILTER_OPTIONS
+      AOI_FILTER_OPTIONS,
+
+      requestSortBy: REQUEST_SORT_OPTIONS.find((o) => o.value == "recordState.created"),
+      requestSortAscending: false,
+      REQUEST_SORT_OPTIONS,
+      requestFilterBy: REQUEST_FILTER_OPTIONS[0],
+      requestFilterSelections: null,
+      REQUEST_FILTER_OPTIONS,
+
+      planSortBy: PLAN_SORT_OPTIONS.find((o) => o.value == "recordState.created"),
+      planSortAscending: false,
+      PLAN_SORT_OPTIONS,
+      planFilterBy: PLAN_FILTER_OPTIONS[0],
+      planFilterSelections: null,
+      PLAN_FILTER_OPTIONS,
     };
   },
 
@@ -1169,6 +1431,16 @@ export default Vue.extend({
         // as these options change when the filter by prop is
         // changed by the user
         this.aoiFilterSelections = null;
+      }
+    },
+    requestFilterBy: {
+      handler(n, o) {
+        this.requestFilterSelections = null;
+      }
+    },
+    planFilterBy: {
+      handler(n, o) {
+        this.planFilterSelections = null;
       }
     }
 

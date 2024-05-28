@@ -1001,18 +1001,35 @@ export default Vue.extend({
         if (_.isNil(a)) {
           return -1;
         }
-        let val_a = _.get(
-          a,
-          this.aoiSortBy.value
-        )
-        let val_b = _.get(
-          b,
-          this.aoiSortBy.value
-        )
-        return (val_a < val_b) ? -1 : 1
+        let val_a = undefined;
+        let val_b = undefined;
+        if (this.aoiSortBy.value === "submissionName") {
+          // special case as many of the records don't have a submission name and
+          // instead use the `getPriorityAreaLabel` function to define what is
+          // shown as the submission name in the list
+          val_a = this.getPriorityAreaLabel(a);
+          val_b = this.getPriorityAreaLabel(b);
+        } else {
+          val_a = _.get(
+            a,
+            this.aoiSortBy.value
+          );
+          val_b = _.get(
+            b,
+            this.aoiSortBy.value
+          );
+        }
+
+        if (typeof val_a === 'string' || typeof val_b === 'string') {
+          return val_a.localeCompare(val_b);
+        } else if (typeof val_a === 'number' || typeof val_a === 'number') {
+          return val_a - val_b;
+        } else {
+          return val_a - val_b;
+        }
       });
       // reverse the sort order based on if the user has selected ascending order or not
-      if (this.aoiSortAscending) {
+      if (!this.aoiSortAscending) {
         l.reverse();
       }
       return l;
@@ -1115,7 +1132,7 @@ export default Vue.extend({
       surveyRequestFeatures: [],
       priorityAreaSubmissionFeatures: [],
       aoiSortBy: AOI_SORT_OPTIONS.find((o) => o.value == "lastModified"),
-      aoiSortAscending: true,
+      aoiSortAscending: false,
       AOI_SORT_OPTIONS,
       aoiFilterBy: AOI_FILTER_OPTIONS[0],
       aoiFilterSelections: null,

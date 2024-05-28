@@ -232,6 +232,15 @@
                     <div class="row">
                       <q-item-section top>
                         <q-item-label>{{ surveyRequest.name }}</q-item-label>
+                        <q-item-label caption>
+                          {{
+                            _.get(
+                              surveyRequest,
+                              "organisation.name",
+                              "No requesting organisation specified"
+                            )
+                          }}
+                        </q-item-label>
                       </q-item-section>
 
                       <q-item-section side top>
@@ -276,7 +285,7 @@
                 </q-list>
                 <div v-else class="hint-text q-pa-lg">
                   There are currently no entries for your custodian, please add
-                  a survey request using the button below.
+                  a HIPP Request using the button below.
                 </div>
               </q-scroll-area>
 

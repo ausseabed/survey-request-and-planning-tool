@@ -54,6 +54,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   .getRepository(SurveyRequest)
   .createQueryBuilder("survey_request")
   .select(["survey_request.id", "survey_request.name"])
+  .leftJoinAndSelect("survey_request.organisation", "organisation")
   .leftJoinAndSelect("survey_request.recordState", "recordState")
   .where(
     `survey_request.deleted = :deleted`,

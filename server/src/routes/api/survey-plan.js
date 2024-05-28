@@ -34,6 +34,7 @@ router.get('/', isAuthenticated, asyncMiddleware(async function (req, res) {
   .select(["survey_plan.id", "survey_plan.surveyName",
     "survey_plan.startDate", "survey_plan.status"])
   .leftJoinAndSelect("survey_plan.organisations", "organisations")
+  .leftJoinAndSelect("survey_plan.custodians", "custodians")
   .leftJoinAndSelect("survey_plan.recordState", "record_state")
 
   if (includeGeometry) {

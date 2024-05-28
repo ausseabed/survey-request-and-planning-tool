@@ -112,6 +112,13 @@
 
                       <q-item-section>
                         <q-item-label>{{ surveyPlan.surveyName }}</q-item-label>
+                        <q-item-label caption>
+                          {{
+                            surveyPlan.organisations
+                              .map((o) => o.name)
+                              .join(", ") | truncate(50)
+                          }}
+                        </q-item-label>
                         <q-item-label caption>{{
                           surveyPlan.status
                         }}</q-item-label>

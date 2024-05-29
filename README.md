@@ -6,7 +6,7 @@ Its intent is to provide a location for, and consistency in specification of bat
 The tool was partly funded by the National Environmental Science Program (NESP2) Marine and Coastal Hub, project 1.2 - National Areas of Interest for Seabed Mapping, Characterisation and Biodiversity Assessment. Project partners – Geoscience Australia, CSIRO, University of Tasmania.
 
 ### Build status
-[![CircleCI](https://circleci.com/gh/ausseabed/survey-request-and-planning-tool.svg?style=svg)](https://circleci.com/gh/ausseabed/survey-request-and-planning-tool)
+[![Develop build](https://github.com/ausseabed/survey-request-and-planning-tool/actions/workflows/build-on-push-develop.yml/badge.svg)](https://github.com/ausseabed/survey-request-and-planning-tool/actions/workflows/build-on-push-develop.yml)
 
 # Copyright and Licensing Terms
 

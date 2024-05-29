@@ -1225,7 +1225,15 @@ export default Vue.extend({
           );
         }
 
-        if (typeof val_a === 'string' || typeof val_b === 'string') {
+        if (_.isNil(val_a) || _.isNil(val_b)) {
+          if (_.isNil(val_a)) {
+            return 1
+          } else if (_.isNil(val_b)) {
+            return -1
+          } else {
+            return -1;
+          }
+        } else if (typeof val_a === 'string' || typeof val_b === 'string') {
           return val_a.localeCompare(val_b);
         } else if (typeof val_a === 'number' || typeof val_a === 'number') {
           return val_a - val_b;

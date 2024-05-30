@@ -190,7 +190,7 @@ router.get(
     }
 
     const wqs = exclude ? `priority_area_submission.id != :id` : `priority_area_submission.id = :id`
-    const geom_select = simplify ? `ST_Simplify(geom, 0.05)` : `geom`
+    const geom_select = simplify ? `ST_Simplify(geom, 0.002, true)` : `geom`
 
     const pas2 = await getConnection()
       .createQueryBuilder()

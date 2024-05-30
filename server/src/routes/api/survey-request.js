@@ -148,7 +148,7 @@ router.get(
     throw err;
   }
 
-  const geom_select = simplify ? `ST_Simplify(geom, 0.05)` : `geom`
+  const geom_select = simplify ? `ST_Simplify(geom, 0.002, true)` : `geom`
 
   const sr2 = await getConnection()
   .createQueryBuilder()

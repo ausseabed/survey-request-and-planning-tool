@@ -311,12 +311,19 @@ MAP
               pas.have_funds_resources as \"Have_resources_to_contribute\",
               rs.created as \"Last_Modified\",
               pa.id as paid,
-              pa.geom as geom
+              pa.geom as geom,
+              case pa.organisational_priority
+                  when 'High' then 3
+                  when 'Medium' then 2
+                  when 'Low' then 1
+                  else 0
+              end as organisational_priority_int
             from priority_area pa
             join priority_area_submission pas on pa.\"priorityAreaSubmissionSubmissionId\" = pas.id
             left outer join organisation sorg on sorg.id = pas.\"submittingOrganisationId\"
             join record_state rs on pas.\"recordStateId\" = rs.id
             where rs.state = 'published' AND pas.deleted = false
+            order by organisational_priority_int
           ) as subquery using unique paid using srid=4326"
 
     CLASS

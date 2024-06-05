@@ -720,7 +720,7 @@
               :transparent="true"
               format="image/png"
               :zIndex="5"
-              :opacity="0.8"
+              :opacity="1.0"
             >
             </l-wms-tile-layer>
 

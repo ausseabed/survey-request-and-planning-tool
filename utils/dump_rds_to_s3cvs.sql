@@ -28,6 +28,12 @@ SELECT aws_commons.create_s3_uri(
    'ap-southeast-2'
 ) AS s3_uri_sct_aoi_submissions \gset
 
+SELECT aws_commons.create_s3_uri(
+   'ausseabed-sct-database-csv-dumps',
+   'sct-aoi-submission-areas',
+   'ap-southeast-2'
+) AS s3_uri_sct_aoi_submission_areas \gset
+
 SELECT * FROM aws_s3.query_export_to_s3('SELECT "user".id as id, email, "user".name, created, "lastSeen", c.name as custodian_name, role.name AS role_name FROM "user" JOIN custodian AS c ON c.id = "user"."custodianId" JOIN role ON role.id = "user"."roleId"', :'s3_uri_sct_users', options :='format csv, HEADER true');
 
 SELECT * FROM aws_s3.query_export_to_s3(
@@ -124,3 +130,42 @@ JOIN organisation AS org ON org.id = aoi_sub."submittingOrganisationId"
 :'s3_uri_sct_aoi_submissions',
 options :='format csv, HEADER true');
 
+SELECT * FROM aws_s3.query_export_to_s3(
+'
+select
+aoi_area."name" as aoi_area_name,
+"preferredTimeframe",
+"riskRating",
+"requiredDataQuality",
+priority,
+"priorityAreaSubmissionSubmissionId",
+seacountry_name,
+ecological_area_name,
+timeframe_reason,
+preferred_season,
+collection_cadence,
+time_series_description,
+perceived_impact,
+organisational_priority,
+existing_data_sources,
+reason_for_aoi_raise,
+existing_data_assessment_comments,
+grid_size,
+survey_standard,
+data_to_capture,
+aoi_area.created as aoi_area_created,
+pas.id as aoi_submission_id,
+pas.submission_name as aoi_submission_name,
+pas.created  as aoi_submission_created,
+c."name" as custodian_name,
+org.name AS submitting_organisation_name,
+rs.created AS record_state_created,
+rs.state AS record_state
+FROM priority_area as aoi_area
+join priority_area_submission pas on pas.id = aoi_area."priorityAreaSubmissionSubmissionId" 
+JOIN custodian AS c ON c.id = pas."custodianId"
+JOIN organisation AS org ON org.id = pas."submittingOrganisationId" 
+JOIN record_state AS rs ON pas."recordStateId" = rs.id
+',
+:'s3_uri_sct_aoi_submission_areas',
+options :='format csv, HEADER true');
